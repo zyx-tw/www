@@ -3,7 +3,10 @@ import data from "./map.json"
 /** A note (planet) or a course (station) in a system. */
 export type Body = {
   slug: string
+  /** Its title, as an article's. */
   name: string
+  /** A few characters for its label on the map. */
+  short: string
   /** What it says, in one or two sentences. */
   line: string
   kind?: "station"

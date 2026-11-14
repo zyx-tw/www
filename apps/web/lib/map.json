@@ -42,24 +42,37 @@
       "bodies": [
         {
           "slug": "what-claude-code-is",
-          "name": "Claude Code 是什麼",
-          "line": "它在你的機器上動手，聊天視窗只會回答。"
+          "name": "Claude Code 不是聊天機器人：它會在你的電腦上動手",
+          "line": "它在你的機器上動手，聊天視窗只會回答。",
+          "short": "它是什麼"
+        },
+        {
+          "slug": "start-from-home",
+          "short": "從家目錄開",
+          "name": "我只在家目錄開 Claude Code，不再 cd 進專案",
+          "line": "在家目錄它碰得到所有專案，跨專案的事 1 個 session 就做完，記憶也不用搬。",
+          "needs": [
+            "what-claude-code-is"
+          ]
         },
         {
           "slug": "four-ways-to-extend",
-          "name": "四種擴充方式",
-          "line": "MCP、skill、plugin、mod，各自適合什麼時候用。"
+          "name": "MCP、skill、plugin、mod：4 種擴充方式怎麼選",
+          "line": "MCP、skill、plugin、mod，各自適合什麼時候用。",
+          "short": "四種擴充"
         },
         {
           "slug": "claude-md",
-          "name": "怎麼寫 CLAUDE.md",
-          "line": "每個 session 最先讀的那份檔案。"
+          "name": "我的 CLAUDE.md 寫了什麼，為什麼這樣寫",
+          "line": "每個 session 最先讀的那份檔案。",
+          "short": "CLAUDE.md"
         },
         {
           "slug": "course-basics",
-          "name": "課程：基礎",
+          "name": "小課程：第一週的 Claude Code",
           "kind": "station",
-          "line": "給第一週的 Claude Code 動手小課程。"
+          "line": "給第一週的 Claude Code 動手小課程。",
+          "short": "課程：基礎"
         }
       ]
     },
@@ -75,37 +88,42 @@
       "bodies": [
         {
           "slug": "knows-me",
-          "name": "懂我",
+          "name": "我只講半句，Claude Code 就懂：讓它看得到我的生活",
           "line": "它看得到我的行事曆、信件與死線，所以我講半句就夠。",
           "needs": [
             "four-ways-to-extend"
-          ]
+          ],
+          "short": "懂我"
         },
         {
           "slug": "remembers-me",
-          "name": "記得我",
+          "name": "同一句糾正我不講第 2 次：把糾正變成規則",
           "line": "同一句糾正，我不講第 2 次。",
           "needs": [
             "claude-md"
-          ]
+          ],
+          "short": "記得我"
         },
         {
           "slug": "acts-for-me",
-          "name": "替我動手",
+          "name": "接了 25 個 MCP server 之後：讓它碰得到我用的每個系統",
           "line": "我用的每個系統它都碰得到，而且走最省的路。",
           "needs": [
             "four-ways-to-extend"
-          ]
+          ],
+          "short": "替我動手"
         },
         {
           "slug": "out-of-my-way",
-          "name": "不打擾我",
-          "line": "它在背景做事，我的瀏覽器還是我的。"
+          "name": "Safari 被呼叫 1,916 次之後，我把瀏覽器還給自己",
+          "line": "它在背景做事，我的瀏覽器還是我的。",
+          "short": "不打擾我"
         },
         {
           "slug": "while-i-am-away",
-          "name": "我不在也行",
-          "line": "能力放在 server 上，不綁在我的筆電。"
+          "name": "筆電關了它還在：把能力搬到 server 上",
+          "line": "能力放在 server 上，不綁在我的筆電。",
+          "short": "我不在也行"
         }
       ]
     },
@@ -121,46 +139,52 @@
       "bodies": [
         {
           "slug": "agent-experience",
-          "name": "agent 也是使用者",
+          "name": "AX：把 agent 當成使用者來設計",
           "line": "人按得到的按鈕，agent 都要有對應的 tool。",
           "needs": [
             "acts-for-me"
-          ]
+          ],
+          "short": "AX"
         },
         {
           "slug": "rules-from-numbers",
-          "name": "用數字改規則",
-          "line": "先量測再改規則，不靠感覺。"
+          "name": "我量了 550 個 session，才決定改哪條規則",
+          "line": "先量測再改規則，不靠感覺。",
+          "short": "用數字改規則"
         },
         {
           "slug": "no-hooks",
-          "name": "不用 hook 管行為",
+          "name": "為什麼我把 2 個 hook 加了又拿掉",
           "line": "修規則或修檢查，不加攔截。",
           "needs": [
             "remembers-me"
-          ]
+          ],
+          "short": "不用 hook"
         },
         {
           "slug": "skills-stay-general",
-          "name": "skill 不寫個案",
+          "name": "skill 只寫方向：細節讓 agent 自己探索",
           "line": "skill 只給方向，細節讓 agent 現場探索。",
           "needs": [
             "four-ways-to-extend"
-          ]
+          ],
+          "short": "skill 不寫個案"
         },
         {
           "slug": "done-means-verified",
-          "name": "驗證才算完成",
-          "line": "CI 綠不算做完，真的跑過 1 次才算。"
+          "name": "CI 綠不算做完：怎樣才算完成",
+          "line": "CI 綠不算做完，真的跑過 1 次才算。",
+          "short": "驗證才算完成"
         },
         {
           "slug": "course-extend",
-          "name": "課程：動手擴充",
+          "name": "小課程：各做 1 個 MCP server、skill 與 plugin",
           "kind": "station",
-          "line": "各做 1 個 MCP server、skill 與 plugin。",
+          "line": "從零做出 3 種擴充，各 1 個。",
           "needs": [
             "four-ways-to-extend"
-          ]
+          ],
+          "short": "課程：擴充"
         }
       ]
     },
@@ -176,32 +200,36 @@
       "bodies": [
         {
           "slug": "subagent-bill",
-          "name": "subagent 的帳單",
-          "line": "subagent 曾佔一半花費，所以只派去查與審。"
+          "name": "subagent 花掉我一半的錢，所以我只讓它查與審",
+          "line": "量了 30 天的花費之後，我改了派工的規則。",
+          "short": "subagent 帳單"
         },
         {
           "slug": "review-by-risk",
-          "name": "只審高風險",
+          "name": "152 次審查跑了 314 輪：我改成只審高風險",
           "line": "什麼都審，等於沒審。",
           "needs": [
             "subagent-bill"
-          ]
+          ],
+          "short": "只審高風險"
         },
         {
           "slug": "many-at-once",
-          "name": "同時派很多個",
-          "line": "6 個 agent 同時跑，一起撞到用量上限。",
+          "name": "同時派 6 個 agent，結果全部撞到用量上限",
+          "line": "並行有上限，還有撞到之後怎麼收拾。",
           "needs": [
             "subagent-bill"
-          ]
+          ],
+          "short": "同時派很多"
         },
         {
           "slug": "two-agents",
-          "name": "Claude Code 加 Codex",
+          "name": "Claude Code 和 Codex 怎麼共用同一份記憶",
           "line": "2 個 agent 共用 1 份記憶與 1 份 plugin 目錄。",
           "needs": [
             "remembers-me"
-          ]
+          ],
+          "short": "加上 Codex"
         }
       ]
     },
@@ -216,47 +244,78 @@
       ],
       "bodies": [
         {
+          "slug": "one-claude-many-machines",
+          "short": "一台連全部",
+          "name": "我有很多台設備，但只有 1 台裝 Claude Code",
+          "line": "其他設備不裝，本機的 Claude Code 連過去，把任務放到適合的那台。",
+          "needs": [
+            "start-from-home"
+          ]
+        },
+        {
+          "slug": "what-runs-where",
+          "short": "誰在做什麼",
+          "name": "它怎麼知道每台設備、每個專案在做什麼",
+          "line": "設備、專案與網路都登記成檔案，Claude Code 先讀再動手。",
+          "needs": [
+            "one-claude-many-machines",
+            "claude-md"
+          ]
+        },
+        {
           "slug": "one-job-per-machine",
-          "name": "每台只做一件事",
-          "line": "筆電只編輯，其他機器負責 build、訓練與儲存。"
+          "name": "筆電只編輯：每台設備只做 1 件事",
+          "line": "筆電只編輯，其他機器負責 build、訓練與儲存。",
+          "short": "一台一件事",
+          "needs": [
+            "one-claude-many-machines"
+          ]
         },
         {
           "slug": "numbers-are-addresses",
-          "name": "編號就是位址",
+          "name": "看編號就知道 IP：我的 PVE 編號規則",
           "line": "看 guest 的編號，就知道它在哪台、IP 是多少。",
           "needs": [
             "one-job-per-machine"
-          ]
+          ],
+          "short": "編號即位址"
         },
         {
           "slug": "fixed-place",
-          "name": "每個 repo 一個位置",
+          "name": "565 個暫存目錄之後：每個 repo 只留 1 個固定位置",
           "line": "每個 session 都在 build 機器的同一個目錄工作。",
           "needs": [
             "one-job-per-machine"
-          ]
+          ],
+          "short": "固定位置"
         },
         {
           "slug": "network-in-git",
-          "name": "網路寫在 git 裡",
-          "line": "網段與存取規則用 pull request 改。"
+          "name": "網路設定寫成 YAML：改網路就是開 pull request",
+          "line": "網段、設備與 Tailscale 的存取規則都是 repo 裡的檔案，所以 Claude Code 知道怎麼連到每一台。",
+          "short": "網路進 git",
+          "needs": [
+            "what-runs-where"
+          ]
         },
         {
           "slug": "one-plugin-catalog",
-          "name": "一份 plugin 目錄",
+          "name": "1 份 plugin 目錄，Claude Code 和 Codex 都能裝",
           "line": "Claude Code 和 Codex 裝到同一個釘住的版本。",
           "needs": [
             "four-ways-to-extend"
-          ]
+          ],
+          "short": "plugin 目錄"
         },
         {
           "slug": "course-machines",
-          "name": "課程：自己的機房",
+          "name": "小課程：架一個 agent 管得動的小機房",
           "kind": "station",
-          "line": "架一個 agent 管得動的小機房。",
+          "line": "從 1 台主機開始，照著做完。",
           "needs": [
             "one-job-per-machine"
-          ]
+          ],
+          "short": "課程：機房"
         }
       ]
     },
@@ -272,34 +331,39 @@
       "bodies": [
         {
           "slug": "changing-the-interface",
-          "name": "改 Claude Code 的介面",
-          "line": "終端機少一塊面板，就自己加。",
+          "name": "終端機少一塊面板，我就自己加：6 個 mod 的故事",
+          "line": "行事曆、音樂、密鑰表單，都長在輸入框上方。",
           "needs": [
             "four-ways-to-extend"
-          ]
+          ],
+          "short": "改介面"
         },
         {
           "slug": "outside-the-terminal",
-          "name": "聊天軟體裡的 agent",
-          "line": "同一個 agent，在終端機外面也叫得到。"
+          "name": "在 Telegram 也叫得到同一個 agent",
+          "line": "同一個 agent，在終端機外面也叫得到。",
+          "short": "聊天軟體"
         },
         {
           "slug": "monitoring-for-agents",
-          "name": "給 agent 看的監控",
+          "name": "不做 dashboard：給 agent 看的監控長什麼樣",
           "line": "不做 dashboard，做 agent 查得到的 tool。",
           "needs": [
             "agent-experience"
-          ]
+          ],
+          "short": "監控"
         },
         {
           "slug": "what-an-agent-has-seen",
-          "name": "agent 看過的東西",
-          "line": "密鑰、圖片、分頁：3 次事故與修法。"
+          "name": "agent 看過的東西會留下來：3 次事故與修法",
+          "line": "密鑰、圖片、分頁：3 次事故與修法。",
+          "short": "安全"
         },
         {
           "slug": "names-to-guess",
-          "name": "agent 猜得到的名字",
-          "line": "機器照角色，用遊戲裡的方塊命名。"
+          "name": "為什麼我的機器用 Minecraft 方塊命名",
+          "line": "好名字讓 agent 不用查就猜得到。",
+          "short": "命名"
         }
       ]
     },
@@ -315,28 +379,36 @@
       "bodies": [
         {
           "slug": "one-design-system",
-          "name": "一套 design system",
-          "line": "每個網站、每封信都用同一組 token。"
+          "name": "每個網站、每封信都用同一套 design system",
+          "line": "每個網站、每封信都用同一組 token。",
+          "short": "design system"
         },
         {
           "slug": "one-way-to-deploy",
-          "name": "一種部署方式",
-          "line": "開 pull request 時就 build，合併只移動 tag。"
+          "name": "PR 就 build，合併只移 tag：我的部署只有 1 種做法",
+          "line": "開 pull request 時就 build，合併只移動 tag。",
+          "short": "部署"
         },
         {
           "slug": "where-files-live",
-          "name": "檔案放哪裡",
-          "line": "所有 repo 與筆記用同一種資料夾結構。"
+          "name": "電腦裡的檔案用 PARA 分類，Claude Code 比我還會找",
+          "line": "它知道分類規則，所以會幫我歸檔，也找得到我忘記放哪的檔案。",
+          "short": "PARA",
+          "needs": [
+            "start-from-home"
+          ]
         },
         {
           "slug": "observability-first",
-          "name": "先做可觀測性",
-          "line": "log 跟功能一起上線，不事後補。"
+          "name": "log 跟功能一起上線：先做可觀測性",
+          "line": "log 跟功能一起上線，不事後補。",
+          "short": "可觀測性"
         },
         {
           "slug": "simple-first",
-          "name": "先求簡單",
-          "line": "先砍功能，再砍文字。"
+          "name": "先砍功能，再砍文字：我的 simple-first 規則",
+          "line": "做頁面之前先問：這一頁只做哪 1 件事。",
+          "short": "先求簡單"
         }
       ]
     }

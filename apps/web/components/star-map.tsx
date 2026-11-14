@@ -9,28 +9,55 @@ import { enterRow } from "@workspace/ui/lib/layout"
 import { Hero, HeroTitle } from "@/components/hero"
 import { MAP } from "@/lib/copy"
 import { findBody, findSystem, systemPath, type System } from "@/lib/map"
-import { drawScene, type Hit, type View } from "@/lib/map-scene"
+import { drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
-/** Rows of the grid by its width in cells: the three column widths. */
-function rowsFor(cols: number) {
-  return cols < 60 ? 20 : cols < 90 ? 24 : 30
-}
+/** CSS pixels to one pixel of the wireframe. */
+const PIXEL = 2
 
 type Scene = View & {
   /** Where `focus` is heading: 1 at a system, 0 on the whole map. */
   goal: number
-  cols: number
-  rows: number
-  cell: number
   hits: Hit[]
   /** The pointer is over the map, so nothing drifts under it. */
   held: boolean
   drag: { x: number; y: number; moved: boolean } | null
 }
 
+/** A line as square pixels, one in `every`. */
+function plot(
+  context: CanvasRenderingContext2D,
+  { x0, y0, x1, y1, every = 1 }: Line
+) {
+  let x = Math.round(x0 / PIXEL)
+  let y = Math.round(y0 / PIXEL)
+  const endX = Math.round(x1 / PIXEL)
+  const endY = Math.round(y1 / PIXEL)
+  const dx = Math.abs(endX - x)
+  const dy = -Math.abs(endY - y)
+  // A line far outside the view is not worth walking.
+  if (dx - dy > 4000) return
+  const stepX = x < endX ? 1 : -1
+  const stepY = y < endY ? 1 : -1
+  let error = dx + dy
+  for (let count = 0; ; count++) {
+    if (count % every === 0) context.fillRect(x, y, 1, 1)
+    if (x === endX && y === endY) break
+    const twice = 2 * error
+    if (twice >= dy) {
+      error += dy
+      x += stepX
+    }
+    if (twice <= dx) {
+      error += dx
+      y += stepY
+    }
+  }
+}
+
 /**
- * The map (lib/map-scene.ts) under the page's title. A drag turns it, a
+ * The map (lib/map-scene.ts) under the page's title: the wireframe on a
+ * canvas of square pixels, the names on a sharp one over it. A drag turns it, a
  * click on a system flies there (/map/<system>), a click on a body goes to
  * its row in the list, and a click on empty space flies back out. It lives
  * in the layout, so it keeps its turn from one page of the map to the next.
@@ -43,8 +70,8 @@ export function StarMap() {
   const target = findSystem(pathname.split("/")[2] ?? "") ?? null
 
   const box = useRef<HTMLDivElement>(null)
-  const muted = useRef<HTMLDivElement>(null)
-  const lit = useRef<HTMLDivElement>(null)
+  const wire = useRef<HTMLCanvasElement>(null)
+  const names = useRef<HTMLCanvasElement>(null)
   const scene = useRef<Scene>({
     yaw: 0.5,
     pitch: 0.95,
@@ -53,9 +80,6 @@ export function StarMap() {
     goal: 0,
     time: 0,
     names: true,
-    cols: 0,
-    rows: 0,
-    cell: 0,
     hits: [],
     held: false,
     drag: null,
@@ -75,36 +99,38 @@ export function StarMap() {
   useEffect(() => {
     const state = scene.current
     const element = box.current
-    if (!element || !muted.current || !lit.current) return
-    const low = muted.current
-    const high = lit.current
+    const low = wire.current?.getContext("2d")
+    const high = names.current?.getContext("2d")
+    if (!element || !low || !high) return
 
+    let width = 0
+    let height = 0
+    let ratio = 1
     const measure = () => {
-      const probe = document.createElement("span")
-      probe.textContent = "0".repeat(20)
-      low.append(probe)
-      state.cell = probe.getBoundingClientRect().width / 20
-      probe.remove()
-      if (!state.cell) return
-      state.cols = Math.floor(element.clientWidth / state.cell)
-      state.rows = rowsFor(state.cols)
-      state.names = state.cols >= 60
+      width = element.clientWidth
+      height = element.clientHeight
+      ratio = window.devicePixelRatio || 1
+      low.canvas.width = Math.ceil(width / PIXEL)
+      low.canvas.height = Math.ceil(height / PIXEL)
+      high.canvas.width = Math.ceil(width * ratio)
+      high.canvas.height = Math.ceil(height * ratio)
+      state.names = width >= 500
     }
     const resize = new ResizeObserver(measure)
     resize.observe(element)
-    void document.fonts?.ready.then(measure)
+    measure()
 
     let frame = 0
-    let last = performance.now()
+    let last = 0
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick)
       const dt = Math.min((now - last) / 1000, 0.1)
-      // 30 frames a second is plenty for characters.
-      if (dt < 1 / 32 || document.hidden || !state.cols) return
+      // 30 frames a second is plenty for a quiet map.
+      if (dt < 1 / 32 || document.hidden || !width) return
       last = now
       const drift = !still.current && !state.held && !state.drag
       if (drift) {
-        state.yaw += dt * 0.04
+        state.yaw += dt * 0.03
         state.time += dt
       }
       state.focus = still.current
@@ -112,35 +138,75 @@ export function StarMap() {
         : state.focus + (state.goal - state.focus) * Math.min(1, dt * 4)
       if (Math.abs(state.goal - state.focus) < 0.002) state.focus = state.goal
       if (state.focus === 0) state.target = null
-      const drawn = drawScene(state, state.cols, state.rows)
+
+      // Both tones come from the tokens, so a theme change needs no code.
+      const dim = getComputedStyle(low.canvas).color
+      const bright = getComputedStyle(high.canvas).color
+      const style = getComputedStyle(high.canvas)
+      high.setTransform(ratio, 0, 0, ratio, 0, 0)
+      high.font = ["font-weight", "font-size", "font-family"]
+        .map((property) => style.getPropertyValue(property))
+        .join(" ")
+      high.textBaseline = "middle"
+      const drawn = drawScene(
+        state,
+        width,
+        height,
+        (text) => high.measureText(text).width
+      )
       state.hits = drawn.hits
-      if (low.textContent !== drawn.muted) low.textContent = drawn.muted
-      if (high.textContent !== drawn.lit) high.textContent = drawn.lit
+
+      low.clearRect(0, 0, low.canvas.width, low.canvas.height)
+      for (const tone of [false, true]) {
+        low.fillStyle = tone ? bright : dim
+        for (const line of drawn.lines) {
+          if (Boolean(line.lit) === tone) plot(low, line)
+        }
+        for (const dot of drawn.dots) {
+          if (Boolean(dot.lit) !== tone) continue
+          const size = Math.max(1, Math.round(dot.size / PIXEL))
+          low.fillRect(
+            Math.round(dot.x / PIXEL - size / 2),
+            Math.round(dot.y / PIXEL - size / 2),
+            size,
+            size
+          )
+        }
+      }
+      high.clearRect(0, 0, width, height)
+      for (const label of drawn.labels) {
+        high.fillStyle = label.lit ? bright : dim
+        high.fillText(label.text, label.x, label.y)
+      }
     }
     frame = requestAnimationFrame(tick)
+    // Text on a canvas cannot start a webfont load; the next frame after
+    // the face is in draws with it. The load rejects when a fallback face
+    // is missing, and the face is in all the same.
+    document.fonts
+      ?.load("16px " + getComputedStyle(element).fontFamily)
+      .catch(() => undefined)
     return () => {
       cancelAnimationFrame(frame)
       resize.disconnect()
     }
   }, [])
 
-  /** The run of cells under the pointer: its own row first, then a row off. */
+  /** The box under the pointer; the last one drawn is the nearest. */
   const hitAt = (event: React.PointerEvent) => {
-    const state = scene.current
-    const rect = muted.current?.getBoundingClientRect()
-    if (!rect || !state.cell) return
-    const col = Math.floor((event.clientX - rect.left) / state.cell)
-    const row = Math.floor(
-      (event.clientY - rect.top) / (rect.height / state.rows)
-    )
-    const inside = (hit: Hit) =>
-      col >= hit.col - 1 && col <= hit.col + hit.width
-    // The last one drawn is the nearest, so look from the end.
-    const drawn = [...state.hits].reverse()
-    return (
-      drawn.find((hit) => hit.row === row && inside(hit)) ??
-      drawn.find((hit) => Math.abs(hit.row - row) === 1 && inside(hit))
-    )
+    const rect = box.current?.getBoundingClientRect()
+    if (!rect) return
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    return [...scene.current.hits]
+      .reverse()
+      .find(
+        (hit) =>
+          x >= hit.x &&
+          x <= hit.x + hit.width &&
+          y >= hit.y &&
+          y <= hit.y + hit.height
+      )
   }
 
   const hover = (hit: Hit | undefined) => {
@@ -172,9 +238,8 @@ export function StarMap() {
       <div
         ref={box}
         aria-hidden
-        data-decode="own"
         className={cn(
-          "relative mt-10 h-120 w-full cursor-grab touch-pan-y overflow-hidden whitespace-pre select-none data-dragging:cursor-grabbing data-over:cursor-pointer lg:h-144 2xl:h-180",
+          "relative mt-10 h-120 w-full cursor-grab touch-pan-y overflow-hidden select-none data-dragging:cursor-grabbing data-over:cursor-pointer lg:h-144 2xl:h-180",
           enterRow(3)
         )}
         onPointerEnter={() => {
@@ -217,8 +282,14 @@ export function StarMap() {
           event.currentTarget.removeAttribute("data-dragging")
         }}
       >
-        <div ref={muted} className="w-fit text-muted-foreground" />
-        <div ref={lit} className="absolute inset-0 text-foreground" />
+        <canvas
+          ref={wire}
+          className="pixelated absolute inset-0 size-full text-muted-foreground"
+        />
+        <canvas
+          ref={names}
+          className="absolute inset-0 size-full text-foreground"
+        />
       </div>
     </>
   )

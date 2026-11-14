@@ -20,3 +20,11 @@
   line-height: var(--text-caption--line-height);
   white-space: pre;
 }
+
+/*
+ * The map's wireframe (components/star-map.tsx) is drawn at half size and
+ * shown at full size, so each of its pixels is a square of four.
+ */
+@utility pixelated {
+  image-rendering: pixelated;
+}
