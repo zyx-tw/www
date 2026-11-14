@@ -103,7 +103,7 @@ export function worksMarkdown() {
 export function mapMarkdown() {
   return markdownDocument({ title: MAP.title, path: "/map" }, [
     `# ${text(MAP.title)}`,
-    "A note without a link is planned and not written yet.",
+    "沒有連結的點還在規劃中，尚未寫成。",
     ...systems.map((system) =>
       [
         `## ${link(system.name, absoluteUrl(systemPath(system)))}`,
@@ -115,9 +115,10 @@ export function mapMarkdown() {
               .filter((name) => name !== undefined)
             return [
               `- ${linked(body.name, body.href)}`,
-              body.kind === "station" ? " (course)" : "",
-              `: ${text(body.line)}`,
-              after.length > 0 ? ` After: ${text(after.join(", "))}.` : "",
+              `：${text(body.line)}`,
+              after.length > 0
+                ? `${MAP.after}：${text(after.join("、"))}。`
+                : "",
             ].join("")
           })
           .join("\n"),

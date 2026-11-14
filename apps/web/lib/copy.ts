@@ -7,7 +7,11 @@ export const HOME = { title: "Loki, 詹詠翔." } as const
 
 export const WORKS = { title: "Works" } as const
 
-export const MAP = { title: "Map" } as const
+export const MAP = {
+  title: "地圖",
+  planned: "規劃中",
+  after: "先讀",
+} as const
 
 export const ABOUT = { title: "About" } as const
 

@@ -48,7 +48,8 @@ function reducedMotion() {
 /**
  * Every text node in the page that has something to scramble, with the delay
  * of the row it sits in. Nodes of symbols alone are left to their owners (the
- * works window's frame on www.zyx.tw), and ScrambleText runs its own effect.
+ * works window's frame on www.zyx.tw), ScrambleText runs its own effect, and
+ * an element with `data-decode="own"` redraws its own text every frame.
  */
 function collect(main: HTMLElement): Line[] {
   const lines: Line[] = []
@@ -56,7 +57,7 @@ function collect(main: HTMLElement): Line[] {
     acceptNode: (node) =>
       (node as Text).data.trim() &&
       !node.parentElement?.closest(
-        "script, style, noscript, [data-slot=scramble-text]"
+        "script, style, noscript, [data-slot=scramble-text], [data-decode=own]"
       )
         ? NodeFilter.FILTER_ACCEPT
         : NodeFilter.FILTER_REJECT,

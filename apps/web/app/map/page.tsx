@@ -1,27 +1,38 @@
-import { cn } from "@workspace/ui/lib/utils"
-import { column, enterRow, page } from "@workspace/ui/lib/layout"
+import Link from "next/link"
 
-import { Hero, HeroTitle } from "@/components/hero"
-import { StarCharts } from "@/components/star-chart"
+import { cn } from "@workspace/ui/lib/utils"
+import { enterRow } from "@workspace/ui/lib/layout"
+
 import { MAP } from "@/lib/copy"
-import { galaxyChart } from "@/lib/map"
+import { systemPath, systems } from "@/lib/map"
 import { pageMetadata } from "@/lib/site"
 
 export const metadata = pageMetadata({ title: MAP.title, path: "/map" })
 
 export const dynamic = "force-static"
 
+/** Every system as a row: the same links as the stars on the map. */
 export default function Map() {
   return (
-    <main className={cn(column, page, "flex flex-1 flex-col")}>
-      <Hero title={<HeroTitle text={MAP.title} />} />
-      <StarCharts
-        label="Systems"
-        className={cn("mt-10", enterRow(2))}
-        narrow={galaxyChart({ cols: 32, rows: 24 })}
-        wide={galaxyChart({ cols: 75, rows: 22 })}
-        widest={galaxyChart({ cols: 102, rows: 26 })}
-      />
-    </main>
+    <ul className="mt-10 flex flex-col">
+      {systems.map((system, index) => (
+        <li
+          key={system.slug}
+          className={cn(
+            "flex flex-wrap justify-between gap-x-5 border-b py-3",
+            enterRow(4 + index)
+          )}
+        >
+          <Link
+            href={systemPath(system)}
+            scroll={false}
+            className="terminal-link"
+          >
+            {system.name}
+          </Link>
+          <span className="text-muted-foreground">{system.line}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
