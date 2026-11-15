@@ -56,18 +56,14 @@ function plot(
   }
 }
 
-/** How many of `bodies` are notes and courses. */
+/** How many notes `bodies` holds. */
 function count(bodies: Body[]) {
-  return [
-    `${MAP.notes} ${bodies.filter(({ kind }) => !kind).length}`,
-    `${MAP.courses} ${bodies.filter(({ kind }) => kind).length}`,
-  ]
+  return [`${MAP.notes} ${bodies.length}`]
 }
 
-/** What is known about a body: its kind, then its state or its measures. */
+/** What is known about a body: its state or its measures. */
 function facts(body: Body, after: string[]) {
   return [
-    body.kind ? MAP.course : MAP.note,
     !body.href && MAP.planned,
     body.length && `${body.length.toLocaleString("en")} ${MAP.length}`,
     body.minutes && `${body.minutes} ${MAP.minutes}`,

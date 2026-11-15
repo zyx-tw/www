@@ -107,7 +107,7 @@ export function worksMarkdown() {
   ])
 }
 
-/** Every system with its notes and courses, and what each one follows. */
+/** Every system with its notes, and what each one follows. */
 export function mapMarkdown() {
   return markdownDocument({ title: MAP.title, path: "/map" }, [
     `# ${text(MAP.title)}`,

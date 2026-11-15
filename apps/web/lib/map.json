@@ -30,10 +30,31 @@
         },
         {
           "slug": "four-ways-to-extend",
-          "name": "依任務缺口選擇 Claude Code 的擴充方式",
-          "line": "用 MCP 接服務，用 Skill 寫做法，用 Plugin 打包，用 Mod 改畫面。",
+          "name": "先確認任務缺什麼，再選擇擴充方式",
+          "line": "缺連線用 MCP，缺做法用 Skill，要整組安裝用 Plugin，要改畫面用 Mod。",
           "short": "擴充",
           "needs": ["start-from-home"]
+        },
+        {
+          "slug": "mcp-wraps-a-service",
+          "name": "用 MCP 把服務的操作包成工具",
+          "line": "MCP server 處理連線與登入，Claude Code 只呼叫工具。",
+          "short": "MCP",
+          "needs": ["four-ways-to-extend"]
+        },
+        {
+          "slug": "skill-loads-on-demand",
+          "name": "把特定任務的步驟寫成 Skill",
+          "line": "通用規則放 CLAUDE.md，Skill 在任務符合說明時才載入全文。",
+          "short": "Skill",
+          "needs": ["four-ways-to-extend"]
+        },
+        {
+          "slug": "plugin-ships-by-version",
+          "name": "用 Plugin 打包擴充，並依版本號更新",
+          "line": "把擴充包成一組安裝，修改內容時同時更新版本號。",
+          "short": "Plugin",
+          "needs": ["skill-loads-on-demand"]
         },
         {
           "slug": "claude-md",
@@ -41,14 +62,6 @@
           "line": "寫明工作背景、詢問條件與完成標準，再檢查規則是否落實。",
           "short": "CLAUDE.md",
           "needs": ["four-ways-to-extend"]
-        },
-        {
-          "slug": "course-basics",
-          "name": "跟著課程練習，把完整小任務交給 Claude Code",
-          "kind": "station",
-          "line": "從查詢專案開始，練習交代任務、保存規則與判斷擴充需求。",
-          "short": "課程",
-          "needs": ["claude-md"]
         }
       ]
     },
@@ -62,13 +75,13 @@
           "slug": "knows-me",
           "name": "讓 Claude Code 直接查詢任務所需的背景",
           "line": "接上資料所在的服務，省去複製貼上的步驟。",
-          "needs": ["four-ways-to-extend"],
+          "needs": ["mcp-wraps-a-service"],
           "short": "Context"
         },
         {
           "slug": "remembers-me",
-          "name": "把糾正存成規則，再改成自動檢查",
-          "line": "依適用範圍保存規則，在合併前檢查能自動判斷的要求。",
+          "name": "把糾正寫到新對話會載入的地方",
+          "line": "依適用範圍，把糾正保存到記憶、專案文件或 CLAUDE.md。",
           "needs": ["claude-md"],
           "short": "記憶"
         },
@@ -76,8 +89,8 @@
           "slug": "acts-for-me",
           "name": "依固定順序接上 Claude Code 需要的服務",
           "line": "先找 MCP，再用 API 或 CLI，必要時才操作瀏覽器。",
-          "needs": ["four-ways-to-extend"],
-          "short": "MCP"
+          "needs": ["mcp-wraps-a-service"],
+          "short": "服務"
         },
         {
           "slug": "out-of-my-way",
@@ -115,25 +128,31 @@
           "short": "量測"
         },
         {
+          "slug": "rules-become-checks",
+          "name": "把能自動判斷的規則改成合併前的檢查",
+          "line": "同一條糾正反覆出現時，改用 pull request 的自動檢查擋下。",
+          "short": "檢查",
+          "needs": ["remembers-me"]
+        },
+        {
           "slug": "skills-stay-general",
           "name": "把通則寫進 Skill，把個案留在專案",
           "line": "依適用範圍整理做法，讓通用 Skill 保持可重用。",
-          "needs": ["four-ways-to-extend"],
+          "needs": ["skill-loads-on-demand"],
           "short": "skill"
+        },
+        {
+          "slug": "read-before-adopting",
+          "name": "讀懂開源做法，再採用符合任務的部分",
+          "line": "安裝前讀完全文，挑出適用的步驟並改寫。",
+          "short": "開源",
+          "needs": ["skill-loads-on-demand"]
         },
         {
           "slug": "done-means-verified",
           "name": "實際操作並附上結果，再回報完成",
           "line": "檢查通過後，仍要確認頁面與部署後的實際行為。",
           "short": "驗證"
-        },
-        {
-          "slug": "course-extend",
-          "name": "依序製作擴充，再用版本號更新",
-          "kind": "station",
-          "line": "製作 Skill 與 MCP server，再包成 Plugin 並練習更新。",
-          "needs": ["four-ways-to-extend"],
-          "short": "課程"
         }
       ]
     },
@@ -166,7 +185,7 @@
         {
           "slug": "two-agents",
           "name": "讓 Claude Code 與 Codex 讀取同一份專案規則",
-          "line": "集中規則檔案，再檢查記憶與 Skill 的同步方式。",
+          "line": "集中專案規則，再逐項確認記憶與 Skill 的同步方式。",
           "needs": ["remembers-me"],
           "short": "Codex"
         }
@@ -182,7 +201,7 @@
           "slug": "one-claude-many-machines",
           "short": "遠端",
           "name": "讓 Claude Code 從筆電連到適合的機器",
-          "line": "對話留在筆電，透過 ssh 把工作送到適合的機器。",
+          "line": "對話留在筆電，透過 ssh 名稱把指令送到遠端。",
           "needs": ["start-from-home"]
         },
         {
@@ -224,16 +243,8 @@
           "slug": "one-plugin-catalog",
           "name": "用固定版本的目錄管理 Plugin 安裝",
           "line": "讓 Claude Code 與 Codex 共用目錄，發版後同步更新版本。",
-          "needs": ["four-ways-to-extend"],
+          "needs": ["plugin-ships-by-version"],
           "short": "plugin"
-        },
-        {
-          "slug": "course-machines",
-          "name": "依課程建立 Claude Code 能操作的遠端環境",
-          "kind": "station",
-          "line": "從 ssh 連線開始，逐步完成分工、固定位置與設備登記。",
-          "needs": ["one-job-per-machine"],
-          "short": "課程"
         }
       ]
     },
@@ -266,8 +277,15 @@
         {
           "slug": "what-an-agent-has-seen",
           "name": "把密碼存進鑰匙圈，讓 Claude Code 用名稱指定",
-          "line": "用表單傳入密碼，遮住指令輸出中的值，再做加密備份。",
+          "line": "用表單傳入密碼，遮住指令輸出中的值。",
           "short": "安全"
+        },
+        {
+          "slug": "backup-memory-and-keys",
+          "name": "把記憶放進 Git，金鑰加密後再備份",
+          "line": "自動同步記憶，加密備份鑰匙圈，並測試還原。",
+          "short": "備份",
+          "needs": ["what-an-agent-has-seen"]
         },
         {
           "slug": "names-to-guess",

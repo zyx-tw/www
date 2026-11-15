@@ -1,7 +1,7 @@
 import data from "./map.json"
 import { findNote, measure } from "./notes"
 
-/** A note (planet) or a course (station) in a system. */
+/** A note in a system, drawn as a planet. */
 export type Body = {
   slug: string
   /** Its title, as an article's. */
@@ -10,7 +10,6 @@ export type Body = {
   short: string
   /** What it says, in one or two sentences. */
   line: string
-  kind?: "station"
   /** The bodies to read first, by slug, from any system. */
   needs?: string[]
   /** Its page, once it is written. A body without one is planned. */

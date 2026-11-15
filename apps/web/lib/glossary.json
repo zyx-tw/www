@@ -12,19 +12,19 @@
   },
   "MCP": {
     "text": "Anthropic 提出的開放標準。MCP server 提供一組 tool，替 Claude Code 處理連線和登入。",
-    "note": "four-ways-to-extend"
+    "note": "mcp-wraps-a-service"
   },
   "Skill": {
     "text": "寫給 Claude Code 的一份做法。平常只載入名字和說明，做到那類任務才載入全文。",
-    "note": "four-ways-to-extend"
+    "note": "skill-loads-on-demand"
   },
   "Plugin": {
     "text": "把 Skill、MCP 這些擴充包成一組，整組安裝，靠版本號更新。",
-    "note": "four-ways-to-extend"
+    "note": "plugin-ships-by-version"
   },
   "Mod": {
     "text": "改 Claude Code 自己介面的擴充，例如在輸入框上方顯示狀態。",
-    "note": "four-ways-to-extend"
+    "note": "changing-the-interface"
   },
   "家目錄": {
     "body": "start-from-home"
@@ -38,7 +38,7 @@
   },
   "pull request": {
     "text": "修改合併進專案之前的那一關。自動檢查通常放在這一關。",
-    "note": "remembers-me"
+    "note": "rules-become-checks"
   },
   "CI": {
     "text": "每次修改都會自動跑的檢查。",
@@ -130,5 +130,11 @@
   "AIntern": {
     "text": "AI 實習生：把團隊的流程做成可以執行的工作流。",
     "href": "/project/aintern"
+  },
+  "自動檢查": {
+    "body": "rules-become-checks"
+  },
+  "備份": {
+    "body": "backup-memory-and-keys"
   }
 }

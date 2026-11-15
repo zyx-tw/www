@@ -24,7 +24,7 @@
       "label": "Map",
       "tip": "Every note, as a star chart",
       "markdown": "/map.md",
-      "summary": "how Loki works with Claude Code: every note and course, with what to read first",
+      "summary": "how Loki works with Claude Code: every note, with what to read first",
       "nav": true,
       "changeFrequency": "weekly",
       "priority": 0.8
