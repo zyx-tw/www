@@ -4,7 +4,7 @@ import { lanes, systems, type System } from "./map"
  * The map is one scene in wireframe: the systems stand over a plane, each
  * star on a stalk as tall as its height, and the camera looks down at an
  * angle and turns around the middle. Flying to a system moves the middle to
- * its star and zooms in, until its sun, its planets and its stations fill
+ * its star and zooms in, until its sun and its planets fill
  * the view. A frame is a list of lines, dots and labels in CSS pixels;
  * components/star-map.tsx paints the lines as square pixels and the labels
  * as text.
@@ -197,37 +197,6 @@ export function drawScene(
     ellipse(cx, cy, radius * Math.abs(Math.cos(spin)), radius, lit)
   }
 
-  /** A station: a cube in wireframe, turning. */
-  const cube = (
-    cx: number,
-    cy: number,
-    size: number,
-    lit: boolean,
-    spin: number
-  ) => {
-    const corners = [-1, 1].flatMap((x) =>
-      [-1, 1].flatMap((y) =>
-        [-1, 1].map((z) => {
-          const rx = x * Math.cos(spin) - y * Math.sin(spin)
-          const depth = x * Math.sin(spin) + y * Math.cos(spin)
-          return {
-            x: cx + rx * size,
-            y: cy + (depth * tilt - z * rise) * size,
-            key: [x, y, z],
-          }
-        })
-      )
-    )
-    corners.forEach((a, i) =>
-      corners.slice(i + 1).forEach((b) => {
-        // An edge joins two corners that differ on one axis.
-        if (a.key.filter((value, axis) => value !== b.key[axis]).length !== 1)
-          return
-        lines.push({ x0: a.x, y0: a.y, x1: b.x, y1: b.y, lit, hue: ink })
-      })
-    )
-  }
-
   /** A label beside (x, y), on the right unless it would leave the view. */
   const name = (
     x: number,
@@ -302,8 +271,7 @@ export function drawScene(
       // its length: 5 px more at 1,000 characters and beyond.
       ink = body.href ? system.slug : undefined
       const size = 7 + Math.min(5, (body.length ?? 0) / 200)
-      if (body.kind === "station") cube(x, y, size, lit, time * 0.3 + index)
-      else globe(x, y, size, lit, 0)
+      globe(x, y, size, lit, 0)
       if (focus >= NAMED)
         name(
           x,
