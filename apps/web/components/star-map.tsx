@@ -8,8 +8,8 @@ import { enterRow, page } from "@workspace/ui/lib/layout"
 
 import { MAP } from "@/lib/copy"
 import { findBody, findSystem, systemPath, systems, type Body } from "@/lib/map"
-import { PALETTES } from "@/lib/map-palette"
-import { drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
+import { HUES } from "@/lib/map-palette"
+import { aim, drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 /** CSS pixels to one pixel of the wireframe. */
@@ -107,6 +107,7 @@ export function StarMap() {
     pitch: 0.95,
     target: null,
     focus: 0,
+    center: { x: 0, y: 0, h: 0, outer: 1 },
     goal: 0,
     time: 0,
     hits: [],
@@ -130,7 +131,11 @@ export function StarMap() {
   useEffect(() => {
     const state = scene.current
     state.goal = target ? 1 : 0
-    if (target) state.target = target
+    if (!target) return
+    // From the whole map the camera starts on the system; from another
+    // system it slides over (the frame loop moves `center`).
+    if (!state.target || still.current) state.center = aim(target)
+    state.target = target
   }, [target])
 
   useEffect(() => {
@@ -155,10 +160,6 @@ export function StarMap() {
     const resize = new ResizeObserver(measure)
     resize.observe(element)
     measure()
-    // While the color is being chosen, ?c=amber tries one on.
-    const palette =
-      PALETTES[new URLSearchParams(window.location.search).get("c") ?? ""]
-
     let frame = 0
     let last = 0
     const tick = (now: number) => {
@@ -177,10 +178,24 @@ export function StarMap() {
         : state.focus + (state.goal - state.focus) * Math.min(1, dt * 4)
       if (Math.abs(state.goal - state.focus) < 0.002) state.focus = state.goal
       if (state.focus === 0) state.target = null
+      if (state.target) {
+        const to = aim(state.target)
+        const step = Math.min(1, dt * 4)
+        for (const key of ["x", "y", "h", "outer"] as const) {
+          const left = to[key] - state.center[key]
+          state.center[key] =
+            Math.abs(left) < 0.0005 ? to[key] : state.center[key] + left * step
+        }
+      }
 
       // Gray comes from the tokens, so a theme change needs no code.
-      const dim = palette?.dim ?? getComputedStyle(low.canvas).color
-      const bright = palette?.bright ?? getComputedStyle(high.canvas).color
+      const dim = getComputedStyle(low.canvas).color
+      const bright = getComputedStyle(high.canvas).color
+      // A system's own color where the scene names one, else gray.
+      const ink = ({ hue, lit }: { hue?: string; lit?: boolean }) => {
+        const own = hue ? HUES[hue] : undefined
+        return lit ? (own?.bright ?? bright) : (own?.dim ?? dim)
+      }
       const style = getComputedStyle(high.canvas)
       high.setTransform(ratio, 0, 0, ratio, 0, 0)
       high.font = ["font-weight", "font-size", "font-family"]
@@ -197,12 +212,14 @@ export function StarMap() {
 
       low.clearRect(0, 0, low.canvas.width, low.canvas.height)
       for (const tone of [false, true]) {
-        low.fillStyle = tone ? bright : dim
         for (const line of drawn.lines) {
-          if (Boolean(line.lit) === tone) plot(low, line)
+          if (Boolean(line.lit) !== tone) continue
+          low.fillStyle = ink(line)
+          plot(low, line)
         }
         for (const dot of drawn.dots) {
           if (Boolean(dot.lit) !== tone) continue
+          low.fillStyle = ink(dot)
           const size = Math.max(1, Math.round(dot.size / PIXEL))
           low.fillRect(
             Math.round(dot.x / PIXEL - size / 2),
@@ -219,11 +236,11 @@ export function StarMap() {
         .trim()
       high.clearRect(0, 0, width, height)
       for (const label of drawn.labels) {
-        high.fillStyle = plate
+        high.fillStyle = label.inverse ? ink(label) : plate
         high.fillRect(label.x - 4, label.y - 11, label.width + 8, 22)
       }
       for (const label of drawn.labels) {
-        high.fillStyle = label.lit ? bright : dim
+        high.fillStyle = label.inverse ? plate : ink(label)
         high.fillText(label.text, label.x, label.y)
       }
     }
@@ -355,7 +372,16 @@ export function StarMap() {
         >
           {(system ?? found) && (
             <p className="font-medium text-balance">
-              {system ? `${system.name}：${system.line}` : found?.body.name}
+              {system ? (
+                <>
+                  <span className="bg-(--mark) px-1 text-background">
+                    {system.name}
+                  </span>{" "}
+                  {system.line}
+                </>
+              ) : (
+                found?.body.name
+              )}
             </p>
           )}
           <p className="text-caption text-muted-foreground">

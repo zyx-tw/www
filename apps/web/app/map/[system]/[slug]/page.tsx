@@ -65,7 +65,6 @@ export default async function NotePage({
   const { system, body, note } = found
 
   const facts = [
-    `${MAP.log} ${note.log}`,
     `${body.length?.toLocaleString("en")} ${MAP.length}`,
     `${body.minutes} ${MAP.minutes}`,
     `v${note.version}`,
@@ -84,8 +83,16 @@ export default async function NotePage({
       <MarkPalette />
       <Hero
         title={<HeroTitle text={body.name} />}
-        subtitle={<span className="text-caption">{facts}</span>}
-        className="pb-10"
+        subtitle={
+          <span className="text-caption">
+            <span className="bg-(--mark) px-1 text-background">
+              {MAP.log} {note.log}
+            </span>
+            {"   "}
+            {facts}
+          </span>
+        }
+        className="pb-16"
       />
       {changes.length > 0 && (
         <ol className="-mt-5 mb-10 flex flex-col text-caption text-muted-foreground">
@@ -131,7 +138,7 @@ export default async function NotePage({
                     ))}
                   </div>
                   {part === 0 && section.callout && (
-                    <p className="my-10 text-center text-title font-medium text-balance">
+                    <p className="my-16 text-center text-title font-medium text-balance">
                       <Rich text={section.callout} />
                     </p>
                   )}
@@ -143,11 +150,11 @@ export default async function NotePage({
               src={section.figure.src}
               ratio={section.figure.ratio}
               alt={section.figure.alt}
-              className="mt-10"
+              className="mt-16"
             />
           )}
           {section.figure?.kind === "diagram" && (
-            <ProjectDiagram diagram={section.figure} className="mt-10" />
+            <ProjectDiagram diagram={section.figure} className="mt-16" />
           )}
           {section.points && (
             <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">

@@ -86,9 +86,11 @@ export function NoteMap({
               onPointerEnter={() => setOver(body.slug)}
               onPointerLeave={() => setOver(undefined)}
               className={cn(
-                body.href || here
-                  ? "fill-foreground stroke-foreground"
-                  : "fill-muted-foreground stroke-muted-foreground"
+                here
+                  ? "fill-(--mark) stroke-(--mark)"
+                  : body.href
+                    ? "fill-foreground stroke-foreground"
+                    : "fill-muted-foreground stroke-muted-foreground"
               )}
             >
               {here && (

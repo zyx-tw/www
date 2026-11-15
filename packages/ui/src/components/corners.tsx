@@ -61,8 +61,8 @@ export function CornerLabel({
 
 /** The tips on Privacy and Terms, which www.zyx.tw's own links share. */
 export const LEGAL_TIPS = {
-  privacy: "What every zyx.tw site stores and logs",
-  terms: "The rules for every zyx.tw site",
+  privacy: "What we store",
+  terms: "The rules",
 }
 
 /**

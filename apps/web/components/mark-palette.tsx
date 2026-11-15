@@ -6,7 +6,13 @@ import { cn } from "@workspace/ui/lib/utils"
 
 import { PALETTES } from "@/lib/map-palette"
 
-const NAMES = { white: "白", amber: "琥珀", red: "紅", green: "綠" } as const
+const NAMES = {
+  orange: "Vaundy",
+  white: "白",
+  amber: "琥珀",
+  red: "紅",
+  green: "綠",
+} as const
 type Name = keyof typeof NAMES
 
 /**
@@ -23,15 +29,16 @@ export function MarkPalette() {
     if (asked === null) return
     // The address is only known in the browser, so this cannot be first state.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPicked(asked in NAMES ? (asked as Name) : "white")
+    setPicked(asked in NAMES ? (asked as Name) : "orange")
   }, [])
 
   useEffect(() => {
     if (!picked) return
     const root = document.documentElement
-    const color = PALETTES[picked]?.bright
-    if (color) root.style.setProperty("--mark", color)
-    else root.style.removeProperty("--mark")
+    root.style.setProperty(
+      "--mark",
+      PALETTES[picked]?.bright ?? "var(--foreground)"
+    )
     window.history.replaceState(null, "", `?c=${picked}`)
     return () => {
       root.style.removeProperty("--mark")

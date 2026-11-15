@@ -19,6 +19,12 @@ export type View = {
   target: System | null
   /** 0 on the whole map, 1 at the target. */
   focus: number
+  /**
+   * Where the camera looks at full focus, and the widest orbit it fits
+   * there. They follow the target (aim), so a flight from one system to
+   * another slides instead of cutting.
+   */
+  center: Aim
   /** Seconds the bodies have been in orbit. */
   time: number
   /** The slug under the pointer. */
@@ -33,10 +39,18 @@ export type Line = {
   x1: number
   y1: number
   lit?: boolean
+  /** The system whose color it takes (lib/map-palette.ts); gray without. */
+  hue?: string
   /** Paint one pixel in this many: 1 is a solid line. */
   every?: number
 }
-export type Dot = { x: number; y: number; size: number; lit?: boolean }
+export type Dot = {
+  x: number
+  y: number
+  size: number
+  lit?: boolean
+  hue?: string
+}
 export type Label = {
   x: number
   y: number
@@ -44,6 +58,9 @@ export type Label = {
   width: number
   text: string
   lit?: boolean
+  hue?: string
+  /** Pointed at: the plate takes the color and the text the page's. */
+  inverse?: boolean
 }
 
 /** A box that answers a click. */
@@ -80,6 +97,16 @@ function place({ at: [x, y, z] }: System) {
   return { x: x * 2 - 1, y: y * 2 - 1, h: z * 0.8 }
 }
 
+export type Aim = { x: number; y: number; h: number; outer: number }
+
+/** Where the camera looks to show `system`, and its widest orbit. */
+export function aim(system: System): Aim {
+  return {
+    ...place(system),
+    outer: orbit(system.bodies.length - 1, 0).radius,
+  }
+}
+
 /** A body's distance from its star, and its angle at `time`. */
 function orbit(index: number, time: number) {
   return {
@@ -104,6 +131,8 @@ export function drawScene(
   const dots: Dot[] = []
   const labels: Label[] = []
   const hits: Hit[] = []
+  // The system whose color the shapes being drawn take.
+  let ink: string | undefined
   const { yaw, pitch, focus, target, time } = view
   const cos = Math.cos(yaw)
   const sin = Math.sin(yaw)
@@ -113,11 +142,10 @@ export function drawScene(
   // The whole map fits the view; at a system its widest orbit does.
   const wide = Math.min(width * 0.38, height * 0.6)
   const tall = Math.min(height * 0.36, wide)
-  const outer = target ? orbit(target.bodies.length - 1, 0).radius : 1
-  const close = Math.min(width * 0.32, height * 0.4) / outer
+  const middle = view.center
+  const close = Math.min(width * 0.32, height * 0.4) / middle.outer
   const sx = wide + (close - wide) * focus
   const sy = sx * (tall / wide)
-  const middle = target ? place(target) : { x: 0, y: 0, h: 0 }
 
   const project = (x: number, y: number, h: number) => {
     const dx = x - middle.x * focus
@@ -169,6 +197,7 @@ export function drawScene(
         x1: cx + Math.cos(b) * rx,
         y1: cy + Math.sin(b) * ry,
         lit,
+        hue: ink,
       })
     }
   }
@@ -213,26 +242,9 @@ export function drawScene(
         // An edge joins two corners that differ on one axis.
         if (a.key.filter((value, axis) => value !== b.key[axis]).length !== 1)
           return
-        lines.push({ x0: a.x, y0: a.y, x1: b.x, y1: b.y, lit })
+        lines.push({ x0: a.x, y0: a.y, x1: b.x, y1: b.y, lit, hue: ink })
       })
     )
-  }
-
-  /** Four corner ticks around a box, as a cursor frames what it points at. */
-  const frame = (x: number, y: number, w: number, h: number) => {
-    const tick = 6
-    for (const [cx, dx] of [
-      [x, 1],
-      [x + w, -1],
-    ] as const) {
-      for (const [cy, dy] of [
-        [y, 1],
-        [y + h, -1],
-      ] as const) {
-        lines.push({ x0: cx, y0: cy, x1: cx + dx * tick, y1: cy, lit: true })
-        lines.push({ x0: cx, y0: cy, x1: cx, y1: cy + dy * tick, lit: true })
-      }
-    }
   }
 
   /** A label beside (x, y), on the right unless it would leave the view. */
@@ -248,7 +260,15 @@ export function drawScene(
     const w = measure(text)
     const right = x + gap + w <= width - 4 || x - gap - w < 4
     const left = right ? x + gap : x - gap - w
-    labels.push({ x: left, y, width: w, text, lit: lit || hover })
+    labels.push({
+      x: left,
+      y,
+      width: w,
+      text,
+      lit: lit || hover,
+      hue: ink,
+      inverse: hover,
+    })
     const box = {
       x: Math.min(left, x - gap) - 4,
       y: y - ROW / 2 - 2,
@@ -256,7 +276,6 @@ export function drawScene(
       height: ROW + 4,
     }
     hits.push({ ...box, ...hit })
-    if (hover) frame(box.x, box.y, box.width, box.height)
   }
 
   // The far stars slide a little as the camera turns.
@@ -304,34 +323,42 @@ export function drawScene(
       if (!here) return dots.push({ x, y, size: 2 })
       const hover = view.hover === body.slug || view.pinned === body.slug
       const lit = Boolean(body.href) || hover
-      if (body.kind === "station") cube(x, y, 7, lit, time * 0.3 + index)
-      else globe(x, y, 7, lit, 0)
-      if (focus < NAMED) return
-      name(
-        x,
-        y,
-        14,
-        body.short,
-        lit,
-        { system: system.slug, body: body.slug },
-        hover
-      )
+      // A written note takes its system's color, and grows a little with
+      // its length: 5 px more at 1,000 characters and beyond.
+      ink = body.href ? system.slug : undefined
+      const size = 7 + Math.min(5, (body.length ?? 0) / 200)
+      if (body.kind === "station") cube(x, y, size, lit, time * 0.3 + index)
+      else globe(x, y, size, lit, 0)
+      if (focus >= NAMED)
+        name(
+          x,
+          y,
+          size + 7,
+          body.short,
+          lit,
+          { system: system.slug, body: body.slug },
+          hover
+        )
+      ink = undefined
     })
 
+    ink = system.slug
     if (here) {
       globe(star.x, star.y, 10 + 18 * focus, true, time * 0.15)
+      ink = undefined
       continue
     }
     const hover = view.hover === system.slug
     // Away from the target, the other systems step back.
     const lit = hover || focus < NEAR
-    dots.push({ x: star.x, y: star.y, size: 6, lit })
+    dots.push({ x: star.x, y: star.y, size: 6, lit, hue: ink })
     lines.push({
       x0: star.x - 8,
       y0: star.y,
       x1: star.x + 8,
       y1: star.y,
       lit,
+      hue: ink,
     })
     lines.push({
       x0: star.x,
@@ -339,8 +366,10 @@ export function drawScene(
       x1: star.x,
       y1: star.y + 8,
       lit,
+      hue: ink,
     })
     name(star.x, star.y, 16, system.name, lit, { system: system.slug }, hover)
+    ink = undefined
   }
 
   return { lines, dots, labels, hits }

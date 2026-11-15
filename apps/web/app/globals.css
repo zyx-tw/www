@@ -29,8 +29,9 @@
   image-rendering: pixelated;
 }
 
-/* A note's marks (components/rich.tsx): the text color, as a terminal marks
-   a selection, unless a palette is being tried (components/mark-palette.tsx). */
-:root {
-  --mark: var(--foreground);
+/* Selected text takes the color of a mark (--mark, packages/ui globals.css),
+   as a note's marked words do (components/rich.tsx). */
+::selection {
+  background-color: var(--mark);
+  color: var(--background);
 }

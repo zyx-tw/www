@@ -51,6 +51,9 @@
 :root {
   --background: oklch(0.97 0.005 85);
   --foreground: oklch(0.25 0 0);
+  /* The one accent: marked words, the current step, a name pointed at. The
+     orange of vaundy.jp (rgb 255 66 0), the same in both themes. */
+  --mark: oklch(0.661 0.233 36.5);
   --primary: oklch(0.25 0 0);
   --primary-foreground: oklch(0.97 0.005 85);
   --muted: oklch(0.93 0.005 85);

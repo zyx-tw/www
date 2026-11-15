@@ -167,7 +167,7 @@ export function ProjectDiagram({
                       "cursor-pointer uppercase outline-offset-4 focus-visible:outline-2",
                       "motion-safe:transition-colors motion-safe:duration-state",
                       current
-                        ? "text-foreground"
+                        ? "bg-(--mark) text-background"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
