@@ -115,13 +115,6 @@
           "short": "量測"
         },
         {
-          "slug": "no-hooks",
-          "name": "我不用 hook 管 Claude Code 的行為",
-          "line": "行為出錯，我改規則或加檢查，不加攔截。",
-          "needs": ["remembers-me"],
-          "short": "hook"
-        },
-        {
           "slug": "skills-stay-general",
           "name": "Skill 不寫個案：只留下一類任務都用得上的做法",
           "line": "站名、元件名、某一次的資料，都不進 Skill。",
@@ -211,7 +204,7 @@
           "name": "看編號就知道位址：我的虛擬機編號規則",
           "line": "看虛擬機的編號，就算得出在哪一台主機、位址是多少。",
           "needs": ["one-job-per-machine"],
-          "short": "PVE"
+          "short": "編號"
         },
         {
           "slug": "fixed-place",
@@ -278,8 +271,8 @@
         },
         {
           "slug": "names-to-guess",
-          "name": "我的設備用 Minecraft 的方塊命名：1 個名字只指 1 樣東西",
-          "line": "舊的名字裡，有 1 個會指到 2 樣東西。",
+          "name": "我的設備用 Minecraft 的方塊命名：每個名字是哪一台，寫在 CLAUDE.md",
+          "line": "我只打設備的名字。每個名字是哪一台、怎麼連，Claude Code 從 CLAUDE.md 讀。",
           "short": "命名"
         }
       ]
