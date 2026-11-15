@@ -59,5 +59,40 @@
   },
   "網路寫成檔案": {
     "body": "network-in-git"
+  },
+  "子 agent": {
+    "text": "Claude Code 另外派出去做事的 agent。看不到原本的對話，做完只交回 1 段摘要。",
+    "note": "subagent-bill"
+  },
+  "Codex": {
+    "text": "OpenAI 的 coding agent。",
+    "note": "two-agents"
+  },
+  "只審高風險": {
+    "body": "review-by-risk"
+  },
+  "子 agent 只查與審": {
+    "body": "subagent-bill"
+  },
+  "Plugin 目錄": {
+    "body": "one-plugin-catalog"
+  },
+  "密碼不貼進對話": {
+    "body": "what-an-agent-has-seen"
+  },
+  "筆電關了之後": {
+    "body": "while-i-am-away"
+  },
+  "監控的 MCP": {
+    "body": "monitoring-for-agents"
+  },
+  "怎樣才算完成": {
+    "body": "done-means-verified"
+  },
+  "把 agent 當成使用者": {
+    "body": "agent-experience"
+  },
+  "Skill 不寫個案": {
+    "body": "skills-stay-general"
   }
 }

@@ -147,33 +147,33 @@
     {
       "slug": "fleet",
       "name": "協作",
-      "line": "不只 1 個 agent 的時候，以及它的花費。",
+      "line": "不只 1 個 agent 的時候，還有用量。",
       "at": [0.8, 0.67, 0.9],
       "bodies": [
         {
           "slug": "subagent-bill",
-          "name": "subagent 花掉我一半的錢，所以我只讓它查與審",
-          "line": "量了 30 天的花費之後，我改了派工的規則。",
+          "name": "子 agent 用掉一半的用量，所以我只讓子 agent 查與審",
+          "line": "量了 30 天的用量之後，我改了派工的規則。",
           "short": "花費"
         },
         {
           "slug": "review-by-risk",
-          "name": "152 次審查跑了 314 輪：我改成只審高風險",
-          "line": "什麼都審，等於沒審。",
+          "name": "152 次審查跑了 314 輪，所以我只審高風險的修改",
+          "line": "審查抓到的問題集中在少數幾類修改，所以只審那幾類。",
           "needs": ["subagent-bill"],
           "short": "審查"
         },
         {
           "slug": "many-at-once",
-          "name": "同時派 6 個 agent，結果全部撞到用量上限",
-          "line": "並行有上限，還有撞到之後怎麼收拾。",
+          "name": "同時派很多個 agent，全部撞到用量上限",
+          "line": "用量是一起算的。同時派越多個，越快一起停在半路。",
           "needs": ["subagent-bill"],
           "short": "並行"
         },
         {
           "slug": "two-agents",
-          "name": "Claude Code 和 Codex 怎麼共用同一份記憶",
-          "line": "2 個 agent 共用 1 份記憶與 1 份 plugin 目錄。",
+          "name": "Claude Code 和 Codex 共用了什麼，還沒共用什麼",
+          "line": "專案的規則和記憶共用同一份。我自己的規則還是 2 份，要手動同步。",
           "needs": ["remembers-me"],
           "short": "Codex"
         }
@@ -252,34 +252,34 @@
       "bodies": [
         {
           "slug": "changing-the-interface",
-          "name": "終端機少一塊面板，我就自己加：6 個 mod 的故事",
-          "line": "行事曆、音樂、密鑰表單，都長在輸入框上方。",
+          "name": "我做過 9 個 Mod，現在開著 3 個：想看的狀態放進 Claude Code 的畫面",
+          "line": "Mod 做了不合用，就關掉或刪掉。輸入框上方的位置很少。",
           "needs": ["four-ways-to-extend"],
           "short": "mod"
         },
         {
           "slug": "outside-the-terminal",
-          "name": "在 Telegram 也叫得到同一個 agent",
-          "line": "同一個 agent，在終端機外面也叫得到。",
+          "name": "Telegram 上的 bot 是另一個 agent：有自己的工具和對話紀錄",
+          "line": "終端機以外的每個入口，只拿到事先列好的工具。",
           "short": "Telegram"
         },
         {
           "slug": "monitoring-for-agents",
-          "name": "不做 dashboard：給 agent 看的監控長什麼樣",
-          "line": "不做 dashboard，做 agent 查得到的 tool。",
+          "name": "監控有 2 個入口：畫面給我看，MCP 給 Claude Code 查",
+          "line": "監控只做畫面的話，Claude Code 讀不到。",
           "needs": ["agent-experience"],
           "short": "監控"
         },
         {
           "slug": "what-an-agent-has-seen",
-          "name": "agent 看過的東西會留下來：3 次事故與修法",
-          "line": "密鑰、圖片、分頁：3 次事故與修法。",
+          "name": "Claude Code 看過的東西會留在對話紀錄裡，所以密碼不貼進對話",
+          "line": "密碼填進表單，直接存進鑰匙圈。對話裡只留下名字。",
           "short": "安全"
         },
         {
           "slug": "names-to-guess",
-          "name": "為什麼我的機器用 Minecraft 方塊命名",
-          "line": "好名字讓 agent 不用查就猜得到。",
+          "name": "我的設備用 Minecraft 的方塊命名：1 個名字只指 1 樣東西",
+          "line": "舊的名字裡，有 1 個會指到 2 樣東西。",
           "short": "命名"
         }
       ]
@@ -292,33 +292,33 @@
       "bodies": [
         {
           "slug": "one-design-system",
-          "name": "每個網站、每封信都用同一套 design system",
-          "line": "每個網站、每封信都用同一組 token。",
+          "name": "畫面的修正改在共用的元件庫，不改在單一網站",
+          "line": "只改一個網站的話，下一個網站會把舊的樣子帶回來。",
           "short": "設計"
         },
         {
           "slug": "one-way-to-deploy",
-          "name": "PR 就 build，合併只移 tag：我的部署只有 1 種做法",
-          "line": "開 pull request 時就 build，合併只移動 tag。",
+          "name": "pull request 的階段就打包好：合併到上線從 228 秒變成 42 秒",
+          "line": "打包放在合併之前。合併之後只換標籤，然後上線。",
           "short": "部署"
         },
         {
           "slug": "where-files-live",
-          "name": "電腦裡的檔案用 PARA 分類，Claude Code 比我還會找",
-          "line": "它知道分類規則，所以會幫我歸檔，也找得到我忘記放哪的檔案。",
+          "name": "我不告訴 Claude Code 檔案在哪：檔案照 PARA 分類，Claude Code 自己找",
+          "line": "Claude Code 知道分類的規則，所以會幫我歸檔，也找得到我沒講位置的檔案。",
           "short": "PARA",
           "needs": ["start-from-home"]
         },
         {
           "slug": "observability-first",
-          "name": "log 跟功能一起上線：先做可觀測性",
-          "line": "log 跟功能一起上線，不事後補。",
+          "name": "log 跟功能一起上線：新服務的第 1 個 pull request 就要送出紀錄",
+          "line": "出事的時候沒有紀錄，就只能猜。",
           "short": "log"
         },
         {
           "slug": "simple-first",
           "name": "先砍功能，再砍文字：我的 simple-first 規則",
-          "line": "做頁面之前先問：這一頁只做哪 1 件事。",
+          "line": "頁面要加說明才看得懂，是版面的問題。我改版面，不加說明。",
           "short": "簡單"
         }
       ]
