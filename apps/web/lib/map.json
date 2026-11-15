@@ -110,35 +110,35 @@
         },
         {
           "slug": "rules-from-numbers",
-          "name": "我量了 550 個 session，才決定改哪條規則",
-          "line": "先量測再改規則，不靠感覺。",
+          "name": "我請 Claude Code 掃過 550 次對話，才決定改哪條規則",
+          "line": "感覺只說得出有問題，數字才指得出是哪一步。",
           "short": "量測"
         },
         {
           "slug": "no-hooks",
-          "name": "為什麼我把 2 個 hook 加了又拿掉",
-          "line": "修規則或修檢查，不加攔截。",
+          "name": "我不用 hook 管 Claude Code 的行為",
+          "line": "行為出錯，我改規則或加檢查，不加攔截。",
           "needs": ["remembers-me"],
           "short": "hook"
         },
         {
           "slug": "skills-stay-general",
-          "name": "skill 只寫方向：細節讓 agent 自己探索",
-          "line": "skill 只給方向，細節讓 agent 現場探索。",
+          "name": "Skill 不寫個案：只留下一類任務都用得上的做法",
+          "line": "站名、元件名、某一次的資料，都不進 Skill。",
           "needs": ["four-ways-to-extend"],
           "short": "skill"
         },
         {
           "slug": "done-means-verified",
           "name": "CI 綠不算做完：怎樣才算完成",
-          "line": "CI 綠不算做完，真的跑過 1 次才算。",
+          "line": "CI 綠只代表檢查沒抓到錯。真的用過 1 次，才算做完。",
           "short": "驗證"
         },
         {
           "slug": "course-extend",
-          "name": "小課程：各做 1 個 MCP server、skill 與 plugin",
+          "name": "小課程：各做 1 個 Skill、MCP server 和 Plugin",
           "kind": "station",
-          "line": "從零做出 3 種擴充，各 1 個。",
+          "line": "4 天，從零做出 3 種擴充，再更新 1 次。",
           "needs": ["four-ways-to-extend"],
           "short": "課程"
         }

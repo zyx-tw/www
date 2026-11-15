@@ -39,5 +39,9 @@
   "pull request": {
     "text": "修改合併進專案之前的那一關。我的自動檢查放在這一關。",
     "note": "remembers-me"
+  },
+  "CI": {
+    "text": "每次修改都會自動跑的檢查。",
+    "note": "done-means-verified"
   }
 }
