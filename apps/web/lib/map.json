@@ -55,41 +55,41 @@
     {
       "slug": "goals",
       "name": "目標",
-      "line": "我想讓 Claude Code 替我做到什麼。",
+      "line": "希望 Claude Code 做到的事。",
       "at": [0.36, 0.33, 0.7],
       "bodies": [
         {
           "slug": "knows-me",
-          "name": "我只講半句，Claude Code 就懂：缺的背景讓 Claude Code 自己查",
-          "line": "Claude Code 查得到我的課程平台和信箱，所以我講半句就夠。",
+          "name": "讓 Claude Code 直接查詢任務所需的背景",
+          "line": "接上資料所在的服務，省去複製貼上的步驟。",
           "needs": ["four-ways-to-extend"],
           "short": "Context"
         },
         {
           "slug": "remembers-me",
-          "name": "同一句糾正，我不想講第 2 次：把糾正寫成規則，再寫成檢查",
-          "line": "糾正寫成規則會載入，寫成檢查才擋得住。",
+          "name": "把糾正存成規則，再改成自動檢查",
+          "line": "依適用範圍保存規則，在合併前檢查能自動判斷的要求。",
           "needs": ["claude-md"],
           "short": "記憶"
         },
         {
           "slug": "acts-for-me",
-          "name": "我接了 25 個 MCP server：我用的每個系統，Claude Code 都要碰得到",
-          "line": "我要 Claude Code 碰得到我用的每個系統，照固定的順序接上。",
+          "name": "依固定順序接上 Claude Code 需要的服務",
+          "line": "先找 MCP，再用 API 或 CLI，必要時才操作瀏覽器。",
           "needs": ["four-ways-to-extend"],
           "short": "MCP"
         },
         {
           "slug": "out-of-my-way",
-          "name": "Claude Code 用了我的 Safari 1,988 次：我給 Claude Code 一個自己的瀏覽器",
-          "line": "Claude Code 在背景用自己的瀏覽器，我的 Safari 留給我。",
+          "name": "給 Claude Code 專用的背景瀏覽器",
+          "line": "一般網頁操作在背景執行，需要既有登入狀態時才用 Safari。",
           "short": "瀏覽器",
           "needs": ["acts-for-me"]
         },
         {
           "slug": "while-i-am-away",
-          "name": "筆電關了，哪些事還在跑：把能力放到一直開著的機器上",
-          "line": "綁在筆電上的能力，筆電關了就停。放在會自己排程的服務上，才會繼續。",
+          "name": "把持續執行的工作交給遠端服務排程",
+          "line": "列出各項能力依賴的機器，移走不能隨筆電關閉的工作。",
           "short": "雲端",
           "needs": ["out-of-my-way"]
         }
@@ -103,35 +103,35 @@
       "bodies": [
         {
           "slug": "agent-experience",
-          "name": "AX：把 agent 當成使用者來設計",
-          "line": "人按得到的按鈕，agent 都要有對應的 tool。",
+          "name": "為畫面上的功能提供對應的 tool",
+          "line": "共用動作定義，讓 Claude Code 執行畫面上的功能。",
           "needs": ["acts-for-me"],
           "short": "AX"
         },
         {
           "slug": "rules-from-numbers",
-          "name": "我請 Claude Code 掃過 550 次對話，才決定改哪條規則",
-          "line": "感覺只說得出有問題，數字才指得出是哪一步。",
+          "name": "從對話紀錄找出問題，再調整規則",
+          "line": "檢查出錯的步驟，把重複問題整理成規則或自動檢查。",
           "short": "量測"
         },
         {
           "slug": "skills-stay-general",
-          "name": "Skill 不寫個案：只留下一類任務都用得上的做法",
-          "line": "站名、元件名、某一次的資料，都不進 Skill。",
+          "name": "把通則寫進 Skill，把個案留在專案",
+          "line": "依適用範圍整理做法，讓通用 Skill 保持可重用。",
           "needs": ["four-ways-to-extend"],
           "short": "skill"
         },
         {
           "slug": "done-means-verified",
-          "name": "CI 綠不算做完：怎樣才算完成",
-          "line": "CI 綠只代表檢查沒抓到錯。真的用過 1 次，才算做完。",
+          "name": "實際操作並附上結果，再回報完成",
+          "line": "檢查通過後，仍要確認頁面與部署後的實際行為。",
           "short": "驗證"
         },
         {
           "slug": "course-extend",
-          "name": "小課程：各做 1 個 Skill、MCP server 和 Plugin",
+          "name": "依序製作擴充，再用版本號更新",
           "kind": "station",
-          "line": "4 天，從零做出 3 種擴充，再更新 1 次。",
+          "line": "製作 Skill 與 MCP server，再包成 Plugin 並練習更新。",
           "needs": ["four-ways-to-extend"],
           "short": "課程"
         }
@@ -285,33 +285,33 @@
       "bodies": [
         {
           "slug": "one-design-system",
-          "name": "畫面的修正改在共用的元件庫，不改在單一網站",
-          "line": "只改一個網站的話，共用的元件沒有改到。下一個網站拿到的還是舊的。",
+          "name": "把畫面修正寫回共用元件庫",
+          "line": "更新共用元件與設計規範，再用自動檢查擋下違規修改。",
           "short": "設計"
         },
         {
           "slug": "one-way-to-deploy",
-          "name": "pull request 的階段就打包好：試行的專案，合併到上線從 228 秒變成 42 秒",
-          "line": "打包放在合併之前。合併之後只換標籤，然後上線。",
+          "name": "在合併前打包，讓各專案共用部署流程",
+          "line": "在 pull request 階段打包，合併後換標籤並驗證上線結果。",
           "short": "部署"
         },
         {
           "slug": "where-files-live",
-          "name": "我不告訴 Claude Code 檔案在哪：檔案照 PARA 分類，Claude Code 自己找",
-          "line": "Claude Code 知道分類的規則，所以會幫我歸檔，也找得到我沒講位置的檔案。",
+          "name": "按 PARA 分類，讓 Claude Code 依用途找檔案",
+          "line": "固定分類與命名規則，再用檔名或用途交代查找與歸檔。",
           "short": "PARA",
           "needs": ["start-from-home"]
         },
         {
           "slug": "observability-first",
-          "name": "log 跟功能一起上線：新服務的第 1 個 pull request 就要送出紀錄",
-          "line": "出事的時候沒有紀錄，就只能猜。",
+          "name": "讓新服務上線時就能查到紀錄",
+          "line": "接上紀錄套件，驗證查詢結果，再加入定時檢查。",
           "short": "log"
         },
         {
           "slug": "simple-first",
-          "name": "先砍功能，再砍文字：我的 simple-first 規則",
-          "line": "頁面要加說明才看得懂，是版面的問題。我改版面，不加說明。",
+          "name": "先刪減功能與文字，再讓主要動作最顯眼",
+          "line": "刪除未經要求的內容，用版面交代操作，再把通用規則寫回 Skill。",
           "short": "簡單"
         }
       ]
