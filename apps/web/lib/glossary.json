@@ -106,5 +106,29 @@
   "log": {
     "text": "程式執行時留下的紀錄。",
     "note": "observability-first"
+  },
+  "hum": {
+    "text": "顯示主機狀態的 Mod：主機回報用量，顯示在 Claude Code 的輸入框上方。",
+    "href": "https://github.com/zyx1121/hum"
+  },
+  "secret-mod": {
+    "text": "保管密碼的 Mod：密碼存進 macOS 鑰匙圈，Claude Code 能使用，但看不到內容。",
+    "href": "https://github.com/zyx1121/secret-mod"
+  },
+  "sensorium": {
+    "text": "給 agent 用的監控服務：收集 log 與監控資料，透過 MCP 查詢。",
+    "href": "/project/sensorium"
+  },
+  "golem": {
+    "text": "維運服務：定期檢查主機與網站，發現問題時通知，並提出修復計畫。",
+    "href": "/project/golem"
+  },
+  "ui.zyx.tw": {
+    "text": "共用元件庫：各個網站從這裡安裝相同的介面元件。",
+    "href": "/project/ui"
+  },
+  "AIntern": {
+    "text": "AI 實習生：把團隊的流程做成可以執行的工作流。",
+    "href": "/project/aintern"
   }
 }
