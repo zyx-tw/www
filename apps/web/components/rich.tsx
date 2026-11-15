@@ -55,7 +55,7 @@ export function Rich({ text }: { text: string }) {
         )
       else if (kind === "mark")
         parts.push(
-          <mark key={key} className="bg-(--mark) text-background">
+          <mark key={key} className="bg-(--mark)/20 text-(--mark)">
             {cut}
           </mark>
         )

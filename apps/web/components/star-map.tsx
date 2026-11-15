@@ -236,11 +236,17 @@ export function StarMap() {
         .trim()
       high.clearRect(0, 0, width, height)
       for (const label of drawn.labels) {
-        high.fillStyle = label.inverse ? ink(label) : plate
+        high.fillStyle = plate
         high.fillRect(label.x - 4, label.y - 11, label.width + 8, 22)
+        if (!label.inverse) continue
+        // Pointed at: a wash of its own color over the plate.
+        high.globalAlpha = 0.2
+        high.fillStyle = ink({ ...label, lit: true })
+        high.fillRect(label.x - 4, label.y - 11, label.width + 8, 22)
+        high.globalAlpha = 1
       }
       for (const label of drawn.labels) {
-        high.fillStyle = label.inverse ? plate : ink(label)
+        high.fillStyle = ink(label)
         high.fillText(label.text, label.x, label.y)
       }
     }
@@ -374,7 +380,7 @@ export function StarMap() {
             <p className="font-medium text-balance">
               {system ? (
                 <>
-                  <span className="bg-(--mark) text-background">
+                  <span className="bg-(--mark)/20 text-(--mark)">
                     {system.name}
                   </span>{" "}
                   {system.line}

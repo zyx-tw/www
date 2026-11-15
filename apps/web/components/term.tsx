@@ -57,7 +57,9 @@ export function Term({
               className="flex w-fit max-w-xl flex-col gap-1 bg-background"
             >
               <p className="font-medium text-balance">
-                <span className="bg-(--mark) text-background">{term.name}</span>
+                <span className="bg-(--mark)/20 text-(--mark)">
+                  {term.name}
+                </span>
                 {term.planned && (
                   <span className="text-caption text-muted-foreground">
                     {"   "}

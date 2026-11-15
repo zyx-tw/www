@@ -112,5 +112,109 @@
         "callout": "==Claude Code 做過的事，下次就知道在哪、怎麼做==。"
       }
     ]
+  },
+  {
+    "slug": "start-from-home",
+    "log": "002",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "常見的教學會叫你先 cd 進專案，再開 Claude Code。我不這樣做。",
+      "我只在家目錄開 Claude Code。==開一次，全部的專案都在 Claude Code 面前==。",
+      "同事不會只認識公司的一個專案。Claude Code 也不該只看得到一個資料夾。"
+    ],
+    "sections": [
+      {
+        "title": "原理：Claude Code 從哪裡開，就看得到哪裡",
+        "body": [
+          "先看一句我真的打過的話：「nas.zyx.tw 應該改成 ui.zyx.tw 的。」",
+          "這句話牽涉 2 個專案：要先讀 ui.zyx.tw 的樣式，再去改 nas.zyx.tw。Claude Code 開在家目錄，2 個專案都在底下，自己找得到，一次做完。",
+          "Claude Code 開在哪個資料夾，就從那裡往下找檔案。==開在專案裡，Claude Code 只認識那一個專案==。",
+          "家目錄的檔案很多，但 Claude Code 不會全部讀一遍。Claude Code 照 [[Agent Loop]] 做事，需要哪個檔案，才去找哪個檔案。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "~                        start here",
+            "├── .claude/",
+            "│   ├── CLAUDE.md        my rules",
+            "│   └── memory/          one memory",
+            "└── Projects/",
+            "    ├── <org>/<repo>/    own rules",
+            "    ├── <org>/<repo>/    own rules",
+            "    └── <org>/<repo>/    own rules"
+          ],
+          "narrow": [
+            "~  start here",
+            "├── .claude/",
+            "│   ├── CLAUDE.md",
+            "│   │   my rules",
+            "│   └── memory/",
+            "│       one memory",
+            "└── Projects/",
+            "    ├── <org>/<repo>/",
+            "    ├── <org>/<repo>/",
+            "    └── <org>/<repo>/"
+          ],
+          "alt": "家目錄的樹狀圖：.claude 底下有 CLAUDE.md 與 memory，Projects 底下是按組織分的 3 個專案。",
+          "steps": [
+            {
+              "label": "Start",
+              "lit": ["~", "start here"],
+              "text": "我在家目錄開 Claude Code，不進任何專案。"
+            },
+            {
+              "label": "Rules",
+              "lit": ["CLAUDE.md", "my rules"],
+              "text": "我自己的規則放在這裡，Claude Code 每次開都會讀。"
+            },
+            {
+              "label": "Memory",
+              "lit": ["memory/", "one memory"],
+              "text": "記憶只有 1 份，所有專案共用。"
+            },
+            {
+              "label": "Projects",
+              "lit": ["Projects/", "<org>/<repo>/", "own rules"],
+              "text": "專案按組織放在固定的位置，各有自己的規則檔。"
+            }
+          ]
+        }
+      },
+      {
+        "title": "做法：我怎麼從家目錄用 Claude Code",
+        "body": ["只開一個地方，靠的是 3 個習慣。"],
+        "points": [
+          {
+            "term": "專案放在固定的位置，Claude Code 自己找",
+            "text": "我的專案都放在同一個資料夾底下，按組織再分一層。我只講專案的名字，Claude Code 就知道去哪裡找。"
+          },
+          {
+            "term": "跨專案的事，1 句話講完",
+            "text": "把一個網站的樣式改成另一個網站的，這種事不用開 2 個視窗來回複製。Claude Code 2 邊都讀得到，自己對照。"
+          },
+          {
+            "term": "動專案之前，先讀那個專案的 CLAUDE.md",
+            "text": "從家目錄開，專案自己的 [[CLAUDE.md]] 不會在一開始就載入。所以我在家目錄的規則裡寫了一條：動某個專案之前，先讀那個專案的 CLAUDE.md、AGENTS.md 和 README。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：把記憶留在同一個地方",
+        "body": [
+          "Claude Code 的 [[記憶]] 跟著開的位置存。每個專案各開一次，記憶就分成很多份，互相看不到。",
+          "在一個專案學到的做法，換到另一個專案一樣用得上。我的習慣、我的設備、哪個專案放在哪裡，Claude Code 都記在同一個地方。",
+          "下次要開 Claude Code，先不要 cd。在家目錄開，講專案的名字就好。"
+        ],
+        "callout": "==只在家目錄開，記憶就只有 1 份==。"
+      }
+    ]
   }
 ]

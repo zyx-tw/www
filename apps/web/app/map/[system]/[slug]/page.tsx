@@ -150,7 +150,7 @@ export default async function NotePage({
             <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">
               {section.points.map(({ term, text }) => (
                 <div key={term} className="flex flex-col items-start gap-y-2">
-                  <dt className="bg-(--mark) font-medium text-background">
+                  <dt className="bg-(--mark)/20 font-medium text-(--mark)">
                     {term}
                   </dt>
                   <dd className="text-pretty">

@@ -25,7 +25,7 @@
           "slug": "start-from-home",
           "short": "家目錄",
           "name": "我只在家目錄開 Claude Code，不再 cd 進專案",
-          "line": "在家目錄它碰得到所有專案，跨專案的事 1 個 session 就做完，記憶也不用搬。",
+          "line": "在家目錄開，Claude Code 碰得到所有專案，跨專案的事 1 句話就做完，記憶也只有 1 份。",
           "needs": ["what-claude-code-is"]
         },
         {
