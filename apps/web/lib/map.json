@@ -206,6 +206,13 @@
           "needs": ["start-from-home"]
         },
         {
+          "slug": "private-network",
+          "name": "用私有網路替每台機器加上固定的名稱",
+          "line": "協調伺服器只交換金鑰與規則，資料在機器之間直接加密傳送。",
+          "short": "私網",
+          "needs": ["one-claude-many-machines"]
+        },
+        {
           "slug": "what-runs-where",
           "short": "登記",
           "name": "把設備與專案登記成 Claude Code 會讀的檔案",
@@ -218,6 +225,13 @@
           "line": "筆電負責編輯和 git，其他機器分擔編譯、運算與儲存。",
           "short": "分工",
           "needs": ["one-claude-many-machines"]
+        },
+        {
+          "slug": "vm-and-container",
+          "name": "虛擬機有自己的核心，容器共用主機的核心",
+          "line": "虛擬機隔離較強，容器啟動較快，依需要的隔離程度選擇。",
+          "short": "虛擬化",
+          "needs": ["one-job-per-machine"]
         },
         {
           "slug": "numbers-are-addresses",
