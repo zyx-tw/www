@@ -19,6 +19,7 @@ export const MAP = {
   length: "字",
   minutes: "分鐘",
   updated: "更新",
+  log: "紀錄",
   changes: "版本紀錄",
   next: "接著讀",
   back: "回到",

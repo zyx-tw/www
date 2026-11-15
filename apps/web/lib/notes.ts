@@ -5,12 +5,14 @@ import type { Section } from "./projects"
 export type Change = { version: string; date: string; text: string }
 
 /**
- * A written note: the page of a body on the map (lib/map.json), by the
+ * A written note, one entry of the log: the page of a body on the map (lib/map.json), by the
  * body's slug. Its title and its one line stay with the body; this is the
  * text, in the same sections and figures a project's page uses.
  */
 export type Note = {
   slug: string
+  /** Its number in the log, in the order the notes were written: "001". */
+  log: string
   /** SemVer: a new major when the advice changes, a minor when it grows. */
   version: string
   /** The day of its last change. */

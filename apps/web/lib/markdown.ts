@@ -178,6 +178,7 @@ export function noteMarkdown(system: System, body: Body, note: Note) {
     [
       `# ${text(body.name)}`,
       [
+        `${MAP.log} ${note.log}`,
         `${body.length?.toLocaleString("en")} ${MAP.length}`,
         `${body.minutes} ${MAP.minutes}`,
         `v${note.version}`,

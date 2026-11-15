@@ -62,6 +62,7 @@ export default async function NotePage({
   const { system, body, note } = found
 
   const facts = [
+    `${MAP.log} ${note.log}`,
     `${body.length?.toLocaleString("en")} ${MAP.length}`,
     `${body.minutes} ${MAP.minutes}`,
     `v${note.version}`,
