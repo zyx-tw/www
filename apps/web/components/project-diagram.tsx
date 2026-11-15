@@ -100,6 +100,8 @@ export function ProjectDiagram({
   className?: string
 }) {
   const steps = useMemo(() => diagram.steps ?? [], [diagram.steps])
+  const { narrow, code } = diagram
+  const middle = !code && "mx-auto"
   const lit = useMemo(() => steps.map((step) => step.lit), [steps])
   const rootRef = useRef<HTMLDivElement>(null)
   const reducedMotion = useReducedMotion()
@@ -139,18 +141,25 @@ export function ProjectDiagram({
           lines={diagram.wide}
           lit={lit}
           active={active}
-          className="mx-auto w-fit max-sm:hidden"
+          className={cn("w-fit", middle, narrow && "max-sm:hidden")}
         />
-        <Lines
-          lines={diagram.narrow}
-          lit={lit}
-          active={active}
-          className="mx-auto w-fit sm:hidden"
-        />
+        {narrow && (
+          <Lines
+            lines={narrow}
+            lit={lit}
+            active={active}
+            className={cn("w-fit sm:hidden", middle)}
+          />
+        )}
       </div>
       {steps.length > 0 && (
         <>
-          <ol className="mt-5 flex flex-wrap justify-center gap-x-2 gap-y-1">
+          <ol
+            className={cn(
+              "mt-5 flex flex-wrap gap-x-2 gap-y-1",
+              !code && "justify-center"
+            )}
+          >
             {steps.map(({ label }, index) => {
               const current = index === active
               return (
@@ -164,7 +173,7 @@ export function ProjectDiagram({
                       setActive(index)
                     }}
                     className={cn(
-                      "cursor-pointer uppercase outline-offset-4 focus-visible:outline-2",
+                      "-my-2.5 cursor-pointer py-2.5 uppercase outline-offset-4 focus-visible:outline-2",
                       "motion-safe:transition-colors motion-safe:duration-state",
                       current
                         ? "bg-(--mark)/20 text-(--mark)"
@@ -188,7 +197,12 @@ export function ProjectDiagram({
           </ol>
           {/* Every step's line shares one cell, so the tallest sets the
               height and nothing below moves as the steps change. */}
-          <div className="mx-auto mt-3 grid max-w-2xl text-center">
+          <div
+            className={cn(
+              "mt-3 grid max-w-2xl",
+              !code && "mx-auto text-center"
+            )}
+          >
             {steps.map(({ label, text }, index) => (
               <p
                 key={label}

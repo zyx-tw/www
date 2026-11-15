@@ -19,7 +19,13 @@ export type Picture = {
 export type Diagram = {
   kind: "diagram"
   wide: string[]
-  narrow: string[]
+  /** Left out, phones get the wide drawing and scroll it sideways. */
+  narrow?: string[]
+  /**
+   * Pseudo code: set from the column's left edge instead of its middle, and
+   * a step lights whole lines.
+   */
+  code?: boolean
   alt: string
   /**
    * The drawing read one part at a time. Each step lights the words in
