@@ -12,17 +12,17 @@
       }
     ],
     "intro": [
-      "Claude Code 會在你的電腦上動手：找檔案、下指令、檢查結果對不對。",
-      "所以我的用法跟常見的教學不太一樣。我不寫很長的 prompt，不貼檔案內容，也不准 Claude Code 每一步都問我。",
-      "我把 Claude Code 當成一個同事：==把整個任務交出去，做完再看結果==。"
+      "Claude Code 能在電腦上找檔案、下指令和檢查結果。",
+      "交代任務目標，讓 Claude Code 找出做法。",
+      "==把完整任務交給 Claude Code，再依回報確認結果==。"
     ],
     "sections": [
       {
-        "title": "原理：Claude Code 怎麼把一個任務做完",
+        "title": "原理：Claude Code 透過檢查完成任務",
         "body": [
-          "先看一句我真的打過的話：「設備檢查頁面沒有上下置中，處理一下。」",
-          "我沒有說是哪個檔案，也沒有說要怎麼改。",
-          "Claude Code 改完之後，頁面如果還是沒置中，會怎麼樣？切換檢查的結果看看。"
+          "例如：「設備檢查頁面沒有上下置中，處理一下。」",
+          "這句話交代了問題，沒有指定檔案或改法。",
+          "Claude Code 會找出檔案、修改樣式，再檢查頁面。"
         ],
         "figure": {
           "kind": "lesson",
@@ -33,121 +33,115 @@
               "label": "還沒置中",
               "blocks": [
                 {
-                  "title": "Claude Code 做的事",
+                  "title": "Claude Code 的工作",
                   "numbered": true,
                   "rows": [
                     {
-                      "text": "讀：找出那一頁的檔案，讀懂版面"
+                      "text": "讀：找出頁面檔案，讀懂版面"
                     },
                     {
-                      "text": "改：改掉樣式"
+                      "text": "改：修改樣式"
                     },
                     {
-                      "text": "檢查：打開頁面，看有沒有置中"
+                      "text": "檢查：打開頁面，確認是否置中"
                     },
                     {
-                      "text": "還沒置中：回到第 1 步，再讀、再改",
+                      "text": "尚未置中：重新讀檔、修改和檢查",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "我做的事",
+                  "title": "接收回報",
                   "rows": [
                     {
-                      "text": "還沒有。Claude Code 還沒回報",
+                      "text": "尚未完成，等待檢查通過",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "結果不對，這一輪不算做完。Claude Code 回到第 1 步，再讀、再改、再檢查。"
+              "text": "結果不對，就回到讀檔步驟。重新修改，再檢查結果。"
             },
             {
-              "label": "置中了",
+              "label": "已經置中",
               "blocks": [
                 {
-                  "title": "Claude Code 做的事",
+                  "title": "Claude Code 的工作",
                   "numbered": true,
                   "rows": [
                     {
-                      "text": "讀：找出那一頁的檔案，讀懂版面"
+                      "text": "讀：找出頁面檔案，讀懂版面"
                     },
                     {
-                      "text": "改：改掉樣式"
+                      "text": "改：修改樣式"
                     },
                     {
-                      "text": "檢查：打開頁面，看有沒有置中"
+                      "text": "檢查：打開頁面，確認是否置中"
                     },
                     {
-                      "text": "置中了：回報改了什麼、怎麼驗證的",
+                      "text": "確認置中：回報修改內容與驗證方式",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "我做的事",
+                  "title": "接收回報",
                   "rows": [
                     {
-                      "text": "看回報",
+                      "text": "查看修改內容與實測結果",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "檢查過了，Claude Code 才回報。我只做 2 件事：講 1 句話，看回報。"
+              "text": "Claude Code 檢查通過後回報。依實測結果判斷任務是否完成。"
             }
           ]
         },
         "points": [
           {
-            "term": "Claude Code 自己找、自己改、自己檢查",
-            "text": "Claude Code 收到這句話，先找出那一頁的檔案，讀懂版面，改掉樣式，再檢查頁面。找、改、檢查，都不用我一步一步指揮。"
+            "term": "認識 Agent Loop",
+            "text": "讀檔案、修改、檢查的流程叫 [[Agent Loop]]。結果不對，就重新讀檔、修改和檢查。"
           },
           {
-            "term": "這個流程叫 Agent Loop",
-            "text": "讀檔案、動手改、檢查結果。結果不對，就從讀檔案再做一次。這個反覆的流程叫 [[Agent Loop]]。"
+            "term": "寫明完成條件",
+            "text": "在 [[CLAUDE.md]] 寫下：「沒驗證就不算完成。」要求回報說明實測方式與結果。==回報附上實測，才有依據判斷是否完成==。"
           },
           {
-            "term": "檢查這一步，我寫成了規則",
-            "text": "我在 [[CLAUDE.md]] 寫了一行：「沒驗證就不算完成。」回報完成要附實測：在哪裡做了什麼、看到什麼。==回報裡有實測，我才當成做完==。看回報就能判斷，我不用自己再檢查一次。"
-          },
-          {
-            "term": "Claude Code 用的是我的電腦",
-            "text": "Claude Code 下指令、改檔案，用的是我這台電腦和我的帳號。所以找檔案、改檔案、下指令，Claude Code 都能自己做。開頁面檢查，靠的是我另外接上的瀏覽器工具。"
+            "term": "確認操作環境",
+            "text": "Claude Code 使用電腦上的帳號執行操作。找檔案、改檔案和下指令都在這個環境中完成。開頁面檢查，則需要另外接上瀏覽器工具。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼把任務交給 Claude Code",
-        "body": [
-          "跟同事交代事情，不會把每個檔案的位置都講一遍。跟 Claude Code 也一樣。"
-        ],
+        "title": "做法：交代目標與需要確認的界線",
+        "body": ["==交代目標，讓 Claude Code 處理找檔與修改==。"],
         "points": [
           {
-            "term": "不給路徑，Claude Code 自己找",
-            "text": "Claude Code 會下 ls（列出檔案）和 grep（搜尋文字）這類指令，在開的資料夾底下找。所以我只說「我要改 demo.ts」，不附路徑。檔案在那個資料夾外面，才需要多講一句位置。"
+            "term": "提供任務目標",
+            "text": "Claude Code 可用 ls 列出檔案，用 grep 搜尋文字。工作範圍內的檔案，可以先只講檔名。例如：「修改 demo.ts。」檔案在範圍外時，再補充位置。"
           },
           {
-            "term": "不寫規格，看到結果再改",
-            "text": "我只講想要什麼，例如「先給我個 poc 我看看」。poc 是先做出來、能動的小版本。Claude Code 做一個小版本的成本很低。所以我先看結果，再講哪裡要改，不先寫完規格。"
+            "term": "先看可操作的小版本",
+            "text": "可以這樣交代：「先做個 poc。」poc 是能操作的小版本。先查看結果，再指出需要修改的地方。"
           },
           {
-            "term": "不准一直問我，只有 3 種情況才問",
-            "text": "我規定 Claude Code 平常自己決定，做完再回報。每個小決定都來問，我光回答就忙不完，Claude Code 也做不了事。只有 3 種情況要停下來問我：不能復原的動作、對外的動作、品味的選擇。刪除、寄信、畫面要長怎樣，都算。"
+            "term": "設定詢問條件",
+            "text": "要求 Claude Code 處理一般決定，完成後再回報。遇到不能復原、對外動作或品味選擇，再停下確認。例如刪除、寄信和決定畫面樣式。"
           }
         ]
       },
       {
-        "title": "下一步：把事情都交給 Claude Code 做",
+        "title": "下一步：把修正方式留下來",
         "body": [
-          "要讓 Claude Code 越來越好用，方法是把事情都交給 Claude Code 做。",
-          "交出去的事做錯了，我會糾正。糾正的話寫進 [[CLAUDE.md]] 或 [[記憶]]，下一次新對話 Claude Code 就讀得到。",
-          "我自己動手處理掉、又沒告訴 Claude Code 的事，什麼都沒留下。我省了一次交代，之後每一次都要重新解釋。",
-          "這跟帶一個新同事一樣。一開始要把話講清楚。講過的話寫下來，==寫下來的事不用從頭再講==。",
-          "可以從一件小事開始，例如問：「README 的安裝步驟還對嗎？」"
+          "從能判斷對錯的小任務開始。",
+          "例如：「README 的安裝步驟還對嗎？」",
+          "結果不符合要求時，指出需要修正的地方。",
+          "把修正方式寫進 [[CLAUDE.md]] 或 [[記憶]]。",
+          "下一個新對話就能讀到這些做法。"
         ],
-        "callout": "==交出去、糾正、寫下來，Claude Code 才會越來越好用==。"
+        "callout": "==交代任務、修正結果，再把做法留下來==。"
       }
     ]
   },
@@ -164,58 +158,58 @@
       }
     ],
     "intro": [
-      "常見的教學會叫你先 cd 進專案，再開 Claude Code。cd 是切換資料夾的指令。我不這樣做，因為我的事情很少只在一個專案裡。",
-      "我只在家目錄開 Claude Code。家目錄是登入電腦之後，屬於我自己的那個資料夾。==開一次，我的專案都在 Claude Code 的工作範圍裡==。",
-      "同事不會只認識公司的一個專案。Claude Code 也不該只看得到一個資料夾。"
+      "cd 是切換資料夾的指令。",
+      "[[家目錄]] 是登入後屬於使用者的資料夾。",
+      "從家目錄開 Claude Code，可讓底下的專案都在工作範圍內。"
     ],
     "sections": [
       {
-        "title": "原理：Claude Code 從開的資料夾往下工作",
+        "title": "原理：啟動位置決定預設工作範圍",
         "body": [
-          "先看一句我真的打過的話：「nas.zyx.tw 應該改成 ui.zyx.tw 的。」",
-          "這句話牽涉 2 個專案：要先讀 ui.zyx.tw 的樣式，再去改 nas.zyx.tw。",
-          "Claude Code 開在不同的資料夾，這句話做起來會不一樣嗎？切換看看。"
+          "例如：「把專案網站的樣式改成 ui.zyx.tw 的樣式。」",
+          "這個任務需要先讀 ui.zyx.tw，再修改專案網站。",
+          "啟動位置會影響 Claude Code 能直接找到哪些專案。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "Claude Code 開在",
+          "ask": "Claude Code 的啟動位置",
           "states": [
             {
-              "label": "nas 的專案裡",
+              "label": "專案資料夾",
               "blocks": [
                 {
                   "title": "Claude Code 的工作範圍",
                   "rows": [
                     {
-                      "text": "nas.zyx.tw"
+                      "text": "專案網站"
                     },
                     {
-                      "text": "ui.zyx.tw：在資料夾外面，要另外給路徑",
+                      "text": "ui.zyx.tw 在範圍外，需要另外提供路徑",
                       "tone": "quiet"
                     }
                   ]
                 },
                 {
-                  "title": "新對話開始時載入的規則",
+                  "title": "新對話載入的規則",
                   "rows": [
                     {
-                      "text": "我的 CLAUDE.md"
+                      "text": "使用者層級的 CLAUDE.md"
                     },
                     {
-                      "text": "nas 專案自己的 CLAUDE.md"
+                      "text": "專案資料夾內的 CLAUDE.md"
                     }
                   ]
                 },
                 {
-                  "title": "記憶",
+                  "title": "記憶位置",
                   "rows": [
                     {
-                      "text": "存在 nas 專案自己的記憶資料夾"
+                      "text": "這個專案的記憶資料夾"
                     }
                   ]
                 }
               ],
-              "text": "ui 的專案在這個資料夾外面。我要多給一次路徑，Claude Code 讀外面的檔案還要我同意。"
+              "text": "其他專案位於範圍外。需要補充路徑，並確認存取。"
             },
             {
               "label": "家目錄",
@@ -224,7 +218,7 @@
                   "title": "Claude Code 的工作範圍",
                   "rows": [
                     {
-                      "text": "nas.zyx.tw"
+                      "text": "專案網站"
                     },
                     {
                       "text": "ui.zyx.tw",
@@ -237,68 +231,70 @@
                   ]
                 },
                 {
-                  "title": "新對話開始時載入的規則",
+                  "title": "新對話載入的規則",
                   "rows": [
                     {
-                      "text": "我的 CLAUDE.md"
+                      "text": "使用者層級的 CLAUDE.md"
                     },
                     {
-                      "text": "專案自己的 CLAUDE.md：讀到那個專案才載入",
+                      "text": "讀到專案檔案時，再載入專案規則",
                       "tone": "quiet"
                     }
                   ]
                 },
                 {
-                  "title": "記憶",
+                  "title": "記憶位置",
                   "rows": [
                     {
-                      "text": "每次都存在同一個記憶資料夾",
+                      "text": "固定使用同一個記憶資料夾",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "2 個專案都在家目錄底下。Claude Code 可以先讀 ui 的樣式，再改 nas，不用我多給路徑。"
+              "text": "範例中的專案都在家目錄底下。Claude Code 可對照樣式，再修改專案網站。"
             }
           ]
         },
         "points": [
           {
-            "term": "Claude Code 從開的資料夾往下工作",
-            "text": "Claude Code 開在哪個資料夾，預設就在那個資料夾底下找檔案、改檔案。==開在專案裡，別的專案都在範圍外面==。要碰外面的專案，得另外給路徑，還要我同意。"
+            "term": "從啟動資料夾往下找",
+            "text": "==Claude Code 預設在啟動資料夾底下工作==。要操作範圍外的專案，需另外提供路徑並確認存取。"
           },
           {
-            "term": "家目錄的檔案很多，會不會很慢",
-            "text": "Claude Code 不會把家目錄全部讀一遍。Claude Code 照 [[Agent Loop]] 做事，需要哪個檔案，才去找哪個檔案。所以我會講專案的名字，Claude Code 就知道從哪裡找起。"
+            "term": "用專案名稱縮小搜尋範圍",
+            "text": "Claude Code 不會把家目錄全部讀完。Claude Code 依 [[Agent Loop]] 尋找需要的檔案。交代任務時附上專案名稱，讓搜尋有明確起點。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼從家目錄用 Claude Code",
-        "body": ["只開一個地方，靠的是 3 個習慣。"],
+        "title": "做法：固定專案位置並先讀專案規則",
+        "body": ["==固定專案位置，並在修改前讀取專案規則==。"],
         "points": [
           {
-            "term": "專案放在固定的位置，位置寫進 CLAUDE.md",
-            "text": "我的專案都放在同一個資料夾底下，按組織再分一層。這個位置寫在我的 [[CLAUDE.md]] 裡。所以我只需要講專案的名字，Claude Code 知道去哪裡找。"
+            "term": "記下專案位置",
+            "text": "把專案放在固定資料夾，按組織分類。把位置寫進 [[CLAUDE.md]]。交代專案名稱時，Claude Code 就有位置可查。"
           },
           {
-            "term": "跨專案的事，1 句話講完",
-            "text": "把一個網站的樣式改成另一個網站的，這種事不用開 2 個視窗來回複製。2 個專案都在工作範圍裡，Claude Code 自己對照。"
+            "term": "直接交代跨專案任務",
+            "text": "專案都在工作範圍內時，可直接要求對照修改。例如：「參考 ui.zyx.tw，調整專案網站的樣式。」讓 Claude Code 讀取來源，再修改目標專案。"
           },
           {
-            "term": "動專案之前，先讀那個專案的 CLAUDE.md",
-            "text": "我自己的 CLAUDE.md 放在 ~/.claude/CLAUDE.md，在哪裡開都會載入。專案的 CLAUDE.md 放在專案資料夾裡。從家目錄開，要等 Claude Code 讀到那個專案的檔案，專案的 CLAUDE.md 才會載入。所以我在自己的 CLAUDE.md 寫了一條：動某個專案之前，先讀那個專案的 CLAUDE.md、AGENTS.md 和 README。"
+            "term": "修改前先讀文件",
+            "text": "使用者層級規則放在 ~/.claude/CLAUDE.md。這份規則不受啟動資料夾影響。專案規則放在專案資料夾內。從家目錄啟動時，讀到專案檔案才載入專案規則。在使用者層級規則寫明修改前的要求。先讀專案的 CLAUDE.md、AGENTS.md 和 README。"
           }
         ]
       },
       {
-        "title": "下一步：把記憶留在同一個地方",
+        "title": "下一步：固定啟動位置以集中記憶",
         "body": [
-          "Claude Code 的 [[記憶]] 跟著開的位置存。每個專案各開一次，記憶就分散在很多個資料夾。在 A 專案記下的事，在 B 專案開的時候不會載入。",
-          "在一個專案學到的做法，換到另一個專案一樣用得上。我的習慣、我的設備、哪個專案放在哪裡，都記在同一個記憶資料夾。",
-          "下次要開 Claude Code，先輸入 cd ~ 回到家目錄，再輸入 claude。然後講專案的名字，第 1 次再加上專案的位置。"
+          "Claude Code 的 [[記憶]] 跟著啟動位置存放。",
+          "在不同專案啟動，記憶會分開存放。",
+          "固定從家目錄啟動，可集中保存習慣、設備與專案位置。",
+          "先輸入 cd ~ 回到家目錄，再輸入 claude。",
+          "接著交代專案名稱，初次使用時補充專案位置。"
         ],
-        "callout": "==只在家目錄開，記憶都存在同一個地方==。"
+        "callout": "==固定從家目錄啟動，讓記憶留在同一個位置==。"
       }
     ]
   },
@@ -315,47 +311,49 @@
       }
     ],
     "intro": [
-      "網路上有很多開源的 MCP、Skill、Plugin。==我不會看到好用的就裝==。",
-      "要判斷一個擴充值不值得用，得先知道那個擴充替 Claude Code 做了什麼。",
-      "這篇有 3 張可以操作的圖。每張圖只改 1 個條件，看 Claude Code 的工作怎麼變。"
+      "選擴充之前，先確認任務缺少什麼。",
+      "MCP 連接服務，Skill 提供做法。",
+      "Plugin 打包擴充，Mod 修改 Claude Code 的畫面。"
     ],
     "sections": [
       {
-        "title": "服務已經有 API，為什麼還要 MCP",
+        "title": "原理：MCP 把服務操作包成工具",
         "body": [
-          "有一次，Claude Code 開了我的瀏覽器，要我登入某個服務的後台。我回了一句：「那有 cli 嗎？沒有的話感覺要用 api 做成 mcp 欸。」",
-          "CLI 是用指令操作服務的程式。API 是服務開給程式呼叫的介面。服務有 API，Claude Code 用 curl 這個指令就能呼叫。那為什麼還要做成 [[MCP]]？",
-          "下面用 Anthropic 文章裡的例子：找空檔，排一場會議。步驟是示意，不是我量的。切換接法，看哪些事還留在 Claude Code 手上。"
+          "CLI 是用指令操作服務的程式。",
+          "API 是服務提供給程式呼叫的介面。",
+          "Claude Code 能用 curl 呼叫 API。",
+          "[[MCP]] 則由 server 提供工具，處理連線與登入。",
+          "例如：查詢空檔後安排會議。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "接法",
+          "ask": "服務的接法",
           "side": true,
           "states": [
             {
               "label": "只有 API",
               "blocks": [
                 {
-                  "title": "Claude Code 要做的事",
+                  "title": "Claude Code 的工作",
                   "numbered": true,
                   "rows": [
                     {
-                      "text": "找到 API 文件，讀完"
+                      "text": "找到並閱讀 API 文件"
                     },
                     {
                       "text": "處理登入"
                     },
                     {
-                      "text": "組請求：查空檔"
+                      "text": "組成查詢空檔的請求"
                     },
                     {
-                      "text": "讀完整包回應"
+                      "text": "讀取回應"
                     },
                     {
-                      "text": "組請求：排會議"
+                      "text": "組成安排會議的請求"
                     },
                     {
-                      "text": "讀完整包回應"
+                      "text": "讀取安排結果"
                     }
                   ]
                 },
@@ -369,28 +367,28 @@
                   ]
                 }
               ],
-              "text": "每一步都要 Claude Code 自己來。新對話裡沒有留下做法的話，要從讀文件重來。"
+              "text": "Claude Code 需要處理文件、登入和請求。新對話若未保留做法，就需要重新讀取文件。"
             },
             {
-              "label": "接了 MCP",
+              "label": "接上 MCP",
               "blocks": [
                 {
-                  "title": "Claude Code 要做的事",
+                  "title": "Claude Code 的工作",
                   "numbered": true,
                   "rows": [
                     {
-                      "text": "讀 schedule_event 要填的欄位"
+                      "text": "讀取 schedule_event 的欄位"
                     },
                     {
                       "text": "呼叫 schedule_event"
                     },
                     {
-                      "text": "讀結果：會議排好了"
+                      "text": "讀取會議安排結果"
                     }
                   ]
                 },
                 {
-                  "title": "MCP server 接手的事",
+                  "title": "MCP server 的工作",
                   "rows": [
                     {
                       "text": "處理登入",
@@ -405,260 +403,212 @@
                       "tone": "mark"
                     },
                     {
-                      "text": "只回傳用得上的結果",
+                      "text": "只回傳需要的結果",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "API 還在，換成 MCP server 去呼叫。查空檔和排會議包成 1 個 tool，這是這個 tool 的設計。"
+              "text": "範例工具把查空檔與排會議包在一起。API 由 MCP server 呼叫。"
             }
           ]
         },
         "points": [
           {
-            "term": "MCP 是什麼",
-            "text": "MCP 是 Anthropic 提出的開放標準，用來把 AI 工具接上外部系統。照 MCP 寫的 server，支援 MCP 的 AI 工具可以用同一種方式接上。"
+            "term": "用標準介面連接服務",
+            "text": "MCP 是 Anthropic 提出的開放標準。支援 MCP 的工具可用相同方式連接 server。"
           },
           {
-            "term": "MCP server 提供什麼",
-            "text": "MCP server 是一支程式，提供一組 tool。每個 tool 是 1 個動作，有名字、說明、要填的欄位。==MCP server 處理連線和登入，Claude Code 只要選 tool、填欄位、讀結果==。1 個 tool 包進幾次 API 呼叫，由寫 server 的人決定。"
+            "term": "設計工具的工作範圍",
+            "text": "MCP server 是提供工具的程式。工具有名稱、說明與需要填寫的欄位。==讓工具完成完整任務，只回傳需要的內容==。工具內要呼叫哪些 API，由 server 的設計決定。"
           },
           {
-            "term": "Claude Code 看到什麼",
-            "text": "新對話開始時，Claude Code 只讀進 tool 的名字和 server 的簡短說明。完整的欄位等到要用那個 tool 才讀。名字和說明還是會佔一點閱讀空間，完整的欄位不會。"
+            "term": "按需要讀取工具欄位",
+            "text": "新對話先載入工具名稱與 server 的簡短說明。要使用工具時，才讀取完整欄位。名稱與說明仍會佔用閱讀空間。"
           },
           {
-            "term": "省下什麼",
-            "text": "Claude Code 少做幾步，少讀幾份文件和回應。省多少要看 tool 怎麼設計，這個例子我沒有量。Anthropic 談 tool 設計的文章建議：1 個 tool 做完一整件事，只回傳用得上的內容。"
-          },
-          {
-            "term": "我的順序",
-            "text": "我在 CLAUDE.md 寫了操作外部服務的順序。先用那個服務的 MCP，再來是 API 或 CLI，再來是在背景執行的瀏覽器，最後才開我自己的瀏覽器。同一個服務第 2 次要開我的瀏覽器，就先查有沒有 MCP、API 或 CLI。"
+            "term": "設定服務操作順序",
+            "text": "在 [[CLAUDE.md]] 寫明操作外部服務的順序。先用服務的 MCP，再用 API 或 CLI。接著使用背景瀏覽器，最後才開日常使用的瀏覽器。需要開瀏覽器時，先查有沒有 MCP、API 或 CLI。"
           }
         ]
       },
       {
-        "title": "做法為什麼不全寫進 CLAUDE.md",
+        "title": "做法：把特定任務的步驟寫成 Skill",
         "body": [
-          "我會對 Claude Code 說：「把這次學到的寫回 skill，記得要夠 general。」",
-          "[[Skill]] 是一份寫給 Claude Code 的做法，例如怎麼寫文章、怎麼做新頁面。做法也可以直接寫進 [[CLAUDE.md]]。那為什麼要另外寫成 Skill？",
-          "下面拿我常用的 15 份 Skill 當例子。選 1 個任務，看 Claude Code 在那一次新對話裡讀進了什麼。"
+          "[[Skill]] 是寫給 Claude Code 的做法。",
+          "例如寫文章或製作新頁面的步驟。",
+          "把這類步驟與 [[CLAUDE.md]] 的通用規則分開。"
         ],
         "figure": {
           "kind": "lesson",
           "ask": "新對話的任務",
           "states": [
             {
-              "label": "改一個錯字",
+              "label": "修改錯字",
               "blocks": [
                 {
-                  "title": "每次都讀",
+                  "title": "每次載入",
                   "rows": [
                     {
-                      "text": "CLAUDE.md 全文",
-                      "value": "113 行"
+                      "text": "CLAUDE.md 全文"
                     },
                     {
-                      "text": "15 份 Skill 的名字和說明"
+                      "text": "Skill 的名稱與說明"
                     }
                   ]
                 },
                 {
-                  "title": "這次才讀",
+                  "title": "任務需要才載入",
                   "rows": [
                     {
-                      "text": "沒有用到 Skill",
+                      "text": "範例任務沒有用到 Skill",
                       "tone": "quiet"
                     }
                   ]
                 },
                 {
-                  "title": "這次沒讀",
+                  "title": "未載入的內容",
                   "rows": [
                     {
-                      "text": "15 份 Skill 的全文",
-                      "value": "2,091 行",
+                      "text": "Skill 全文",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "假設這個任務沒有對上任何一份 Skill 的說明。Claude Code 不讀任何一份全文。"
+              "text": "假設任務未符合任何 Skill 說明。Claude Code 就不載入 Skill 全文。"
             },
             {
-              "label": "寫一篇文章",
+              "label": "撰寫文章",
               "blocks": [
                 {
-                  "title": "每次都讀",
+                  "title": "每次載入",
                   "rows": [
                     {
-                      "text": "CLAUDE.md 全文",
-                      "value": "113 行"
+                      "text": "CLAUDE.md 全文"
                     },
                     {
-                      "text": "15 份 Skill 的名字和說明"
+                      "text": "Skill 的名稱與說明"
                     }
                   ]
                 },
                 {
-                  "title": "這次才讀",
+                  "title": "任務需要才載入",
                   "rows": [
                     {
-                      "text": "article 的全文",
-                      "value": "146 行",
+                      "text": "article 全文",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "這次沒讀",
+                  "title": "未載入的內容",
                   "rows": [
                     {
-                      "text": "另外 14 份 Skill 的全文",
-                      "value": "1,945 行",
+                      "text": "其他 Skill 全文",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "任務對上 article 的說明，Claude Code 才讀進 article 這份做法。"
+              "text": "任務符合 article 的說明。Claude Code 載入 article 的全文。"
             },
             {
-              "label": "做一個新頁面",
+              "label": "製作新頁面",
               "blocks": [
                 {
-                  "title": "每次都讀",
+                  "title": "每次載入",
                   "rows": [
                     {
-                      "text": "CLAUDE.md 全文",
-                      "value": "113 行"
+                      "text": "CLAUDE.md 全文"
                     },
                     {
-                      "text": "15 份 Skill 的名字和說明"
+                      "text": "Skill 的名稱與說明"
                     }
                   ]
                 },
                 {
-                  "title": "這次才讀",
+                  "title": "任務需要才載入",
                   "rows": [
                     {
-                      "text": "simple-first 的全文",
-                      "value": "155 行",
+                      "text": "simple-first 全文",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "這次沒讀",
+                  "title": "未載入的內容",
                   "rows": [
                     {
-                      "text": "另外 14 份 Skill 的全文",
-                      "value": "1,936 行",
+                      "text": "其他 Skill 全文",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "換成做新頁面，讀進來的換成 simple-first 這份做法。"
+              "text": "任務符合 simple-first 的說明。Claude Code 載入 simple-first 的全文。"
             }
           ]
         },
         "points": [
           {
-            "term": "CLAUDE.md 每次整份載入",
-            "text": "不管這次的任務是什麼，Claude Code 都先讀完整份 CLAUDE.md。做法全寫進 CLAUDE.md 的話，改一個錯字也要先讀完怎麼寫文章。"
+            "term": "區分通用規則與任務步驟",
+            "text": "==CLAUDE.md 每次載入全文，Skill 用到才載入全文==。每個任務都需要知道的規則，放進 CLAUDE.md。只有特定任務需要的步驟，寫成 Skill。"
           },
           {
-            "term": "Skill 用到才載入全文",
-            "text": "平常 Claude Code 只看得到每份 Skill 的名字和 1 段說明。任務對上了說明，Claude Code 才讀進全文。==CLAUDE.md 每次整份載入，Skill 用到才載入全文==。"
-          },
-          {
-            "term": "怎麼分",
-            "text": "每個任務都要知道的事，放 CLAUDE.md，例如我是誰、什麼時候才能問我。只有某類任務才用得到的步驟，寫成 Skill。官方文件建議 CLAUDE.md 不超過 200 行。"
-          },
-          {
-            "term": "為什麼要夠 general",
-            "text": "Skill 一載入就是整份全文。寫進某一次任務的細節，下一個任務用不上，Claude Code 還是要讀。所以某一次任務的路徑、名字、數字不寫進 Skill，只留一類任務都用得上的步驟。"
-          },
-          {
-            "term": "圖裡的數字",
-            "text": "行數是 2026-11-15 數的。我的 CLAUDE.md 有 113 行。這 15 份 Skill 的全文加起來 2,091 行。"
+            "term": "保留能重複使用的做法",
+            "text": "Skill 載入時會讀取全文。刪除只適用於個別任務的路徑、名稱與細節。留下同類任務都能使用的步驟。"
           }
         ]
       },
       {
-        "title": "Skill 已經能用，為什麼還要包成 Plugin",
+        "title": "做法：用 Plugin 打包並更新擴充",
         "body": [
-          "寫這篇的時候，我剛在 article 這份 Skill 加了 1 條規則。",
-          "我常用的 15 份 Skill 包在同一個 [[Plugin]] 裡，名字叫 zyx。假設另一台電腦也裝了 zyx。",
-          "我改了 Skill 的內容，也推上了 Git 倉庫。另一台電腦執行更新，會拿到新的規則嗎？選 1 種做法看結果。"
+          "[[Plugin]] 可以把擴充包成一組。",
+          "例如：把 article 的新規則推上 [[Git]] 倉庫。",
+          "另一台電腦更新時，能否取得新內容取決於版本號。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "改完內容後，版本號",
+          "ask": "修改內容後的版本號",
           "side": true,
           "states": [
             {
-              "label": "留在 0.49.0",
+              "label": "保留 0.49.0",
               "blocks": [
                 {
-                  "title": "我的 Plugin：zyx",
+                  "title": "來源 Plugin",
                   "rows": [
                     {
                       "text": "版本號",
                       "value": "0.49.0"
                     },
                     {
-                      "text": "article 多了 1 條規則",
+                      "text": "article 已加入新規則",
                       "tone": "mark"
-                    },
-                    {
-                      "text": "15 份 Skill",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "5 個子 agent",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "1 個 MCP server",
-                      "tone": "quiet"
                     }
                   ]
                 },
                 {
-                  "title": "另一台電腦，執行更新之後",
+                  "title": "另一台電腦更新後",
                   "rows": [
                     {
                       "text": "版本號",
                       "value": "0.49.0"
                     },
                     {
-                      "text": "article 還是舊的內容"
-                    },
-                    {
-                      "text": "15 份 Skill",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "5 個子 agent",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "1 個 MCP server",
-                      "tone": "quiet"
+                      "text": "article 仍是舊內容"
                     }
                   ]
                 }
               ],
-              "text": "版本號沒變，另一台電腦就留著原本那一份。"
+              "text": "版本號沒有改變，更新端保留原有內容。"
             },
             {
               "label": "改成 0.49.1",
               "blocks": [
                 {
-                  "title": "我的 Plugin：zyx",
+                  "title": "來源 Plugin",
                   "rows": [
                     {
                       "text": "版本號",
@@ -666,25 +616,13 @@
                       "tone": "mark"
                     },
                     {
-                      "text": "article 多了 1 條規則",
+                      "text": "article 已加入新規則",
                       "tone": "mark"
-                    },
-                    {
-                      "text": "15 份 Skill",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "5 個子 agent",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "1 個 MCP server",
-                      "tone": "quiet"
                     }
                   ]
                 },
                 {
-                  "title": "另一台電腦，執行更新之後",
+                  "title": "另一台電腦更新後",
                   "rows": [
                     {
                       "text": "版本號",
@@ -692,91 +630,58 @@
                       "tone": "mark"
                     },
                     {
-                      "text": "article 多了 1 條規則",
+                      "text": "article 取得新規則",
                       "tone": "mark"
-                    },
-                    {
-                      "text": "15 份 Skill",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "5 個子 agent",
-                      "tone": "quiet"
-                    },
-                    {
-                      "text": "1 個 MCP server",
-                      "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "版本號變了，另一台電腦才換成新的一整組。"
+              "text": "版本號改變後，更新端取得新版擴充。"
             }
           ]
         },
         "points": [
           {
-            "term": "Plugin 裝的是一整組",
-            "text": "1 個 Plugin 可以同時裝進 Skill、MCP server 和子 agent。子 agent 是 Claude Code 另外派出去做事的 agent。Skill 和 MCP 不包成 Plugin 也能用。==Plugin 把擴充整組安裝，靠版本號更新==。"
+            "term": "整組安裝擴充",
+            "text": "==Plugin 把擴充整組安裝，靠版本號更新==。Plugin 可以包含 Skill、MCP server 和 [[子 agent]]。子 agent 是 Claude Code 另外派出的 agent。Skill 和 MCP 也能單獨使用。"
           },
           {
-            "term": "版本號決定要不要更新",
-            "text": "Plugin 的版本號寫在 plugin.json 這個檔案裡。裝過的電腦會留著自己那一份，直到版本號改變。所以我每次改內容，都會一起改版本號。"
+            "term": "修改內容時更新版本",
+            "text": "Plugin 的版本號寫在 plugin.json。修改內容時，也更新版本號。安裝端才能在執行更新時取得新版。"
           },
           {
-            "term": "分享給別人",
-            "text": "marketplace 是一份 Plugin 的目錄。對方加入我的 marketplace 之後，1 行指令就能安裝。之後我發新版，對方 1 行指令就能更新，不用再複製檔案。"
+            "term": "透過目錄分享",
+            "text": "marketplace 是 Plugin 的目錄。使用者加入目錄後，可用指令安裝或更新。這樣不必手動複製擴充檔案。"
           },
           {
-            "term": "名稱不會打架",
-            "text": "Plugin 裡的 Skill 會帶上 Plugin 的名字當前綴，例如 zyx:article。裝了很多個 Plugin，同名的 Skill 也不會互相蓋掉。"
+            "term": "用前綴區分同名 Skill",
+            "text": "Plugin 內的 Skill 會帶上 Plugin 名稱。例如 zyx:article。前綴讓不同 Plugin 的同名 Skill 不會互相覆蓋。"
           },
           {
-            "term": "我的做法",
-            "text": "我的 Plugin 放在 Git 倉庫裡。每次修改都留下紀錄，看得到改了什麼。"
+            "term": "用 Git 保存修改",
+            "text": "把 Plugin 放進 Git 倉庫。用修改紀錄查看內容變更。"
           }
         ]
       },
       {
-        "title": "Mod 改的是 Claude Code 的畫面",
+        "title": "原理：Mod 修改 Claude Code 的畫面",
         "body": [
-          "我做過幾個 [[Mod]]：把正在播的音樂、今天的行程、主機的狀態，顯示在 Claude Code 的輸入框上面。",
-          "==Mod 改的是 Claude Code 自己的畫面==。我想知道的事直接在畫面上，就不用另外開口問。"
+          "==Mod 改的是 Claude Code 的畫面==。",
+          "例如：用 [[Mod]] 在輸入框上方顯示資訊。",
+          "資訊可以是播放中的音樂、行程或主機狀態。",
+          "把需要的資訊放在畫面上，就能直接查看。"
         ]
       },
       {
-        "title": "4 種擴充，各用 1 句話說完",
-        "body": ["讀到這裡，可以先自己講講看，再對答案。"],
-        "points": [
-          {
-            "term": "MCP",
-            "text": "MCP server 處理連線和登入，Claude Code 只要選 tool、填欄位、讀結果。"
-          },
-          {
-            "term": "Skill",
-            "text": "一份寫給 Claude Code 的做法，用到才載入全文。"
-          },
-          {
-            "term": "Plugin",
-            "text": "把 Skill、MCP 這些擴充整組安裝，靠版本號更新。"
-          },
-          {
-            "term": "Mod",
-            "text": "改 Claude Code 自己的畫面。"
-          }
-        ]
-      },
-      {
-        "title": "下一步：讀別人的做法，寫成自己的",
+        "title": "下一步：讀懂開源做法再決定是否採用",
         "body": [
-          "看到一個好用的開源 Skill，我不直接裝。我先讀內容：作者遇到什麼問題，用什麼方法解決。",
-          "讀的時候可以問 3 件事。作者要解決什麼問題？哪些步驟我的任務用得上？哪些前提跟我不一樣？",
-          "用得上的部分，我改寫進自己的 Skill，用我的用詞，照我的習慣。我檢查文案的那份 Skill，有一部分就是讀了別人開源的 Skill 之後改寫的。",
-          "這跟學新知識一樣。讀懂、自己整理過一次，才會變成自己的。",
-          "我的 Skill 是我和 Claude Code 一次一次改出來的，寫的是我的習慣。裝一份別人的做法進來，Claude Code 會照別人的習慣做事。",
-          "下次看到想裝的 Skill，先打開全文讀一遍。再決定要整份裝，還是只改寫用得上的那幾步。"
+          "先讀開源 Skill 全文，再決定是否安裝。",
+          "確認要解決的問題，以及做法需要哪些前提。",
+          "挑出適用於任務的步驟，依工作習慣改寫。",
+          "若整份做法都適用，再考慮完整安裝。",
+          "安裝前確認內容，Claude Code 才有符合需求的做法可讀。"
         ],
-        "callout": "==看別人怎麼做，學過來，內化成自己的==。"
+        "callout": "==先讀懂做法，再採用符合任務的部分==。"
       }
     ]
   },
@@ -793,27 +698,27 @@
       }
     ],
     "intro": [
-      "CLAUDE.md 是 Claude Code 每次新對話開始時都會載入的檔案。",
-      "常見的寫法是把專案的指令和資料夾結構列上去。我的 CLAUDE.md 寫的是另一件事：==跟我一起工作，要知道什麼==。",
-      "新同事第 1 天需要知道的事，我都寫在這裡。寫 1 次，之後每次新對話都會載入。"
+      "CLAUDE.md 用來保存 Claude Code 的工作規則。",
+      "新對話開始時，Claude Code 會載入適用的規則。",
+      "把通用要求寫下來，交代任務時就能省去重複說明。"
     ],
     "sections": [
       {
-        "title": "原理：寫進 CLAUDE.md 的話，每次新對話都會載入",
+        "title": "原理：CLAUDE.md 為任務補上通用要求",
         "body": [
-          "先看一句我真的打過的話：「設備檢查頁面沒有上下置中，處理一下。」",
-          "我沒有說改完要驗證，沒有說能不能問我，也沒有說做完怎麼回報。Claude Code 怎麼知道？",
-          "切換看看：Claude Code 開始工作時，手上有哪些話。"
+          "例如：「設備檢查頁面沒有上下置中，處理一下。」",
+          "這句話沒有交代驗證、詢問條件與回報方式。",
+          "把這些通用要求寫進 CLAUDE.md，供新對話載入。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "Claude Code 手上的話",
+          "ask": "Claude Code 收到的要求",
           "states": [
             {
-              "label": "只有我打的這句",
+              "label": "只有任務描述",
               "blocks": [
                 {
-                  "title": "我這次打的",
+                  "title": "任務內容",
                   "rows": [
                     {
                       "text": "「設備檢查頁面沒有上下置中，處理一下。」"
@@ -821,30 +726,30 @@
                   ]
                 },
                 {
-                  "title": "我沒講的事",
+                  "title": "尚未交代的要求",
                   "rows": [
                     {
-                      "text": "改完要不要驗證",
+                      "text": "修改後是否需要驗證",
                       "tone": "quiet"
                     },
                     {
-                      "text": "什麼時候可以問我",
+                      "text": "什麼情況需要詢問",
                       "tone": "quiet"
                     },
                     {
-                      "text": "做完要怎麼回報",
+                      "text": "完成後如何回報",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "只看這 1 句，有 3 件事沒有交代。"
+              "text": "任務描述沒有交代通用的工作要求。"
             },
             {
               "label": "加上 CLAUDE.md",
               "blocks": [
                 {
-                  "title": "我這次打的",
+                  "title": "任務內容",
                   "rows": [
                     {
                       "text": "「設備檢查頁面沒有上下置中，處理一下。」"
@@ -852,7 +757,7 @@
                   ]
                 },
                 {
-                  "title": "CLAUDE.md 早就寫好的",
+                  "title": "CLAUDE.md 的通用要求",
                   "rows": [
                     {
                       "text": "「沒驗證就不算完成。」",
@@ -869,61 +774,58 @@
                   ]
                 }
               ],
-              "text": "這 3 行寫在我的 CLAUDE.md 裡。每一次新對話，Claude Code 都會載入。"
+              "text": "把通用要求寫進 CLAUDE.md。Claude Code 會在新對話載入這些規則。"
             }
           ]
         },
         "points": [
           {
-            "term": "寫 1 次，每次都載入",
-            "text": "我交代任務的時候，不用每次說「測試要過才算好」。那一行在 CLAUDE.md 裡，新對話一開始就載入了。"
+            "term": "保存需要反覆交代的要求",
+            "text": "==需要反覆交代的要求，寫進 CLAUDE.md==。例如：「測試要過才算完成。」只有特定任務需要的步驟，則寫成 [[Skill]]。"
           },
           {
-            "term": "載入不等於每次都照做",
-            "text": "規則有時候還是會被漏掉。漏掉的時候我會糾正，再把那一行改得更明確。同一條一直被漏掉，就改成自動檢查，做法在 [[記憶]]。"
+            "term": "檢查規則是否落實",
+            "text": "載入規則不代表 Claude Code 必定照做。發現漏掉規則時，指出問題並把文字改得更明確。持續漏掉的規則，可改成自動檢查。相關做法見 [[記憶]]。"
           },
           {
-            "term": "什麼話該寫進去",
-            "text": "==每次都要講的話，就該寫進 CLAUDE.md==。只有某類任務才用得到的步驟，寫成 [[Skill]]。"
-          },
-          {
-            "term": "CLAUDE.md 放在哪裡",
-            "text": "我自己的 CLAUDE.md 放在 ~/.claude/CLAUDE.md，在哪個資料夾開 Claude Code 都會載入。專案的 CLAUDE.md 放在專案資料夾裡，只在那個專案載入。這篇講的是我自己的那一份。"
+            "term": "區分規則的存放位置",
+            "text": "使用者層級規則放在 ~/.claude/CLAUDE.md。在不同資料夾啟動，都會載入這份規則。專案規則放在專案資料夾內，供該專案使用。"
           }
         ]
       },
       {
-        "title": "做法：我的 CLAUDE.md 裡的 4 種內容",
-        "body": ["我的 CLAUDE.md 有 113 行。這裡講其中 4 種內容。"],
+        "title": "做法：寫明背景、詢問條件與完成標準",
+        "body": ["==規則要交代工作所需的背景與判斷條件==。"],
         "points": [
           {
-            "term": "我是誰，Claude Code 是誰",
-            "text": "開頭寫我的身分和我在做的事。Claude Code 知道我是誰，才知道我講的東西指的是什麼。我也給我的 Claude Code 取了名字，叫 Kilo。"
+            "term": "交代工作背景",
+            "text": "寫明使用者的角色與正在處理的工作。這些背景能幫助 Claude Code 理解任務中的用詞。"
           },
           {
-            "term": "什麼時候才能問我",
-            "text": "我寫的是：「只有不能復原、對外、品味選擇才問，其他自己決定再回報。」這一行讓 Claude Code 知道，小決定不用拿來問我。"
+            "term": "設定詢問條件",
+            "text": "可以這樣寫：「只有不能復原、對外、品味選擇才問，其他自行決定再回報。」讓 Claude Code 依這條規則處理一般決定。"
           },
           {
-            "term": "怎樣才算做完",
-            "text": "除了「沒驗證就不算完成」，還有一條：「同一個前提的修法失敗 2 次就停。」同一個方向一直試只會繞圈。要先把前提寫下來實測，才能修第 3 次。"
+            "term": "定義完成與停止條件",
+            "text": "寫下：「沒驗證就不算完成。」要求完成回報附上實測。同一前提下的修法持續失敗時，先停下來。寫出前提並實測，再繼續修改。"
           },
           {
-            "term": "東西放在哪裡",
-            "text": "我有哪些設備、專案放在哪個資料夾、哪種工作要在哪台機器上做。細節不寫在 CLAUDE.md，只寫到 Claude Code 知道去哪裡查。"
+            "term": "提供查詢位置",
+            "text": "寫明設備、專案位置與工作執行位置。細節另存，只在 CLAUDE.md 留下查詢線索。"
           }
         ]
       },
       {
-        "title": "下一步：寫你自己糾正過的話，不要抄範本",
+        "title": "下一步：把實際糾正過的要求改成規則",
         "body": [
-          "網路上有很多 CLAUDE.md 範本。我不照抄，因為範本寫的是別人的工作習慣。",
-          "糾正不一定會留到下一次對話。同一句話要講第 2 次的時候，就把那句話寫進 CLAUDE.md。",
-          "寫法是把糾正改成規則。例如你糾正了「你沒檢查就說做完了」，規則就寫成「回報完成要附實測」。",
-          "先從 1 句你真的糾正過的話開始，寫進 ~/.claude/CLAUDE.md。不用一次寫滿。",
-          "寫完開一個新對話，交一件類似的任務，看 Claude Code 有沒有照做。沒有照做，就把那一行改得更明確。"
+          "先挑出需要重複交代的要求。",
+          "例如把「你沒檢查就說做完了」改成規則。",
+          "規則可以寫成：「回報完成要附實測。」",
+          "把規則存進 ~/.claude/CLAUDE.md。",
+          "開新對話，交代類似任務，檢查 Claude Code 是否照做。",
+          "若未照做，就把規則改得更明確。"
         ],
-        "callout": "==把糾正過的話寫進 CLAUDE.md，再開一個新對話測試==。"
+        "callout": "==把糾正改成規則，再用新對話測試==。"
       }
     ]
   },
@@ -940,15 +842,17 @@
       }
     ],
     "intro": [
-      "這是一門 5 天的小課程。每天 1 個練習，都用你自己的專案做。",
-      "看別人怎麼用 Claude Code，不如自己交一次任務。==5 天的目標：你敢把一整個小任務交給 Claude Code==。",
-      "每個練習都對應一篇文章。先做練習，卡住了再去讀。"
+      "這門課程分成 5 天，每天用自己的專案練習。",
+      "課程目標是把完整的小任務交給 Claude Code。",
+      "先做練習，卡住時再讀對應文章。"
     ],
     "sections": [
       {
         "title": "課程：5 天，每天 1 個練習",
         "body": [
-          "每個練習都有做完的條件。一般的步驟讓 Claude Code 自己處理。Claude Code 停下來問你的時候，再由你決定。"
+          "==依完成條件檢查每個練習的結果==。",
+          "讓 Claude Code 處理一般步驟。",
+          "Claude Code 停下詢問時，再決定需要確認的事項。"
         ],
         "figure": {
           "kind": "diagram",
@@ -967,35 +871,38 @@
         },
         "points": [
           {
-            "term": "第 1 天：問 Claude Code 1 個問題",
-            "text": "在你的專案裡開 Claude Code，問：「這個專案要怎麼啟動？指令寫在哪個檔案？」做完的條件：Claude Code 給了指令，也講了是從哪個檔案看到的。看 Claude Code 找了哪些檔案，這是 [[Agent Loop]] 的第 1 步。"
+            "term": "第 1 天：詢問專案啟動方式",
+            "text": "在專案裡開 Claude Code。問：「這個專案要怎麼啟動？指令寫在哪個檔案？」完成條件是回報包含啟動指令與來源檔案。查看 Claude Code 找了哪些檔案。這是 [[Agent Loop]] 的讀檔步驟。"
           },
           {
-            "term": "第 2 天：交出 1 個小任務",
-            "text": "挑一個你看得出對錯的小修改，例如改掉 README 的 1 個錯字。只講你想要什麼，不講檔案在哪，也不講怎麼改。做完的條件：Claude Code 只改了你要的地方，回報裡講了怎麼檢查的。"
+            "term": "第 2 天：交出小任務",
+            "text": "挑選能判斷對錯的小修改。例如：修正 README 的錯字。只交代目標，不指定路徑或改法。完成條件是修改符合要求，且回報說明檢查方式。"
           },
           {
-            "term": "第 3 天：改從家目錄開 Claude Code",
-            "text": "輸入 cd ~ 回到 [[家目錄]]，再開 Claude Code。講專案的名字和位置，再問一次第 1 天的問題。做完的條件：Claude Code 從家目錄找到了那個專案，答案跟第 1 天一樣。你有 2 個專案的話，再問一件牽涉 2 邊的事。"
+            "term": "第 3 天：從家目錄啟動",
+            "text": "輸入 cd ~ 回到 [[家目錄]]，再開 Claude Code。交代專案名稱與位置，再問第 1 天的問題。完成條件是找到專案，並得到與第 1 天相同的答案。若有不同專案，再交代需要跨專案處理的任務。"
           },
           {
-            "term": "第 4 天：把 1 句糾正寫成規則",
-            "text": "回想前 3 天你糾正過 Claude Code 的 1 句話，改寫成規則，存進 ~/.claude/CLAUDE.md。寫法看 [[CLAUDE.md]]。做完的條件：開一個新對話，交一件類似的任務，Claude Code 照那條規則做了。"
+            "term": "第 4 天：把糾正寫成規則",
+            "text": "挑出前面練習中糾正過的要求。改寫成規則，存進 ~/.claude/CLAUDE.md。寫法參考 [[CLAUDE.md]]。開新對話，交代類似任務。完成條件是 Claude Code 依規則處理任務。"
           },
           {
-            "term": "第 5 天：判斷缺口屬於哪一種",
-            "text": "回想這 4 天 Claude Code 卡在哪裡，挑 1 個。Claude Code 碰不到某個服務，缺的是 [[MCP]]。Claude Code 不知道某類任務的做法，缺的是 [[Skill]]。做完的條件：寫下缺口屬於哪一種，還有你的理由。今天先不用動手做。"
+            "term": "第 5 天：判斷需要哪種擴充",
+            "text": "挑出前面練習遇到的阻礙。需要連接服務時，判斷是否缺少 [[MCP]]。缺少特定任務的做法時，判斷是否需要 [[Skill]]。完成條件是寫下缺口類型與理由。這個練習先做判斷，不必製作擴充。"
           }
         ]
       },
       {
-        "title": "下一步：用下一個任務測試你的規則",
+        "title": "下一步：用下一個任務測試規則",
         "body": [
-          "第 4 天寫下的規則，要用過才知道有沒有用。",
-          "再交 1 件類似的任務，看 Claude Code 的回報有沒有照規則走。沒有照做的規則，改得更明確。只對 1 次任務有用的規則，刪掉。",
-          "之後每糾正 1 次，就問自己：這句話下次還會再講嗎？會的話就寫下來，做法在 [[記憶]]。"
+          "把第 4 天寫的規則用在類似任務上。",
+          "查看回報是否符合規則。",
+          "未落實的規則，改得更明確。",
+          "只適用於個別任務的規則，從通用規則中刪除。",
+          "糾正結果後，判斷這個要求是否還會用到。",
+          "會重複使用的要求就留下，做法見 [[記憶]]。"
         ],
-        "callout": "==規則寫下來，要用下一個任務測試==。"
+        "callout": "==寫下規則後，用下一個任務檢查是否有效==。"
       }
     ]
   },
@@ -2480,61 +2387,62 @@
       }
     ],
     "intro": [
-      "我有好幾台機器，但我只在筆電上跟 Claude Code 對話。",
-      "我不在每一台機器上各開一個對話。==筆電上的 Claude Code 用 ssh 連到其他機器，把指令送過去執行==。",
-      "我對話的入口只有筆電。記憶和規則也都在筆電上。"
+      "在筆電上開啟 Claude Code 對話。",
+      "用 [[ssh]] 連到其他機器，執行遠端指令。",
+      "把 [[記憶]] 和規則留在筆電。"
     ],
     "sections": [
       {
-        "title": "原理：對話在筆電，指令送到別台機器執行",
+        "title": "原理：對話在筆電，指令在遠端執行",
         "body": [
-          "我的 CLAUDE.md 有一行：「MacBook 只編輯與 git：build / test / server 在 ssh sandbox」。",
-          "sandbox 是我放在家裡主機上的一台虛擬機。",
-          "同一類工作，送到哪一台執行？選 1 台看看。"
+          "==Claude Code 可以透過 ssh 執行遠端指令==。",
+          "把編輯和 git 操作留在筆電。",
+          "把編譯、測試和伺服器放到遠端。",
+          "例如，sandbox 可以作為預設的開發環境。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "指令在哪一台執行",
+          "ask": "指令在哪裡執行",
           "side": true,
           "states": [
             {
               "label": "筆電",
               "blocks": [
                 {
-                  "title": "放在這裡的工作",
+                  "title": "適合的工作",
                   "rows": [
                     {
                       "text": "編輯檔案"
                     },
                     {
-                      "text": "git 的操作"
+                      "text": "git 操作"
                     },
                     {
-                      "text": "只有 Mac 做得到的編譯"
+                      "text": "只有 Mac 能完成的編譯"
                     }
                   ]
                 },
                 {
-                  "title": "不放在這裡的工作",
+                  "title": "移到遠端的工作",
                   "rows": [
                     {
                       "text": "編譯和測試",
                       "tone": "quiet"
                     },
                     {
-                      "text": "要一直開著的服務",
+                      "text": "持續執行的服務",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "筆電是我每天在用的主力機。重的工作放在筆電，會拖慢我手上的事。"
+              "text": "重的工作移到遠端，減少對筆電的影響。"
             },
             {
-              "label": "sandbox",
+              "label": "遠端開發環境",
               "blocks": [
                 {
-                  "title": "放在這裡的工作",
+                  "title": "適合的工作",
                   "rows": [
                     {
                       "text": "編譯和測試",
@@ -2551,24 +2459,24 @@
                   ]
                 },
                 {
-                  "title": "Claude Code 怎麼過去",
+                  "title": "連線方式",
                   "rows": [
                     {
-                      "text": "ssh sandbox，後面接要執行的指令"
+                      "text": "例如，用 ssh sandbox 執行指令。"
                     }
                   ]
                 }
               ],
-              "text": "這是預設的地方。10 月中到 11 月中，Claude Code 的指令有 23% 送到 sandbox。"
+              "text": "把這類工作放到固定的開發環境。"
             },
             {
               "label": "有顯示卡的桌機",
               "blocks": [
                 {
-                  "title": "放在這裡的工作",
+                  "title": "適合的工作",
                   "rows": [
                     {
-                      "text": "要用顯示卡的運算",
+                      "text": "需要顯示卡的運算",
                       "tone": "mark"
                     },
                     {
@@ -2578,67 +2486,64 @@
                   ]
                 },
                 {
-                  "title": "Claude Code 怎麼過去",
+                  "title": "連線方式",
                   "rows": [
                     {
-                      "text": "ssh furnace，後面接要執行的指令"
+                      "text": "例如，用 ssh furnace 執行指令。"
                     }
                   ]
                 }
               ],
-              "text": "這一台是 Windows。Claude Code 一樣用 ssh 連過去。"
+              "text": "Windows 機器也可以透過 ssh 連線。"
             }
           ]
         },
         "points": [
           {
-            "term": "ssh 讓 1 個 Claude Code 用很多台機器",
-            "text": "[[ssh]] 是從一台電腦對另一台電腦下指令的工具。Claude Code 本來就會下指令。所以多 1 台機器，只是多 1 個 ssh 的名字。"
+            "term": "用 ssh 執行遠端指令",
+            "text": "[[ssh]] 能從電腦向遠端機器下指令。Claude Code 可以使用這個工具。新增機器時，設定對應的 ssh 名稱。"
           },
           {
-            "term": "連線要重複使用",
-            "text": "我把 ssh 設成重複使用同一條連線。第 1 次連上之後，10 分鐘內再下指令，不用重新連線。Claude Code 一次任務會下很多個指令，每個都重連會很慢。"
+            "term": "重複使用連線",
+            "text": "設定 ssh 重複使用連線。後續指令便不必重新建立連線。"
           },
           {
-            "term": "記憶和規則在筆電上",
-            "text": "我的 [[記憶]] 和 [[CLAUDE.md]] 都在筆電上。筆電上的 Claude Code 每次對話都讀得到。"
-          },
-          {
-            "term": "23% 是怎麼數的",
-            "text": "2026-10-13 到 11-15，Claude Code 下了 48,918 次指令。其中 11,217 次的指令裡有 ssh sandbox。"
+            "term": "保留對話的規則來源",
+            "text": "把 [[記憶]] 和 [[CLAUDE.md]] 放在筆電。筆電上的 Claude Code 可以讀取這些檔案。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼讓 Claude Code 知道要去哪一台",
-        "body": ["哪一台做什麼，寫在檔案裡。"],
+        "title": "做法：把設備分工寫進規則",
+        "body": ["==把工作與執行位置寫進 CLAUDE.md==。"],
         "points": [
           {
-            "term": "規則是 CLAUDE.md 的 1 行",
-            "text": "筆電只編輯和做 git 的操作。編譯、測試、伺服器在 sandbox。要用顯示卡的工作和長時間的工作在別台。"
+            "term": "寫清楚預設分工",
+            "text": "規定筆電只編輯和操作 git。編譯、測試和伺服器放到開發環境。另行指定顯示卡運算和長時間工作的機器。"
           },
           {
-            "term": "每台機器有 1 個短名字",
-            "text": "ssh 直接用這個名字，我講話也用這個名字。名字怎麼取，寫在 [[機器的名字]]。"
+            "term": "使用短名字",
+            "text": "為機器設定簡短的 ssh 名稱。交代工作時，使用相同名稱。命名方式可參考 [[機器的名字]]。"
           },
           {
-            "term": "例外記在記憶裡",
-            "text": "有些專案只能在筆電上編譯，例如 iOS 的 app。這種例外記在記憶，不寫進 CLAUDE.md。CLAUDE.md 每次都載入，只放每個任務都適用的規則。"
+            "term": "把專案例外放進記憶",
+            "text": "例如，iOS app 的編譯需要留在 Mac。把這類例外記在專案相關的記憶。CLAUDE.md 只放通用規則。"
           },
           {
-            "term": "派出去的 agent 要再講一次",
-            "text": "子 agent 不一定會遵守我的 CLAUDE.md。所以派工的時候，在哪一台執行要寫進派工的指示。"
+            "term": "派工時寫明位置",
+            "text": "[[子 agent]] 不一定會遵守 CLAUDE.md。派工指示也要寫明執行位置。"
           }
         ]
       },
       {
-        "title": "下一步：先接上 1 台",
+        "title": "下一步：接上遠端機器",
         "body": [
-          "找 1 台你手邊的舊電腦，或租來的主機，設定好 ssh。",
-          "在 CLAUDE.md 寫 1 行：哪些工作要到那台機器上做。",
-          "然後交一個要編譯的任務，看 Claude Code 會不會自己連過去。"
+          "準備舊電腦或租來的主機。",
+          "設定 ssh，讓 Claude Code 能連線。",
+          "在 CLAUDE.md 寫明遠端負責的工作。",
+          "交付編譯任務，檢查是否在遠端執行。"
         ],
-        "callout": "==對話留在筆電，重的工作送到別台==。"
+        "callout": "==對話留在筆電，重的工作送到遠端==。"
       }
     ]
   },
@@ -2655,112 +2560,98 @@
       }
     ],
     "intro": [
-      "我的設備、專案、網路，都登記成檔案。",
-      "我不靠自己記，也不靠每次開對話再交代。==Claude Code 動手之前，先讀對應的那一份檔案==。",
-      "檔案分 3 層，從短到長。一開始只載入最短的 2 層。"
+      "把設備、專案和網路登記成檔案。",
+      "規定 Claude Code 動手前先讀對應檔案。",
+      "把通用規則、索引和詳細筆記分開。"
     ],
     "sections": [
       {
-        "title": "原理：先讀登記的檔案，再動手",
+        "title": "原理：分層記錄，按需讀取",
         "body": [
-          "我的 CLAUDE.md 有一行：「auto memory 是地圖：碰 ops、佈署、既有專案前先讀對應 memory」。",
-          "2026-10-29，我把測試機器上每個專案的位置和登入方法寫成檔案。寫之前和寫之後，差在哪裡？切換看看。"
+          "==規則指出用途，詳細筆記記錄操作方式==。",
+          "在 [[CLAUDE.md]] 寫明設備名稱和用途。",
+          "用 [[記憶]] 索引指向詳細筆記。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "位置和登入方法",
+          "ask": "位置和登入方法從哪裡取得",
           "states": [
             {
-              "label": "還沒寫成檔案",
+              "label": "沒有登記",
               "blocks": [
                 {
-                  "title": "測試 3 個檔案的修改",
+                  "title": "測試修改前",
                   "rows": [
                     {
-                      "text": "Claude Code 自己摸索放哪裡、怎麼登入"
-                    },
-                    {
-                      "text": "總共走了",
-                      "value": "24 步"
-                    },
-                    {
-                      "text": "其中重試",
-                      "value": "4 次"
+                      "text": "需要摸索程式位置和登入方法"
                     }
                   ]
                 }
               ],
-              "text": "每個新對話都從頭摸索。每次摸索出來的做法還不一樣。"
+              "text": "新對話需要重新找出環境的使用方式。"
             },
             {
-              "label": "寫成檔案之後",
+              "label": "已經登記",
               "blocks": [
                 {
-                  "title": "問一個新對話同一件事",
+                  "title": "先讀環境說明",
                   "rows": [
                     {
-                      "text": "程式放哪、怎麼登入、用哪個瀏覽器"
-                    },
-                    {
-                      "text": "回答",
-                      "value": "3 行"
-                    },
-                    {
-                      "text": "回答之前先查了",
-                      "value": "0 次"
+                      "text": "查閱程式位置、登入方法和瀏覽器"
                     }
                   ]
                 }
               ],
-              "text": "這一次只問了位置，沒有實際測試。新對話不用摸索，直接答得出來。"
+              "text": "依照說明找到環境，再執行測試。"
             }
           ]
         },
         "points": [
           {
-            "term": "3 層檔案",
-            "text": "第 1 層是 [[CLAUDE.md]]：每台設備 1 行，寫名字和用途。第 2 層是 [[記憶]] 的索引：每則筆記 1 行。第 3 層是筆記本身：規格、位址、踩過的問題。"
+            "term": "分成 3 層",
+            "text": "第 1 層是 [[CLAUDE.md]]，記錄名稱和用途。第 2 層是 [[記憶]] 索引，指向筆記。第 3 層記錄規格、位址和已知問題。先載入規則與索引，再按需讀取細節。"
           },
           {
-            "term": "細節不放第 1 層",
-            "text": "硬體規格和位址，只有要動那台設備的時候才查。CLAUDE.md 每次都整份載入，所以只留名字和用途。"
+            "term": "詳細資料按需讀取",
+            "text": "操作設備時，再查硬體規格和位址。CLAUDE.md 會隨新對話載入。只在這裡保留名稱和用途。"
           },
           {
-            "term": "專案自己的登記",
-            "text": "每個專案在測試機器上有 1 份說明：測試用的資料庫、連接埠、怎麼登入、怎麼啟動。位置怎麼安排，寫在 [[固定的位置]]。"
+            "term": "專案另寫環境說明",
+            "text": "記錄測試資料庫、連接埠和登入方法。也要寫明啟動方式。位置安排可參考 [[固定的位置]]。"
           },
           {
-            "term": "網路也是檔案",
-            "text": "網段和設備登記在 Git 倉庫的 1 個檔案裡。做法寫在 [[網路寫成檔案]]。"
+            "term": "網路也要登記",
+            "text": "把網段和設備登記在 Git 倉庫。做法可參考 [[網路寫成檔案]]。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼讓登記的檔案被讀到",
-        "body": ["檔案寫了，還要讓 Claude Code 在對的時候去讀。"],
+        "title": "做法：規定何時讀取，何時更新",
+        "body": ["==在規則中寫明動手前必讀的檔案==。"],
         "points": [
           {
-            "term": "規定動手之前先讀",
-            "text": "我從 [[家目錄]] 開 Claude Code，專案的 CLAUDE.md 不會自動載入。所以我規定：動某個專案之前，先讀那個專案的 CLAUDE.md、AGENTS.md 或 README。"
+            "term": "操作專案前先讀說明",
+            "text": "從 [[家目錄]] 開啟對話時，留意專案規則。不要假設專案的 CLAUDE.md 已載入。規定動手前先讀專案規則或 README。"
           },
           {
-            "term": "我貼的證據優先",
-            "text": "記憶寫的是當時的狀況，可能已經過時。我貼的截圖和 log 跟記憶不一樣的時候，以我貼的為準。"
+            "term": "以現場證據為準",
+            "text": "記憶可能已經過時。截圖和 [[log]] 與記憶不同時，以現場證據為準。"
           },
           {
-            "term": "同一類的筆記收成 1 則總表",
-            "text": "我把同一類的筆記收進 1 則總表，索引只留總表那 1 行。現在索引有 110 則，筆記的檔案有 285 個。"
+            "term": "合併同類筆記",
+            "text": "把同類筆記整理成總表。索引只保留總表的入口。"
           }
         ]
       },
       {
-        "title": "下一步：把交代過 2 次的事登記成檔案",
+        "title": "下一步：把常用交代寫成說明",
         "body": [
-          "挑 1 件你最常交代的事：某台機器怎麼連，或某個專案怎麼啟動。",
-          "請 Claude Code 寫成 1 份檔案，放在那個專案裡。再在 CLAUDE.md 加 1 行：動手之前先讀這份。",
-          "開一個新對話，問同一件事。答得出來，而且沒有摸索，就是寫對了。"
+          "挑選常用的連線或專案啟動方式。",
+          "請 Claude Code 寫成檔案，放進專案。",
+          "在 CLAUDE.md 規定動手前先讀。",
+          "開啟新對話，確認能依檔案回答。"
         ],
-        "callout": "==交代過 2 次的事，就登記成檔案==。"
+        "callout": "==把常用交代寫成檔案，讓新對話先讀==。"
       }
     ]
   },
@@ -2777,128 +2668,130 @@
       }
     ],
     "intro": [
-      "我的筆電只做 2 件事：編輯檔案，還有 git 的操作。",
-      "什麼都在筆電上做，是常見的做法。我不這樣做，因為==筆電是我的主力機，重的工作會拖慢我手上的事==。",
-      "每種工作有固定的機器。Claude Code 照這張分工表，決定指令送去哪裡。"
+      "把筆電的工作限於編輯和 git 操作。",
+      "將編譯、運算和儲存交給適合的機器。",
+      "讓 Claude Code 依分工表選擇執行位置。"
     ],
     "sections": [
       {
-        "title": "原理：每種工作有固定的機器",
+        "title": "原理：依工作需求分配機器",
         "body": [
-          "我的機器用 Minecraft 的方塊命名。筆電叫 workbench，是工作台。",
-          "選 1 種工作，看是哪一台做。"
+          "==讓每種工作都有固定的執行位置==。",
+          "例如，用 workbench 表示負責編輯的筆電。",
+          "把工作與對應機器寫進分工表。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "這個工作",
+          "ask": "工作應放在哪裡",
           "states": [
             {
               "label": "編輯和 git",
               "blocks": [
                 {
-                  "title": "送到哪一台",
+                  "title": "執行位置",
                   "rows": [
                     {
-                      "text": "workbench，我的筆電",
+                      "text": "例如，workbench 是編輯用的筆電。",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "筆電只做輕的事。我同時還要用這台做別的事。"
+              "text": "把輕的工作留在筆電。"
             },
             {
               "label": "編譯和測試",
               "blocks": [
                 {
-                  "title": "送到哪一台",
+                  "title": "執行位置",
                   "rows": [
                     {
-                      "text": "sandbox，家裡主機上的虛擬機",
+                      "text": "例如，sandbox 是開發用的虛擬機。",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "這是預設的地方。專案的相依套件也只裝在這裡。"
+              "text": "相依套件也安裝在這個環境。"
             },
             {
-              "label": "用顯示卡的運算",
+              "label": "顯示卡運算",
               "blocks": [
                 {
-                  "title": "送到哪一台",
+                  "title": "執行位置",
                   "rows": [
                     {
-                      "text": "furnace，有顯示卡的桌機",
+                      "text": "例如，furnace 是有顯示卡的桌機。",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "訓練模型、背景瀏覽器截不到的頁面，都送到這一台。"
+              "text": "訓練模型可放在這裡。背景瀏覽器截不到的頁面也可交給桌機。"
             },
             {
               "label": "備份",
               "blocks": [
                 {
-                  "title": "送到哪一台",
+                  "title": "執行位置",
                   "rows": [
                     {
-                      "text": "enderchest，儲存用的主機",
+                      "text": "專門負責儲存的主機",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "備份放在專門儲存的那一台，不跟其他工作混在一起。"
+              "text": "把備份放到專門儲存的機器。"
             }
           ]
         },
         "points": [
           {
-            "term": "分工寫成 CLAUDE.md 的 1 行",
-            "text": "筆電只編輯和做 git 的操作。編譯、測試、伺服器在 sandbox。要用顯示卡的工作和長時間的工作在別台。Claude Code 每次新對話都會載入這一行。"
+            "term": "把分工寫進規則",
+            "text": "在 CLAUDE.md 指定各類工作的執行位置。Claude Code 在新對話中讀取分工。"
           },
           {
-            "term": "筆電上不裝相依套件",
-            "text": "專案放在雲端同步的資料夾，相依套件不裝在這裡。安裝和測試都是重的工作，所以到 sandbox 做。"
+            "term": "在遠端安裝相依套件",
+            "text": "程式碼可以放在雲端同步的資料夾。不要在這裡安裝相依套件。把安裝和測試放到遠端開發環境。"
           },
           {
-            "term": "要乾淨的環境，就開一個新的",
-            "text": "需要全新的環境時，Claude Code 用 tool 開一個新的容器。這樣不會弄髒其他專案的環境。"
+            "term": "用容器隔離新環境",
+            "text": "需要乾淨環境時，用工具建立容器。讓新環境與其他專案分開。"
           },
           {
-            "term": "其他幾台",
-            "text": "spawner 負責開虛擬機和容器。hopper 是路由器。每一台的名字和用途，在 CLAUDE.md 裡各佔 1 行。"
+            "term": "登記其他設備的用途",
+            "text": "例如，spawner 負責建立虛擬機和容器。例如，hopper 負責路由。在 CLAUDE.md 記錄名稱和用途。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼讓分工不被打破",
-        "body": ["分工表寫了，還是會被打破。我補了 3 條。"],
+        "title": "做法：補上例外與派工規則",
+        "body": ["==把專案例外與執行限制寫清楚==。"],
         "points": [
           {
-            "term": "例外記在記憶裡",
-            "text": "只有 Mac 做得到的編譯留在筆電，例如 iOS 的 app。這種例外記在 [[記憶]]，跟著專案走。"
+            "term": "例外跟著專案記錄",
+            "text": "只有 Mac 能完成的編譯留在筆電。例如，iOS app 的編譯就是這類例外。把例外寫進專案相關的 [[記憶]]。"
           },
           {
-            "term": "舊版本不留在筆電",
-            "text": "換新版就直接蓋掉舊版。2026-10-05 我數過：同一個 app 在筆電上有 10 份舊版，加上 12 個壓縮檔，一共 4.9 GB。"
+            "term": "以新版取代舊版",
+            "text": "更新筆電上的 app 時，以新版取代舊版。避免持續保留舊版本。"
           },
           {
-            "term": "子 agent 也要照分工",
-            "text": "子 agent 不一定會遵守我的 CLAUDE.md。所以「在哪一台執行」除了寫在 CLAUDE.md，也寫進每一次派工的指示。"
+            "term": "派工也要寫明分工",
+            "text": "[[子 agent]] 不一定會遵守 CLAUDE.md。每份派工指示都要寫明執行位置。"
           }
         ]
       },
       {
-        "title": "下一步：先搬走 1 種重的工作",
+        "title": "下一步：移走重的工作",
         "body": [
-          "列出你的電腦這一週做過的重工作：編譯、測試、跑模型。",
-          "挑 1 種，搬到另一台機器。在 CLAUDE.md 寫 1 行：這種工作到哪一台做。",
-          "之後筆電又變慢的時候，看是哪個工作在跑，再搬 1 種。"
+          "列出編譯、測試和模型運算等重工作。",
+          "挑選其中一類，移到其他機器。",
+          "在 CLAUDE.md 寫明這類工作的執行位置。",
+          "筆電變慢時，檢查還有哪些重工作。"
         ],
-        "callout": "==筆電只編輯，重的工作送到固定的機器==。"
+        "callout": "==筆電負責編輯，重的工作交給固定機器==。"
       }
     ]
   },
@@ -2915,28 +2808,31 @@
       }
     ],
     "intro": [
-      "我的虛擬機和容器，編號就是位址。",
-      "編號隨便給，要找 1 台機器就得翻表。我的規則是==看到編號，就算得出在哪一台主機、位址的最後一段是多少==。",
-      "每台主機有自己的網段。知道是哪一台主機，完整的位址就出來了。"
+      "替虛擬機和容器設定可反推位址的編號。",
+      "用編號辨認主機，並取得位址尾碼。",
+      "搭配主機的網段，就能得到完整位址。"
     ],
     "sections": [
       {
-        "title": "原理：編號裡有主機，也有位址",
+        "title": "原理：讓編號對應主機與位址",
         "body": [
-          "我用 Proxmox 這套軟體開虛擬機和容器。容器是比虛擬機輕的隔離環境。每一台都有 1 個編號。",
-          "規則有 2 條。千位數代表第幾台主機，每台主機有自己的網段。後 3 碼等於位址的最後一段。",
-          "下面的位址是示意的，不是我真實的網段。選 1 個編號看看。"
+          "虛擬機和容器都有可識別的編號。",
+          "容器是比虛擬機輕的隔離環境。",
+          "以下示範 2 條編號規則。",
+          "千位數對應主機，後 3 碼對應位址尾碼。",
+          "==把主機網段與編號尾碼合起來，取得位址==。",
+          "圖中的位址是示意，不是真實網段。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "編號",
+          "ask": "從編號反推位置",
           "side": true,
           "states": [
             {
               "label": "150",
               "blocks": [
                 {
-                  "title": "拆開來看",
+                  "title": "拆解編號",
                   "rows": [
                     {
                       "text": "千位數",
@@ -2949,18 +2845,18 @@
                   ]
                 },
                 {
-                  "title": "算出來的",
+                  "title": "對應位置",
                   "rows": [
                     {
                       "text": "主機",
                       "value": "第 1 台"
                     },
                     {
-                      "text": "位址的最後一段",
+                      "text": "位址尾碼",
                       "value": ".150"
                     },
                     {
-                      "text": "完整的位址",
+                      "text": "示意位址",
                       "value": "10.0.1.150"
                     },
                     {
@@ -2970,13 +2866,13 @@
                   ]
                 }
               ],
-              "text": "後 3 碼在 100 到 199 之間的，是虛擬機。"
+              "text": "這套規則把尾碼 100 到 199 分給虛擬機。"
             },
             {
               "label": "1210",
               "blocks": [
                 {
-                  "title": "拆開來看",
+                  "title": "拆解編號",
                   "rows": [
                     {
                       "text": "千位數",
@@ -2989,7 +2885,7 @@
                   ]
                 },
                 {
-                  "title": "算出來的",
+                  "title": "對應位置",
                   "rows": [
                     {
                       "text": "主機",
@@ -2997,11 +2893,11 @@
                       "tone": "mark"
                     },
                     {
-                      "text": "位址的最後一段",
+                      "text": "位址尾碼",
                       "value": ".210"
                     },
                     {
-                      "text": "完整的位址",
+                      "text": "示意位址",
                       "value": "10.0.2.210"
                     },
                     {
@@ -3012,13 +2908,13 @@
                   ]
                 }
               ],
-              "text": "後 3 碼在 200 到 254 之間的，是容器。換了主機，網段也跟著換。"
+              "text": "這套規則把尾碼 200 到 254 分給容器。主機不同，使用的網段也不同。"
             },
             {
               "label": "1300",
               "blocks": [
                 {
-                  "title": "拆開來看",
+                  "title": "拆解編號",
                   "rows": [
                     {
                       "text": "千位數",
@@ -3031,56 +2927,52 @@
                   ]
                 },
                 {
-                  "title": "算出來的",
+                  "title": "檢查結果",
                   "rows": [
                     {
-                      "text": "後 3 碼超過 254，建不出來",
+                      "text": "尾碼超過規則允許的 254，拒絕建立。",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "位址的最後一段只能到 254。這種編號，建立機器的工具會直接拒絕。"
+              "text": "建立工具檢查尾碼，拒絕超出範圍的編號。"
             }
           ]
         },
         "points": [
           {
-            "term": "不用翻表",
-            "text": "看到編號 1210，就知道是第 2 台主機上的容器，位址的尾數是 210。再配上那台主機的網段，就是完整的位址。"
+            "term": "用編號反推位置",
+            "text": "例如，1210 對應第 2 台主機上的容器。位址尾碼是 210。搭配主機網段，就能取得完整位址。"
           },
           {
-            "term": "規則寫在工具裡",
-            "text": "建立機器的工具會檢查位址的最後一段，超出範圍就拒絕。==檢查寫在工具裡，不合的編號建不出來==。網段跟著主機走這一條，目前只是約定，工具還沒有檢查。"
-          },
-          {
-            "term": "每台主機照同一個標準",
-            "text": "我有 3 台主機照這個規則。原本每一台的設定都不一樣。2026-10-23 我請 Claude Code 統一了。"
+            "term": "分清楚檢查與約定",
+            "text": "把尾碼範圍檢查寫進建立工具。主機與網段的對應仍需遵守約定。這項對應尚未由工具檢查。"
           }
         ]
       },
       {
-        "title": "做法：機器由 Claude Code 開",
-        "body": ["機器是 Claude Code 用工具開的。工具會檢查編號。"],
+        "title": "做法：讓 Claude Code 透過工具建立機器",
+        "body": ["==用建立工具檢查編號，拒絕不合規則的輸入==。"],
         "points": [
           {
-            "term": "開機器是 tool",
-            "text": "開容器、開虛擬機、設定網域，都是我做的 [[MCP]] tool。Claude Code 不用進後台點。"
+            "term": "透過 MCP 操作",
+            "text": "用 [[MCP]] 工具建立容器和虛擬機。設定網域也可以透過工具完成。Claude Code 不必到後台點選。"
           },
           {
-            "term": "名字留給服務",
-            "text": "虛擬機和容器用裡面跑的服務命名，不另外取代號。看名字就知道裡面是什麼。"
+            "term": "用服務命名",
+            "text": "以執行的服務命名虛擬機和容器。不要另外取難以辨認用途的代號。"
           }
         ]
       },
       {
-        "title": "下一步：先定 1 條可以反推的編號規則",
+        "title": "下一步：先定可反推的編號規則",
         "body": [
-          "你有會開虛擬機的主機的話，先定 1 條編號規則。",
-          "規則要能反推：看到編號，算得出位址。",
-          "再把規則寫進建立機器的工具，讓不合規則的編號建不出來。"
+          "為建立虛擬機的主機訂定編號規則。",
+          "檢查能否從編號反推出位址。",
+          "把規則寫進建立工具，拒絕不合規則的輸入。"
         ],
-        "callout": "==看到編號，就算得出位址==。"
+        "callout": "==讓編號提供足夠資訊，反推出機器位址==。"
       }
     ]
   },
@@ -3097,26 +2989,28 @@
       }
     ],
     "intro": [
-      "每個專案在 sandbox 上只有 1 個固定的位置。sandbox 是我用來編譯和測試的機器。",
-      "沒有規定的話，每個新對話會自己找地方放。我不這樣做，因為==每個新對話都會用不同的做法，從頭摸索一次==。",
-      "固定的位置裡有程式碼，還有 1 份說明：怎麼測試、怎麼登入。"
+      "替專案保留固定的測試資料夾。",
+      "例如，sandbox 可以作為編譯和測試的機器。",
+      "在固定位置保存程式碼和環境說明。",
+      "讓新對話沿用環境，減少重新摸索。"
     ],
     "sections": [
       {
-        "title": "原理：同一個位置，每個新對話重複使用",
+        "title": "原理：讓新對話重複使用固定位置",
         "body": [
-          "先看一句我真的打過的話：「我覺得要整理一下 sandbox 使用習慣 不然每次新的 claude code 都用不同的使用方式 應該每個 project 都要有自己的 sandbox 空間 這樣就可以每次重用了」",
-          "每個專案的固定位置叫 main。2 個對話同時要用同一個專案，會怎麼樣？切換看看。"
+          "==固定程式碼與說明的位置，讓新對話接著用==。",
+          "把專案的固定位置命名為 main。",
+          "依佔用狀態，決定使用固定位置或臨時位置。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "main 這個位置",
+          "ask": "如何選擇工作位置",
           "states": [
             {
-              "label": "沒有人在用",
+              "label": "固定位置未佔用",
               "blocks": [
                 {
-                  "title": "這個對話拿到",
+                  "title": "使用位置",
                   "rows": [
                     {
                       "text": "main，專案的固定位置",
@@ -3125,31 +3019,31 @@
                   ]
                 }
               ],
-              "text": "直接用固定的位置。上一個對話留下的環境，可以接著用。"
+              "text": "直接使用固定位置，沿用留下的環境。"
             },
             {
-              "label": "2 小時內有人在用",
+              "label": "固定位置正在使用",
               "blocks": [
                 {
-                  "title": "這個對話拿到",
+                  "title": "使用位置",
                   "rows": [
                     {
-                      "text": "另一個臨時的位置",
+                      "text": "另外分配臨時位置",
                       "tone": "mark"
                     },
                     {
-                      "text": "內容從 main 複製過來"
+                      "text": "從 main 複製內容"
                     }
                   ]
                 }
               ],
-              "text": "2 個對話不搶同一個位置。臨時的位置閒置 24 小時之後，會自動清掉。"
+              "text": "讓同時工作的對話使用不同位置。閒置的臨時位置由排程清除。"
             },
             {
-              "label": "被佔用超過 2 小時",
+              "label": "佔用紀錄已失效",
               "blocks": [
                 {
-                  "title": "這個對話拿到",
+                  "title": "使用位置",
                   "rows": [
                     {
                       "text": "main，專案的固定位置",
@@ -3158,55 +3052,57 @@
                   ]
                 }
               ],
-              "text": "佔用的紀錄超過 2 小時，就當成已經放掉。"
+              "text": "佔用紀錄失效後，固定位置視為已釋放。"
             }
           ]
         },
         "points": [
           {
-            "term": "位置裡有什麼",
-            "text": "每個專案 1 個資料夾。裡面有程式碼，還有不進 git 的東西：環境設定、登入用的腳本、測試腳本。另外有 1 份說明。"
+            "term": "保存程式碼與環境資料",
+            "text": "在專案資料夾保存程式碼和環境設定。也放入登入腳本、測試腳本和說明。環境設定與這些腳本不放進 git。"
           },
           {
-            "term": "說明寫什麼",
-            "text": "測試用的資料庫、連接埠、怎麼登入、怎麼啟動。我在 [[CLAUDE.md]] 規定：先讀這份說明，再動手。"
+            "term": "寫清楚環境說明",
+            "text": "記錄測試資料庫、連接埠和登入方法。也要寫明啟動方式。在 [[CLAUDE.md]] 規定先讀說明。"
           },
           {
-            "term": "每個專案有自己的資料庫和連接埠",
-            "text": "連接埠是服務開在機器上的號碼。每個專案分到 1 個測試用的資料庫，還有 10 個連接埠。2 個專案不會搶到同一個。"
+            "term": "分配獨立資源",
+            "text": "連接埠是服務在機器上使用的號碼。為各專案分配測試資料庫和連接埠。避免專案互相爭用。"
           },
           {
-            "term": "用 1 個指令問位置",
-            "text": "原本的規則是放一個鎖定用的檔案，沒有一個專案照做。所以我改成 1 個指令。Claude Code 問這個指令要用哪個位置，指令直接回答。"
+            "term": "用指令取得位置",
+            "text": "讓 Claude Code 向指令查詢工作位置。由指令直接回答應使用的位置。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼維持固定的位置",
-        "body": ["位置定下來之後，還有 3 件事要顧。"],
+        "title": "做法：集中共用工具，清理臨時位置",
+        "body": ["==用排程清理閒置位置，讓清理自動執行==。"],
         "points": [
           {
-            "term": "共用的工具放在共用的位置",
-            "text": "瀏覽器這類每個專案都會用的工具，放在共用的資料夾。每個專案各裝一份的話，更新要改很多地方。"
+            "term": "共用工具集中放置",
+            "text": "把瀏覽器等共用工具放在共用資料夾。更新時，不必逐一修改各專案的副本。"
           },
           {
-            "term": "舊的工作目錄凍結",
-            "text": "我 2026-10-29 的筆記記的是：舊的工作目錄有 565 個資料夾、116 GB。現在的規則是：不在舊的地方開新資料夾。"
+            "term": "停止擴充舊目錄",
+            "text": "凍結舊的工作目錄。不要繼續在舊位置建立資料夾。"
           },
           {
-            "term": "每天自動清理",
-            "text": "每天有 1 個排程，清掉閒置的臨時位置。清理不靠 Claude Code 記得。"
+            "term": "用排程清理",
+            "text": "設定排程清除閒置的臨時位置。讓清理不依賴 Claude Code 記得執行。"
           }
         ]
       },
       {
-        "title": "下一步：給 1 個專案固定的位置",
+        "title": "下一步：替常用專案固定位置",
         "body": [
-          "挑 1 個你常交給 Claude Code 測試的專案。",
-          "在測試的機器上，給這個專案 1 個固定的資料夾。再寫 1 份說明：資料庫、連接埠、怎麼登入、怎麼啟動。",
-          "開一個新對話，只問 3 件事：程式放哪、怎麼登入、怎麼啟動。答得出來就完成了。"
+          "挑選常交給 Claude Code 測試的專案。",
+          "在測試機器上指定固定的資料夾。",
+          "寫明資料庫、連接埠、登入和啟動方式。",
+          "開啟新對話，詢問位置、登入和啟動方法。",
+          "確認能依說明回答。"
         ],
-        "callout": "==新對話接著用上一個對話的位置，不重新摸索==。"
+        "callout": "==讓新對話沿用固定位置與環境說明==。"
       }
     ]
   },
@@ -3223,124 +3119,119 @@
       }
     ],
     "intro": [
-      "我的網路設定是 Git 倉庫裡的檔案。",
-      "在後台點一點就能改網路。我不這樣改，因為==在後台改的設定，下一次套用就會被蓋掉==。",
-      "改網路的順序是固定的：先改檔案，再動設備。"
+      "把網路設定保存在 [[Git]] 倉庫。",
+      "修改網路時，先改檔案，再動設備。",
+      "只在後台修改的設定，會被後續套用覆蓋。"
     ],
     "sections": [
       {
-        "title": "原理：改網路，就是改檔案",
+        "title": "原理：把網路設定寫成可檢查的檔案",
         "body": [
-          "先看一句我真的打過的話：「好，先盤點寫網段表」",
-          "網段表後來變成 1 個檔案，登記每個網段和每台設備。誰能連到誰，是另一個檔案。",
-          "同一個修改放在不同的地方，會怎麼樣？切換看看。"
+          "把網段和設備登記成檔案。",
+          "另外記錄哪些設備可以互相連線。",
+          "==以檔案為準，透過合併套用存取規則==。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "這個修改",
+          "ask": "修改放在哪裡",
           "states": [
             {
-              "label": "在 pull request 裡",
+              "label": "pull request 裡",
               "blocks": [
                 {
-                  "title": "發生的事",
+                  "title": "檢查階段",
                   "rows": [
                     {
-                      "text": "自動跑存取規則的測試"
+                      "text": "自動執行存取規則測試"
                     },
                     {
-                      "text": "還沒有套用到網路上",
+                      "text": "尚未套用到網路",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "測試確認規則沒有寫壞。這時候網路還沒有變。"
+              "text": "先測試存取規則，網路設定尚未改變。"
             },
             {
               "label": "合併之後",
               "blocks": [
                 {
-                  "title": "發生的事",
+                  "title": "套用階段",
                   "rows": [
                     {
-                      "text": "存取規則套用到網路上",
+                      "text": "把存取規則套用到網路",
                       "tone": "mark"
                     },
                     {
-                      "text": "網段表送給維運服務",
+                      "text": "把網段表交給維運服務比對",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "合併才套用存取規則。網段表只是送給維運服務比對，設備還是要另外動。"
+              "text": "網段表用於比對狀態。設備仍需另外操作。"
             },
             {
-              "label": "只在後台改",
+              "label": "只在後台修改",
               "blocks": [
                 {
-                  "title": "發生的事",
+                  "title": "設定不一致",
                   "rows": [
                     {
-                      "text": "下一次合併，後台的修改被蓋掉",
+                      "text": "後續合併會覆蓋後台的修改",
                       "tone": "mark"
                     },
                     {
-                      "text": "維運服務發現跟檔案不一樣，通知我"
+                      "text": "維運服務比對差異並發出通知"
                     }
                   ]
                 }
               ],
-              "text": "後台的修改不在檔案裡。下一次套用就不見了。"
+              "text": "後台的修改沒有寫進檔案。後續套用會覆蓋這些修改。"
             }
           ]
         },
         "points": [
           {
-            "term": "檔案就是登記",
-            "text": "網段、設備、誰能連到誰，都在這個倉庫裡。Claude Code 要連 1 台機器之前，讀檔案就知道怎麼走。"
+            "term": "用檔案查連線方式",
+            "text": "在倉庫記錄網段、設備和存取規則。Claude Code 連線前先讀檔案。"
           },
           {
-            "term": "每 10 分鐘比對一次",
-            "text": "維運服務每 10 分鐘拿檔案跟實際的網路比對。多出沒登記的設備，或規則不一樣，就通知我。"
+            "term": "比對實際狀態",
+            "text": "讓維運服務比對檔案與實際網路。有未登記的設備或規則差異時，發出通知。"
           },
           {
-            "term": "1 條規則只開放 1 個服務",
-            "text": "存取規則 1 條只開放 1 個服務，不開放整個網路。現在有 12 條。"
-          },
-          {
-            "term": "這個倉庫還很新",
-            "text": "倉庫是 2026-11-13 建的。寫這篇的時候只用了 2 天。"
+            "term": "依服務開放存取",
+            "text": "讓存取規則只開放指定服務。不要直接開放整個網路。"
           }
         ]
       },
       {
-        "title": "做法：Claude Code 怎麼改我的網路",
-        "body": [
-          "Claude Code 讀網路的狀態用 tool，改存取規則走 pull request。"
-        ],
+        "title": "做法：讀取狀態用工具，修改設定送審",
+        "body": ["==讀取狀態用工具，修改規則走 pull request==。"],
         "points": [
           {
-            "term": "讀用 tool，改走 pull request",
-            "text": "我做的 Tailscale [[MCP]] 有 5 個 tool，都只能讀或檢查。要改存取規則，Claude Code 改檔案，再送 [[pull request]]。每一次修改都留下紀錄。"
+            "term": "把讀取與修改分開",
+            "text": "Tailscale [[MCP]] 工具用來讀取或檢查。修改存取規則時，先修改檔案。再送出 [[pull request]]，留下修改紀錄。"
           },
           {
-            "term": "加 1 台設備是 4 個步驟",
-            "text": "步驟寫在倉庫的說明裡。Claude Code 照著做，不用我每次交代。"
+            "term": "依說明新增設備",
+            "text": "新增設備的步驟寫在倉庫說明中。讓 Claude Code 依說明操作。"
           },
           {
-            "term": "說明裡有一段寫給 agent",
-            "text": "倉庫的說明有一段是寫給 agent 的：哪些事可以做，哪些事不要做。Claude Code 動這個倉庫之前會先讀。"
+            "term": "寫明 agent 的操作範圍",
+            "text": "在倉庫說明中，列出可做與不可做的事。規定 Claude Code 操作前先讀。"
           }
         ]
       },
       {
-        "title": "下一步：先有一份網段表",
+        "title": "下一步：先建立網段表",
         "body": [
-          "請 Claude Code 盤點：你的網路有哪些網段、哪些設備。寫成 1 個檔案，放進 Git 倉庫。",
-          "之後改網路，先改這個檔案，再動設備。",
-          "自動套用可以之後再加。光是有這份檔案，Claude Code 就知道每一台怎麼連。"
+          "請 Claude Code 盤點網段和設備。",
+          "把結果寫成檔案，放進 Git 倉庫。",
+          "修改網路前，先更新檔案，再動設備。",
+          "有了登記資料，再加入自動套用。"
         ],
         "callout": "==先改檔案，再動設備==。"
       }
@@ -3359,141 +3250,142 @@
       }
     ],
     "intro": [
-      "我有 1 份 Plugin 的目錄，登記了 8 個 Plugin。Claude Code 和 Codex 都從這份目錄安裝。Codex 是 OpenAI 的 coding agent。",
-      "==目錄寫死每個 Plugin 的版本==，2 邊裝到的才會是同一版。有 1 個例外，下面會講。",
-      "寫死也有代價：我發了新版，要再改一次目錄，使用的人才拿得到。"
+      "用 [[Plugin 目錄]] 登記安裝來源和版本。",
+      "讓 Claude Code 與 [[Codex]] 從相同目錄安裝。",
+      "目錄固定版本，才能取得相同內容。",
+      "發佈新版後，也要更新目錄。"
     ],
     "sections": [
       {
-        "title": "原理：目錄寫死版本，2 邊才裝到同一版",
+        "title": "原理：固定版本，讓安裝內容一致",
         "body": [
-          "目錄是 1 個檔案，裡面有 8 個 [[Plugin]]。每一個都寫了版本號，還有那一版在 Git 裡的編號。",
-          "目錄指向 Plugin 的方式不一樣，安裝的人會拿到什麼？切換看看。"
+          "在目錄記錄 [[Plugin]] 的版本號。",
+          "也要記錄該版本在 Git 裡的編號。",
+          "==讓目錄指向固定版本，避免安裝內容變動==。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "目錄指向",
+          "ask": "目錄指向什麼",
           "side": true,
           "states": [
             {
-              "label": "寫死的版本",
+              "label": "固定版本",
               "blocks": [
                 {
-                  "title": "安裝的人拿到",
+                  "title": "安裝內容",
                   "rows": [
                     {
-                      "text": "目錄寫的那一版",
+                      "text": "取得目錄指定的版本",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "我發新版之後",
+                  "title": "新版發佈後",
                   "rows": [
                     {
-                      "text": "要再改一次目錄，對方才拿得到"
+                      "text": "更新目錄，才能安裝新版"
                     }
                   ]
                 }
               ],
-              "text": "2 邊裝到同一版。代價是每次發版，要多改 1 次目錄。"
+              "text": "Claude Code 與 Codex 可取得相同版本。發版後需同步更新目錄。"
             },
             {
-              "label": "最新的分支",
+              "label": "最新分支",
               "blocks": [
                 {
-                  "title": "安裝的人拿到",
+                  "title": "安裝內容",
                   "rows": [
                     {
-                      "text": "安裝當下最新的內容"
+                      "text": "取得安裝當下的分支內容"
                     }
                   ]
                 },
                 {
-                  "title": "我發新版之後",
+                  "title": "內容變動後",
                   "rows": [
                     {
-                      "text": "不同時間裝的人，拿到不同的內容",
+                      "text": "不同時間安裝，可能取得不同內容",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "我的規則是目錄不能指向分支。分支的內容會變，不同時間安裝的人拿到的不一樣。"
+              "text": "分支內容會變動。需要固定版本時，不要指向分支。"
             },
             {
-              "label": "我電腦上的資料夾",
+              "label": "本機資料夾",
               "blocks": [
                 {
-                  "title": "安裝的人拿到",
+                  "title": "安裝內容",
                   "rows": [
                     {
-                      "text": "只有我自己裝得到"
+                      "text": "本機直接使用資料夾內容"
                     }
                   ]
                 },
                 {
-                  "title": "我發新版之後",
+                  "title": "本機更新後",
                   "rows": [
                     {
-                      "text": "我馬上用到新版",
+                      "text": "Claude Code 使用更新後的內容",
                       "tone": "mark"
                     },
                     {
-                      "text": "Codex 還停在目錄寫的舊版"
+                      "text": "Codex 仍使用目錄指定的版本"
                     }
                   ]
                 }
               ],
-              "text": "我自己的 zyx Plugin 走這條路。Claude Code 用的是 0.49.2，Codex 還停在 0.29.0。"
+              "text": "例如，zyx 可以採用本機資料夾。來源不同時，安裝版本可能不同。"
             }
           ]
         },
         "points": [
           {
-            "term": "目錄每次修改都自動檢查",
-            "text": "自動檢查看 4 件事。名字有沒有重複、版本號的格式、Git 編號的格式，還有說明裡的版本一不一致。"
+            "term": "自動檢查目錄",
+            "text": "每次修改目錄時，檢查名稱是否重複。檢查版本號和 Git 編號的格式。再確認說明中的版本是否一致。"
           },
           {
-            "term": "2 邊的安裝指令幾乎一樣",
-            "text": "Claude Code 和 Codex 都是 2 行指令：先加入目錄，再安裝 Plugin。"
+            "term": "先加目錄，再安裝",
+            "text": "Claude Code 和 Codex 都先加入目錄。再安裝所需的 Plugin。"
           },
           {
-            "term": "Codex 只用得到一部分",
-            "text": "zyx 這個 Plugin 裝到 Codex 之後，只有 [[Skill]] 會生效。子 agent 和 MCP tool 不會。"
-          },
-          {
-            "term": "現在的落差",
-            "text": "寫這篇的時候，Codex 上的 zyx 落後 20 個小版本。目錄從 2026-10-05 之後沒有人去改，版本就停在那裡。"
+            "term": "留意支援的內容",
+            "text": "例如，zyx 在 Codex 只啟用 [[Skill]]。其中的子 agent 和 MCP 工具不會生效。"
           }
         ]
       },
       {
-        "title": "做法：發版和改目錄是 2 步",
-        "body": ["目錄和 Plugin 放在不同的 Git 倉庫。"],
+        "title": "做法：發版後同步更新目錄",
+        "body": [
+          "目錄和 Plugin 放在不同的 Git 倉庫。",
+          "==發佈 Plugin 後，接著更新目錄的版本資訊==。"
+        ],
         "points": [
           {
-            "term": "先在 Plugin 的倉庫發版",
-            "text": "Plugin 自己的倉庫改版本號、發版。這一步只影響直接從這個倉庫裝的人。"
+            "term": "先發佈 Plugin",
+            "text": "在 Plugin 倉庫更新版本號並發版。這只影響直接從該倉庫安裝的使用者。"
           },
           {
-            "term": "再改目錄",
-            "text": "目錄的倉庫送一個 [[pull request]]，把版本號和 Git 的編號一起改成新的。合併之後，從目錄安裝的人才拿得到新版。"
+            "term": "再更新目錄",
+            "text": "在目錄倉庫送出 [[pull request]]。同步更新版本號與 Git 編號。合併後，從目錄安裝才能取得新版。"
           },
           {
-            "term": "說明裡有一段寫給 agent",
-            "text": "目錄的說明有一段是寫給 agent 的，寫了怎麼加 Plugin、怎麼改版本。Claude Code 照著做。"
+            "term": "寫明目錄操作方式",
+            "text": "在說明中列出新增 Plugin 的方式。也要寫明版本更新方式。讓 Claude Code 依說明操作。"
           }
         ]
       },
       {
-        "title": "下一步：給你的 Plugin 一份目錄",
+        "title": "下一步：替 Plugin 建立版本目錄",
         "body": [
-          "你的 Skill 要給另一台電腦，或另一個 agent 用的話，先包成 Plugin，再登記到 1 份目錄。",
-          "目錄裡寫死版本。",
-          "每次發版之後，記得改目錄。可以請 Claude Code 在發版的同一輪一起改。"
+          "要讓其他電腦或 agent 使用 [[Skill]]，先包成 Plugin。",
+          "把 Plugin 登記到目錄，固定安裝版本。",
+          "請 Claude Code 在發版時一起更新目錄。"
         ],
-        "callout": "==目錄寫死版本，發版之後記得改目錄==。"
+        "callout": "==固定安裝版本，並在發版後更新目錄==。"
       }
     ]
   },
@@ -3510,15 +3402,18 @@
       }
     ],
     "intro": [
-      "這是一門 5 天的小課程。你會架出一個 Claude Code 管得動的小機房。",
-      "只需要 1 台多出來的機器：舊電腦，或租來的主機。==每天只做 1 件事，做完就用一個新對話測試==。",
-      "每一天都對應這一區的一篇文章。先做，卡住了再去讀。"
+      "這門課程分成 5 天。",
+      "準備舊電腦或租來的主機，作為遠端環境。",
+      "每天完成指定工作，再用新對話驗證。",
+      "遇到問題時，閱讀對應文章。"
     ],
     "sections": [
       {
-        "title": "課程：5 天，每天 1 件事",
+        "title": "課程：5 天，每天完成指定工作",
         "body": [
-          "每一天的工作都交給 Claude Code 做。你負責講要什麼，還有檢查做完的條件。"
+          "把每天的工作交給 Claude Code。",
+          "先交代需求，再檢查完成條件。",
+          "==用新對話驗證規則和說明是否能被讀取==。"
         ],
         "figure": {
           "kind": "diagram",
@@ -3537,35 +3432,36 @@
         },
         "points": [
           {
-            "term": "第 1 天：接上 1 台機器",
-            "text": "先準備好那台機器的位址和登入的帳號。請 Claude Code 設定 [[ssh]]：給那台機器 1 個短名字，用金鑰登入，連線要重複使用。做完的條件：Claude Code 用 1 行 ssh 指令，在那台機器上執行 hostname，拿到那台機器的名字。"
+            "term": "第 1 天：接上遠端機器",
+            "text": "準備遠端機器的位址和登入帳號。請 Claude Code 設定 [[ssh]]。使用短名字、金鑰登入和連線重用。完成條件：透過 ssh 執行 hostname。確認能取得遠端機器的名字。"
           },
           {
-            "term": "第 2 天：寫 1 行分工",
-            "text": "在 [[CLAUDE.md]] 寫 1 行：哪些工作要到那台機器上做。再請 Claude Code 在那台機器上裝好專案要用的工具。做完的條件：開一個新對話，交一個要測試的任務。Claude Code 自己把程式送過去，在那台機器上跑完測試。"
+            "term": "第 2 天：寫明工作分工",
+            "text": "在 [[CLAUDE.md]] 指定遠端負責的工作。請 Claude Code 在遠端裝好專案工具。完成條件：用新對話交付測試任務。確認 Claude Code 把程式送到遠端測試。"
           },
           {
-            "term": "第 3 天：給 1 個專案固定的位置",
-            "text": "在那台機器上給 1 個專案固定的資料夾，再寫 1 份說明。做法看 [[固定的位置]]。做完的條件：新對話答得出程式放哪、怎麼登入、怎麼啟動。再請 Claude Code 照說明實際啟動 1 次。"
+            "term": "第 3 天：固定專案位置",
+            "text": "在遠端指定專案資料夾，並寫好環境說明。做法可參考 [[固定的位置]]。完成條件：新對話能回答位置和登入方法。也要能回答啟動方式，再依說明實際啟動。"
           },
           {
-            "term": "第 4 天：登記你的設備",
-            "text": "請 Claude Code 把你的設備寫成 1 個檔案：名字、用途、怎麼連。放進 Git 倉庫，再在 CLAUDE.md 寫 1 行這個檔案在哪。做完的條件：新對話問「某一台是做什麼的」，Claude Code 讀檔案回答。"
+            "term": "第 4 天：登記設備",
+            "text": "記錄設備名稱、用途和連線方式。把檔案放進 Git 倉庫。在 CLAUDE.md 寫明檔案位置。完成條件：用新對話詢問設備用途。確認 Claude Code 讀檔案回答。"
           },
           {
-            "term": "第 5 天：寫一段給 agent 的話",
-            "text": "在那個倉庫的說明裡加一段，寫給 agent：哪些事可以做，哪些事不要做。再在 CLAUDE.md 寫 1 行：動專案之前先讀說明。做完的條件：新對話要改那個倉庫的時候，先讀了這一段。"
+            "term": "第 5 天：寫明 agent 的操作範圍",
+            "text": "在倉庫說明列出可做與不可做的事。在 CLAUDE.md 規定操作前先讀。完成條件：用新對話交付倉庫修改任務。確認 Claude Code 先讀這段說明。"
           }
         ]
       },
       {
-        "title": "下一步：機器變多之前，先把規則定好",
+        "title": "下一步：先登記，再增加機器",
         "body": [
-          "5 天之後，你有 1 台 Claude Code 連得到的機器，還有 3 份登記的檔案。",
-          "要加第 2 台的時候，不用重新交代。在設備的檔案加 1 行，在 CLAUDE.md 的分工加 1 行。",
-          "開始用虛擬機之後，再定編號的規則。"
+          "完成課程後，確認連線與登記資料可用。",
+          "新增機器時，先更新設備檔案。",
+          "再更新 CLAUDE.md 裡的分工。",
+          "開始使用虛擬機時，再訂定編號規則。"
         ],
-        "callout": "==先有登記的檔案，再加機器==。"
+        "callout": "==先有登記的檔案，再增加機器==。"
       }
     ]
   },
@@ -3582,20 +3478,21 @@
       }
     ],
     "intro": [
-      "寫程式、改設定、部署，都由跟我對話的那個 Claude Code 自己做。[[子 agent]] 只負責查和審。",
-      "把工作分給很多個子 agent 同時做，看起來比較快。我不這樣做，因為==我量過：子 agent 用掉了一半的用量，大部分花在寫程式的那一種==。",
-      "所以我只在 1 種情況派子 agent：過程很長，帶回來的結論很短。"
+      "寫程式、改設定與部署，由主線的 Claude Code 處理。",
+      "過程很長、結論很短時，才派 [[子 agent]]。",
+      "簡短的工作與需要來回討論的事，留在主線處理。"
     ],
     "sections": [
       {
-        "title": "原理：派不派子 agent，看帶回來的東西有多短",
+        "title": "原理：依工作過程與交回的結論決定派工",
         "body": [
-          "我的 CLAUDE.md 有一行：「開發由主線 Kilo 自己做；查與審才派 subagent」。Kilo 是我給 Claude Code 取的名字。",
-          "同樣是工作，誰來做？選 1 種工作看看。"
+          "==過程很長、結論很短的工作，才適合派出去==。",
+          "例如：「開發由主線的 Claude Code 處理，查與審才派子 agent。」",
+          "依工作內容，選擇由主線處理或交給子 agent。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "這個工作",
+          "ask": "這個工作交給誰",
           "side": true,
           "states": [
             {
@@ -3605,26 +3502,13 @@
                   "title": "誰做",
                   "rows": [
                     {
-                      "text": "主線的 Claude Code 自己做",
+                      "text": "主線的 Claude Code 處理",
                       "tone": "mark"
-                    }
-                  ]
-                },
-                {
-                  "title": "到 2026-09 為止量到的",
-                  "rows": [
-                    {
-                      "text": "每次的動作，中位數",
-                      "value": "約 80 個"
-                    },
-                    {
-                      "text": "最多的 1 次",
-                      "value": "236 個"
                     }
                   ]
                 }
               ],
-              "text": "寫程式的子 agent 一跑就是很多個動作。量到的用量，大部分花在這裡。"
+              "text": "寫程式由主線的 Claude Code 處理。避免重新交代主線已知的背景。"
             },
             {
               "label": "查資料",
@@ -3633,7 +3517,7 @@
                   "title": "誰做",
                   "rows": [
                     {
-                      "text": "派 1 個負責查的子 agent",
+                      "text": "派負責查資料的子 agent",
                       "tone": "mark"
                     }
                   ]
@@ -3642,12 +3526,12 @@
                   "title": "帶回來的",
                   "rows": [
                     {
-                      "text": "幾行結論，加上出處"
+                      "text": "簡短的結論與出處"
                     }
                   ]
                 }
               ],
-              "text": "讀很多檔案、很長的 log，帶回來的只有幾行。這種工作才派出去。"
+              "text": "讀取檔案或長篇 log，再交回簡短結論。"
             },
             {
               "label": "審高風險的修改",
@@ -3656,11 +3540,11 @@
                   "title": "誰做",
                   "rows": [
                     {
-                      "text": "派 1 個負責審的子 agent",
+                      "text": "派負責審查的子 agent",
                       "tone": "mark"
                     },
                     {
-                      "text": "同時請 Codex 審 1 次"
+                      "text": "同時請 Codex 審查"
                     }
                   ]
                 },
@@ -3668,66 +3552,58 @@
                   "title": "帶回來的",
                   "rows": [
                     {
-                      "text": "通過或不通過，還有要修的地方"
+                      "text": "是否通過，以及需要修正的地方"
                     }
                   ]
                 }
               ],
-              "text": "寫的人看不到自己的盲點。所以審要換一個 agent。"
+              "text": "把審查交給另一個 agent，檢查開發時的盲點。"
             }
           ]
         },
         "points": [
           {
-            "term": "子 agent 的代價",
-            "text": "另外派出去的子 agent 看不到我和 Claude Code 的對話。背景要重新交代，做完只交回 1 段摘要。需要主線已經知道的背景時，我用 fork。fork 會帶著目前的對話。"
+            "term": "重新交代背景",
+            "text": "一般子 agent 不帶原本的對話。派工時要重新交代背景。需要沿用目前的對話時，使用 fork。fork 會帶著目前的對話。"
           },
           {
-            "term": "一半是怎麼量的",
-            "text": "到 2026-09-23 為止的 30 天、126 次對話，子 agent 佔了加權用量的 50%。加權是指輸出的 [[token]] 算得比輸入重。這 50% 裡面，78% 花在寫程式的那一種。"
-          },
-          {
-            "term": "改了之後",
-            "text": "2026-10-13 到 11-15，我用同一個算法重算，子 agent 佔 9.9%。寫程式的那一種子 agent，我已經拿掉了。"
-          },
-          {
-            "term": "這 3 種情況不派",
-            "text": "5 步以內的小事不派。要跟我來回討論的事不派。主線剛讀過的檔案也不派。我當時的糾正是：「化繁為簡，不要把簡單的事變複雜。」"
+            "term": "留在主線的工作",
+            "text": "簡短的工作不派出去。需要與使用者來回討論的事，也留在主線。主線剛讀過的檔案，不再派子 agent 重讀。"
           }
         ]
       },
       {
-        "title": "做法：查、審、規劃，各有 1 種子 agent",
-        "body": ["寫這篇的時候，我有 5 種子 agent。這篇講其中 3 種。"],
+        "title": "做法：依查詢、審查與規劃分配工作",
+        "body": ["==派工時寫清楚任務、限制與執行位置==。"],
         "points": [
           {
             "term": "查",
-            "text": "讀很多檔案、長的 log、跨專案盤點、上網研究。條件是過程比結論長很多。這種子 agent 的工作是讀，不改任何東西。"
+            "text": "把讀檔、長篇 log 與跨專案盤點交給子 agent。上網研究也適用。條件是過程遠比結論長。這類工作只讀，不修改內容。"
           },
           {
             "term": "審",
-            "text": "只審高風險的修改，最多 2 輪。什麼算高風險，寫在 [[只審高風險]]。"
+            "text": "只審高風險的修改，最多 2 輪。高風險的判斷方式見 [[只審高風險]]。"
           },
           {
             "term": "規劃",
-            "text": "目標還很模糊的時候，先派 1 個子 agent 把工作拆成清單。需要做決定的地方，交回主線決定。"
+            "text": "目標模糊時，派子 agent 把工作拆成清單。需要決定的事項，交回主線。"
           },
           {
-            "term": "限制要寫進派工的指示",
-            "text": "子 agent 不一定會遵守我的 CLAUDE.md。在哪一台機器執行、哪些東西不能碰，都要寫進派工的指示。"
+            "term": "限制",
+            "text": "不要假設子 agent 會遵守 [[CLAUDE.md]]。派工指示要寫明執行的機器。也要寫明不能碰的內容。"
           },
           {
-            "term": "不同的工作用不同的模型",
-            "text": "審和規劃用最強的模型。查用中階的。照規則掃文字用最小的。"
+            "term": "模型",
+            "text": "審查與規劃使用最強的模型。查資料使用中階模型。依規則掃描文字使用最小的模型。"
           }
         ]
       },
       {
-        "title": "下一步：回頭看你上次派出去的工作",
+        "title": "下一步：檢查派工是否只需交回簡短結論",
         "body": [
-          "回想你上次派子 agent 的工作。帶回來的東西，比過程短很多嗎？",
-          "短很多的，繼續派。差不多長的，下次讓主線自己做。",
-          "想知道實際的用量，請 Claude Code 掃自己的對話紀錄，算出子 agent 佔了多少。"
+          "檢查準備派出去的工作。",
+          "若過程遠比結論長，就交給子 agent。",
+          "若過程與結論差不多長，就由主線處理。"
         ],
         "callout": "==過程很長、結論很短的工作，才派子 agent==。"
       }
@@ -3746,35 +3622,35 @@
       }
     ],
     "intro": [
-      "我只審高風險的修改。其他的修改，檢查通過、實際用過 1 次，就合併。",
-      "每個修改都審，聽起來最安全。我不這樣做，因為==審查真正抓到問題的地方，集中在少數幾類修改==。",
-      "低風險的修改，審出來的大多是用詞和修飾。"
+      "依修改出錯的後果，決定是否送審。",
+      "高風險修改交給不同模型審查。",
+      "低風險修改通過檢查，再實際操作後合併。"
     ],
     "sections": [
       {
-        "title": "原理：高風險的才審，而且最多 2 輪",
+        "title": "原理：高風險修改才送審，最多 2 輪",
         "body": [
-          "先看一句我真的打過的話：「可以先改一個試試嗎 確定真的不會送審」",
-          "送審是把修改交給另一個 agent 檢查。那一次我要確認的是：這個修改不會送審。",
-          "不同的修改走哪一條路？選 1 種看看。"
+          "送審是把修改交給另一個 agent 檢查。",
+          "==依出錯後果判斷風險，再決定審查流程==。",
+          "依修改類型，選擇對應的處理方式。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "這個修改",
+          "ask": "這個修改怎麼處理",
           "side": true,
           "states": [
             {
-              "label": "文件、畫面、樣式",
+              "label": "低風險的文件、畫面與樣式",
               "blocks": [
                 {
                   "title": "要走的路",
                   "numbered": true,
                   "rows": [
                     {
-                      "text": "自動檢查通過"
+                      "text": "通過自動檢查"
                     },
                     {
-                      "text": "實際用過 1 次"
+                      "text": "實際操作修改的內容"
                     },
                     {
                       "text": "合併",
@@ -3786,29 +3662,29 @@
                   "title": "審查",
                   "rows": [
                     {
-                      "text": "不審",
+                      "text": "不送審",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "這類修改出錯，後果很小。上線有問題再修。"
+              "text": "確認出錯後果很小，再依低風險流程處理。上線後有問題再修。"
             },
             {
-              "label": "登入、權限、刪資料",
+              "label": "登入、權限與刪除資料",
               "blocks": [
                 {
                   "title": "要走的路",
                   "numbered": true,
                   "rows": [
                     {
-                      "text": "2 個不同的模型各審 1 次"
+                      "text": "由 Claude Code 與 Codex 分別審查"
                     },
                     {
-                      "text": "一定要處理的問題全部修完"
+                      "text": "修完一定要處理的問題"
                     },
                     {
-                      "text": "自動檢查通過，才合併",
+                      "text": "通過自動檢查後合併",
                       "tone": "mark"
                     }
                   ]
@@ -3823,59 +3699,55 @@
                   ]
                 }
               ],
-              "text": "這類修改出錯，會外洩、毀掉資料，或影響到外面的人。這種才審。"
+              "text": "修改若會造成外洩、毀損資料或對外影響，就要送審。"
             }
           ]
         },
         "points": [
           {
-            "term": "什麼算高風險",
-            "text": "出錯會外洩、毀掉資料，或造成對外的後果。例如登入和權限、金鑰、刪除、金流、寄信、寫進別人的系統、網域和憑證。"
+            "term": "高風險的範圍",
+            "text": "檢查出錯是否會外洩、毀損資料或影響別人。例如登入、權限、金鑰與刪除資料。金流、寄信與寫入別人的系統也在範圍內。網域與憑證也要列入。"
           },
           {
-            "term": "為什麼最多 2 輪",
-            "text": "第 2 輪只確認第 1 輪要修的地方修好了。新發現的問題另外記下來，不擋合併。不設上限的話，審查會一直來回。我量到最長的 1 次跑了 22 輪。"
+            "term": "限制審查輪次",
+            "text": "第 2 輪只確認第 1 輪要求的修正。新發現的問題另外記錄，不擋合併。設定上限，避免審查持續來回。"
           },
           {
-            "term": "為什麼用 2 個模型",
-            "text": "Claude 審 Claude 寫的東西，盲點是一樣的。所以高風險的修改，我讓 Claude 和 [[Codex]] 各審 1 次。2 邊都提到的問題一定要處理，除非主線能證明問題不成立。"
-          },
-          {
-            "term": "改之前量到的",
-            "text": "2026-09-03 到 10-03 這 30 天，152 次審查跑了 314 輪。第 1 輪沒過的佔 73%。213 個工作小時裡，有 29 個小時卡在等審查。"
-          },
-          {
-            "term": "改之後量到的",
-            "text": "我重數了 2026-10-16 到 11-15：263 次審查，95% 在 2 輪以內結束，最長 9 輪。審查的次數沒有變少。變短的是每一次的來回。"
+            "term": "使用不同模型",
+            "text": "讓 Claude Code 與 [[Codex]] 分別審查。不同模型可檢查不同的盲點。雙方都提出的問題一定要處理。主線若能證明問題不成立，則可排除。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼讓審查不拖住工作",
-        "body": ["審查的規則寫成了 1 份 [[Skill]]。重點有 3 條。"],
+        "title": "做法：先修已知問題，再依分類處理審查結果",
+        "body": [
+          "把審查規則寫成 [[Skill]]。",
+          "==先修完已知問題，再把修改送審==。"
+        ],
         "points": [
           {
-            "term": "送審之前，先修完已知的問題",
-            "text": "Claude Code 自己已經知道的問題，先修完再送審。"
+            "term": "送審前修正",
+            "text": "Claude Code 已經知道的問題，先修完再送審。"
           },
           {
-            "term": "審出來的問題分 4 類",
-            "text": "只有「一定要處理」這一類會擋住合併。其他 3 類記下來，不擋。這樣小問題不會把合併卡住。"
+            "term": "分類審查結果",
+            "text": "把審出的問題分成 4 類。只有「一定要處理」會擋住合併。其他類別記錄下來，不擋合併。"
           },
           {
-            "term": "我點名的時候也審",
-            "text": "不在清單上的修改，我開口說要審，也照審。專案自己的筆記有要求的時候也一樣。"
+            "term": "依要求加審",
+            "text": "使用者明確要求審查時，照要求送審。專案筆記要求審查時，也要送審。"
           }
         ]
       },
       {
-        "title": "下一步：寫下你的高風險清單",
+        "title": "下一步：把高風險清單寫進專案規則",
         "body": [
-          "列出你的專案裡，出錯會外洩、毀掉資料、影響到別人的地方。",
-          "把這份清單寫進 CLAUDE.md：只有碰到清單上的修改才審，最多 2 輪。",
-          "其他的修改，檢查通過、實際用過 1 次，就合併。"
+          "列出出錯會外洩、毀損資料或影響別人的地方。",
+          "把清單寫進 [[CLAUDE.md]]。",
+          "寫明清單內的修改要送審，最多 2 輪。",
+          "低風險修改通過檢查後，實際操作再合併。"
         ],
-        "callout": "==只審出錯會外洩、毀資料、影響別人的修改==。"
+        "callout": "==依出錯後果決定審查範圍==。"
       }
     ]
   },
@@ -3892,141 +3764,139 @@
       }
     ],
     "intro": [
-      "我不同時派很多個 agent 去寫程式。",
-      "同時派很多個，看起來會快很多倍。我不這樣做，因為==用量的上限是所有 agent 一起算的==。",
-      "同時跑越多個，越快一起撞到上限。撞到的時候，每一個都停在半路。"
+      "避免同時派出多個 agent 寫程式。",
+      "所有 agent 共用用量上限。",
+      "同時執行會集中消耗用量，工作可能一起中斷。"
     ],
     "sections": [
       {
-        "title": "原理：用量是一起算的",
+        "title": "原理：並行工作共用用量與測試資源",
         "body": [
-          "2026-09-27 晚上，Claude Code 在同一個專案同時派了好幾個寫程式的子 agent。",
-          "那 2 天發生了什麼，之後我定了什麼規則？照順序看。"
+          "==同時執行不會降低工作的總用量==。",
+          "並行工作會集中消耗用量。",
+          "測試工作也會共用同一台機器的資源。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "發生的順序",
+          "ask": "工作如何中斷與接續",
           "side": true,
           "states": [
             {
-              "label": "第 1 晚",
+              "label": "同時派工",
               "blocks": [
                 {
                   "title": "做的事",
                   "rows": [
                     {
-                      "text": "同時派出好幾個寫程式的子 agent"
+                      "text": "同時派出多個寫程式的子 agent"
                     }
                   ]
                 },
                 {
-                  "title": "結果",
+                  "title": "可能的結果",
                   "rows": [
                     {
-                      "text": "全部撞到用量上限",
+                      "text": "一起碰到用量上限",
                       "tone": "mark"
                     },
                     {
-                      "text": "每一個都做到一半"
+                      "text": "工作停在未完成的狀態"
                     },
                     {
-                      "text": "沒有一個 commit 過",
+                      "text": "修改尚未 commit",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "commit 是把修改記進 Git。沒有 commit，做到一半的修改就只留在工作資料夾裡。"
+              "text": "commit 是把修改記進 Git。尚未 commit 的修改只留在工作資料夾。"
             },
             {
-              "label": "隔天早上",
+              "label": "同時接回",
               "blocks": [
                 {
                   "title": "做的事",
                   "rows": [
                     {
-                      "text": "同時接回 5 個"
+                      "text": "同時接回中斷的工作"
                     }
                   ]
                 },
                 {
-                  "title": "結果",
+                  "title": "可能的結果",
                   "rows": [
                     {
-                      "text": "約 1 個半小時後，又一起撞到上限",
+                      "text": "再次一起碰到用量上限",
                       "tone": "mark"
                     },
                     {
-                      "text": "每個接回來，要重讀約 20 萬 token"
+                      "text": "各項工作都要重新讀取背景"
                     }
                   ]
                 }
               ],
-              "text": "接回去也是同時做，所以又一起停下來。"
+              "text": "同時接回仍會集中消耗用量，工作可能再次一起中斷。"
             },
             {
-              "label": "之後的規則",
+              "label": "逐項完成",
               "blocks": [
                 {
                   "title": "規則",
                   "rows": [
                     {
-                      "text": "1 次派 1 個，做完再派下一個"
+                      "text": "做完目前的工作，再派下一項"
                     },
                     {
-                      "text": "我要求同時做，最多 2 個"
+                      "text": "使用者要求並行時，最多 2 個"
                     },
                     {
-                      "text": "接回去也是 1 次 1 個"
+                      "text": "中斷的工作也逐項接回"
                     },
                     {
-                      "text": "每做到一個段落，先在本機 commit",
+                      "text": "每完成一個段落，先在本機 commit",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "這是當時替寫程式的子 agent 定的規則。"
+              "text": "逐項完成並記錄修改，避免工作一起停在半途。"
             }
           ]
         },
         "points": [
           {
-            "term": "同時做不會省用量",
-            "text": "同樣的工作，同時做和一件一件做，用掉的總量差不多。同時做只是把用量擠在同一段時間。一件一件做，至少能一件一件上線。"
+            "term": "用量集中",
+            "text": "相同工作並行或逐項執行，總用量差不多。並行會把用量集中消耗。逐項執行能讓完成的工作逐項上線。"
           },
           {
-            "term": "測試的機器也會排隊",
-            "text": "那一晚，好幾個 agent 的工作同時在測試的機器上跑。那台機器只有 4 核，負載到了 10。"
-          },
-          {
-            "term": "這件事的紀錄",
-            "text": "那一晚的對話紀錄已經過了保留的期限。我的 2 則筆記數字不一樣：一則寫 6 個，一則寫同時最多 7 個。"
+            "term": "測試資源共用",
+            "text": "多個 agent 同時測試，會共用測試機器。機器資源不足時，測試工作也要排隊。"
           }
         ]
       },
       {
-        "title": "做法：我現在怎麼派",
-        "body": ["那之後我改了 2 件事。"],
+        "title": "做法：開發留在主線，避免集中派工",
+        "body": ["==寫程式由主線的 Claude Code 處理==。"],
         "points": [
           {
-            "term": "寫程式不派出去",
-            "text": "寫程式由主線的 Claude Code 自己做。寫程式的那一種子 agent，2026-11-13 拿掉了。原因寫在 [[子 agent 只查與審]]。"
+            "term": "開發留在主線",
+            "text": "不要把寫程式的工作交給子 agent。派工原則見 [[子 agent 只查與審]]。"
           },
           {
-            "term": "同時開的對話也算在一起",
-            "text": "我同時開好幾個 Claude Code 的對話時，用量也是一起算的。2026-10-27 那天，有 6 個不同的對話收到用量上限的訊息。"
+            "term": "對話共用用量",
+            "text": "同時開啟多個 Claude Code 對話，用量仍一起計算。規劃並行工作時，也要考慮其他對話。"
           }
         ]
       },
       {
-        "title": "下一步：派之前先算用量",
+        "title": "下一步：逐項執行，完成一個段落就 commit",
         "body": [
-          "下次想同時派很多個 agent 的時候，先想：這些工作加起來，會不會超過一段時間的用量。",
-          "不確定，就 1 次派 1 個。每做完一個段落就 commit。",
-          "真的撞到上限，等用量恢復之後，一個一個接回去。"
+          "派工前，先考慮所有工作的合計用量。",
+          "不確定是否會超過上限時，就逐項執行。",
+          "每完成一個段落，就把修改 commit 到 [[Git]]。",
+          "碰到上限後，等用量恢復，再逐項接回工作。"
         ],
-        "callout": "==用量一起算，同時派越多，越快一起停==。"
+        "callout": "==逐項完成工作，避免一起停在半途==。"
       }
     ]
   },
@@ -4043,20 +3913,20 @@
       }
     ],
     "intro": [
-      "我同時用 Claude Code 和 [[Codex]]。",
-      "2 個 agent 各寫一套規則，內容會越差越遠。我的做法是==能共用同一個檔案的，就不要有 2 份==。",
-      "現在共用了一部分。還有 2 樣是分開的，這篇也會講。"
+      "讓 Claude Code 與 [[Codex]] 讀取同一份專案規則。",
+      "可共用的規則放在同一個檔案，避免內容分歧。",
+      "個人規則與 [[Skill]] 版本仍需手動同步。"
     ],
     "sections": [
       {
-        "title": "原理：同一個檔案，2 個 agent 都讀",
+        "title": "原理：讓不同 agent 讀取同一份規則",
         "body": [
-          "先看一句我真的打過的話：「reviewer 感覺不錯 可以整合我的 codex」",
-          "Codex 進來之後，同一條規則要讓 2 個 agent 都讀到。規則寫在哪裡，Codex 才讀得到？選 1 個位置看看。"
+          "==可共用的規則集中在同一個檔案==。",
+          "依規則的位置，設定 Claude Code 與 Codex 的讀取方式。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "這條規則寫在",
+          "ask": "規則放在哪裡",
           "side": true,
           "states": [
             {
@@ -4066,7 +3936,7 @@
                   "title": "Claude Code",
                   "rows": [
                     {
-                      "text": "讀得到",
+                      "text": "從 CLAUDE.md 引用並讀取",
                       "tone": "mark"
                     }
                   ]
@@ -4075,13 +3945,13 @@
                   "title": "Codex",
                   "rows": [
                     {
-                      "text": "讀得到",
+                      "text": "直接讀取",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "Codex 直接讀 AGENTS.md。Claude Code 從 CLAUDE.md 裡的那 1 行，讀到同一份。"
+              "text": "在 CLAUDE.md 寫入 @AGENTS.md。Claude Code 與 Codex 就能讀取同一份規則。"
             },
             {
               "label": "專案的 CLAUDE.md",
@@ -4090,7 +3960,7 @@
                   "title": "Claude Code",
                   "rows": [
                     {
-                      "text": "讀得到",
+                      "text": "讀取 CLAUDE.md",
                       "tone": "mark"
                     }
                   ]
@@ -4099,22 +3969,22 @@
                   "title": "Codex",
                   "rows": [
                     {
-                      "text": "讀得到，因為我設定了備用的檔名",
+                      "text": "設定備用檔名後讀取",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "只有 CLAUDE.md 的專案，我讓 Codex 把 CLAUDE.md 當成備用的檔名。"
+              "text": "專案只有 CLAUDE.md 時，把 CLAUDE.md 設為 Codex 的備用檔名。"
             },
             {
-              "label": "我自己的 CLAUDE.md",
+              "label": "個人的 CLAUDE.md",
               "blocks": [
                 {
                   "title": "Claude Code",
                   "rows": [
                     {
-                      "text": "讀得到",
+                      "text": "讀取個人的 CLAUDE.md",
                       "tone": "mark"
                     }
                   ]
@@ -4123,61 +3993,63 @@
                   "title": "Codex",
                   "rows": [
                     {
-                      "text": "讀不到，讀的是另一份手動抄的",
+                      "text": "讀取手動同步的個人規則",
                       "tone": "quiet"
                     }
                   ]
                 }
               ],
-              "text": "這一份還是 2 份。手動抄的那一份已經過時了。"
+              "text": "個人規則若分開存放，就需要手動同步。檢查副本是否已過時。"
             }
           ]
         },
         "points": [
           {
-            "term": "專案的規則：1 個檔案",
-            "text": "規則寫在 AGENTS.md。CLAUDE.md 只有 1 行，內容是 @AGENTS.md。2 個 agent 讀到的是同一份。"
+            "term": "專案規則",
+            "text": "把規則集中寫在 AGENTS.md。[[CLAUDE.md]] 只保留 @AGENTS.md。Claude Code 與 Codex 讀取同一份內容。"
           },
           {
-            "term": "記憶：Codex 只讀不寫",
-            "text": "[[記憶]] 資料夾是一個 [[Git]] 倉庫。Codex 會讀記憶的索引。Codex 沒有自動寫進去的路徑。"
+            "term": "記憶",
+            "text": "使用同一個 [[Git]] 倉庫保存 [[記憶]] 資料夾。讓 Codex 讀取記憶索引。這個配置沒有讓 Codex 自動寫入記憶的路徑。"
           },
           {
-            "term": "Skill：同一份目錄，版本落後",
-            "text": "2 邊從同一份 [[Plugin 目錄]] 安裝。寫這篇的時候，Codex 上是 0.29.0，有 7 份 Skill。Claude Code 上是 0.49.2，有 15 份。"
+            "term": "Skill 來源",
+            "text": "讓 Claude Code 與 Codex 從同一份 [[Plugin 目錄]] 安裝。來源相同，安裝的版本仍可能不同。"
           },
           {
-            "term": "還分開的 2 樣",
-            "text": "我自己的規則有 2 份，要手動同步。Skill 的版本要手動更新。這 2 樣都過時了。==要手動同步的東西，遲早會不一樣==。"
+            "term": "手動同步",
+            "text": "個人規則若分開保存，就要手動同步。Skill 版本也要手動更新。檢查這些內容是否一致。"
           }
         ]
       },
       {
-        "title": "做法：我怎麼用第 2 個 agent",
-        "body": ["Codex 在我這裡主要做 2 件事。"],
+        "title": "做法：用 Codex 補充審查與寫作意見",
+        "body": ["==讓 Codex 提供審查與寫作的另一個意見==。"],
         "points": [
           {
-            "term": "第 2 個審查的人",
-            "text": "高風險的修改，Claude 和 Codex 各審 1 次。不同的模型，盲點不一樣。做法寫在 [[只審高風險]]。"
+            "term": "審查高風險修改",
+            "text": "讓 Claude Code 與 Codex 分別審查。不同模型可檢查不同的盲點。審查方式見 [[只審高風險]]。"
           },
           {
-            "term": "寫稿的第 2 個意見",
-            "text": "這個網站的文章，我請 Codex 出過草稿和教學的設計，也審過。給 Codex 的說明裡，要寫清楚我真正的做法。"
+            "term": "補充寫作意見",
+            "text": "請 Codex 提供草稿與教學設計，也可請 Codex 審稿。任務說明要寫清楚實際採用的做法。"
           },
           {
-            "term": "新專案一開始就用 AGENTS.md",
-            "text": "新的專案直接把規則寫在 AGENTS.md。之後再加第 3 個 agent，也不用搬。"
+            "term": "新專案的規則",
+            "text": "新專案直接使用 AGENTS.md。之後加入其他 agent，也不用搬動規則。"
           }
         ]
       },
       {
-        "title": "下一步：數一數你的規則有幾份",
+        "title": "下一步：合併專案規則，再檢查同步項目",
         "body": [
-          "你也用 2 個 agent 的話，先看專案的規則有幾份。",
-          "把內容搬到 AGENTS.md。CLAUDE.md 只留 1 行，指向 AGENTS.md。",
-          "再列出還要手動同步的東西。每一樣都問：能不能改成同一個檔案？"
+          "檢查 Claude Code 與 Codex 是否讀取不同的規則檔。",
+          "把專案規則搬到 AGENTS.md。",
+          "CLAUDE.md 只保留 @AGENTS.md。",
+          "列出仍需手動同步的內容。",
+          "逐項檢查是否能改用同一個檔案。"
         ],
-        "callout": "==2 個 agent 讀同一個檔案，不要各寫一份==。"
+        "callout": "==讓不同 agent 讀同一個檔案，避免各寫一份==。"
       }
     ]
   },
@@ -4194,148 +4066,135 @@
       }
     ],
     "intro": [
-      "Claude Code 的畫面上少了我想看的東西，我就做 1 個 [[Mod]] 加上去。",
-      "我做過 9 個 Mod，現在開著 3 個。其他 6 個關掉了、刪掉了，或做完沒有裝。",
-      "==Mod 做了不合用，就關掉或刪掉==。輸入框上方的位置有限。"
+      "用 [[Mod]] 在 Claude Code 畫面加入需要的狀態。",
+      "Mod 可用 [[Plugin]] 的方式安裝。",
+      "輸入框上方的位置有限。不合用的 Mod 就關掉或刪掉。"
     ],
     "sections": [
       {
-        "title": "原理：想看的狀態，直接放進 Claude Code 的畫面",
+        "title": "原理：把需要的狀態放進 Claude Code 畫面",
         "body": [
-          "先看一句我真的打過的話：「claude mod hum 怎麼都 no data 了」",
-          "hum 是我做的 Mod，在輸入框上方顯示每台主機的狀態。那一天面板上沒有資料，所以我問了這一句。",
-          "我做過的 9 個 Mod，現在各是什麼狀態？選 1 種看看。"
+          "==Mod 能在 Claude Code 畫面加入狀態面板==。",
+          "例如，hum 在輸入框上方顯示主機狀態。",
+          "面板沒有資料時，可以這樣交代：「檢查 hum 為什麼顯示 no data。」",
+          "依使用需求，決定哪些面板要保留。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "這 9 個 Mod 現在",
+          "ask": "例如：選擇 Mod 的保留方式。",
           "side": true,
           "states": [
             {
-              "label": "開著 3 個",
+              "label": "保留需要的面板",
               "blocks": [
                 {
-                  "title": "面板上顯示的",
+                  "title": "面板用途",
                   "rows": [
                     {
                       "text": "hum",
-                      "value": "每台主機的狀態"
+                      "value": "顯示主機狀態"
                     },
                     {
                       "text": "secret-mod",
-                      "value": "填密碼的表單"
+                      "value": "提供密碼表單"
                     },
                     {
                       "text": "golem-mod",
-                      "value": "維運服務的事件"
+                      "value": "顯示維運事件"
                     }
                   ]
                 }
               ],
-              "text": "這 3 個分別接上主機的監控、鑰匙圈、維運服務。"
+              "text": "依任務需要，保留對應的面板。"
             },
             {
-              "label": "關掉 2 個",
+              "label": "關閉擁擠的面板",
               "blocks": [
                 {
-                  "title": "面板上顯示的",
+                  "title": "可關閉的內容",
                   "rows": [
                     {
-                      "text": "正在播的音樂"
+                      "text": "正在播放的音樂"
                     },
                     {
-                      "text": "今天的行程和待辦"
+                      "text": "行程與待辦"
                     }
                   ]
                 },
                 {
-                  "title": "我的筆記記的原因",
+                  "title": "關閉的原因",
                   "rows": [
                     {
-                      "text": "面板太擠",
+                      "text": "面板擠占輸入框上方的位置",
                       "tone": "mark"
                     }
                   ]
                 }
               ],
-              "text": "這 2 個還裝著，只是關掉了。"
+              "text": "關閉不合用的面板，保留安裝狀態。"
             },
             {
-              "label": "刪掉或沒裝 4 個",
+              "label": "刪除或暫不安裝",
               "blocks": [
                 {
-                  "title": "數量",
+                  "title": "暫不安裝的例子",
                   "rows": [
                     {
-                      "text": "刪掉",
-                      "value": "3 個"
-                    },
-                    {
-                      "text": "做完沒有裝",
-                      "value": "1 個"
-                    }
-                  ]
-                },
-                {
-                  "title": "沒有裝的那 1 個",
-                  "rows": [
-                    {
-                      "text": "在畫面右邊開 1 個文字編輯器"
+                      "text": "在畫面右側加入文字編輯器"
                     }
                   ]
                 }
               ],
-              "text": "做出來不等於要一直開著。"
+              "text": "做好的 Mod 可以依需求刪除或暫不安裝。"
             }
           ]
         },
         "points": [
           {
-            "term": "Mod 怎麼裝",
-            "text": "Mod 用 [[Plugin]] 的方式安裝。裡面的程式會在 Claude Code 的畫面上加東西，例如輸入框上方的 1 塊面板。"
+            "term": "安裝方式",
+            "text": "Mod 用 Plugin 的方式安裝。程式會在 Claude Code 畫面加入內容。例如，在輸入框上方加入面板。"
           },
           {
-            "term": "面板的位置有限",
-            "text": "輸入框上方的位置有限。我改過 hum 的顯示，就是為了省位置：「改 claude mod 都不要顯示 % 就可以更多空間了」"
-          },
-          {
-            "term": "數字是怎麼數的",
-            "text": "2026-11-15 我請 Claude Code 對照專案和安裝清單：做過 9 個，開著 3 個。較早的幾個只剩筆記的紀錄。"
+            "term": "節省面板空間",
+            "text": "刪去不需要的顯示內容，保留有用的狀態。修改時，直接說明要移除哪些內容。"
           }
         ]
       },
       {
-        "title": "做法：開著的 3 個 Mod 各做什麼",
+        "title": "做法：依用途連接面板與服務",
         "body": [
-          "hum 和 golem-mod 顯示狀態。secret-mod 收密碼，也替 Claude Code 執行指令。"
+          "==讓面板顯示狀態，讓表單接收密碼==。",
+          "例如，用 hum 和 golem-mod 顯示狀態。",
+          "用 secret-mod 接收密碼並執行指令。"
         ],
         "points": [
           {
-            "term": "hum：主機的狀態",
-            "text": "每台主機每 15 秒把數字送到我的監控服務。面板從監控服務讀，不直接連主機。"
+            "term": "主機狀態",
+            "text": "例如，主機把狀態送到監控服務。hum 從監控服務讀取，不直接連主機。"
           },
           {
-            "term": "secret-mod：密碼的表單",
-            "text": "Claude Code 需要密碼的時候，畫面跳出表單讓我填。值不會出現在對話裡。細節寫在 [[密碼不貼進對話]]。"
+            "term": "密碼表單",
+            "text": "例如，secret-mod 在需要密碼時顯示表單。填入的值不會出現在對話裡。做法見 [[密碼不貼進對話]]。"
           },
           {
-            "term": "golem-mod：維運服務的事件",
-            "text": "面板每 30 秒向維運服務問 1 次有沒有新事件。主機或網站出事，我在 Claude Code 的畫面上就看得到。"
+            "term": "維運事件",
+            "text": "例如，golem-mod 向維運服務查詢新事件。主機或網站出事時，在面板顯示事件。"
           },
           {
-            "term": "改 Mod 也是用講的",
-            "text": "要改面板的時候，我直接講要改成什麼。Mod 是 Claude Code 寫的，也由 Claude Code 改。"
+            "term": "修改面板",
+            "text": "直接向 Claude Code 說明面板要改成什麼。請 Claude Code 修改 Mod。"
           }
         ]
       },
       {
-        "title": "下一步：挑 1 個你常開口問的狀態",
+        "title": "下一步：把常查的狀態做成面板",
         "body": [
-          "回想你常問 Claude Code 的狀態，例如主機有沒有開著。",
-          "挑 1 樣，請 Claude Code 做成 1 個 Mod，顯示在輸入框上方。",
-          "用過之後回頭看。不合用的就關掉。"
+          "找出經常向 Claude Code 查詢的狀態。",
+          "例如，主機是否開著。",
+          "請 Claude Code 把這項狀態做成 Mod。",
+          "將面板放在輸入框上方。使用後檢查是否合用。"
         ],
-        "callout": "==想看的狀態放進畫面，不合用就關掉==。"
+        "callout": "==把需要的狀態放進畫面，不合用就關掉==。"
       }
     ]
   },
@@ -4352,21 +4211,23 @@
       }
     ],
     "intro": [
-      "我在 Telegram 上有幾個 bot。每個 bot 背後都是 Claude Code。",
-      "這些 bot 跟我終端機裡的 Claude Code，==不是同一個 agent==。",
-      "bot 只載入自己清單上的 MCP server，也有自己的對話紀錄。"
+      "Telegram bot 可以透過 Claude Code 處理訊息。",
+      "這類 bot 與終端機裡的 Claude Code 分開運作。",
+      "bot 只載入清單上的 [[MCP]] server。",
+      "bot 的對話紀錄也與終端機分開。"
     ],
     "sections": [
       {
-        "title": "原理：回答的是誰，決定了能做什麼",
+        "title": "原理：入口決定能用的工具與紀錄",
         "body": [
-          "先看一句我真的打過的話：「bot 自己那台機器上要有自己的 sandbox 不要跟我的混再一起」",
-          "sandbox 是 bot 做事用的工作空間。我要求 bot 的工作空間跟我自己的分開。",
-          "同樣是傳訊息，回答的是誰？選 1 個看看。"
+          "==通訊 bot 的工具與紀錄需要分開設定==。",
+          "bot 使用獨立的工作空間。",
+          "可以這樣交代：「讓 bot 使用獨立的 sandbox，不與終端機的工作空間混用。」",
+          "比較不同入口，再決定要開放哪些能力。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "回答我的是",
+          "ask": "選擇訊息或操作的入口。",
           "side": true,
           "states": [
             {
@@ -4376,123 +4237,120 @@
                   "title": "MCP server",
                   "rows": [
                     {
-                      "text": "我接上的每一個"
+                      "text": "載入終端機環境設定的工具"
                     }
                   ]
                 },
                 {
-                  "title": "記憶",
+                  "title": "規則與記憶",
                   "rows": [
                     {
-                      "text": "我的 CLAUDE.md 和記憶資料夾"
+                      "text": "使用終端機環境的 CLAUDE.md 與記憶資料夾"
                     }
                   ]
                 }
               ],
-              "text": "這是我平常對話的那一個。"
+              "text": "終端機的工具與記憶由終端機環境設定。"
             },
             {
-              "label": "Telegram 上的 bot",
+              "label": "Telegram bot",
               "blocks": [
                 {
                   "title": "MCP server",
                   "rows": [
                     {
-                      "text": "只有 bot 自己清單上的",
+                      "text": "只載入 bot 清單上的工具",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "記憶",
+                  "title": "對話與行為設定",
                   "rows": [
                     {
-                      "text": "每個聊天室 1 份自己的對話紀錄"
+                      "text": "各聊天室分開保存對話紀錄"
                     },
                     {
-                      "text": "人格寫在 bot 自己的檔案裡"
+                      "text": "把 bot 的行為設定寫進檔案"
                     }
                   ]
                 }
               ],
-              "text": "每則訊息都啟動 1 次不開畫面的 Claude Code。bot 看不到我終端機裡的對話。"
+              "text": "收到訊息後，啟動不開畫面的 Claude Code。bot 看不到終端機裡的對話。"
             },
             {
-              "label": "維運服務的按鈕",
+              "label": "維運核准按鈕",
               "blocks": [
                 {
-                  "title": "能做的事",
+                  "title": "可執行的動作",
                   "rows": [
                     {
-                      "text": "只有事先列好名字的動作",
+                      "text": "只執行事先列名的動作",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "按下去之前會檢查",
+                  "title": "執行前檢查",
                   "rows": [
                     {
-                      "text": "是不是我設定的那個聊天室"
+                      "text": "核對設定的聊天室"
                     },
                     {
-                      "text": "有沒有超過 30 分鐘"
+                      "text": "檢查核准請求是否過期"
                     },
                     {
-                      "text": "警報是不是同一個"
+                      "text": "核對警報是否相符"
                     }
                   ]
                 }
               ],
-              "text": "這裡沒有對話。維運服務傳來修理的計畫，我按核准或拒絕。"
+              "text": "維運服務傳來修復計畫。按鈕用於核准或拒絕，不進行對話。"
             }
           ]
         },
         "points": [
           {
-            "term": "bot 的做法是 1 個範本",
-            "text": "我把 bot 的做法做成 1 個範本專案，叫 agent-template。每個聊天室有 1 份對話紀錄，人格寫在 1 個檔案裡。"
+            "term": "bot 範本",
+            "text": "把 bot 的做法整理成範本專案。各聊天室分開保存對話紀錄。把 bot 的行為設定寫進檔案。"
           },
           {
-            "term": "工具另外列",
-            "text": "bot 啟動的時候，只載入自己清單上的 [[MCP]] server。我接在自己這邊的 MCP server，不會跟著載入。"
-          },
-          {
-            "term": "直接連到終端機的路",
-            "text": "2026-10-09 我做過 1 條路，從 Telegram 直接操作終端機裡的 Claude Code。2 天後我刪掉了。這是筆記的紀錄，原因沒有記下來。"
+            "term": "工具清單",
+            "text": "bot 啟動時，只載入清單上的 MCP server。終端機已連接的工具不會自動載入。"
           }
         ]
       },
       {
-        "title": "做法：bot 和按鈕各自的界線",
-        "body": ["bot 和按鈕能用什麼，都是事先列好的。"],
+        "title": "做法：分開工作空間並限制按鈕動作",
+        "body": ["==bot 使用獨立空間，按鈕只執行列好的動作==。"],
         "points": [
           {
-            "term": "bot 在自己的機器上執行",
-            "text": "bot 放在 1 台一直開著的虛擬機上，有自己的工作資料夾。"
+            "term": "執行位置",
+            "text": "把 bot 放在持續開機的虛擬機。替 bot 準備獨立的工作資料夾。"
           },
           {
-            "term": "按鈕只做列好的動作",
-            "text": "維運服務的計畫裡，每個動作都是事先列好名字的。我按核准，只會執行那幾個動作。"
+            "term": "核准動作",
+            "text": "在維運計畫中列出可執行的動作名稱。按下核准後，只執行計畫列出的動作。"
           },
           {
-            "term": "事件只有 1 份",
-            "text": "同一份事件，Telegram 的通知和 Claude Code 裡的面板各自決定怎麼顯示。我當時問的是：「這樣 tg dc 甚至 claude mod 都可以自己寫自己的業務邏輯？」"
+            "term": "共用事件",
+            "text": "讓 Telegram 通知與 Claude Code 面板讀取相同事件。各入口分別決定如何顯示。"
           },
           {
-            "term": "通知是推的，面板是拉的",
-            "text": "出事的時候，維運服務主動傳訊息到 Telegram。Claude Code 裡的面板每 30 秒自己去問 1 次。"
+            "term": "通知與查詢",
+            "text": "發生問題時，維運服務主動傳送 Telegram 通知。Claude Code 面板則向維運服務查詢事件。"
           }
         ]
       },
       {
-        "title": "下一步：先決定 bot 可以碰什麼",
+        "title": "下一步：先列出 bot 可以使用的能力",
         "body": [
-          "把 Claude Code 接到通訊軟體之前，先列出這個 bot 可以用的 MCP server。",
-          "清單以外的都不要載入。bot 的對話紀錄和工作資料夾，也跟你自己的分開。",
-          "會改東西的動作，做成要你按核准的按鈕。"
+          "把 Claude Code 接到通訊軟體前，先列出工具清單。",
+          "只載入清單上的 MCP server。",
+          "分開 bot 與終端機的對話紀錄和工作資料夾。",
+          "把會修改內容的動作做成核准按鈕。"
         ],
-        "callout": "==終端機以外的入口，能用什麼都先列好==。"
+        "callout": "==終端機以外的入口，先列出可用的能力==。"
       }
     ]
   },
@@ -4509,25 +4367,28 @@
       }
     ],
     "intro": [
-      "我的監控有 2 個入口。畫面是給我看的。[[MCP]] 是給 Claude Code 查的。",
-      "Claude Code 要查資料、要登記新的專案，都走 MCP。所以==每一份監控，都要有給 Claude Code 用的入口==。",
-      "我存 [[log]] 和數字的服務叫 sensorium。sensorium 沒有監控的畫面，查資料都用 MCP。"
+      "監控畫面用來查看狀態。",
+      "[[MCP]] 提供 Claude Code 查詢資料的入口。",
+      "Claude Code 也能透過維運服務的 MCP 登記專案。",
+      "例如，sensorium 儲存 [[log]] 與監控資料。",
+      "sensorium 不提供監控畫面，資料透過 MCP 查詢。"
     ],
     "sections": [
       {
-        "title": "原理：看的人不一樣，入口就不一樣",
+        "title": "原理：依使用方式提供監控入口",
         "body": [
-          "先看一句我真的打過的話：「web dashboard 主要是拿來看的， mcp 是我請我 claude code 開發新專案也能同時用 golem mcp 註冊上去」",
-          "golem 是我的維運服務的名字。這句話講了 2 個入口各自給誰用。",
-          "要看監控的是誰？選 1 個看看。"
+          "==畫面供人查看，MCP 供 Claude Code 查詢==。",
+          "例如，golem 提供維運畫面與 MCP。",
+          "畫面顯示狀態，MCP 支援查詢與專案登記。",
+          "依需求選擇入口。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "要看監控的是",
+          "ask": "選擇監控的使用方式。",
           "side": true,
           "states": [
             {
-              "label": "我",
+              "label": "查看畫面",
               "blocks": [
                 {
                   "title": "入口",
@@ -4539,21 +4400,21 @@
                   ]
                 },
                 {
-                  "title": "看到的",
+                  "title": "顯示內容",
                   "rows": [
                     {
-                      "text": "每台主機和網站的狀態"
+                      "text": "主機與網站的狀態"
                     },
                     {
-                      "text": "新的事件會自己跳出來"
+                      "text": "新發生的事件"
                     }
                   ]
                 }
               ],
-              "text": "畫面是拿來看的。我當時說：「動態一直跳出來給我看 這樣很酷」"
+              "text": "透過畫面查看狀態與新事件。"
             },
             {
-              "label": "Claude Code",
+              "label": "Claude Code 查詢",
               "blocks": [
                 {
                   "title": "入口",
@@ -4565,105 +4426,92 @@
                   ]
                 },
                 {
-                  "title": "能查的",
+                  "title": "查詢內容",
                   "rows": [
                     {
                       "text": "log"
                     },
                     {
-                      "text": "數字"
-                    },
-                    {
-                      "text": "每個請求經過的路徑"
-                    },
-                    {
-                      "text": "錯誤的統計"
+                      "text": "請求經過的路徑"
                     }
                   ]
                 }
               ],
-              "text": "一共 8 個工具，全部只能讀。Claude Code 查完，回報查到了什麼。"
+              "text": "使用唯讀工具查詢。Claude Code 查完後回報結果。"
             },
             {
-              "label": "沒有人在看",
+              "label": "無人查看時",
               "blocks": [
                 {
                   "title": "入口",
                   "rows": [
                     {
-                      "text": "維運服務自己檢查",
+                      "text": "維運服務依規則檢查",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "接下來",
+                  "title": "問題處理流程",
                   "numbered": true,
                   "rows": [
                     {
-                      "text": "偵測到問題"
+                      "text": "偵測問題"
                     },
                     {
-                      "text": "傳通知給我"
+                      "text": "傳送通知"
                     },
                     {
-                      "text": "擬好修理的計畫"
+                      "text": "擬定修復計畫"
                     },
                     {
-                      "text": "等我按核准"
+                      "text": "等待核准"
                     }
                   ]
                 }
               ],
-              "text": "我和 Claude Code 都不在的時候，維運服務照寫好的規則檢查。"
+              "text": "無人查看時，維運服務仍依寫好的規則檢查。"
             }
           ]
         },
         "points": [
           {
-            "term": "Claude Code 查 1 次的例子",
-            "text": "2026-11-10 我打了：「剛剛有人點一些頁面都會 error 好像有跳 alert」。Claude Code 查了錯誤的統計。從開始查到回答找到了，是 12 秒。"
+            "term": "登記新專案",
+            "text": "新專案上線時，請 Claude Code 用維運服務的 MCP 登記。"
           },
           {
-            "term": "新專案自己登記",
-            "text": "新的專案上線時，Claude Code 用維運服務的 MCP 把專案登記進去。這是我替維運服務做 MCP 的原因。"
-          },
-          {
-            "term": "檢查的規則是寫好的",
-            "text": "維運服務判斷有沒有出事，靠的是寫好的規則，不是讓模型判斷。問題要等偵測回報正常，才算結束。"
+            "term": "依規則判斷",
+            "text": "維運服務依寫好的規則判斷狀態。等偵測結果恢復正常，才結束問題處理。"
           }
         ]
       },
       {
-        "title": "做法：我的監控分成 3 塊",
-        "body": ["每一塊只做 1 件事。"],
+        "title": "做法：分開收集、儲存與維運工作",
+        "body": ["==把收集、儲存與問題處理分開負責==。"],
         "points": [
           {
-            "term": "主機送數字",
-            "text": "每台主機上有 1 個小程式，每 15 秒把主機的數字送出去。"
+            "term": "主機送出狀態",
+            "text": "在主機上執行收集程式，把主機狀態送到監控服務。"
           },
           {
-            "term": "監控服務收和存",
-            "text": "網站的 log、數字、請求的路徑，都送到 sensorium。格式用的是 OpenTelemetry 這個公開的標準。"
+            "term": "監控服務儲存資料",
+            "text": "例如，把網站的 log 與請求路徑送到 sensorium。資料採用 OpenTelemetry 公開標準。"
           },
           {
-            "term": "資料只留幾天",
-            "text": "2026-10-26 硬碟被監控的資料塞滿。我的筆記記的是：那之後數字只保留 7 天。"
-          },
-          {
-            "term": "維運服務看和修",
-            "text": "golem 定時檢查主機和網站。出事就通知我，擬好計畫，等我核准。做法寫在 [[筆電關了之後]]。"
+            "term": "維運服務處理問題",
+            "text": "例如，golem 定期檢查主機與網站。發生問題時，傳送通知並擬定修復計畫。等待核准後再執行。做法見 [[筆電關了之後]]。"
           }
         ]
       },
       {
-        "title": "下一步：替你的監控加 1 個 Claude Code 讀得到的入口",
+        "title": "下一步：提供 Claude Code 可讀取的監控入口",
         "body": [
-          "先看你現在的監控，Claude Code 讀不讀得到。",
-          "讀不到，就加 1 個只能讀的 MCP server，或 1 個查詢用的指令。",
-          "下次出事，直接把看到的現象講給 Claude Code，讓 Claude Code 自己去查。"
+          "檢查 Claude Code 能否讀取現有監控。",
+          "無法讀取時，加入唯讀 MCP server 或查詢指令。",
+          "發生問題時，把觀察到的現象交代給 Claude Code。",
+          "請 Claude Code 查詢監控資料並回報結果。"
         ],
-        "callout": "==畫面給人看，MCP 給 Claude Code 查==。"
+        "callout": "==讓 Claude Code 透過查詢入口取得監控資料==。"
       }
     ]
   },
@@ -4680,96 +4528,89 @@
       }
     ],
     "intro": [
-      "我不把密碼貼進對話。",
-      "Claude Code 看過的每樣東西，都會寫進電腦上的對話紀錄。==貼進對話的密碼，會在紀錄裡留 30 天==。",
-      "所以密碼走另一條路：我填進表單，直接存進鑰匙圈。鑰匙圈是 macOS 存密碼的地方。"
+      "密碼不要貼進對話。",
+      "Claude Code 看過的內容會寫入電腦上的對話紀錄。",
+      "改用表單輸入密碼，直接存進鑰匙圈。",
+      "鑰匙圈是 macOS 儲存密碼的地方。"
     ],
     "sections": [
       {
-        "title": "原理：對話紀錄會留下 Claude Code 看過的東西",
+        "title": "原理：對話紀錄會保留看過的內容",
         "body": [
-          "先看一句我真的打過的話：「幫我開個 serect mod 我給你 key 之後都可以用 api 打」",
-          "我要的是：金鑰交給 Claude Code 用，但不經過對話。",
-          "同一組密碼，用不同的方式交給 Claude Code，會留在哪裡？選 1 種看看。"
+          "==貼進對話的密碼會留在對話紀錄裡==。",
+          "讓 Claude Code 使用金鑰時，避免透過對話傳入。",
+          "可以這樣交代：「開啟密碼表單，金鑰存入鑰匙圈，對話只留下名稱。」",
+          "比較輸入方式，確認密碼值會存放在哪裡。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "這組密碼",
+          "ask": "選擇密碼的傳入方式。",
           "side": true,
           "states": [
             {
-              "label": "貼在對話裡",
+              "label": "貼進對話",
               "blocks": [
                 {
-                  "title": "留在哪裡",
+                  "title": "留下的位置",
                   "rows": [
                     {
-                      "text": "這次對話的紀錄",
+                      "text": "目前對話的紀錄",
                       "tone": "mark"
                     },
                     {
-                      "text": "派工時帶到的話，子 agent 的紀錄也有"
-                    }
-                  ]
-                },
-                {
-                  "title": "留多久",
-                  "rows": [
-                    {
-                      "text": "30 天",
-                      "tone": "mark"
+                      "text": "派工時若傳入密碼，也會進入子 agent 的紀錄"
                     }
                   ]
                 }
               ],
-              "text": "對話紀錄是電腦上的檔案。我設定保留 30 天，到期才刪。"
+              "text": "對話紀錄是電腦上的檔案。貼入的密碼會留在紀錄裡。"
             },
             {
-              "label": "填進表單",
+              "label": "填入表單",
               "blocks": [
                 {
-                  "title": "留在哪裡",
+                  "title": "留下的位置",
                   "rows": [
                     {
                       "text": "鑰匙圈"
                     },
                     {
-                      "text": "對話裡只有名字",
+                      "text": "對話只留下名稱",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "要用的時候",
+                  "title": "使用方式",
                   "rows": [
                     {
-                      "text": "Claude Code 用名字指定"
+                      "text": "Claude Code 用名稱指定密碼"
                     },
                     {
-                      "text": "指令的輸出裡，值會被遮住"
+                      "text": "指令輸出中的密碼值會被遮住"
                     }
                   ]
                 }
               ],
-              "text": "表單是我做的 Mod。值直接進鑰匙圈，不經過對話。"
+              "text": "例如，secret-mod 的表單把值直接存進鑰匙圈。值不經過對話。"
             },
             {
-              "label": "表單加備份",
+              "label": "表單搭配備份",
               "blocks": [
                 {
-                  "title": "留在哪裡",
+                  "title": "留下的位置",
                   "rows": [
                     {
                       "text": "鑰匙圈"
                     },
                     {
-                      "text": "加密過的備份，放在 Git 倉庫",
+                      "text": "加密備份存入 Git 倉庫",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "筆電壞掉的時候",
+                  "title": "筆電損壞時",
                   "rows": [
                     {
                       "text": "從備份還原"
@@ -4777,59 +4618,45 @@
                   ]
                 }
               ],
-              "text": "鑰匙圈只在這台筆電上。所以我另外加密，備份 1 份。"
+              "text": "鑰匙圈的值存放在筆電上。另做加密備份，供還原使用。"
             }
           ]
         },
         "points": [
           {
-            "term": "對話紀錄有多少",
-            "text": "2026-10-13 到 11-15，我的電腦上有 906 個對話紀錄檔，共 3.4 GB。其中 210 個檔案裡有圖，共 3,628 筆，沒有去掉重複的。截圖也是 Claude Code 看過的東西。"
-          },
-          {
-            "term": "我的筆記記了 3 次",
-            "text": "2026-09-29，1 組密碼留在對話紀錄裡，子 agent 的紀錄還多了 4 份。10-11，1 組金鑰存錯欄位，列出名字時一起印了出來。10-29，1 組舊金鑰出現在對話裡，之後換掉了。"
-          },
-          {
-            "term": "查含密碼的檔案，只印數量",
-            "text": "我的規則是：查這類檔案只印有幾筆，不印內容。印出來的東西一樣會進對話紀錄。"
-          },
-          {
-            "term": "表單擋不住的事",
-            "text": "表單擋的是值出現在對話裡。Claude Code 仍然可以用指令讀鑰匙圈。這一點我沒有另外設禁止的規則。"
+            "term": "表單的保護範圍",
+            "text": "表單避免密碼值出現在對話裡。Claude Code 仍可透過指令讀取鑰匙圈。"
           }
         ]
       },
       {
-        "title": "做法：密碼從表單進去，用名字拿出來",
-        "body": ["走表單的時候，對話裡只留下密碼的名字。"],
+        "title": "做法：從表單存入密碼，再用名稱指定",
+        "body": ["==對話只保留密碼名稱，密碼值由工具帶入==。"],
         "points": [
           {
-            "term": "需要密碼的時候跳表單",
-            "text": "Claude Code 需要 1 組新的密碼時，畫面跳出表單。我填完之後，對話裡只留下這組密碼的名字。"
+            "term": "填入密碼表單",
+            "text": "Claude Code 需要新密碼時，開啟表單。填寫後把值存進鑰匙圈，對話只留下名稱。"
           },
           {
-            "term": "用名字執行指令",
-            "text": "要用的時候，Claude Code 把指令交給表單的工具執行。輸出裡如果出現那組值，會被遮住。"
+            "term": "用名稱執行指令",
+            "text": "Claude Code 用名稱指定密碼。把指令交給表單工具執行。指令輸出若含密碼值，工具會遮住密碼值。"
           },
           {
-            "term": "存了幾組",
-            "text": "2026-10-15 到 11-12，我用表單存了 18 組，取消 3 次。"
-          },
-          {
-            "term": "備份",
-            "text": "2026-11-13 我問了：「keychain 的問題 都存在我這台上 如果我這台死掉了就全 g 了 有辦法存到 github 上嗎？」現在鑰匙圈裡的值會加密，備份到 [[Git]] 倉庫。"
+            "term": "加密備份",
+            "text": "將鑰匙圈裡的值加密，再備份到 [[Git]] 倉庫。筆電損壞時，從備份還原。"
           }
         ]
       },
       {
-        "title": "下一步：下次要給密碼之前，先換 1 條路",
+        "title": "下一步：改用鑰匙圈傳入密碼",
         "body": [
-          "下次 Claude Code 需要密碼，先不要貼進對話。",
-          "把密碼存進系統的鑰匙圈，只告訴 Claude Code 名字。請 Claude Code 在指令裡直接帶入，不要印出來。",
-          "已經貼過的密碼，換 1 組新的。舊的那組還在對話紀錄裡。"
+          "Claude Code 需要密碼時，先存進系統鑰匙圈。",
+          "只告訴 Claude Code 密碼名稱。",
+          "請 Claude Code 在指令裡帶入密碼，不要印出密碼。",
+          "已貼進對話的密碼需要更換。",
+          "更換後，舊密碼仍留在對話紀錄裡。"
         ],
-        "callout": "==密碼只給 Claude Code 名字，值不貼進對話==。"
+        "callout": "==只交代密碼名稱，不把密碼值貼進對話==。"
       }
     ]
   },
@@ -4846,28 +4673,30 @@
       }
     ],
     "intro": [
-      "我固定在用的設備，每台都有 1 個 Minecraft 的名字。實體的機器用方塊，隨身的裝置用物品。",
-      "每個名字是哪一台、怎麼連，都寫在 [[CLAUDE.md]] 的同一段。",
-      "這篇講這一段寫了什麼，還有 2026-10-11 改名那天我做了什麼。"
+      "把設備的名稱、用途與連線方式寫進 [[CLAUDE.md]]。",
+      "Claude Code 讀取規則後，就能依名稱辨認設備。",
+      "例如，用 Minecraft 方塊替實體機器命名。",
+      "隨身裝置用物品命名。虛擬機保留服務原本的名稱。"
     ],
     "sections": [
       {
-        "title": "原理：Claude Code 從 CLAUDE.md 知道每個名字是哪一台",
+        "title": "原理：用設備名稱查到用途與連線方式",
         "body": [
-          "先看一句我真的打過的話：「spawner 上面都有哪些機器」",
-          "這句話沒有講 spawner 是什麼，也沒有講怎麼連。",
-          "Claude Code 每次新對話都會載入 CLAUDE.md，設備那一段寫了這 2 件事。選 1 個名字看看。"
+          "==把設備名稱、用途與連線方式寫在同一段==。",
+          "例如：「查詢 spawner 上有哪些虛擬機。」",
+          "Claude Code 會在新對話載入 CLAUDE.md。",
+          "設備說明提供名稱與連線方式的對照。"
         ],
         "figure": {
           "kind": "lesson",
-          "ask": "我打的是",
+          "ask": "例如：選擇設備名稱。",
           "side": true,
           "states": [
             {
               "label": "workbench",
               "blocks": [
                 {
-                  "title": "名字的來源",
+                  "title": "名稱來源",
                   "rows": [
                     {
                       "text": "Minecraft 的方塊：工作台"
@@ -4875,30 +4704,30 @@
                   ]
                 },
                 {
-                  "title": "指的是",
+                  "title": "設備用途",
                   "rows": [
                     {
-                      "text": "筆電，我的主力機",
+                      "text": "作為主力機的筆電",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "怎麼連",
+                  "title": "連線方式",
                   "rows": [
                     {
-                      "text": "不用連，Claude Code 就在這一台上執行"
+                      "text": "Claude Code 直接在這台筆電執行"
                     }
                   ]
                 }
               ],
-              "text": "我在筆電上跟 Claude Code 對話。其他設備都從這一台連過去。"
+              "text": "在筆電上與 Claude Code 對話。從筆電連到其他設備。"
             },
             {
               "label": "spawner",
               "blocks": [
                 {
-                  "title": "名字的來源",
+                  "title": "名稱來源",
                   "rows": [
                     {
                       "text": "Minecraft 的方塊：生怪磚"
@@ -4906,16 +4735,16 @@
                   ]
                 },
                 {
-                  "title": "指的是",
+                  "title": "設備用途",
                   "rows": [
                     {
-                      "text": "開虛擬機的主機",
+                      "text": "執行虛擬機的主機",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "怎麼連",
+                  "title": "連線方式",
                   "rows": [
                     {
                       "text": "ssh spawner"
@@ -4923,13 +4752,13 @@
                   ]
                 }
               ],
-              "text": "連線名稱跟設備的名字一樣。"
+              "text": "連線名稱與設備名稱保持一致。"
             },
             {
               "label": "furnace",
               "blocks": [
                 {
-                  "title": "名字的來源",
+                  "title": "名稱來源",
                   "rows": [
                     {
                       "text": "Minecraft 的方塊：熔爐"
@@ -4937,16 +4766,16 @@
                   ]
                 },
                 {
-                  "title": "指的是",
+                  "title": "設備用途",
                   "rows": [
                     {
-                      "text": "有顯示卡的桌機",
+                      "text": "配有顯示卡的桌機",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "怎麼連",
+                  "title": "連線方式",
                   "rows": [
                     {
                       "text": "ssh furnace"
@@ -4954,13 +4783,13 @@
                   ]
                 }
               ],
-              "text": "要用顯示卡的工作，我會直接打這個名字。例如：「可以先到 furnace 跑」"
+              "text": "需要顯示卡時，用設備名稱指定執行位置。例如：「到 furnace 執行。」"
             },
             {
               "label": "hopper",
               "blocks": [
                 {
-                  "title": "名字的來源",
+                  "title": "名稱來源",
                   "rows": [
                     {
                       "text": "Minecraft 的方塊：漏斗"
@@ -4968,7 +4797,7 @@
                   ]
                 },
                 {
-                  "title": "指的是",
+                  "title": "設備用途",
                   "rows": [
                     {
                       "text": "路由器",
@@ -4977,7 +4806,7 @@
                   ]
                 },
                 {
-                  "title": "怎麼連",
+                  "title": "連線方式",
                   "rows": [
                     {
                       "text": "ssh hopper"
@@ -4985,30 +4814,30 @@
                   ]
                 }
               ],
-              "text": "路由器也有名字，連法跟其他設備一樣。"
+              "text": "路由器也依設備名稱連線。"
             },
             {
               "label": "sandbox",
               "blocks": [
                 {
-                  "title": "名字的來源",
+                  "title": "名稱來源",
                   "rows": [
                     {
-                      "text": "服務原本的名字"
+                      "text": "保留服務原本的名稱"
                     }
                   ]
                 },
                 {
-                  "title": "指的是",
+                  "title": "設備用途",
                   "rows": [
                     {
-                      "text": "編譯和測試用的虛擬機",
+                      "text": "編譯與測試用的虛擬機",
                       "tone": "mark"
                     }
                   ]
                 },
                 {
-                  "title": "怎麼連",
+                  "title": "連線方式",
                   "rows": [
                     {
                       "text": "ssh sandbox"
@@ -5016,59 +4845,61 @@
                   ]
                 }
               ],
-              "text": "虛擬機不用 Minecraft 的名字，保留服務原本的名字。"
+              "text": "虛擬機保留服務名稱，不套用實體機器的命名方式。"
             }
           ]
         },
         "points": [
           {
-            "term": "命名的規則",
-            "text": "實體的機器用方塊：筆電是工作台，路由器是漏斗。隨身的裝置用物品：手機是指南針。虛擬機保留服務原本的名字。"
+            "term": "命名規則",
+            "text": "例如，實體機器用 Minecraft 方塊命名。隨身裝置用物品命名。虛擬機保留服務名稱。"
           },
           {
-            "term": "名字就是連線名稱",
-            "text": "[[ssh]] 的連線名稱跟設備的名字一樣。打 ssh spawner 就連到 spawner。"
+            "term": "連線名稱",
+            "text": "讓 [[ssh]] 連線名稱與設備名稱一致。例如，用 ssh spawner 連到 spawner。"
           },
           {
-            "term": "細節不寫在這一段",
-            "text": "硬體規格和位址不寫在 CLAUDE.md。Claude Code 要維運的時候，才去記憶的筆記裡找。"
+            "term": "細節放入記憶",
+            "text": "設備段落只放名稱、用途與連線方式。硬體規格與位址另放在記憶筆記。維運時再讀取細節。"
           }
         ]
       },
       {
-        "title": "做法：改名那天做的事，和取新名字的方法",
-        "body": ["2026-10-11 我把舊的名字全部換成現在這一套。"],
+        "title": "做法：選擇易辨識的名稱並處理新舊對照",
+        "body": ["==讓名稱容易辨認，並保留改名前後的對照==。"],
         "points": [
           {
-            "term": "舊的連線名稱直接刪掉",
-            "text": "改名那天，舊的連線名稱一起刪了。"
+            "term": "移除舊連線名稱",
+            "text": "設備改名時，一併刪除舊的連線名稱。"
           },
           {
-            "term": "留 1 行新舊對照",
-            "text": "CLAUDE.md 裡有 1 行，寫每個舊名字對到哪個新名字。舊的文件和 log 照這一行去讀。"
+            "term": "保留名稱對照",
+            "text": "在 CLAUDE.md 記下舊名稱對應的新名稱。讀取舊文件與 log 時，依照對照辨認設備。"
           },
           {
-            "term": "沒有改到的地方",
-            "text": "虛擬機軟體內部的節點名稱還是舊的。10-29 我還發現，監控服務裡登記的也是舊名字。那天我打的是：「我發現現在 sensorium 有些註冊的名字都舊的」"
+            "term": "檢查名稱是否一致",
+            "text": "改名時，檢查虛擬機軟體內部的節點名稱。也檢查監控服務登記的名稱。設備改名不代表這些名稱已經更新。"
           },
           {
-            "term": "新名字先請 Claude Code 列候選",
-            "text": "2026-10-29 我替維運服務取名字，問的是：「有什麼 minecraft 相關的嗎」。最後選了 golem，是 Minecraft 裡保護村莊的鐵巨人。"
+            "term": "列出候選名稱",
+            "text": "請 Claude Code 依命名主題列出候選。例如，用 Minecraft 的鐵巨人 golem 為維運服務命名。"
           },
           {
-            "term": "字形要差很多",
-            "text": "Claude Code 列候選時用了 2 個條件：字形差很多、不容易打錯，而且不要跟現有的名字太像。"
+            "term": "避開相似字形",
+            "text": "選擇字形差異大、不容易打錯的名稱。避免與現有設備名稱太接近。"
           }
         ]
       },
       {
-        "title": "下一步：把你的設備寫進 CLAUDE.md",
+        "title": "下一步：寫下設備說明並測試名稱",
         "body": [
-          "列出你固定在用的設備。每台寫 3 件事：名字、是什麼、怎麼連。",
-          "把這一段放進 CLAUDE.md。",
-          "開 1 個新對話，只打設備的名字交代 1 件事。看 Claude Code 有沒有連到對的那一台。"
+          "列出固定使用的設備。",
+          "逐台寫下名稱、用途與連線方式。",
+          "把設備說明放進 CLAUDE.md。",
+          "開啟新對話，用設備名稱交代任務。",
+          "檢查 Claude Code 是否連到正確設備。"
         ],
-        "callout": "==設備的名字、是什麼、怎麼連，寫在 CLAUDE.md 的同一段==。"
+        "callout": "==用新對話檢查設備名稱是否指向正確設備==。"
       }
     ]
   },

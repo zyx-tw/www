@@ -312,11 +312,20 @@ html.tv::after {
     transparent 1px 3px
   );
 }
+/*
+ * The edge blur is a rectangle. Without the screen's round corners it blurs
+ * the black bezel into the page at each corner.
+ */
+html.tv [data-slot="corner-edge"] {
+  inset-inline: var(--bezel);
+}
 html.tv [data-slot="corner-edge"][data-edge="top"] {
   top: var(--bezel);
+  border-radius: 40px 40px 0 0;
 }
 html.tv [data-slot="corner-edge"][data-edge="bottom"] {
   bottom: var(--bezel);
+  border-radius: 0 0 40px 40px;
 }
 /*
  * The TV frame turning on (components/tv.tsx, TvBoot): two black halves part

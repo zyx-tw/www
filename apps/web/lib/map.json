@@ -17,36 +17,36 @@
       "bodies": [
         {
           "slug": "what-claude-code-is",
-          "name": "Claude Code 不是聊天機器人，是會在你的電腦上動手的同事",
-          "line": "Claude Code 會找檔案、下指令、檢查結果，所以我把整個任務交出去。",
+          "name": "交代完整任務，讓 Claude Code 修改並驗證結果",
+          "line": "說明目標與確認界線，依實測回報判斷是否完成。",
           "short": "入門"
         },
         {
           "slug": "start-from-home",
           "short": "家目錄",
-          "name": "我只在家目錄開 Claude Code，不 cd 進專案",
-          "line": "在家目錄開，我的專案都在 Claude Code 的工作範圍裡，記憶也存在同一個地方。",
+          "name": "從家目錄啟動 Claude Code，集中專案範圍與記憶",
+          "line": "固定專案位置，修改前讀取專案規則，再處理跨專案任務。",
           "needs": ["what-claude-code-is"]
         },
         {
           "slug": "four-ways-to-extend",
-          "name": "MCP、Skill、Plugin、Mod：4 種擴充方式怎麼選",
-          "line": "MCP、Skill、Plugin、Mod 各替 Claude Code 做了什麼，附 3 張可以操作的圖。",
+          "name": "依任務缺口選擇 Claude Code 的擴充方式",
+          "line": "用 MCP 接服務，用 Skill 寫做法，用 Plugin 打包，用 Mod 改畫面。",
           "short": "擴充",
           "needs": ["start-from-home"]
         },
         {
           "slug": "claude-md",
-          "name": "我的 CLAUDE.md 寫了什麼，為什麼這樣寫",
-          "line": "把糾正過的話寫成每次新對話都會載入的規則。",
+          "name": "把通用工作要求寫進 CLAUDE.md，並用新任務測試",
+          "line": "寫明工作背景、詢問條件與完成標準，再檢查規則是否落實。",
           "short": "CLAUDE.md",
           "needs": ["four-ways-to-extend"]
         },
         {
           "slug": "course-basics",
-          "name": "小課程：第一週的 Claude Code",
+          "name": "跟著課程練習，把完整小任務交給 Claude Code",
           "kind": "station",
-          "line": "5 天，每天 1 個練習，用你自己的專案做。",
+          "line": "從查詢專案開始，練習交代任務、保存規則與判斷擴充需求。",
           "short": "課程",
           "needs": ["claude-md"]
         }
@@ -145,28 +145,28 @@
       "bodies": [
         {
           "slug": "subagent-bill",
-          "name": "子 agent 用掉一半的用量，所以我只讓子 agent 查與審",
-          "line": "2026-09 量了 30 天的用量之後，我改了派工的規則。現在子 agent 佔 9.9%。",
+          "name": "把過程長、結論短的工作交給子 agent",
+          "line": "開發留在主線，依任務分配查詢、審查與規劃。",
           "short": "花費"
         },
         {
           "slug": "review-by-risk",
-          "name": "152 次審查跑了 314 輪，所以我只審高風險的修改",
-          "line": "2026-09 到 10 月的 30 天裡量到的。審查抓到的問題，集中在少數幾類修改。",
+          "name": "依修改出錯的後果決定是否送審",
+          "line": "先修已知問題，再依風險與審查分類處理合併。",
           "needs": ["subagent-bill"],
           "short": "審查"
         },
         {
           "slug": "many-at-once",
-          "name": "同時派很多個 agent，全部撞到用量上限",
-          "line": "用量是一起算的。同時派越多個，越快一起停在半路。",
+          "name": "逐項完成工作，避免並行耗盡用量",
+          "line": "共用用量上限時，逐項執行並及時 commit。",
           "needs": ["subagent-bill"],
           "short": "並行"
         },
         {
           "slug": "two-agents",
-          "name": "Claude Code 和 Codex 共用了什麼，還沒共用什麼",
-          "line": "專案的規則和記憶共用同一份。我自己的規則還是 2 份，要手動同步。",
+          "name": "讓 Claude Code 與 Codex 讀取同一份專案規則",
+          "line": "集中規則檔案，再檢查記憶與 Skill 的同步方式。",
           "needs": ["remembers-me"],
           "short": "Codex"
         }
@@ -181,57 +181,57 @@
         {
           "slug": "one-claude-many-machines",
           "short": "遠端",
-          "name": "我有很多台設備，但只在筆電上跟 Claude Code 對話",
-          "line": "筆電上的 Claude Code 用 ssh 連到其他機器，把工作放到適合的那一台。",
+          "name": "讓 Claude Code 從筆電連到適合的機器",
+          "line": "對話留在筆電，透過 ssh 把工作送到適合的機器。",
           "needs": ["start-from-home"]
         },
         {
           "slug": "what-runs-where",
           "short": "登記",
-          "name": "Claude Code 怎麼知道每台設備、每個專案在做什麼",
-          "line": "設備、專案和網路都登記成檔案，Claude Code 先讀再動手。",
+          "name": "把設備與專案登記成 Claude Code 會讀的檔案",
+          "line": "分層記錄設備與專案，規定 Claude Code 動手前先讀。",
           "needs": ["one-claude-many-machines", "claude-md"]
         },
         {
           "slug": "one-job-per-machine",
-          "name": "筆電只編輯：每種工作有固定的機器",
-          "line": "筆電只編輯，其他機器負責編譯、運算和儲存。",
+          "name": "把每種工作交給固定的機器",
+          "line": "筆電負責編輯和 git，其他機器分擔編譯、運算與儲存。",
           "short": "分工",
           "needs": ["one-claude-many-machines"]
         },
         {
           "slug": "numbers-are-addresses",
-          "name": "看編號就知道位址：我的虛擬機編號規則",
-          "line": "看虛擬機的編號，就算得出在哪一台主機、位址是多少。",
+          "name": "用可反推位址的規則替虛擬機編號",
+          "line": "讓編號對應主機與位址，並在建立工具中檢查範圍。",
           "needs": ["one-job-per-machine"],
           "short": "編號"
         },
         {
           "slug": "fixed-place",
-          "name": "每個專案在測試的機器上，只有 1 個固定的位置",
-          "line": "每個新對話都到同一個位置工作，接著用上一個對話留下的環境。",
+          "name": "替專案保留可重複使用的測試位置",
+          "line": "固定程式碼與環境說明的位置，讓新對話接著使用。",
           "needs": ["one-job-per-machine"],
           "short": "sandbox"
         },
         {
           "slug": "network-in-git",
-          "name": "網路設定寫成檔案：改網路就是送 pull request",
-          "line": "網段、設備和存取規則都是 Git 倉庫裡的檔案。先改檔案，再動設備。",
+          "name": "先修改 Git 裡的網路設定，再操作設備",
+          "line": "把網段、設備與存取規則寫成檔案，透過 pull request 檢查修改。",
           "short": "網路",
           "needs": ["what-runs-where"]
         },
         {
           "slug": "one-plugin-catalog",
-          "name": "1 份 Plugin 目錄，Claude Code 和 Codex 都從這裡裝",
-          "line": "目錄寫死每個 Plugin 的版本，2 邊才會裝到同一版。我自己的 zyx 是例外，2 邊現在不同版。",
+          "name": "用固定版本的目錄管理 Plugin 安裝",
+          "line": "讓 Claude Code 與 Codex 共用目錄，發版後同步更新版本。",
           "needs": ["four-ways-to-extend"],
           "short": "plugin"
         },
         {
           "slug": "course-machines",
-          "name": "小課程：架一個 Claude Code 管得動的小機房",
+          "name": "依課程建立 Claude Code 能操作的遠端環境",
           "kind": "station",
-          "line": "5 天，從 1 台多出來的機器開始。",
+          "line": "從 ssh 連線開始，逐步完成分工、固定位置與設備登記。",
           "needs": ["one-job-per-machine"],
           "short": "課程"
         }
@@ -245,34 +245,34 @@
       "bodies": [
         {
           "slug": "changing-the-interface",
-          "name": "我做過 9 個 Mod，現在開著 3 個：想看的狀態放進 Claude Code 的畫面",
-          "line": "Mod 做了不合用，就關掉或刪掉。輸入框上方的位置有限。",
+          "name": "用 Mod 把需要的狀態放進 Claude Code 畫面",
+          "line": "依用途保留狀態面板，關閉或刪除不合用的 Mod。",
           "needs": ["four-ways-to-extend"],
           "short": "mod"
         },
         {
           "slug": "outside-the-terminal",
-          "name": "Telegram 上的 bot 是另一個 agent：有自己的 MCP 清單和對話紀錄",
-          "line": "bot 和按鈕能用什麼，都是事先列好的。",
+          "name": "為通訊 bot 分開設定工具、對話紀錄與工作空間",
+          "line": "先列出 bot 可用的能力，讓修改動作經過核准。",
           "short": "Telegram"
         },
         {
           "slug": "monitoring-for-agents",
-          "name": "監控有 2 個入口：畫面給我看，MCP 給 Claude Code 查",
-          "line": "畫面是拿來看的。Claude Code 要查資料、要登記新的專案，都走 MCP。",
+          "name": "替監控提供 Claude Code 可查詢的入口",
+          "line": "分開收集、儲存與維運工作，透過 MCP 查詢及登記專案。",
           "needs": ["agent-experience"],
           "short": "監控"
         },
         {
           "slug": "what-an-agent-has-seen",
-          "name": "Claude Code 看過的東西會留在對話紀錄裡，所以密碼不貼進對話",
-          "line": "密碼填進表單，直接存進鑰匙圈。對話裡只留下名字。",
+          "name": "把密碼存進鑰匙圈，讓 Claude Code 用名稱指定",
+          "line": "用表單傳入密碼，遮住指令輸出中的值，再做加密備份。",
           "short": "安全"
         },
         {
           "slug": "names-to-guess",
-          "name": "我的設備用 Minecraft 的方塊命名：每個名字是哪一台，寫在 CLAUDE.md",
-          "line": "我只打設備的名字。每個名字是哪一台、怎麼連，Claude Code 從 CLAUDE.md 讀。",
+          "name": "把設備名稱、用途與連線方式寫進 CLAUDE.md",
+          "line": "統一設備名稱與連線名稱，再用新對話檢查是否連對。",
           "short": "命名"
         }
       ]

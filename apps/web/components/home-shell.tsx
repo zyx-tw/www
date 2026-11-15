@@ -242,9 +242,16 @@ export function HomeShell({
       }}
     >
       <div aria-live="polite">
-        {lines.map((line) =>
+        {lines.map((line, i) =>
           line.kind === "in" ? (
-            <p key={line.id} className="text-muted-foreground">
+            // An empty line after a command's output, as a terminal leaves.
+            <p
+              key={line.id}
+              className={cn(
+                "text-muted-foreground",
+                lines[i - 1]?.kind === "out" && "mt-6"
+              )}
+            >
               <span aria-hidden="true">$ </span>
               {line.text}
             </p>
@@ -271,7 +278,9 @@ export function HomeShell({
           )
         )}
       </div>
-      <label className="relative flex">
+      <label
+        className={cn("relative flex", lines.at(-1)?.kind === "out" && "mt-6")}
+      >
         <span
           aria-hidden="true"
           className="whitespace-pre text-muted-foreground"
