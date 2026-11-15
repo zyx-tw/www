@@ -232,14 +232,14 @@
     "intro": [
       "網路上有很多開源的 MCP、Skill、Plugin。看到好用的就裝起來，是最常見的做法。",
       "我不這樣做。我跟我的 Claude Code 已經有自己的習慣。==別人的做法裝進來，不會變成我的==。",
-      "我會去讀別人怎麼做，把用得上的部分學過來，寫成自己的。要學之前，先知道 4 種擴充方式各補什麼缺口。"
+      "我會去讀別人怎麼做，把用得上的部分學過來，寫成自己的。要學之前，先弄清楚 4 種擴充方式各是什麼、各省下什麼。"
     ],
     "sections": [
       {
         "title": "原理：4 種擴充方式，各補 1 種缺口",
         "body": [
           "先看一句我真的打過的話：「那有 cli 嗎？沒有的話感覺要用 api 做成 mcp 欸。」",
-          "當時 Claude Code 碰不到一個服務。碰不到系統，要補的就是 [[MCP]]。MCP 讓 Claude Code 能操作另一個系統，例如雲端平台、行事曆、資料庫。",
+          "當時 Claude Code 碰不到一個服務。碰不到系統，要補的就是 [[MCP]]。",
           "其他 3 種補的是別的缺口。[[Skill]] 是一份做法，[[Plugin]] 把這些擴充包在一起，[[Mod]] 改的是 Claude Code 自己的畫面。"
         ],
         "figure": {
@@ -296,25 +296,88 @@
         }
       },
       {
-        "title": "做法：我怎麼決定用哪一種",
-        "body": ["我照缺口選。每一種我都有自己的規矩。"],
+        "title": "MCP：讓 Claude Code 碰得到別的系統",
+        "body": [
+          "MCP 是 Anthropic 開源的一套標準。以前每個系統的接法都不一樣，每一種 AI 工具都要替每個系統各寫一次。有了 MCP，系統只要寫 1 次，支援 MCP 的 AI 工具都能接。",
+          "==有 API 也值得接 MCP，因為 MCP 省下 Claude Code 每一次重新摸索的步驟==。"
+        ],
         "points": [
           {
-            "term": "Claude Code 碰不到某個系統：接 MCP",
-            "text": "有官方的 MCP 就直接裝，那是服務自己開的門。沒有的話，我用那個服務的 API 自己做一個。MCP 接上之後，Claude Code 不用再開瀏覽器替我點網頁，我的瀏覽器還是我的。"
+            "term": "MCP 怎麼運作",
+            "text": "MCP server 是一支程式，站在 Claude Code 和那個系統中間。Server 提供一組 tool，每個 tool 是 1 個動作，例如「查行程」「建立虛擬機」。每個 tool 有名字、說明、要填的欄位。"
           },
           {
-            "term": "Claude Code 不知道我的做法：寫成 Skill",
-            "text": "Skill 是一份寫給 Claude Code 的做法，做到那類任務才會載入。我會說「把這次學到的寫回 skill，記得要夠 general」。寫了某一次的細節，Skill 會越來越長，下一個任務也用不上。"
+            "term": "Claude Code 看到什麼",
+            "text": "開始工作時，Claude Code 只讀進 tool 的名字和 server 的簡短說明。完整的欄位等到要用那個 tool 才讀。所以多接幾個 MCP，平常幾乎不佔 Claude Code 的閱讀空間。"
           },
           {
-            "term": "換一台電腦還要用：包成 Plugin",
-            "text": "Plugin 把 Skill、MCP 這些擴充包在一起，1 行指令就能裝好。我自己的 Skill 都放在同一個 Plugin 裡，也能分享給別人。"
+            "term": "只有 API 也做得到，差在哪裡",
+            "text": "只有 API 的話，Claude Code 每次都要先找文件、處理登入、自己組請求，再從一大包回應裡找答案。接了 MCP，登入由 server 處理，Claude Code 直接看到有哪些動作可以用。"
           },
           {
-            "term": "我想看到狀態：做 Mod",
-            "text": "Mod 改的是 Claude Code 自己的介面。我做了幾個 Mod，把正在播的音樂、今天的行程、主機的狀態，顯示在輸入框上面。Mod 還是搶先體驗的功能，之後可能會變。"
+            "term": "MCP 省下什麼",
+            "text": "省步驟：1 個 tool 可以做完原本好幾次 API 呼叫。省 token（模型計算文字量的單位，也是費用的單位）：tool 只回傳用得上的內容，不是整包資料。步驟和文字都少了，任務也更快做完。"
+          },
+          {
+            "term": "我的順序",
+            "text": "我在 CLAUDE.md 寫了操作外部服務的順序：那個服務的 MCP、API 或 CLI、最後才是瀏覽器。有官方的 MCP 就直接裝。沒有的話，我用那個服務的 API 自己做一個。"
           }
+        ]
+      },
+      {
+        "title": "Skill：做到那類任務才載入的做法",
+        "body": [
+          "Skill 是一份寫給 Claude Code 的做法，例如怎麼寫文章、怎麼做簡報、怎麼發版。",
+          "Skill 和 [[CLAUDE.md]] 都是寫給 Claude Code 看的文字。==差別在什麼時候載入==。"
+        ],
+        "points": [
+          {
+            "term": "CLAUDE.md 每次都整份載入",
+            "text": "不管這次的任務是什麼，Claude Code 都會先讀完整份 CLAUDE.md。寫得越長，每一次工作都要多讀那麼多。"
+          },
+          {
+            "term": "Skill 用到才載入",
+            "text": "平常 Claude Code 只看得到每個 Skill 的名字和 1 段說明。做到那類任務，Claude Code 才讀進全文。所以很長的做法放在 Skill 裡，平常幾乎不花成本。"
+          },
+          {
+            "term": "怎麼分",
+            "text": "每個任務都要知道的事，放 CLAUDE.md，例如我是誰、什麼時候才能問我。只有某類任務才用得到的步驟，寫成 Skill。官方文件建議 CLAUDE.md 不超過 200 行，長成步驟的段落就搬去 Skill。"
+          },
+          {
+            "term": "我的規矩",
+            "text": "我會說「把這次學到的寫回 skill，記得要夠 general」。寫了某一次的細節，Skill 會越來越長，下一個任務也用不上。"
+          }
+        ]
+      },
+      {
+        "title": "Plugin：把擴充包起來，有版本，能分享",
+        "body": [
+          "Skill 和 MCP 不包成 Plugin 也能用。==要換電腦、要給別人用、要管版本的時候，才需要 Plugin==。"
+        ],
+        "points": [
+          {
+            "term": "一次裝好一整組",
+            "text": "1 個 Plugin 可以同時裝進 Skill、MCP server、子 agent 和 hook（在特定時機自動執行的指令）。換一台電腦，1 行指令就全部回來。"
+          },
+          {
+            "term": "有版本號",
+            "text": "Plugin 有自己的版本號，內容放在 Git 上。每次修改都留下紀錄，看得到改了什麼。改壞了可以退回上一版。"
+          },
+          {
+            "term": "能分享，也能更新",
+            "text": "把 Plugin 放上 marketplace（一份 Plugin 的目錄），別人 1 行指令就能安裝。我發了新版，對方 1 行指令就能更新，不用再複製檔案。"
+          },
+          {
+            "term": "名稱不會打架",
+            "text": "Plugin 裡的 Skill 會帶上 Plugin 的名字當前綴。裝了很多個 Plugin，同名的 Skill 也不會互相蓋掉。"
+          }
+        ]
+      },
+      {
+        "title": "Mod：把狀態放進 Claude Code 的畫面",
+        "body": [
+          "Mod 改的是 Claude Code 自己的介面。我做了幾個 Mod，把正在播的音樂、今天的行程、主機的狀態，顯示在輸入框上面。",
+          "我想知道的事直接在畫面上，就不用另外開口問。Mod 還是搶先體驗的功能，之後可能會變。"
         ]
       },
       {

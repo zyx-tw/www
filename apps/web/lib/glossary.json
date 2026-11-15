@@ -11,15 +11,15 @@
     "note": "claude-md"
   },
   "MCP": {
-    "text": "讓 Claude Code 能操作另一個系統的接口，例如雲端平台、行事曆、資料庫。",
+    "text": "Anthropic 開源的標準。MCP server 提供一組 tool，讓 Claude Code 能操作另一個系統。",
     "note": "four-ways-to-extend"
   },
   "Skill": {
-    "text": "寫給 Claude Code 的一份做法，做到那類任務才會載入。",
+    "text": "寫給 Claude Code 的一份做法。平常只載入名字和說明，做到那類任務才載入全文。",
     "note": "four-ways-to-extend"
   },
   "Plugin": {
-    "text": "把 Skill、MCP 這些擴充包在一起，方便安裝與分享。",
+    "text": "把 Skill、MCP 這些擴充包成一組，有版本號，1 行指令就能安裝與更新。",
     "note": "four-ways-to-extend"
   },
   "Mod": {
