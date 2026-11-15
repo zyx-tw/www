@@ -406,6 +406,7 @@ export function render(
     cap = 8,
     stars = true,
     scale = S,
+    sprites = [],
   } = {}
 ) {
   const lamps = prims
@@ -603,6 +604,35 @@ export function render(
       }
       px.set([c[0], c[1], c[2], 255], i * 4)
     }
+  // Sprites: a model drawn elsewhere with the same camera (sprite/index.html), set down at a point of the scene.
+  // `tint` redraws it in the amber ramp by its lightness; without it the model keeps its own colours, in steps.
+  for (const { w: sw, h: sh, data, at, tint } of sprites) {
+    const src = Buffer.from(data, "base64")
+    const cx = Math.round(OX + ((at[0] - at[1]) / R2) * scale),
+      cy = Math.round(
+        oy + ((at[0] + at[1]) / R2) * scale * SIN - at[2] * scale * COS
+      )
+    for (let y = 0; y < sh; y++)
+      for (let x = 0; x < sw; x++) {
+        const k = (y * sw + x) * 4,
+          X = cx - (sw >> 1) + x,
+          Y = cy - (sh >> 1) + y
+        if (src[k + 3] < 128 || X < 0 || Y < 0 || X >= W || Y >= H) continue
+        let c = [src[k], src[k + 1], src[k + 2]]
+        if (tint)
+          c = RAMP[Math.max(2, Math.min(8, Math.round(lum(c) * 7.2) + 1))]
+        else {
+          const m = (c[0] + c[1] + c[2]) / 3
+          c = c.map((v) =>
+            Math.max(
+              0,
+              Math.min(255, Math.round((m + (v - m) * 1.5) / 24) * 24)
+            )
+          )
+        } // a little more colour, in steps
+        px.set([c[0], c[1], c[2], 255], (Y * W + X) * 4)
+      }
+  }
   const K = 3,
     w = W * K,
     hgt = H * K,

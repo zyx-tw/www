@@ -15,6 +15,14 @@ import fs from "node:fs"
 const out = process.argv[2],
   only = process.argv[3]
 fs.mkdirSync(out, { recursive: true })
+const SPRITE = Object.fromEntries(
+  ["good", "zyx"].map((n) => [
+    n,
+    JSON.parse(
+      fs.readFileSync(new URL(`./sprites/${n}.json`, import.meta.url), "utf8")
+    ),
+  ])
+)
 const A = GLOW.amber,
   K = MAT.dark,
   G = MAT.steel,
@@ -162,46 +170,38 @@ const S = {
       )
     return p
   },
-  // Link: a ticket machine. A long strip goes in at the back; a short ticket comes out at the front.
+  // Link: a shortener. The long line on the display becomes the short one; a short ticket comes out.
   link() {
-    const p = [
-      ...feet(-3.4, -2.4, 6.8, 5.0),
-      box(-3.4, -2.4, 0.2, 6.8, 5.0, 2.2, K),
-      box(-3.5, -2.5, 2.4, 7.0, 5.2, 0.16, G),
-    ]
+    const p = [...body(10.0, 4.4, 2.6)],
+      t = 2.96
     p.push(
-      cyl(-1.2, -1.0, 2.56, 1.3, 0.5, G),
-      cyl(-1.2, -1.0, 3.06, 1.05, 0.2, L),
-      cyl(-1.2, -1.0, 3.26, 0.3, 0.1, K)
-    ) // the reel of strip
-    for (let i = 0; i < 9; i++)
+      frame(-4.6, 2.2, 0.8, 9.2, 1.9),
+      box(-4.6, 2.2, 0.8, 9.2, 0.04, 1.9, K, { lift: -0.25 })
+    )
+    for (let i = 0; i < 22; i++)
       p.push(
-        box(
-          -0.1 + i * 0.36,
-          -1.5,
-          2.56 + (i < 2 ? i * 0.1 : 0.2),
-          0.34,
-          1.0,
-          0.05,
-          L,
-          { lift: 0.1 }
-        )
-      ) // the long strip
+        box(-4.4 + i * 0.4, 2.26, 2.0, 0.28, 0.03, 0.44, i % 7 === 4 ? K : L, {
+          lift: -0.05,
+        })
+      ) // the long address
+    for (let i = 0; i < 5; i++)
+      p.push(lit(-4.4 + i * 0.4, 2.26, 1.1, 0.28, 0.44, 1.3)) // the short one
+    p.push(box(-1.9, 2.26, 1.24, 6.3, 0.03, 0.12, K))
+    // On top: the long strip runs into the head; the short ticket leaves on the other side.
     p.push(
-      box(2.2, -1.9, 2.56, 1.0, 1.8, 0.9, K),
-      glow(box(2.3, -0.08, 2.8, 0.8, 0.03, 0.4), A, 0.9)
+      box(-4.6, -0.5, t, 5.6, 1.0, 0.06, L, { lift: 0.1 }),
+      box(1.0, -1.0, t, 1.6, 2.0, 1.3, K),
+      box(0.9, -1.1, t + 1.3, 1.8, 2.2, 0.14, G),
+      glow(box(1.3, 1.02, t + 0.5, 1.0, 0.03, 0.4), A, 1.2)
     )
+    for (let i = 0; i < 13; i++)
+      p.push(box(-4.4 + i * 0.42, -0.4, t + 0.06, 0.06, 0.8, 0.02, K))
     p.push(
-      box(1.9, 2.5, 1.5, 1.4, 0.9, 0.05, MAT.orange, { lift: 0.1 }),
-      box(1.8, 2.5, 1.3, 1.6, 0.12, 0.16, G)
-    ) // the short ticket
-    p.push(
-      ...keys(-2.9, 0.9, 2.56, 5, 3, 14),
-      ...knob(0.6, 1.3, 2.56, 0.34, true),
-      glow(box(-2.9, 2.62, 1.2, 3.2, 0.03, 0.7), A, 1.2)
+      box(2.6, -0.5, t, 1.2, 1.0, 0.06, MAT.orange, { lift: 0.1 }),
+      ...keys(-4.2, 1.0, t, 6, 1, 5, 0.6),
+      ...knob(4.2, 1.4, t, 0.36, true),
+      ...knob(4.2, -1.4, t, 0.3)
     )
-    for (let i = 0; i < 6; i++)
-      p.push(box(3.42, -2.0 + i * 0.7, 0.6, 0.03, 0.4, 1.4, G, { lift: -0.1 }))
     return p
   },
 }
@@ -296,65 +296,58 @@ Object.assign(S, {
       p.push(box(-1.6 + i * 0.7, -1.4, 3.96, 0.44, 2.4, 0.1, K))
     return p
   },
-  // Good: a server with its offering on top, a snack bag between two lamps.
+  // Good: a server with its offering on top. The bag is the real model, drawn with the same camera.
   good() {
-    const p = [...body(6.4, 4.2, 3.0)],
-      t = 3.36
-    for (let k = 0; k < 5; k++) {
-      p.push(box(-2.9, 2.1, 0.6 + k * 0.52, 5.8, 0.05, 0.38, G, { lift: -0.2 }))
-      for (let j = 0; j < 4; j++)
+    const p = [...body(8.0, 4.6, 1.8)],
+      t = 2.16
+    for (let k = 0; k < 3; k++) {
+      p.push(box(-3.7, 2.3, 0.5 + k * 0.5, 7.4, 0.05, 0.36, G, { lift: -0.2 }))
+      for (let j = 0; j < 5; j++)
         p.push(
           glow(
-            box(-2.6 + j * 0.4, 2.16, 0.7 + k * 0.52, 0.2, 0.03, 0.16),
+            box(-3.4 + j * 0.4, 2.36, 0.6 + k * 0.5, 0.2, 0.03, 0.16),
             A,
-            j === 1 && k === 2 ? 0.9 : 0.1
+            j === 1 && k === 1 ? 0.9 : 0.1
           )
         )
     }
-    p.push(
-      box(-1.6, -1.1, t, 3.2, 2.2, 0.16, G),
-      box(-0.9, -0.5, t + 0.16, 1.8, 1.0, 1.7, MAT.orange),
-      box(-1.0, -0.6, t + 1.86, 2.0, 1.2, 0.14, MAT.orange, { lift: 0.14 }),
-      box(-0.5, 0.5, t + 0.6, 1.0, 0.03, 0.7, K)
-    )
-    for (const x of [-1.35, 1.35])
+    p.push(cyl(0, 0, t, 1.9, 0.16, G), cyl(0, 0, t + 0.16, 1.5, 0.06, K))
+    for (const x of [-3.0, 3.0])
       p.push(
-        cyl(x, 0.75, t + 0.16, 0.1, 0.7, L),
-        glow(ball(x, 0.75, t + 1.0, 0.16), A, 1.2)
+        cyl(x, 1.4, t, 0.24, 0.1, G),
+        cyl(x, 1.4, t + 0.1, 0.08, 0.8, L),
+        glow(ball(x, 1.4, t + 1.1, 0.2), A, 1.4)
       )
+    p.sprites = [{ ...SPRITE.good, at: [0, 0, t + 0.2 + 2.1] }]
     return p
   },
-  // Plump: a turntable with an arm. The flat shape on the plate comes out round.
+  // Plump: a turntable. The flat mark on the front panel stands on the plate in 3D.
   "3d"() {
-    const p = [...body(8.4, 5.0, 1.2)],
+    const p = [...body(8.6, 5.2, 1.2)],
       t = 1.56
-    p.push(
-      cyl(-1.0, -0.2, t, 2.2, 0.24, G),
-      cyl(-1.0, -0.2, t + 0.24, 1.9, 0.08, K)
-    )
-    for (const [dx, dz, r] of [
-      [0, 1.6, 0.95],
-      [-1.1, 1.6, 0.75],
-      [1.1, 1.6, 0.75],
-      [0, 2.7, 0.75],
-      [0, 0.75, 0.75],
-    ])
+    p.push(cyl(0, -0.2, t, 2.5, 0.24, G), cyl(0, -0.2, t + 0.24, 2.2, 0.08, K))
+    for (let i = 0; i < 12; i++)
       p.push(
-        ball(-1.0 + dx * 0.7, -0.2 - dx * 0.7, t + 0.3 + dz, r, MAT.orange, {
-          lift: 0.06,
-        })
+        glow(
+          box(
+            Math.cos(i * 0.5236) * 2.36 - 0.08,
+            -0.2 + Math.sin(i * 0.5236) * 2.36 - 0.08,
+            t + 0.24,
+            0.16,
+            0.16,
+            0.06
+          ),
+          A,
+          0.1
+        )
       )
     p.push(
-      box(2.6, -2.0, t, 0.9, 0.9, 3.6, K),
-      box(-0.6, -1.9, t + 3.3, 3.4, 0.7, 0.3, G),
-      box(-0.9, -1.8, t + 2.9, 0.5, 0.5, 0.4, L),
-      glow(box(-0.8, -1.7, t + 2.8, 0.3, 0.3, 0.1), A, 1.0)
+      lit(-3.9, 2.62, 0.5, 1.6, 0.6),
+      ...keys(2.9, 1.0, t, 2, 3, 5),
+      ...knob(-3.5, 1.6, t, 0.36, true),
+      ...knob(-3.5, 0.6, t, 0.3)
     )
-    p.push(
-      lit(-3.9, 2.52, 0.5, 1.6, 0.6),
-      ...keys(1.8, 0.6, t, 3, 3, 8),
-      ...knob(2.4, -0.4, t, 0.36, true)
-    )
+    p.sprites = [{ ...SPRITE.zyx, tint: true, at: [0, -0.2, t + 0.3 + 2.0] }]
     return p
   },
   // UI: a parts cabinet. Rows of small drawers; one is open and holds the part.
@@ -583,13 +576,23 @@ Object.assign(S, {
     return p
   },
 })
-for (const [name, build] of Object.entries(S))
-  if (!only || only === name)
-    render(
-      [
-        box(-30, -30, -1, 60, 60, 1, MAT.dark, { floor: true, lift: -0.16 }),
-        ...build(),
-      ],
-      `${out}/${name}.png`,
-      { ground: 8.2, oy: 222, scale: 27, mono: true, cap: 6, stars: false }
-    )
+for (const [name, build] of Object.entries(S)) {
+  if (only && only !== name) continue
+  const prims = build()
+  render(
+    [
+      box(-30, -30, -1, 60, 60, 1, MAT.dark, { floor: true, lift: -0.16 }),
+      ...prims,
+    ],
+    `${out}/${name}.png`,
+    {
+      ground: 8.2,
+      oy: 222,
+      scale: 27,
+      mono: true,
+      cap: 6,
+      stars: false,
+      sprites: prims.sprites ?? [],
+    }
+  )
+}

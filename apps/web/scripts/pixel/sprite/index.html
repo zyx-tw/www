@@ -1,0 +1,103 @@
+<!doctype html>
+<meta charset="utf-8" />
+<script type="importmap">
+  {
+    "imports": {
+      "three": "/three/build/three.module.js",
+      "three/addons/": "/three/examples/jsm/"
+    }
+  }
+</script>
+<body style="margin: 0; background: #000">
+  <script type="module">
+    // Draws a 3D model the way the pixel scenes are drawn: the same camera, the same light, no smoothing.
+    import * as THREE from "three"
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
+    import { SVGLoader } from "three/addons/loaders/SVGLoader.js"
+
+    async function load(kind) {
+      if (kind === "good") {
+        const { scene } = await new GLTFLoader().loadAsync("/good.glb")
+        scene.traverse((o) => {
+          if (o.isMesh) {
+            o.material.map.minFilter = o.material.map.magFilter =
+              THREE.NearestFilter
+            o.material = new THREE.MeshLambertMaterial({ map: o.material.map })
+          }
+        })
+        return scene
+      }
+      const data = new SVGLoader().parse(await (await fetch("/zyx.svg")).text())
+      const group = new THREE.Group()
+      for (const path of data.paths)
+        for (const shape of SVGLoader.createShapes(path)) {
+          const geo = new THREE.ExtrudeGeometry(shape, {
+            depth: 900,
+            bevelEnabled: true,
+            bevelThickness: 120,
+            bevelSize: 120,
+            bevelSegments: 4,
+          })
+          group.add(
+            new THREE.Mesh(
+              geo,
+              new THREE.MeshLambertMaterial({ color: 0xffffff })
+            )
+          )
+        }
+      group.scale.y = -1 // SVG y runs down
+      const holder = new THREE.Group()
+      holder.add(group)
+      return holder
+    }
+
+    /** `units` is the model's height in scene units, `scale` the pixels a unit; `turn` spins it about the vertical. */
+    window.shot = async (kind, units, scale, turn = 0) => {
+      const model = await load(kind)
+      const box = new THREE.Box3().setFromObject(model),
+        size = box.getSize(new THREE.Vector3()),
+        mid = box.getCenter(new THREE.Vector3())
+      const k = units / size.y
+      const root = new THREE.Group()
+      model.position.sub(mid)
+      root.add(model)
+      root.scale.setScalar(k)
+      root.rotation.y = turn
+      const scene = new THREE.Scene()
+      scene.add(
+        root,
+        new THREE.AmbientLight(0xffffff, kind === "good" ? 1.9 : 1.5)
+      )
+      const sun = new THREE.DirectionalLight(
+        0xffffff,
+        kind === "good" ? 1.3 : 2.4
+      )
+      sun.position.set(-0.5, 0.78, 0.42)
+      scene.add(sun)
+      const R = (size.length() * k) / 2,
+        n = Math.ceil(2 * R * scale)
+      const cam = new THREE.OrthographicCamera(-R, R, R, -R, 0.1, 100)
+      cam.position
+        .set(1, Math.SQRT2 * Math.tan(Math.PI / 6), 1)
+        .multiplyScalar(20)
+      cam.lookAt(0, 0, 0)
+      const renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        alpha: true,
+        preserveDrawingBuffer: true,
+      })
+      renderer.setPixelRatio(1)
+      renderer.setSize(n, n)
+      renderer.render(scene, cam)
+      const gl = renderer.getContext(),
+        px = new Uint8Array(n * n * 4)
+      gl.readPixels(0, 0, n, n, gl.RGBA, gl.UNSIGNED_BYTE, px)
+      let bin = ""
+      for (let y = n - 1; y >= 0; y--)
+        for (let x = 0; x < n * 4; x++)
+          bin += String.fromCharCode(px[y * n * 4 + x])
+      return { w: n, h: n, data: btoa(bin) }
+    }
+    window.ready = true
+  </script>
+</body>
