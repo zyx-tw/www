@@ -5,15 +5,23 @@ import { Canvas, useFrame } from "@react-three/fiber"
 import { Suspense, useCallback, useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
-const MODEL_URL = "/good.glb"
+import { Command, Cursor } from "@workspace/ui/components/shell"
 
+import { MODEL_URL } from "@/lib/site"
+
+// While the model downloads the page is an idle prompt, as every status page
+// of the design system ends.
 function LoadingOverlay() {
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center bg-background">
-      <div className="relative h-16 w-16">
-        <div className="absolute top-0 left-0 h-full w-full border-4 border-muted" />
-        <div className="absolute top-0 left-0 h-full w-full animate-spin border-4 border-foreground border-t-transparent" />
-      </div>
+    <div
+      data-slot="good-loading"
+      role="status"
+      aria-label="Loading"
+      className="absolute inset-0 z-10 flex items-center justify-center bg-background"
+    >
+      <Command>
+        <Cursor />
+      </Command>
     </div>
   )
 }
@@ -57,6 +65,9 @@ function Model({ isInteracting, onLoaded }: ModelProps) {
         clearcoatRoughness: 0.15,
         emissive: new THREE.Color(0x222222),
         emissiveIntensity: 0.1,
+        // The model is faceted and ships without normals: the shader derives
+        // each face's normal, which is what the stored normals held.
+        flatShading: true,
       })
       if (source?.map) metal.map = source.map
       if (source?.normalMap) metal.normalMap = source.normalMap
