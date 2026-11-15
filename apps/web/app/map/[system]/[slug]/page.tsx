@@ -7,7 +7,6 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
 import { ProjectPicture } from "@/components/project-picture"
-import { MarkPalette } from "@/components/mark-palette"
 import { NoteMap } from "@/components/note-map"
 import { Rich } from "@/components/rich"
 import { MAP } from "@/lib/copy"
@@ -80,7 +79,6 @@ export default async function NotePage({
 
   return (
     <main lang="zh-Hant" className={cn(column, page, "flex-1")}>
-      <MarkPalette />
       <Hero
         title={<HeroTitle text={body.name} />}
         subtitle={
