@@ -13,6 +13,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "previews": "uv run scripts/previews.py",
+    "pictures": "node scripts/pixel/devices.mjs /tmp/zyx-pictures && uv run scripts/pixel/webp.py /tmp/zyx-pictures public/previews && uv run scripts/previews.py --dither-only",
     "og": "uv run scripts/og-image.py"
   },
   "dependencies": {

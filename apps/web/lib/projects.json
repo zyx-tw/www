@@ -334,9 +334,7 @@
     "preview": {
       "image": "/previews/aintern.webp",
       "dither": "/previews/aintern-dither.webp",
-      "focus": "50% 50%",
-      "zoom": 1.5,
-      "selector": "[role=img][aria-label]"
+      "focus": "50% 50%"
     }
   },
   {
@@ -738,9 +736,7 @@
     "preview": {
       "image": "/previews/carrel.webp",
       "dither": "/previews/carrel-dither.webp",
-      "focus": "50% 50%",
-      "zoom": 2,
-      "selector": "svg[viewBox='0 0 640 400']"
+      "focus": "50% 50%"
     }
   },
   {
@@ -810,8 +806,7 @@
     "preview": {
       "image": "/previews/ui.webp",
       "dither": "/previews/ui-dither.webp",
-      "focus": "50% 0%",
-      "zoom": 2
+      "focus": "50% 50%"
     }
   },
   {
@@ -829,8 +824,7 @@
     "preview": {
       "image": "/previews/sensorium.webp",
       "dither": "/previews/sensorium-dither.webp",
-      "focus": "50% 50%",
-      "zoom": 2
+      "focus": "50% 50%"
     }
   },
   {
@@ -848,7 +842,7 @@
     "preview": {
       "image": "/previews/ai.webp",
       "dither": "/previews/ai-dither.webp",
-      "focus": "50% 0%"
+      "focus": "50% 50%"
     }
   },
   {
@@ -866,7 +860,7 @@
     "preview": {
       "image": "/previews/winlab.webp",
       "dither": "/previews/winlab-dither.webp",
-      "focus": "50% 0%"
+      "focus": "50% 50%"
     }
   },
   {
@@ -884,8 +878,7 @@
     "preview": {
       "image": "/previews/portal.webp",
       "dither": "/previews/portal-dither.webp",
-      "focus": "50% 50%",
-      "zoom": 2
+      "focus": "50% 50%"
     }
   },
   {
@@ -903,8 +896,7 @@
     "preview": {
       "image": "/previews/video.webp",
       "dither": "/previews/video-dither.webp",
-      "focus": "50% 50%",
-      "zoom": 2
+      "focus": "50% 50%"
     }
   },
   {
@@ -918,8 +910,7 @@
     "preview": {
       "image": "/previews/link.webp",
       "dither": "/previews/link-dither.webp",
-      "focus": "50% 50%",
-      "zoom": 2
+      "focus": "50% 50%"
     }
   },
   {

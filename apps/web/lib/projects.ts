@@ -90,14 +90,10 @@ export type Project = {
   /** What it is built with, a handful of names. */
   stack: string[]
   /**
-   * Written by `bun run previews` (scripts/previews.py): a 1440x1080 color
-   * screenshot and its dithered twin. The window uses a matching 4:3 image
-   * area and contains other aspect ratios without cropping.
-   * `focus` places any spare space as two percentages ("50% 0%" aligns top).
-   * `zoom` captures a viewport that many times smaller at that pixel density,
-   * so the site's text is larger in the same 1440x1080 file. `source` is the
-   * page to capture when it is not `href`, and `selector` captures one
-   * element of it, centered on the page's background.
+   * Written by `bun run pictures` (scripts/pixel): a 1440x1080 pixel drawing
+   * of the product as one machine, and its dithered twin. `focus` places any
+   * spare space as two percentages. `zoom`, `source` and `selector` belong to
+   * `bun run previews`, which captures the live site instead.
    */
   preview: {
     image: string
