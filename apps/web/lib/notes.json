@@ -216,5 +216,327 @@
         "callout": "==只在家目錄開，記憶就只有 1 份==。"
       }
     ]
+  },
+  {
+    "slug": "four-ways-to-extend",
+    "log": "003",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "想讓 Claude Code 多會一件事，有 4 種擴充方式：MCP、Skill、Plugin、Mod。",
+      "我不會看到什麼就裝什麼。我先問 1 個問題：==Claude Code 現在缺的是什麼==。",
+      "碰不到某個系統、不知道我的做法、換一台電腦就沒了、我看不到狀態。4 種缺口，各對 1 種擴充方式。"
+    ],
+    "sections": [
+      {
+        "title": "原理：4 種擴充方式，各補 1 種缺口",
+        "body": [
+          "先看一句我真的打過的話：「那有 cli 嗎？沒有的話感覺要用 api 做成 mcp 欸。」",
+          "當時 Claude Code 碰不到一個服務。碰不到系統，要補的就是 [[MCP]]。MCP 讓 Claude Code 能操作另一個系統，例如雲端平台、行事曆、資料庫。",
+          "其他 3 種補的是別的缺口。[[Skill]] 是一份做法，[[Plugin]] 把這些擴充包在一起，[[Mod]] 改的是 Claude Code 自己的畫面。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " Claude Code cannot...                 add",
+            " ─────────────────────────────────────────────",
+            " reach a system I use              ──>  MCP",
+            " do a task my way                  ──>  SKILL",
+            " keep all of it on a new machine   ──>  PLUGIN",
+            " show me a status in its screen    ──>  MOD"
+          ],
+          "narrow": [
+            "reach a system",
+            "  ──> MCP",
+            "do a task my way",
+            "  ──> SKILL",
+            "keep it on a new machine",
+            "  ──> PLUGIN",
+            "show me a status",
+            "  ──> MOD"
+          ],
+          "alt": "一張 4 列的對照表：碰不到系統用 MCP，不知道我的做法用 Skill，換電腦還要用就包成 Plugin，要在畫面上看狀態用 Mod。",
+          "steps": [
+            {
+              "label": "MCP",
+              "lit": ["reach a system I use", "reach a system", "MCP"],
+              "text": "Claude Code 碰不到某個系統，就接 MCP。"
+            },
+            {
+              "label": "Skill",
+              "lit": ["do a task my way", "SKILL"],
+              "text": "Claude Code 不知道我的做法，就寫成 Skill。"
+            },
+            {
+              "label": "Plugin",
+              "lit": [
+                "keep all of it on a new machine",
+                "keep it on a new machine",
+                "PLUGIN"
+              ],
+              "text": "換一台電腦還要用，就包成 Plugin。"
+            },
+            {
+              "label": "Mod",
+              "lit": [
+                "show me a status in its screen",
+                "show me a status",
+                "MOD"
+              ],
+              "text": "我想在 Claude Code 的畫面上看到狀態，就做 Mod。"
+            }
+          ]
+        }
+      },
+      {
+        "title": "做法：我怎麼決定用哪一種",
+        "body": ["我照缺口選。每一種我都有自己的規矩。"],
+        "points": [
+          {
+            "term": "Claude Code 碰不到某個系統：接 MCP",
+            "text": "有官方的 MCP 就直接裝。沒有的話，我用那個服務的 API 自己做一個。MCP 接上之後，Claude Code 不用再開瀏覽器替我點網頁。"
+          },
+          {
+            "term": "Claude Code 不知道我的做法：寫成 Skill",
+            "text": "Skill 是一份寫給 Claude Code 的做法，做到那類任務才會載入。我會說「把這次學到的寫回 skill，記得要夠 general」。Skill 只寫通用的做法，不寫某一次的細節。"
+          },
+          {
+            "term": "換一台電腦還要用：包成 Plugin",
+            "text": "Plugin 把 Skill、MCP 這些擴充包在一起，1 行指令就能裝好。我自己的 Skill 都放在同一個 Plugin 裡，也能分享給別人。"
+          },
+          {
+            "term": "我想看到狀態：做 Mod",
+            "text": "Mod 改的是 Claude Code 自己的介面。我做了幾個 Mod，把正在播的音樂、今天的行程、主機的狀態，顯示在輸入框上面。Mod 還是搶先體驗的功能，之後可能會變。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：先補最痛的那 1 個缺口",
+        "body": [
+          "不用 4 種一次裝滿。回想 Claude Code 上次卡在哪裡，照上面的表選 1 種。",
+          "我不用 hook（在特定時機自動執行的指令）糾正 Claude Code 的行為。Claude Code 做錯的事，我寫成 [[CLAUDE.md]] 的規則，或是寫回 Skill。"
+        ],
+        "callout": "==缺什麼，才補什麼==。"
+      }
+    ]
+  },
+  {
+    "slug": "claude-md",
+    "log": "004",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "CLAUDE.md 是 Claude Code 每次開始工作前，最先讀的檔案。",
+      "常見的寫法是把專案的指令和資料夾結構列上去。我的 CLAUDE.md 寫的是另一件事：==跟我一起工作，要知道什麼==。",
+      "新同事第 1 天需要知道的事，我都寫在這裡。寫 1 次，之後不用再講。"
+    ],
+    "sections": [
+      {
+        "title": "原理：寫進 CLAUDE.md 的話，我不用再講第 2 次",
+        "body": [
+          "我的 CLAUDE.md 裡有一行：「沒驗證就不算完成。」",
+          "所以我交代任務的時候，不用每次說「測試要過才算好」。Claude Code 開始工作前就讀過這一行，做完會自己驗證，回報時附上怎麼驗的。",
+          "==每次都要講的話，就該寫進 CLAUDE.md==。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "CLAUDE.md",
+            "├── who         me, and a name for the agent",
+            "├── context     where I start, what to read first",
+            "├── style       how I work, when to ask me",
+            "├── skills      which skill to load by default",
+            "├── browser     which tool opens a web page",
+            "├── fleet       when to send a helper agent",
+            "├── verify      what counts as done",
+            "├── output      how to write to me",
+            "└── devices     which machines exist"
+          ],
+          "narrow": [
+            "CLAUDE.md",
+            "├── who",
+            "├── context",
+            "├── style",
+            "├── skills",
+            "├── browser",
+            "├── fleet",
+            "├── verify",
+            "├── output",
+            "└── devices"
+          ],
+          "alt": "我的 CLAUDE.md 的 9 個段落：who、context、style、skills、browser、fleet、verify、output、devices，各附一句它寫了什麼。",
+          "steps": [
+            {
+              "label": "Who",
+              "lit": ["who", "me, and a name for the agent"],
+              "text": "我是誰，Claude Code 是誰。"
+            },
+            {
+              "label": "Ask",
+              "lit": ["style", "how I work, when to ask me"],
+              "text": "我怎麼工作，什麼時候才能問我。"
+            },
+            {
+              "label": "Done",
+              "lit": ["verify", "what counts as done"],
+              "text": "怎樣才算做完。"
+            },
+            {
+              "label": "Where",
+              "lit": [
+                "context",
+                "where I start, what to read first",
+                "devices",
+                "which machines exist"
+              ],
+              "text": "東西放在哪裡，動手前要先讀什麼。"
+            }
+          ]
+        }
+      },
+      {
+        "title": "做法：我的 CLAUDE.md 寫了 4 種東西",
+        "body": ["我的 CLAUDE.md 大約 110 行，分成 4 種內容。"],
+        "points": [
+          {
+            "term": "我是誰，Claude Code 是誰",
+            "text": "開頭寫我的身分和我在做的事。我也給我的 Claude Code 取了名字，叫 Kilo。"
+          },
+          {
+            "term": "什麼時候才能問我",
+            "text": "我寫的是：「只有不能復原、對外、品味選擇才問，其他自己決定再回報。」有了這一行，Claude Code 不會拿小決定來打斷我。"
+          },
+          {
+            "term": "怎樣才算做完",
+            "text": "除了「沒驗證就不算完成」，還有一條：「同一個前提的修法失敗 2 次就停。」要先把前提寫下來實測，才能修第 3 次。"
+          },
+          {
+            "term": "東西放在哪裡",
+            "text": "我有哪些設備、專案放在哪個資料夾、哪種工作要在哪台機器上做。細節不寫在 CLAUDE.md，只寫到 Claude Code 知道去哪裡查。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：從 3 行開始寫",
+        "body": [
+          "CLAUDE.md 不用一次寫完。先寫 3 行：你是誰、什麼時候才能問你、怎樣才算做完。",
+          "之後每次發現同一句話講了第 2 次，就把那句話加進去。這個做法在 [[記憶]] 講得更完整。",
+          "放在家目錄的 CLAUDE.md 對每個專案都有效，原因在 [[家目錄]]。"
+        ],
+        "callout": "==糾正過 1 次的事，就寫成 1 條規則==。"
+      }
+    ]
+  },
+  {
+    "slug": "course-basics",
+    "log": "005",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "這是一門 5 天的小課程。每天 1 個練習，都用你自己的專案做。",
+      "==5 天之後，你會習慣把整個任務交給 Claude Code==，也會有一份自己的 CLAUDE.md。",
+      "每個練習都對應一篇文章。先做練習，卡住了再去讀。"
+    ],
+    "sections": [
+      {
+        "title": "課程：5 天，每天 1 個練習",
+        "body": [
+          "每個練習只要打 1 句話。打完之後先不要插手，看 Claude Code 做了什麼。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " DAY 1      DAY 2      DAY 3      DAY 4      DAY 5",
+            " ask   ──>  hand  ──>  home  ──>  rules ──>  extend"
+          ],
+          "narrow": [
+            "DAY 1  ask",
+            "DAY 2  hand",
+            "DAY 3  home",
+            "DAY 4  rules",
+            "DAY 5  extend"
+          ],
+          "alt": "5 天排成一列：第 1 天 ask、第 2 天 hand、第 3 天 home、第 4 天 rules、第 5 天 extend。",
+          "steps": [
+            {
+              "label": "Day 1",
+              "lit": ["DAY 1", "ask"],
+              "text": "問 Claude Code 1 個問題。"
+            },
+            {
+              "label": "Day 2",
+              "lit": ["DAY 2", "hand"],
+              "text": "交出 1 個小任務。"
+            },
+            {
+              "label": "Day 3",
+              "lit": ["DAY 3", "home"],
+              "text": "改從家目錄開 Claude Code。"
+            },
+            {
+              "label": "Day 4",
+              "lit": ["DAY 4", "rules"],
+              "text": "寫 3 行 CLAUDE.md。"
+            },
+            {
+              "label": "Day 5",
+              "lit": ["DAY 5", "extend"],
+              "text": "補 1 個缺口。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "第 1 天：問 Claude Code 1 個問題",
+            "text": "在你的專案裡開 Claude Code，問一件你記得名字、但不確定細節的事，例如「README 的安裝步驟還對嗎？」看 Claude Code 找了哪些檔案。這個過程就是 [[Agent Loop]]。"
+          },
+          {
+            "term": "第 2 天：交出 1 個小任務",
+            "text": "挑一個小修改，只講你想要什麼。不講檔案在哪，也不講怎麼改。看 Claude Code 改完之後，有沒有自己檢查結果。"
+          },
+          {
+            "term": "第 3 天：改從家目錄開 Claude Code",
+            "text": "不要 cd 進專案，在 [[家目錄]] 開。問一件牽涉 2 個專案的事，看 Claude Code 能不能自己找到 2 邊。"
+          },
+          {
+            "term": "第 4 天：寫 3 行 CLAUDE.md",
+            "text": "寫下你是誰、什麼時候才能問你、怎樣才算做完。寫法看 [[CLAUDE.md]]。"
+          },
+          {
+            "term": "第 5 天：補 1 個缺口",
+            "text": "回想這 4 天 Claude Code 卡在哪裡。碰不到某個系統就接 [[MCP]]，不知道你的做法就寫成 [[Skill]]。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：把這週糾正過的話寫下來",
+        "body": [
+          "這 5 天裡你糾正過 Claude Code 的話，一句一句寫進 CLAUDE.md。",
+          "下一步是讓 Claude Code 自己記住這些話，做法在 [[記憶]]。"
+        ],
+        "callout": "==同一句糾正，不講第 2 次==。"
+      }
+    ]
   }
 ]

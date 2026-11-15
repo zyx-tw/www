@@ -30,21 +30,21 @@
         },
         {
           "slug": "four-ways-to-extend",
-          "name": "MCP、skill、plugin、mod：4 種擴充方式怎麼選",
-          "line": "MCP、skill、plugin、mod，各自適合什麼時候用。",
+          "name": "MCP、Skill、Plugin、Mod：4 種擴充方式怎麼選",
+          "line": "MCP、Skill、Plugin、Mod，各補 Claude Code 的 1 種缺口。",
           "short": "擴充"
         },
         {
           "slug": "claude-md",
           "name": "我的 CLAUDE.md 寫了什麼，為什麼這樣寫",
-          "line": "每個 session 最先讀的那份檔案。",
+          "line": "Claude Code 每次開始工作前最先讀的檔案。",
           "short": "CLAUDE.md"
         },
         {
           "slug": "course-basics",
           "name": "小課程：第一週的 Claude Code",
           "kind": "station",
-          "line": "給第一週的 Claude Code 動手小課程。",
+          "line": "5 天，每天 1 個練習，用你自己的專案做。",
           "short": "課程"
         }
       ]
