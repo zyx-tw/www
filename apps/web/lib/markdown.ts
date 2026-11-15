@@ -174,6 +174,42 @@ function sectionMarkdown({ title, body, callout, figure, points }: Section) {
           ].join("\n\n")
         )
         .join("\n\n"),
+    // A quiz with its answers: a reader of text cannot pick.
+    figure?.kind === "quiz" &&
+      [
+        `**${text(figure.ask)}**`,
+        ...figure.items.map(
+          ({ text: item, answer, why }) =>
+            `- ${text(item)} → ${text(figure.options[answer] ?? "")}. ${text(why)}`
+        ),
+      ].join("\n"),
+    // The whole run, in the order the page replays it.
+    figure?.kind === "trace" &&
+      figure.events
+        .map(({ from, lines, text: line }, index) =>
+          [
+            `${index + 1}. ${text(from)}: ${text(line)}`,
+            ["```text", ...lines, "```"].join("\n"),
+          ].join("\n\n")
+        )
+        .join("\n\n"),
+    figure?.kind === "trace" && `Figure: ${text(figure.alt)}`,
+    // Every stop of a dial, with its bars as values.
+    figure?.kind === "dial" &&
+      figure.stops
+        .map(({ label, bars, text: line }) =>
+          [
+            `**${text(figure.ask)} ${text(label)}**`,
+            bars
+              .map(
+                ({ label: name, cells, value }) =>
+                  `- ${text(name)}: ${text(value ?? String(cells))}`
+              )
+              .join("\n"),
+            text(line),
+          ].join("\n\n")
+        )
+        .join("\n\n"),
     points
       ?.map(({ term, text: line }) => `- ${text(term)}: ${text(plain(line))}`)
       .join("\n"),

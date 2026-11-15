@@ -6,8 +6,11 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
+import { ProjectDial } from "@/components/project-dial"
 import { ProjectLesson } from "@/components/project-lesson"
 import { ProjectPicture } from "@/components/project-picture"
+import { ProjectQuiz } from "@/components/project-quiz"
+import { ProjectTrace } from "@/components/project-trace"
 import { NoteMap } from "@/components/note-map"
 import { Rich } from "@/components/rich"
 import { MAP } from "@/lib/copy"
@@ -149,6 +152,15 @@ export default async function NotePage({
           )}
           {section.figure?.kind === "lesson" && (
             <ProjectLesson lesson={section.figure} className="mt-10" />
+          )}
+          {section.figure?.kind === "quiz" && (
+            <ProjectQuiz quiz={section.figure} className="mt-10" />
+          )}
+          {section.figure?.kind === "trace" && (
+            <ProjectTrace trace={section.figure} className="mt-10" />
+          )}
+          {section.figure?.kind === "dial" && (
+            <ProjectDial dial={section.figure} className="mt-10" />
           )}
           {section.points && (
             <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">

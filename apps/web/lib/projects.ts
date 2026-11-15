@@ -64,13 +64,71 @@ export type Lesson = {
   }[]
 }
 
+/**
+ * A question the reader answers before the text does
+ * (components/project-quiz.tsx). Every item takes the same options; picking
+ * one shows which is right, and the line that says why.
+ */
+export type Quiz = {
+  kind: "quiz"
+  ask: string
+  options: string[]
+  items: {
+    text: string
+    /** The index of the right option. */
+    answer: number
+    why: string
+  }[]
+}
+
+/**
+ * A run replayed one event at a time (components/project-trace.tsx): who
+ * spoke, what was sent, and the line to take from it. Events stay on screen,
+ * so the reader watches the record grow.
+ */
+export type Trace = {
+  kind: "trace"
+  alt: string
+  events: {
+    /** The sender, in Latin capitals: USER, MODEL, TOOL. */
+    from: string
+    /** What was sent, as written on the wire. Long lines wrap. */
+    lines: string[]
+    text: string
+  }[]
+}
+
+/**
+ * A quantity the reader moves (components/project-dial.tsx): each stop
+ * redraws the same bars, so the eye follows what grows and what does not.
+ */
+export type Dial = {
+  kind: "dial"
+  ask: string
+  /** Cells in a full bar: 20 or fewer, so a phone holds it. */
+  scale: number
+  stops: {
+    label: string
+    /** The same bars at every stop, in the same order. */
+    bars: {
+      label: string
+      cells: number
+      value?: string
+      tone?: "mark" | "quiet"
+    }[]
+    text: string
+  }[]
+}
+
+export type Figure = Picture | Diagram | Lesson | Quiz | Trace | Dial
+
 /** One part of a project's page, from the overview toward the detail. */
 export type Section = {
   title: string
   body: string[]
   /** A note's one line to leave with, set apart in the middle. */
   callout?: string
-  figure?: Picture | Diagram | Lesson
+  figure?: Figure
   /** Terms with one line each, set in the label column of the details. */
   points?: { term: string; text: string }[]
 }

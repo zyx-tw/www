@@ -23,6 +23,14 @@ export const MAP = {
   sources: "來源",
 } as const
 
+/** The controls of a note's figures. */
+export const FIGURE = {
+  next: "下一步",
+  again: "重來",
+  right: "正確",
+  wrong: "再想想",
+} as const
+
 export const INFO = { title: "Info" } as const
 
 export const NOT_FOUND = {

@@ -197,7 +197,14 @@ export function drawScene(
     ellipse(cx, cy, radius * Math.abs(Math.cos(spin)), radius, lit)
   }
 
-  /** A label beside (x, y), on the right unless it would leave the view. */
+  // Where the target's bodies put their names: other names give way.
+  const taken: { x: number; y: number; width: number }[] = []
+  const later: (() => void)[] = []
+
+  /**
+   * A label beside (x, y), on the right unless it would leave the view. One
+   * that `yields` moves to the other side of a taken place, or is left out.
+   */
   const name = (
     x: number,
     y: number,
@@ -205,11 +212,31 @@ export function drawScene(
     text: string,
     lit: boolean,
     hit: Pick<Hit, "system" | "body">,
-    hover: boolean
+    hover: boolean,
+    yields = false
   ) => {
     const w = measure(text)
     const right = x + gap + w <= width - 4 || x - gap - w < 4
-    const left = right ? x + gap : x - gap - w
+    const free = (at: number) =>
+      at >= 4 &&
+      at + w <= width - 4 &&
+      !taken.some(
+        (box) =>
+          at < box.x + box.width + 8 &&
+          at + w + 8 > box.x &&
+          Math.abs(y - box.y) < ROW
+      )
+    let left = right ? x + gap : x - gap - w
+    if (yields && !free(left)) {
+      const other = right ? x - gap - w : x + gap
+      if (!free(other)) {
+        // No room for the name: the star alone still answers a click.
+        hits.push({ x: x - 14, y: y - 14, width: 28, height: 28, ...hit })
+        return
+      }
+      left = other
+    }
+    if (!yields) taken.push({ x: left, y, width: w })
     labels.push({
       x: left,
       y,
@@ -311,9 +338,25 @@ export function drawScene(
       lit,
       hue: ink,
     })
-    name(star.x, star.y, 16, system.name, lit, { system: system.slug }, hover)
+    // After every body has its name, so this one can give way to them.
+    const hue = ink
+    later.push(() => {
+      ink = hue
+      name(
+        star.x,
+        star.y,
+        16,
+        system.name,
+        lit,
+        { system: system.slug },
+        hover,
+        true
+      )
+      ink = undefined
+    })
     ink = undefined
   }
+  for (const draw of later) draw()
 
   return { lines, dots, labels, hits }
 }
