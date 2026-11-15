@@ -1,11 +1,12 @@
 /**
  * The one column every page's content sits in: 576, 768 and 1024px wide at
- * the base, lg and 2xl breakpoints, with 20px gutters. The nav and the other
+ * the base, lg and 2xl breakpoints, with the gutter the corners have (12px,
+ * `--gutter`). The nav and the other
  * links sit in the viewport's corners instead (corners.tsx). Width changes
  * between breakpoints ease over 300ms (`transition-column`).
  */
 export const column =
-  "mx-auto w-full max-w-xl px-5 motion-safe:transition-column lg:max-w-3xl 2xl:max-w-5xl"
+  "mx-auto w-full max-w-xl px-(--gutter) motion-safe:transition-column lg:max-w-3xl 2xl:max-w-5xl"
 
 /**
  * A page's space for the fixed corners: the title starts 120px down, and the

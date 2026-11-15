@@ -10,7 +10,7 @@ export { CornerTip }
 /*
  * The frame every zyx.tw site shares: the logo top left, the page nav top
  * right, secondary links bottom left and the copyright bottom right. Each
- * corner is fixed 20px in from the viewport's corner, or from the screen's
+ * corner is fixed 12px (`--gutter`) in from the viewport's corner, or from the screen's
  * when the site wears the TV frame (`tv` on <html>). All corners use
  * text-body (16px on 24px lines). An item in a corner
  * can carry a tip (`CornerTip`), which opens toward the page.

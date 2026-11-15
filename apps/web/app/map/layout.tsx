@@ -7,7 +7,7 @@ import { StarMap } from "@/components/star-map"
  */
 export default function MapLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main lang="zh-Hant" className="fixed inset-0 flex flex-col">
+    <main lang="zh-Hant" className="fixed inset-(--bezel) flex flex-col">
       <StarMap />
       <div className="sr-only">{children}</div>
     </main>

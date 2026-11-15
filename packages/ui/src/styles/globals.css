@@ -262,6 +262,8 @@
  */
 :root {
   --bezel: 0px;
+  /* From the screen's edge to the corners and to a page's text: 12px. */
+  --gutter: 0.75rem;
 }
 html.tv {
   --bezel: 16px;
@@ -522,16 +524,20 @@ html[data-boot] [data-slot="tv-boot"] {
     "";
 }
 
-/* Corners sit 20px in from the screen, past the TV bezel when there is one. */
+/*
+ * Corners sit one gutter in from the screen, past the TV bezel when there is
+ * one. The column (lib/layout.ts) has the same gutter, so on a narrow screen
+ * a page's text starts under the mark.
+ */
 @utility corner-top {
-  top: calc(var(--bezel) + 1.25rem);
+  top: calc(var(--bezel) + var(--gutter));
 }
 @utility corner-bottom {
-  bottom: calc(var(--bezel) + 1.25rem);
+  bottom: calc(var(--bezel) + var(--gutter));
 }
 @utility corner-left {
-  left: calc(var(--bezel) + 1.25rem);
+  left: calc(var(--bezel) + var(--gutter));
 }
 @utility corner-right {
-  right: calc(var(--bezel) + 1.25rem);
+  right: calc(var(--bezel) + var(--gutter));
 }

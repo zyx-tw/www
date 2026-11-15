@@ -4,9 +4,8 @@ import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@workspace/ui/lib/utils"
-import { column, enterRow, page } from "@workspace/ui/lib/layout"
+import { enterRow, page } from "@workspace/ui/lib/layout"
 
-import { HeroTitle } from "@/components/hero"
 import { MAP } from "@/lib/copy"
 import { findBody, findSystem, systemPath, systems, type Body } from "@/lib/map"
 import { PALETTES } from "@/lib/map-palette"
@@ -81,7 +80,7 @@ function facts(body: Body, after: string[]) {
 /**
  * The map (lib/map-scene.ts) fills the screen under the corners, as the
  * display of a ship: the wireframe on a canvas of square pixels, the names
- * on a sharp one over it, the page's title at the top of the column and the
+ * on a sharp one over it, and the
  * instruments at its foot: what the thing pointed at is, and what is known
  * about it. A drag turns the view. Pointing at a system or a body puts it on
  * the instruments; a click on a system flies there
@@ -334,22 +333,26 @@ export function StarMap() {
           className="absolute inset-0 size-full text-foreground"
         />
       </div>
+      {/* The trail in the top left corner already names the page, so the
+          heading is for a screen reader only. The page's decoder swaps text
+          nodes for its own, so text that changes is a new element. */}
+      <h1 key={`title ${target?.slug ?? ""}`} className="sr-only">
+        {target?.name ?? MAP.title}
+      </h1>
       <div
         className={cn(
-          column,
           page,
-          "pointer-events-none relative flex flex-1 flex-col justify-between"
+          "pointer-events-none relative flex flex-1 flex-col justify-end px-(--gutter)"
         )}
       >
-        {/* The page's decoder swaps text nodes for its own, so text that
-            changes is a new element, not new text in the old one. */}
-        <div key={`title ${target?.slug ?? ""}`} className={enterRow(1)}>
-          <HeroTitle text={target?.name ?? MAP.title} />
-        </div>
         {/* One line for what it is, one for what is known about it. */}
         <div
           key={`facts ${subject ?? ""}`}
-          className={cn("flex w-fit flex-col gap-1 bg-background", enterRow(2))}
+          data-slot="map-facts"
+          className={cn(
+            "flex w-fit max-w-xl flex-col gap-1 bg-background",
+            enterRow(1)
+          )}
         >
           {(system ?? found) && (
             <p className="font-medium text-balance">

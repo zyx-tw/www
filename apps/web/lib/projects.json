@@ -46,48 +46,27 @@
           "steps": [
             {
               "label": "Say",
-              "lit": [
-                "SAY",
-                "in words",
-                "you, in plain words"
-              ],
+              "lit": ["SAY", "in words", "you, in plain words"],
               "text": "You describe the work in the chat, as you would to a new colleague."
             },
             {
               "label": "Build",
-              "lit": [
-                "BUILD",
-                "on canvas",
-                "agent, on a canvas"
-              ],
+              "lit": ["BUILD", "on canvas", "agent, on a canvas"],
               "text": "The agent adds nodes to the canvas and connects them."
             },
             {
               "label": "Test",
-              "lit": [
-                "TEST",
-                "each step",
-                "agent, every step"
-              ],
+              "lit": ["TEST", "each step", "agent, every step"],
               "text": "It runs each step with real input and fixes what fails."
             },
             {
               "label": "Review",
-              "lit": [
-                "REVIEW",
-                "signs off",
-                "a person signs off"
-              ],
+              "lit": ["REVIEW", "signs off", "a person signs off"],
               "text": "The run stops here until the named person approves."
             },
             {
               "label": "Run",
-              "lit": [
-                "RUN",
-                "a trigger",
-                "or button",
-                "trigger or button"
-              ],
+              "lit": ["RUN", "a trigger", "or button", "trigger or button"],
               "text": "From then on a schedule, a form or a button starts it."
             }
           ]
@@ -172,15 +151,16 @@
       {
         "title": "Starts and ends",
         "body": [
-          "A workflow starts 5 ways and ends 5 ways. The same workflow can sit behind a form for the whole office, or run every Monday at 9."
+          "A workflow starts 6 ways and ends 5 ways. The same workflow can sit behind a form for the whole office, or run every Monday at 9."
         ],
         "figure": {
           "kind": "diagram",
           "wide": [
             " STARTS                                      ENDS",
             " a person presses Run ─╮                  ╭─ a result page",
-            " a schedule ───────────┤  ╭──────────╮    ├─ an email",
-            " an incoming webhook ──┼─>│ WORKFLOW │───>┼─ a webhook call",
+            " a schedule ───────────┤                  ├─ an email",
+            " an incoming webhook ──┤  ╭──────────╮    ├─ a webhook call",
+            " mail to its address ──┼─>│ WORKFLOW │───>┤",
             " a web page or form ───┤  ╰──────────╯    ├─ a filled form",
             " the Chrome side panel ╯                  ╰─ a published site"
           ],
@@ -189,6 +169,7 @@
             " ├─ a person presses Run",
             " ├─ a schedule",
             " ├─ an incoming webhook",
+            " ├─ mail to its address",
             " ├─ a web page or form",
             " ├─ the Chrome side panel",
             " │",
@@ -203,7 +184,7 @@
             " ╰─ a published site",
             " ENDS"
           ],
-          "alt": "Five starts lead into a workflow: a person presses Run, a schedule, a webhook, a web page or form, the Chrome side panel. Five ends lead out: a result page, an email, a webhook call, a filled form, a published site.",
+          "alt": "Six starts lead into a workflow: a person presses Run, a schedule, a webhook, mail to its own address, a web page or form, the Chrome side panel. Five ends lead out: a result page, an email, a webhook call, a filled form, a published site.",
           "steps": [
             {
               "label": "Starts",
@@ -212,16 +193,15 @@
                 "a person presses Run",
                 "a schedule",
                 "an incoming webhook",
+                "mail to its address",
                 "a web page or form",
                 "the Chrome side panel"
               ],
-              "text": "5 things start a run: a person, a clock, another system, a web page or the browser's side panel."
+              "text": "6 things start a run: a person, a clock, another system, a mail, a web page or the browser's side panel."
             },
             {
               "label": "Workflow",
-              "lit": [
-                "WORKFLOW"
-              ],
+              "lit": ["WORKFLOW"],
               "text": "The same workflow runs, whatever started it."
             },
             {
@@ -244,7 +224,7 @@
         "body": [
           "The agent's instructions come in layers: a neutral core, then the organisation's own rules, then the rules of each group the person belongs to. So it uses the team's words and knows the team's systems.",
           "Groups form a tree. A workflow is shared with people or groups as viewer, runner, editor or owner, and a copy can pull changes from its parent or offer its own back.",
-          "Accounts are passkeys only, by invitation. Spending has a monthly cap for the site and for each person, and the audit log cannot be edited."
+          "People sign in with a passkey, by invitation, or with the organisation's single sign-on. Spending has a monthly cap for the site and for each person, and the audit log cannot be edited."
         ],
         "figure": {
           "kind": "picture",
@@ -265,7 +245,7 @@
         "body": [
           "The web app holds the canvas, the chat, the tools and the scheduler. Work runs in 3 kinds of runner: Python, a browser (Playwright) and office documents (LibreOffice and OCR).",
           "Runners pull jobs from the web app and never reach the database. Each job runs in a new sandbox with a private temporary folder and no privileges.",
-          "Credentials are sealed at rest and masked in every log. The model is any OpenAI-compatible endpoint, chosen in configuration."
+          "Credentials are sealed at rest and masked in every log. The model is the Claude API or any OpenAI-compatible endpoint, chosen in configuration."
         ],
         "figure": {
           "kind": "diagram",
@@ -279,10 +259,10 @@
             "           ╰───┬──────┬───╯",
             "          jobs │      │ models",
             "   ╭───────────┴──╮ ╭─┴─────────────╮",
-            "   │   RUNNERS    │ │ MODEL GATEWAY │",
-            "   │  Python      │ │ OpenAI-       │",
-            "   │  Playwright  │ │ compatible    │",
-            "   │  LibreOffice │ │ endpoint      │",
+            "   │   RUNNERS    │ │     MODEL     │",
+            "   │  Python      │ │ Claude API or │",
+            "   │  Playwright  │ │ OpenAI-       │",
+            "   │  LibreOffice │ │ compatible    │",
             "   ╰──────────────╯ ╰───────────────╯"
           ],
           "narrow": [
@@ -294,8 +274,8 @@
             "│   Next.js    │",
             "╰─┬────┬─────┬─╯",
             "  │    │     ╰─ POSTGRES",
-            "  │    ╰─ MODEL GATEWAY",
-            "  │       OpenAI-compatible",
+            "  │    ╰─ MODEL: Claude API",
+            "  │       or OpenAI-compatible",
             "╭─┴────────────╮",
             "│   RUNNERS    │",
             "│  Python      │",
@@ -303,54 +283,40 @@
             "│  LibreOffice │",
             "╰──────────────╯"
           ],
-          "alt": "A browser, the Chrome side panel and MCP clients reach the web app. The web app stores state in Postgres, hands jobs to three runners (Python, browser, documents) and calls a model gateway.",
+          "alt": "A browser, the Chrome side panel and MCP clients reach the web app. The web app stores state in Postgres, hands jobs to three runners (Python, browser, documents) and calls a model: the Claude API or an OpenAI-compatible endpoint.",
           "steps": [
             {
               "label": "Clients",
-              "lit": [
-                "browser",
-                "Chrome panel",
-                "Claude Code, Codex"
-              ],
+              "lit": ["browser", "Chrome panel", "Claude Code, Codex"],
               "text": "People use the browser or the Chrome side panel. Agents come in over MCP."
             },
             {
               "label": "Web app",
-              "lit": [
-                "WEB APP",
-                "Next.js"
-              ],
+              "lit": ["WEB APP", "Next.js"],
               "text": "One web app holds the canvas, the chat, the tools and the scheduler."
             },
             {
               "label": "Postgres",
-              "lit": [
-                "POSTGRES"
-              ],
+              "lit": ["POSTGRES"],
               "text": "State lives in Postgres. Only the web app talks to it."
             },
             {
               "label": "Runners",
-              "lit": [
-                "RUNNERS",
-                "Python",
-                "Playwright",
-                "LibreOffice",
-                "jobs"
-              ],
+              "lit": ["RUNNERS", "Python", "Playwright", "LibreOffice", "jobs"],
               "text": "Runners pull jobs and run each one in a fresh sandbox."
             },
             {
               "label": "Models",
               "lit": [
-                "MODEL GATEWAY",
-                "OpenAI-compatible",
+                "MODEL",
+                "MODEL: Claude API",
+                "or OpenAI-compatible",
+                "Claude API or",
                 "OpenAI-",
                 "compatible",
-                "endpoint",
                 "models"
               ],
-              "text": "AI steps call one model endpoint, chosen in configuration."
+              "text": "AI steps call one model, the Claude API or an OpenAI-compatible endpoint, chosen in configuration."
             }
           ]
         }
@@ -362,7 +328,8 @@
       "Docker runners",
       "bubblewrap",
       "MCP",
-      "Passkeys"
+      "Passkeys",
+      "OIDC"
     ],
     "preview": {
       "image": "/previews/aintern.webp",
@@ -454,9 +421,7 @@
             },
             {
               "label": "Connect",
-              "lit": [
-                "ssh sdn-hw.alice"
-              ],
+              "lit": ["ssh sdn-hw.alice"],
               "text": "The alias is already in the member's SSH config."
             }
           ]
@@ -597,21 +562,12 @@
           "steps": [
             {
               "label": "Push",
-              "lit": [
-                "PUSH",
-                "your repo on GitHub",
-                "your repo",
-                "on GitHub"
-              ],
+              "lit": ["PUSH", "your repo on GitHub", "your repo", "on GitHub"],
               "text": "A push to the linked branch starts it."
             },
             {
               "label": "Build",
-              "lit": [
-                "BUILD",
-                "GitHub Actions",
-                "Actions"
-              ],
+              "lit": ["BUILD", "GitHub Actions", "Actions"],
               "text": "GitHub Actions builds the release."
             },
             {
@@ -778,14 +734,7 @@
         ]
       }
     ],
-    "stack": [
-      "Go",
-      "Proxmox VE",
-      "MCP",
-      "Keycloak",
-      "EVPN",
-      "Caddy"
-    ],
+    "stack": ["Go", "Proxmox VE", "MCP", "Keycloak", "EVPN", "Caddy"],
     "preview": {
       "image": "/previews/carrel.webp",
       "dither": "/previews/carrel-dither.webp",
@@ -805,13 +754,7 @@
       "When something breaks, it opens an incident and sends a short explanation to Telegram and to signed webhooks. When the problem goes away, it closes the incident by itself.",
       "For a known fix, it writes a plan, asks for approval in Telegram, runs the fix and checks that the alert has cleared. Agents add new rules over MCP."
     ],
-    "stack": [
-      "TypeScript",
-      "Bun",
-      "SQLite",
-      "MCP",
-      "Claude Agent SDK"
-    ],
+    "stack": ["TypeScript", "Bun", "SQLite", "MCP", "Claude Agent SDK"],
     "preview": {
       "image": "/previews/golem.webp",
       "dither": "/previews/golem-dither.webp",
@@ -828,10 +771,7 @@
       "乖乖 is a corn snack that engineers in Taiwan tape onto servers for luck. The green bag means everything keeps running.",
       "Good is the digital version: a 3D bag on a web page, for machines that have no shelf to put one on."
     ],
-    "stack": [
-      "Next.js",
-      "three.js"
-    ],
+    "stack": ["Next.js", "three.js"],
     "preview": {
       "image": "/previews/good.webp",
       "dither": "/previews/good-dither.webp",
@@ -848,11 +788,7 @@
       "Plump turns a flat SVG into a 3D object. You shape the depth and bevel, pick a material and light the scene.",
       "The scene saves as a file you can open again and keep editing. The zyx mark on this site's earlier home page was made with it."
     ],
-    "stack": [
-      "Next.js",
-      "three.js",
-      "WebGL"
-    ],
+    "stack": ["Next.js", "three.js", "WebGL"],
     "preview": {
       "image": "/previews/3d.webp",
       "dither": "/previews/3d-dither.webp",
@@ -870,12 +806,7 @@
       "The design system behind every zyx.tw site: grayscale tokens and our own components on Base UI, served as a shadcn registry.",
       "It sets a terminal look with one monospace face, 4 type sizes, square corners and 2 motion durations. A token check in CI blocks values outside the system."
     ],
-    "stack": [
-      "React",
-      "Base UI",
-      "shadcn registry",
-      "Tailwind CSS"
-    ],
+    "stack": ["React", "Base UI", "shadcn registry", "Tailwind CSS"],
     "preview": {
       "image": "/previews/ui.webp",
       "dither": "/previews/ui-dither.webp",
@@ -894,12 +825,7 @@
       "My services already speak OpenTelemetry, but the reader of their logs at 3 am is often an agent now. Sensorium keeps the logs, traces and metrics of many services in one Postgres store.",
       "Agents read them through 8 MCP tools, so \"what broke?\" is one tool call. Each project has its own ingest token, and old data expires by itself."
     ],
-    "stack": [
-      "TypeScript",
-      "Postgres",
-      "OpenTelemetry",
-      "MCP"
-    ],
+    "stack": ["TypeScript", "Postgres", "OpenTelemetry", "MCP"],
     "preview": {
       "image": "/previews/sensorium.webp",
       "dither": "/previews/sensorium-dither.webp",
@@ -918,11 +844,7 @@
       "The official website of NYCU's Office of AI Affairs, with its news, events and programs.",
       "Content lives in Postgres and is edited in the browser, and the site serves an MCP endpoint so agents can read it."
     ],
-    "stack": [
-      "Next.js",
-      "Postgres",
-      "Better Auth"
-    ],
+    "stack": ["Next.js", "Postgres", "Better Auth"],
     "preview": {
       "image": "/previews/ai.webp",
       "dither": "/previews/ai-dither.webp",
@@ -940,10 +862,7 @@
       "The public website of the Wireless Internet Laboratory at NYCU, led by Prof. Chien-Chao Tseng.",
       "One page covers the lab's research areas, from SDN and 5G/6G orchestration to cloud-native systems, with a link to the members' portal."
     ],
-    "stack": [
-      "Next.js",
-      "Tailwind CSS"
-    ],
+    "stack": ["Next.js", "Tailwind CSS"],
     "preview": {
       "image": "/previews/winlab.webp",
       "dither": "/previews/winlab-dither.webp",
@@ -961,12 +880,7 @@
       "WinLab members book rooms, file receipts, sign documents, order meals and open the lab door through one portal.",
       "Every action is defined once, so a member can click it and an agent can call it as an MCP tool. Members sign in with the lab's Keycloak account."
     ],
-    "stack": [
-      "Next.js",
-      "Postgres",
-      "Keycloak",
-      "MCP"
-    ],
+    "stack": ["Next.js", "Postgres", "Keycloak", "MCP"],
     "preview": {
       "image": "/previews/portal.webp",
       "dither": "/previews/portal-dither.webp",
@@ -985,11 +899,7 @@
       "The lab's video library. Members sign in to watch, and the site remembers where each viewer stopped.",
       "Videos stream from the lab's Nextcloud, and each upload gets a transcript beside the player that jumps to the spoken line."
     ],
-    "stack": [
-      "Next.js",
-      "SQLite",
-      "Nextcloud"
-    ],
+    "stack": ["Next.js", "SQLite", "Nextcloud"],
     "preview": {
       "image": "/previews/video.webp",
       "dither": "/previews/video-dither.webp",
@@ -1003,13 +913,8 @@
     "year": 2026,
     "href": "https://link.zyx.tw",
     "purpose": "URL shortener",
-    "intro": [
-      "Paste a long URL, get a short one back. That is all it does."
-    ],
-    "stack": [
-      "Next.js",
-      "Postgres"
-    ],
+    "intro": ["Paste a long URL, get a short one back. That is all it does."],
+    "stack": ["Next.js", "Postgres"],
     "preview": {
       "image": "/previews/link.webp",
       "dither": "/previews/link-dither.webp",
@@ -1023,12 +928,8 @@
     "year": 2026,
     "href": "https://time.zyx.tw",
     "purpose": "what time is it?",
-    "intro": [
-      "What time is it? A clock, that's all."
-    ],
-    "stack": [
-      "Next.js"
-    ],
+    "intro": ["What time is it? A clock, that's all."],
+    "stack": ["Next.js"],
     "preview": {
       "image": "/previews/time.webp",
       "dither": "/previews/time-dither.webp",
