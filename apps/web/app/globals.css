@@ -28,3 +28,9 @@
 @utility pixelated {
   image-rendering: pixelated;
 }
+
+/* A note's marks (components/rich.tsx): the text color, as a terminal marks
+   a selection, unless a palette is being tried (components/mark-palette.tsx). */
+:root {
+  --mark: var(--foreground);
+}

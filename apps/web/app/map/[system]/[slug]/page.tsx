@@ -7,6 +7,7 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
 import { ProjectPicture } from "@/components/project-picture"
+import { MarkPalette } from "@/components/mark-palette"
 import { NoteMap } from "@/components/note-map"
 import { Rich } from "@/components/rich"
 import { MAP } from "@/lib/copy"
@@ -80,6 +81,7 @@ export default async function NotePage({
 
   return (
     <main lang="zh-Hant" className={cn(column, page, "flex-1")}>
+      <MarkPalette />
       <Hero
         title={<HeroTitle text={body.name} />}
         subtitle={<span className="text-caption">{facts}</span>}
@@ -151,7 +153,7 @@ export default async function NotePage({
             <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">
               {section.points.map(({ term, text }) => (
                 <div key={term} className="flex flex-col items-start gap-y-2">
-                  <dt className="bg-foreground px-1 font-medium text-background">
+                  <dt className="bg-(--mark) px-1 font-medium text-background">
                     {term}
                   </dt>
                   <dd className="text-pretty">

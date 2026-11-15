@@ -15,7 +15,7 @@ export function Rich({ text }: { text: string }) {
       )
     if (part.startsWith("=="))
       return (
-        <mark key={index} className="bg-foreground px-1 text-background">
+        <mark key={index} className="bg-(--mark) px-1 text-background">
           {part.slice(2, -2)}
         </mark>
       )
