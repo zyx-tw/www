@@ -1,6 +1,7 @@
 import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
+import { plain } from "@/components/rich"
 import { ABOUT, HOME, MAP, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import {
@@ -135,10 +136,11 @@ export function mapMarkdown() {
 }
 
 /** A section: its paragraphs, its figure, then its terms. */
-function sectionMarkdown({ title, body, figure, points }: Section) {
+function sectionMarkdown({ title, body, callout, figure, points }: Section) {
   return [
     `## ${text(title)}`,
-    ...body.map(text),
+    ...body.map((line) => text(plain(line))),
+    callout && `> ${text(plain(callout))}`,
     figure?.kind === "picture" &&
       `![${text(figure.alt)}](${absoluteUrl(figure.src)})`,
     // The drawing as drawn; its description follows for readers of text.
@@ -152,7 +154,7 @@ function sectionMarkdown({ title, body, figure, points }: Section) {
         )
         .join("\n"),
     points
-      ?.map(({ term, text: line }) => `- ${text(term)}: ${text(line)}`)
+      ?.map(({ term, text: line }) => `- ${text(term)}: ${text(plain(line))}`)
       .join("\n"),
   ]
     .filter(Boolean)
@@ -184,7 +186,7 @@ export function noteMarkdown(system: System, body: Body, note: Note) {
         `v${note.version}`,
         `${MAP.updated} ${note.updated}`,
       ].join("，"),
-      ...note.intro.map(text),
+      ...note.intro.map((line) => text(plain(line))),
       ...note.sections.map(sectionMarkdown),
       [
         `## ${MAP.title}`,

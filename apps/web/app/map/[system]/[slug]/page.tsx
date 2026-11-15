@@ -7,9 +7,10 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
 import { ProjectPicture } from "@/components/project-picture"
-import { Rows } from "@/components/rows"
+import { NoteMap } from "@/components/note-map"
+import { Rich } from "@/components/rich"
 import { MAP } from "@/lib/copy"
-import { findBody, findSystem, systemPath, systems } from "@/lib/map"
+import { findBody, findSystem, systems } from "@/lib/map"
 import { findNote, notes } from "@/lib/notes"
 import { pageMetadata } from "@/lib/site"
 
@@ -47,9 +48,10 @@ export async function generateMetadata({
 }
 
 /**
- * One note: its title, what is known about it (length, reading time,
- * version, last change), the text in sections with their figures, then its
- * changes and the notes around it on the map. The same sections and figures
+ * One note: its title, what is known about it (its number in the log,
+ * length, reading time, version, last change, and the earlier versions once
+ * there are any), the text in sections with their figures, then its system
+ * as a small chart to go on from. The same sections and figures
  * as a project's page (app/works/[slug]/page.tsx).
  */
 export default async function NotePage({
@@ -68,23 +70,12 @@ export default async function NotePage({
     `v${note.version}`,
     `${MAP.updated} ${note.updated}`,
   ].join("   ")
-  const linked = (item: (typeof systems)[number]["bodies"][number]) => ({
-    value: item.name,
-    href: item.href ?? `${systemPath(findBody(item.slug)!.system)}`,
-  })
-  const before = (body.needs ?? []).flatMap((slug) => {
-    const item = findBody(slug)?.body
-    return item ? [{ label: MAP.after, ...linked(item) }] : []
-  })
-  const after = systems
+  // The first note that needs this one, written or not.
+  const next = systems
     .flatMap(({ bodies }) => bodies)
-    .filter(({ needs }) => needs?.includes(body.slug))
-    .map((item) => ({ label: MAP.next, ...linked(item) }))
-  const around = [
-    ...before,
-    ...after,
-    { label: MAP.back, value: system.name, href: systemPath(system) },
-  ]
+    .find(({ needs }) => needs?.includes(body.slug))
+  // The first version needs no list: the line above already says it.
+  const changes = note.changes.length > 1 ? note.changes : []
   const below = enterRow(3 + note.intro.length)
 
   return (
@@ -94,11 +85,20 @@ export default async function NotePage({
         subtitle={<span className="text-caption">{facts}</span>}
         className="pb-10"
       />
+      {changes.length > 0 && (
+        <ol className="-mt-5 mb-10 flex flex-col text-caption text-muted-foreground">
+          {changes.map(({ version, date, text }) => (
+            <li key={version}>
+              v{version} {date} {text}
+            </li>
+          ))}
+        </ol>
+      )}
 
       <div className="flex max-w-2xl flex-col gap-y-5">
         {note.intro.map((paragraph, index) => (
           <p key={index} className={cn("text-pretty", enterRow(3 + index))}>
-            {paragraph}
+            <Rich text={paragraph} />
           </p>
         ))}
       </div>
@@ -110,13 +110,32 @@ export default async function NotePage({
           className={cn("mt-20", below)}
         >
           <SectionTitle id={`section-${index}`} title={section.title} />
-          <div className="mt-5 flex max-w-2xl flex-col gap-y-5">
-            {section.body.map((paragraph, at) => (
-              <p key={at} className="text-pretty">
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          {/* The one line to leave with comes after the first paragraph,
+              set apart in the middle of the column. */}
+          {[section.body.slice(0, 1), section.body.slice(1)].map(
+            (paragraphs, part) =>
+              paragraphs.length > 0 && (
+                <div key={part}>
+                  <div
+                    className={cn(
+                      "flex max-w-2xl flex-col gap-y-5",
+                      (part === 0 || !section.callout) && "mt-5"
+                    )}
+                  >
+                    {paragraphs.map((paragraph, at) => (
+                      <p key={at} className="text-pretty">
+                        <Rich text={paragraph} />
+                      </p>
+                    ))}
+                  </div>
+                  {part === 0 && section.callout && (
+                    <p className="my-10 text-center text-title font-medium text-balance">
+                      <Rich text={section.callout} />
+                    </p>
+                  )}
+                </div>
+              )
+          )}
           {section.figure?.kind === "picture" && (
             <ProjectPicture
               src={section.figure.src}
@@ -129,32 +148,28 @@ export default async function NotePage({
             <ProjectDiagram diagram={section.figure} className="mt-10" />
           )}
           {section.points && (
-            <Rows
-              className="mt-10"
-              rows={section.points.map(({ term, text }) => ({
-                label: term,
-                value: text,
-              }))}
-            />
+            <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">
+              {section.points.map(({ term, text }) => (
+                <div key={term} className="flex flex-col items-start gap-y-2">
+                  <dt className="bg-foreground px-1 font-medium text-background">
+                    {term}
+                  </dt>
+                  <dd className="text-pretty">
+                    <Rich text={text} />
+                  </dd>
+                </div>
+              ))}
+            </dl>
           )}
         </section>
       ))}
 
-      <section aria-labelledby="around-heading" className={cn("mt-20", below)}>
-        <SectionTitle id="around-heading" title={MAP.title} />
-        <Rows className="mt-5" rows={around} />
-      </section>
-
-      <section aria-labelledby="changes-heading" className={cn("mt-20", below)}>
-        <SectionTitle id="changes-heading" title={MAP.changes} />
-        <Rows
-          className="mt-5"
-          rows={note.changes.map(({ version, date, text }) => ({
-            label: `v${version}`,
-            value: `${date}   ${text}`,
-          }))}
-        />
-      </section>
+      <NoteMap
+        system={system}
+        current={body.slug}
+        next={next && { name: next.name, href: next.href }}
+        className={cn("mt-20", below)}
+      />
     </main>
   )
 }

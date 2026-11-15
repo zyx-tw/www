@@ -34,6 +34,8 @@ export type Diagram = {
 export type Section = {
   title: string
   body: string[]
+  /** A note's one line to leave with, set apart in the middle. */
+  callout?: string
   figure?: Picture | Diagram
   /** Terms with one line each, set in the label column of the details. */
   points?: { term: string; text: string }[]

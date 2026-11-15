@@ -33,9 +33,10 @@ export function findNote(slug: string) {
 function prose({ intro, sections }: Note) {
   return [
     ...intro,
-    ...sections.flatMap(({ title, body, figure, points }) => [
+    ...sections.flatMap(({ title, body, callout, figure, points }) => [
       title,
       ...body,
+      ...(callout ? [callout] : []),
       ...(figure?.kind === "diagram"
         ? (figure.steps ?? []).map(({ text }) => text)
         : []),
