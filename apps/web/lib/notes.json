@@ -6286,7 +6286,7 @@
     ],
     "sources": [
       {
-        "title": "Building effective agents",
+        "title": "Building effective AI agents",
         "href": "https://www.anthropic.com/engineering/building-effective-agents",
         "by": "Anthropic"
       },
@@ -6513,7 +6513,7 @@
         "by": "Claude API docs"
       },
       {
-        "title": "Writing tools for agents",
+        "title": "Writing effective tools for AI agents",
         "href": "https://www.anthropic.com/engineering/writing-tools-for-agents",
         "by": "Anthropic"
       },
@@ -7150,22 +7150,22 @@
         "by": "Claude Code docs"
       },
       {
-        "title": "Permission modes",
+        "title": "Choose a permission mode",
         "href": "https://code.claude.com/docs/en/permission-modes",
         "by": "Claude Code docs"
       },
       {
-        "title": "Sandboxing",
+        "title": "Configure the sandboxed Bash tool",
         "href": "https://code.claude.com/docs/en/sandboxing",
         "by": "Claude Code docs"
       },
       {
-        "title": "Codex sandboxing",
+        "title": "Codex: Sandbox",
         "href": "https://developers.openai.com/codex/concepts/sandboxing",
         "by": "OpenAI"
       },
       {
-        "title": "Agent sandboxing",
+        "title": "Implementing a secure sandbox for local agents",
         "href": "https://cursor.com/blog/agent-sandboxing",
         "by": "Cursor"
       },
