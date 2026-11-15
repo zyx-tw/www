@@ -1,15 +1,23 @@
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@workspace/ui/lib/utils"
-import { enterRow } from "@workspace/ui/lib/layout"
+import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
-import { Hero, HeroTitle } from "@/components/hero"
+import { HeroTitle } from "@/components/hero"
 import { MAP } from "@/lib/copy"
-import { findBody, findSystem, systemPath, type System } from "@/lib/map"
-import { drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
+import { findBody, findSystem, systemPath, systems } from "@/lib/map"
+import { PALETTES } from "@/lib/map-palette"
+import {
+  bodyReading,
+  drawScene,
+  systemReading,
+  type Hit,
+  type Line,
+  type View,
+} from "@/lib/map-scene"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 /** CSS pixels to one pixel of the wireframe. */
@@ -19,7 +27,7 @@ type Scene = View & {
   /** Where `focus` is heading: 1 at a system, 0 on the whole map. */
   goal: number
   hits: Hit[]
-  /** The pointer is over the map, so nothing drifts under it. */
+  /** The pointer is over something, so nothing drifts from under it. */
   held: boolean
   drag: { x: number; y: number; moved: boolean } | null
 }
@@ -55,23 +63,43 @@ function plot(
   }
 }
 
+/** A number as an instrument prints it: signed, two decimals. */
+function signed(value: number) {
+  return `${value < 0 ? "-" : "+"}${Math.abs(value).toFixed(2)}`
+}
+
+const COUNTS = [
+  `${MAP.systems} ${systems.length}`,
+  `${MAP.notes} ${systems.flatMap(({ bodies }) => bodies).filter(({ kind }) => !kind).length}`,
+  `${MAP.courses} ${systems.flatMap(({ bodies }) => bodies).filter(({ kind }) => kind).length}`,
+].join("   ")
+
 /**
- * The map (lib/map-scene.ts) under the page's title: the wireframe on a
- * canvas of square pixels, the names on a sharp one over it. A drag turns it, a
- * click on a system flies there (/map/<system>), a click on a body goes to
- * its row in the list, and a click on empty space flies back out. It lives
- * in the layout, so it keeps its turn from one page of the map to the next.
- * Decorative for a screen reader: the lists below hold the same links.
+ * The map (lib/map-scene.ts) fills the screen under the corners, as the
+ * display of a ship: the wireframe on a canvas of square pixels, the names
+ * on a sharp one over it, the page's title at the top of the column and the
+ * instruments at its foot. A drag turns the view. Pointing at a system or a
+ * body puts it on the instruments; a click on a system flies there
+ * (/map/<system>), a click on a body keeps it on the instruments, and a
+ * click on empty space lets go of it, then flies back out. It lives in the
+ * layout, so it keeps its turn from one page of the map to the next.
+ * Decorative for a screen reader: the layout holds the same links as lists.
  */
 export function StarMap() {
   const pathname = usePathname()
   const router = useRouter()
   const reducedMotion = useReducedMotion()
   const target = findSystem(pathname.split("/")[2] ?? "") ?? null
+  const [hover, setHover] = useState<string>()
+  const [picked, setPinned] = useState<string>()
+  // A body stays picked only while its own system is the one flown to.
+  const pinned =
+    picked && findBody(picked)?.system === target ? picked : undefined
 
   const box = useRef<HTMLDivElement>(null)
   const wire = useRef<HTMLCanvasElement>(null)
   const names = useRef<HTMLCanvasElement>(null)
+  const readout = useRef<HTMLParagraphElement>(null)
   const scene = useRef<Scene>({
     yaw: 0.5,
     pitch: 0.95,
@@ -79,16 +107,25 @@ export function StarMap() {
     focus: 0,
     goal: 0,
     time: 0,
-    names: true,
     hits: [],
     held: false,
     drag: null,
   })
   const still = useRef(reducedMotion)
 
+  // What the instruments show: the thing pointed at, else the body picked,
+  // else the system flown to.
+  const subject = hover ?? pinned ?? target?.slug
+  const shown = useRef(subject)
+
   useEffect(() => {
     still.current = reducedMotion
   }, [reducedMotion])
+
+  useEffect(() => {
+    shown.current = subject
+    scene.current.pinned = pinned
+  }, [subject, pinned])
 
   useEffect(() => {
     const state = scene.current
@@ -114,14 +151,17 @@ export function StarMap() {
       low.canvas.height = Math.ceil(height / PIXEL)
       high.canvas.width = Math.ceil(width * ratio)
       high.canvas.height = Math.ceil(height * ratio)
-      state.names = width >= 500
     }
     const resize = new ResizeObserver(measure)
     resize.observe(element)
     measure()
+    // While the color is being chosen, ?c=amber tries one on.
+    const palette =
+      PALETTES[new URLSearchParams(window.location.search).get("c") ?? ""]
 
     let frame = 0
     let last = 0
+    let count = 0
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick)
       const dt = Math.min((now - last) / 1000, 0.1)
@@ -139,9 +179,9 @@ export function StarMap() {
       if (Math.abs(state.goal - state.focus) < 0.002) state.focus = state.goal
       if (state.focus === 0) state.target = null
 
-      // Both tones come from the tokens, so a theme change needs no code.
-      const dim = getComputedStyle(low.canvas).color
-      const bright = getComputedStyle(high.canvas).color
+      // Gray comes from the tokens, so a theme change needs no code.
+      const dim = palette?.dim ?? getComputedStyle(low.canvas).color
+      const bright = palette?.bright ?? getComputedStyle(high.canvas).color
       const style = getComputedStyle(high.canvas)
       high.setTransform(ratio, 0, 0, ratio, 0, 0)
       high.font = ["font-weight", "font-size", "font-family"]
@@ -178,6 +218,33 @@ export function StarMap() {
         high.fillStyle = label.lit ? bright : dim
         high.fillText(label.text, label.x, label.y)
       }
+
+      // The instruments read four times a second.
+      if (count++ % 8 || !readout.current) return
+      const slug = shown.current
+      const system = slug ? findSystem(slug) : undefined
+      const found = slug ? findBody(slug) : undefined
+      let text = COUNTS
+      if (system) {
+        const reading = systemReading(state, system)
+        text = [
+          `${MAP.position} ${signed(reading.x)} ${signed(reading.y)} ${signed(reading.h)}`,
+          `${MAP.bearing} ${String(reading.bearing).padStart(3, "0")}°`,
+          `${MAP.distance} ${reading.distance.toFixed(2)}`,
+          `${MAP.bodies} ${system.bodies.length}`,
+        ].join("   ")
+      } else if (found) {
+        const index = found.system.bodies.indexOf(found.body)
+        const reading = bodyReading(state, index)
+        text = [
+          `${MAP.orbit} ${index + 1}/${found.system.bodies.length}`,
+          `${MAP.radius} ${reading.radius.toFixed(2)}`,
+          `${MAP.angle} ${String(reading.angle).padStart(3, "0")}°`,
+        ].join("   ")
+      }
+      if (readout.current.textContent !== text) {
+        readout.current.textContent = text
+      }
     }
     frame = requestAnimationFrame(tick)
     // Text on a canvas cannot start a webfont load; the next frame after
@@ -209,46 +276,37 @@ export function StarMap() {
       )
   }
 
-  const hover = (hit: Hit | undefined) => {
-    scene.current.hover = hit?.body ?? hit?.system
-    if (hit) box.current?.setAttribute("data-over", "")
-    else box.current?.removeAttribute("data-over")
+  const point = (hit: Hit | undefined) => {
+    const slug = hit?.body ?? hit?.system
+    scene.current.hover = slug
+    scene.current.held = Boolean(hit)
+    setHover(slug)
   }
 
   const open = (hit: Hit | undefined) => {
-    if (!hit) {
-      if (scene.current.goal) router.push("/map", { scroll: false })
-      return
+    if (hit?.body) {
+      const href = findBody(hit.body)?.body.href
+      return href ? router.push(href) : setPinned(hit.body)
     }
-    const system: Pick<System, "slug"> = { slug: hit.system }
-    if (!hit.body) return router.push(systemPath(system), { scroll: false })
-    const href = findBody(hit.body)?.body.href
-    router.push(href ?? `${systemPath(system)}#${hit.body}`)
+    if (hit) return router.push(systemPath({ slug: hit.system }))
+    if (pinned) return setPinned(undefined)
+    if (scene.current.goal) router.push("/map")
   }
+
+  const system = subject ? findSystem(subject) : undefined
+  const found = subject ? findBody(subject) : undefined
+  const after = (found?.body.needs ?? [])
+    .map((slug) => findBody(slug)?.body.short)
+    .filter((name) => name !== undefined)
 
   return (
     <>
-      {/* The page's decoder swaps text nodes for its own, so a title that
-          changes is a new element, not new text in the old one. */}
-      <Hero
-        key={target?.slug ?? "map"}
-        title={<HeroTitle text={target?.name ?? MAP.title} />}
-        subtitle={target?.line}
-      />
       <div
         ref={box}
         aria-hidden
-        className={cn(
-          "relative mt-10 h-120 w-full cursor-grab touch-pan-y overflow-hidden select-none data-dragging:cursor-grabbing data-over:cursor-pointer lg:h-144 2xl:h-180",
-          enterRow(3)
-        )}
-        onPointerEnter={() => {
-          scene.current.held = true
-        }}
-        onPointerLeave={() => {
-          scene.current.held = false
-          hover(undefined)
-        }}
+        data-over={hover ? "" : undefined}
+        className="absolute inset-0 cursor-grab touch-none select-none data-dragging:cursor-grabbing data-over:cursor-pointer"
+        onPointerLeave={() => point(undefined)}
         onPointerDown={(event) => {
           scene.current.drag = {
             x: event.clientX,
@@ -260,7 +318,7 @@ export function StarMap() {
         onPointerMove={(event) => {
           const state = scene.current
           const drag = state.drag
-          if (!drag) return hover(hitAt(event))
+          if (!drag) return point(hitAt(event))
           const dx = event.clientX - drag.x
           const dy = event.clientY - drag.y
           if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 5) return
@@ -276,6 +334,8 @@ export function StarMap() {
           scene.current.drag = null
           event.currentTarget.removeAttribute("data-dragging")
           if (drag && !drag.moved) open(hitAt(event))
+          // A finger leaves nothing pointed at.
+          if (event.pointerType !== "mouse") point(undefined)
         }}
         onPointerCancel={(event) => {
           scene.current.drag = null
@@ -290,6 +350,57 @@ export function StarMap() {
           ref={names}
           className="absolute inset-0 size-full text-foreground"
         />
+      </div>
+      <div
+        className={cn(
+          column,
+          page,
+          "pointer-events-none relative flex flex-1 flex-col justify-between"
+        )}
+      >
+        {/* The page's decoder swaps text nodes for its own, so text that
+            changes is a new element, not new text in the old one. */}
+        <div key={target?.slug ?? "map"} className={enterRow(1)}>
+          <HeroTitle text={target?.name ?? MAP.title} />
+        </div>
+        <div className={cn("flex flex-col gap-1", enterRow(2))}>
+          <div key={subject ?? "map"} className="flex flex-col gap-1">
+            {(system ?? found) && (
+              <p className="flex justify-between gap-x-5">
+                <span className="font-medium text-pretty">
+                  {system?.name ?? found?.body.name}
+                </span>
+                <span className="shrink-0 text-muted-foreground">
+                  {system
+                    ? `${MAP.system} ${systems.indexOf(system) + 1}/${systems.length}`
+                    : found?.body.kind
+                      ? MAP.course
+                      : MAP.note}
+                </span>
+              </p>
+            )}
+            {(system ?? found) && (
+              <p className="text-pretty text-muted-foreground">
+                {system?.line ?? found?.body.line}
+              </p>
+            )}
+            {found && (
+              <p className="text-caption text-muted-foreground">
+                {[
+                  !found.body.href && MAP.planned,
+                  after.length > 0 && `${MAP.after} ${after.join("、")}`,
+                ]
+                  .filter(Boolean)
+                  .join("   ")}
+              </p>
+            )}
+          </div>
+          {/* Filled in by the frame loop, four times a second. */}
+          <p
+            ref={readout}
+            className="text-caption whitespace-pre-wrap text-muted-foreground"
+          />
+        </div>
       </div>
     </>
   )

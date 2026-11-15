@@ -23,8 +23,8 @@ export type View = {
   time: number
   /** The slug under the pointer. */
   hover?: string
-  /** Bodies carry their names; without, their number in the list. */
-  names: boolean
+  /** The body picked by a click, which keeps its frame. */
+  pinned?: string
 }
 
 export type Line = {
@@ -76,7 +76,7 @@ function place({ at: [x, y, z] }: System) {
 /** A body's distance from its star, and its angle at `time`. */
 function orbit(index: number, time: number) {
   return {
-    radius: 0.08 + 0.035 * index,
+    radius: 0.12 + 0.035 * index,
     angle: index * 2.4 + (time * 0.08) / (1 + index * 0.4),
   }
 }
@@ -104,10 +104,10 @@ export function drawScene(
   const rise = Math.cos(pitch)
 
   // The whole map fits the view; at a system its widest orbit does.
-  const wide = width * 0.38
-  const tall = Math.min(height * 0.42, wide)
+  const wide = Math.min(width * 0.38, height * 0.6)
+  const tall = Math.min(height * 0.36, wide)
   const outer = target ? orbit(target.bodies.length - 1, 0).radius : 1
-  const close = (width * 0.3) / outer
+  const close = Math.min(width * 0.32, height * 0.4) / outer
   const sx = wide + (close - wide) * focus
   const sy = sx * (tall / wide)
   const middle = target ? place(target) : { x: 0, y: 0, h: 0 }
@@ -118,7 +118,7 @@ export function drawScene(
     const depth = dx * sin + dy * cos
     return {
       x: width / 2 + (dx * cos - dy * sin) * sx,
-      y: height / 2 + (depth * tilt - (h - middle.h * focus) * rise) * sy,
+      y: height * 0.46 + (depth * tilt - (h - middle.h * focus) * rise) * sy,
       depth,
     }
   }
@@ -295,7 +295,7 @@ export function drawScene(
         at.h
       )
       if (!here) return dots.push({ x, y, size: 2 })
-      const hover = view.hover === body.slug
+      const hover = view.hover === body.slug || view.pinned === body.slug
       const lit = Boolean(body.href) || hover
       if (body.kind === "station") cube(x, y, 7, lit, time * 0.3 + index)
       else globe(x, y, 7, lit, 0)
@@ -304,7 +304,7 @@ export function drawScene(
         x,
         y,
         14,
-        view.names ? body.short : String(index + 1),
+        body.short,
         lit,
         { system: system.slug, body: body.slug },
         hover
@@ -337,4 +337,32 @@ export function drawScene(
   }
 
   return { lines, dots, labels, hits }
+}
+
+/** A whole turn in degrees, from 0 up to 360. */
+function degrees(radians: number) {
+  return Math.round((((radians * 180) / Math.PI) % 360) + 360) % 360
+}
+
+/**
+ * What the instruments read for a system: where it is, its bearing from the
+ * way the camera faces and its distance from the middle of the view.
+ */
+export function systemReading(view: View, system: System) {
+  const at = place(system)
+  const middle = view.target ? place(view.target) : { x: 0, y: 0, h: 0 }
+  const dx = at.x - middle.x * view.focus
+  const dy = at.y - middle.y * view.focus
+  const dh = at.h - middle.h * view.focus
+  return {
+    ...at,
+    bearing: degrees(Math.atan2(dx, -dy) - view.yaw),
+    distance: Math.hypot(dx, dy, dh),
+  }
+}
+
+/** A body's orbit: its radius, and its angle now. */
+export function bodyReading(view: View, index: number) {
+  const { radius, angle } = orbit(index, view.time)
+  return { radius, angle: degrees(angle) }
 }

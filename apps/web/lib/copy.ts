@@ -11,6 +11,19 @@ export const MAP = {
   title: "地圖",
   planned: "規劃中",
   after: "先讀",
+  system: "星系",
+  note: "文章",
+  course: "課程",
+  position: "座標",
+  bearing: "方位",
+  distance: "距離",
+  bodies: "天體",
+  orbit: "軌道",
+  radius: "半徑",
+  angle: "角度",
+  systems: "星系",
+  notes: "文章",
+  courses: "課程",
 } as const
 
 export const ABOUT = { title: "About" } as const

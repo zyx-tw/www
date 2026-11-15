@@ -50,10 +50,6 @@ export default async function SystemPage({
           id={body.slug}
           className={cn("flex gap-x-3 border-b py-3", enterRow(4 + index))}
         >
-          {/* The map on a phone has room for numbers only. */}
-          <span aria-hidden className="text-muted-foreground lg:hidden">
-            {index + 1}
-          </span>
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="flex flex-wrap items-center justify-between gap-x-5">
               {body.href ? (

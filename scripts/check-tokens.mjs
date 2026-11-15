@@ -54,6 +54,8 @@ const exempt = {
   // The Works backdrop is content: ASCII koi in their own colors, drawn on
   // a canvas.
   "apps/web/lib/pond/renderer.ts": ["color literal"],
+  // The map is content: a cockpit display in the color of its phosphor.
+  "apps/web/lib/map-palette.ts": ["color literal"],
   // Stamp's seal is the product's mark: vermilion ink and glyphs sized in
   // the seal's own SVG units, the same in both themes.
   "apps/stamp/components/seal.tsx": ["color literal", "raw font size"],
