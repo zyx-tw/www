@@ -43,5 +43,21 @@
   "CI": {
     "text": "每次修改都會自動跑的檢查。",
     "note": "done-means-verified"
+  },
+  "筆電只編輯": {
+    "body": "one-job-per-machine"
+  },
+  "ssh": {
+    "text": "從一台電腦對另一台電腦下指令的工具。",
+    "note": "one-claude-many-machines"
+  },
+  "機器的名字": {
+    "body": "names-to-guess"
+  },
+  "固定的位置": {
+    "body": "fixed-place"
+  },
+  "網路寫成檔案": {
+    "body": "network-in-git"
   }
 }

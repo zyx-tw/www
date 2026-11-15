@@ -75,7 +75,7 @@
         {
           "slug": "acts-for-me",
           "name": "我接了 25 個 MCP server：我用的每個系統，Claude Code 都要碰得到",
-          "line": "我用的每個系統 Claude Code 都碰得到，而且走要讀最少東西的那條路。",
+          "line": "我要 Claude Code 碰得到我用的每個系統，照固定的順序接上。",
           "needs": ["four-ways-to-extend"],
           "short": "MCP"
         },
@@ -182,63 +182,63 @@
     {
       "slug": "machines",
       "name": "機房",
-      "line": "蓋給 agent 用的機房。",
+      "line": "蓋給 Claude Code 用的機房。",
       "at": [0.23, 0.73, 0.2],
       "bodies": [
         {
           "slug": "one-claude-many-machines",
           "short": "遠端",
-          "name": "我有很多台設備，但只有 1 台裝 Claude Code",
-          "line": "其他設備不裝，本機的 Claude Code 連過去，把任務放到適合的那台。",
+          "name": "我有很多台設備，但只在筆電上跟 Claude Code 對話",
+          "line": "筆電上的 Claude Code 用 ssh 連到其他機器，把工作放到適合的那一台。",
           "needs": ["start-from-home"]
         },
         {
           "slug": "what-runs-where",
           "short": "登記",
-          "name": "它怎麼知道每台設備、每個專案在做什麼",
-          "line": "設備、專案與網路都登記成檔案，Claude Code 先讀再動手。",
+          "name": "Claude Code 怎麼知道每台設備、每個專案在做什麼",
+          "line": "設備、專案和網路都登記成檔案，Claude Code 先讀再動手。",
           "needs": ["one-claude-many-machines", "claude-md"]
         },
         {
           "slug": "one-job-per-machine",
           "name": "筆電只編輯：每台設備只做 1 件事",
-          "line": "筆電只編輯，其他機器負責 build、訓練與儲存。",
+          "line": "筆電只編輯，其他機器負責編譯、運算和儲存。",
           "short": "分工",
           "needs": ["one-claude-many-machines"]
         },
         {
           "slug": "numbers-are-addresses",
-          "name": "看編號就知道 IP：我的 PVE 編號規則",
-          "line": "看 guest 的編號，就知道它在哪台、IP 是多少。",
+          "name": "看編號就知道位址：我的虛擬機編號規則",
+          "line": "看虛擬機的編號，就算得出在哪一台主機、位址是多少。",
           "needs": ["one-job-per-machine"],
           "short": "PVE"
         },
         {
           "slug": "fixed-place",
-          "name": "565 個暫存目錄之後：每個 repo 只留 1 個固定位置",
-          "line": "每個 session 都在 build 機器的同一個目錄工作。",
+          "name": "每個專案在測試的機器上，只有 1 個固定的位置",
+          "line": "每個新對話都到同一個位置工作，接著用上一個對話留下的環境。",
           "needs": ["one-job-per-machine"],
           "short": "sandbox"
         },
         {
           "slug": "network-in-git",
-          "name": "網路設定寫成 YAML：改網路就是開 pull request",
-          "line": "網段、設備與 Tailscale 的存取規則都是 repo 裡的檔案，所以 Claude Code 知道怎麼連到每一台。",
+          "name": "網路設定寫成檔案：改網路就是送 pull request",
+          "line": "網段、設備和存取規則都是 Git 倉庫裡的檔案。先改檔案，再動設備。",
           "short": "網路",
           "needs": ["what-runs-where"]
         },
         {
           "slug": "one-plugin-catalog",
-          "name": "1 份 plugin 目錄，Claude Code 和 Codex 都能裝",
-          "line": "Claude Code 和 Codex 裝到同一個釘住的版本。",
+          "name": "1 份 Plugin 目錄，Claude Code 和 Codex 都從這裡裝",
+          "line": "目錄寫死每個 Plugin 的版本，2 邊才會裝到同一版。",
           "needs": ["four-ways-to-extend"],
           "short": "plugin"
         },
         {
           "slug": "course-machines",
-          "name": "小課程：架一個 agent 管得動的小機房",
+          "name": "小課程：架一個 Claude Code 管得動的小機房",
           "kind": "station",
-          "line": "從 1 台主機開始，照著做完。",
+          "line": "5 天，從 1 台多出來的機器開始。",
           "needs": ["one-job-per-machine"],
           "short": "課程"
         }
