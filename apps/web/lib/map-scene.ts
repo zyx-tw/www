@@ -37,7 +37,14 @@ export type Line = {
   every?: number
 }
 export type Dot = { x: number; y: number; size: number; lit?: boolean }
-export type Label = { x: number; y: number; text: string; lit?: boolean }
+export type Label = {
+  x: number
+  y: number
+  /** The width of its text, for the plate drawn behind it. */
+  width: number
+  text: string
+  lit?: boolean
+}
 
 /** A box that answers a click. */
 export type Hit = {
@@ -241,7 +248,7 @@ export function drawScene(
     const w = measure(text)
     const right = x + gap + w <= width - 4 || x - gap - w < 4
     const left = right ? x + gap : x - gap - w
-    labels.push({ x: left, y, text, lit: lit || hover })
+    labels.push({ x: left, y, width: w, text, lit: lit || hover })
     const box = {
       x: Math.min(left, x - gap) - 4,
       y: y - ROW / 2 - 2,
@@ -337,32 +344,4 @@ export function drawScene(
   }
 
   return { lines, dots, labels, hits }
-}
-
-/** A whole turn in degrees, from 0 up to 360. */
-function degrees(radians: number) {
-  return Math.round((((radians * 180) / Math.PI) % 360) + 360) % 360
-}
-
-/**
- * What the instruments read for a system: where it is, its bearing from the
- * way the camera faces and its distance from the middle of the view.
- */
-export function systemReading(view: View, system: System) {
-  const at = place(system)
-  const middle = view.target ? place(view.target) : { x: 0, y: 0, h: 0 }
-  const dx = at.x - middle.x * view.focus
-  const dy = at.y - middle.y * view.focus
-  const dh = at.h - middle.h * view.focus
-  return {
-    ...at,
-    bearing: degrees(Math.atan2(dx, -dy) - view.yaw),
-    distance: Math.hypot(dx, dy, dh),
-  }
-}
-
-/** A body's orbit: its radius, and its angle now. */
-export function bodyReading(view: View, index: number) {
-  const { radius, angle } = orbit(index, view.time)
-  return { radius, angle: degrees(angle) }
 }

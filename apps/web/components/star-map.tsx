@@ -8,16 +8,9 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { HeroTitle } from "@/components/hero"
 import { MAP } from "@/lib/copy"
-import { findBody, findSystem, systemPath, systems } from "@/lib/map"
+import { findBody, findSystem, systemPath, systems, type Body } from "@/lib/map"
 import { PALETTES } from "@/lib/map-palette"
-import {
-  bodyReading,
-  drawScene,
-  systemReading,
-  type Hit,
-  type Line,
-  type View,
-} from "@/lib/map-scene"
+import { drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 /** CSS pixels to one pixel of the wireframe. */
@@ -63,23 +56,35 @@ function plot(
   }
 }
 
-/** A number as an instrument prints it: signed, two decimals. */
-function signed(value: number) {
-  return `${value < 0 ? "-" : "+"}${Math.abs(value).toFixed(2)}`
+/** How many of `bodies` are notes, courses and written. */
+function count(bodies: Body[]) {
+  return [
+    `${MAP.notes} ${bodies.filter(({ kind }) => !kind).length}`,
+    `${MAP.courses} ${bodies.filter(({ kind }) => kind).length}`,
+    `${MAP.written} ${bodies.filter(({ href }) => href).length}`,
+  ]
 }
 
-const COUNTS = [
-  `${MAP.systems} ${systems.length}`,
-  `${MAP.notes} ${systems.flatMap(({ bodies }) => bodies).filter(({ kind }) => !kind).length}`,
-  `${MAP.courses} ${systems.flatMap(({ bodies }) => bodies).filter(({ kind }) => kind).length}`,
-].join("   ")
+/** What is known about a body: its kind, then its state or its measures. */
+function facts(body: Body, after: string[]) {
+  return [
+    body.kind ? MAP.course : MAP.note,
+    !body.href && MAP.planned,
+    body.length && `${body.length.toLocaleString("en")} ${MAP.length}`,
+    body.minutes && `${body.minutes} ${MAP.minutes}`,
+    body.version && `v${body.version}`,
+    body.updated && `${MAP.updated} ${body.updated}`,
+    after.length > 0 && `${MAP.after} ${after.join("、")}`,
+  ].filter((fact): fact is string => Boolean(fact))
+}
 
 /**
  * The map (lib/map-scene.ts) fills the screen under the corners, as the
  * display of a ship: the wireframe on a canvas of square pixels, the names
  * on a sharp one over it, the page's title at the top of the column and the
- * instruments at its foot. A drag turns the view. Pointing at a system or a
- * body puts it on the instruments; a click on a system flies there
+ * instruments at its foot: what the thing pointed at is, and what is known
+ * about it. A drag turns the view. Pointing at a system or a body puts it on
+ * the instruments; a click on a system flies there
  * (/map/<system>), a click on a body keeps it on the instruments, and a
  * click on empty space lets go of it, then flies back out. It lives in the
  * layout, so it keeps its turn from one page of the map to the next.
@@ -99,7 +104,6 @@ export function StarMap() {
   const box = useRef<HTMLDivElement>(null)
   const wire = useRef<HTMLCanvasElement>(null)
   const names = useRef<HTMLCanvasElement>(null)
-  const readout = useRef<HTMLParagraphElement>(null)
   const scene = useRef<Scene>({
     yaw: 0.5,
     pitch: 0.95,
@@ -116,16 +120,14 @@ export function StarMap() {
   // What the instruments show: the thing pointed at, else the body picked,
   // else the system flown to.
   const subject = hover ?? pinned ?? target?.slug
-  const shown = useRef(subject)
 
   useEffect(() => {
     still.current = reducedMotion
   }, [reducedMotion])
 
   useEffect(() => {
-    shown.current = subject
     scene.current.pinned = pinned
-  }, [subject, pinned])
+  }, [pinned])
 
   useEffect(() => {
     const state = scene.current
@@ -161,7 +163,6 @@ export function StarMap() {
 
     let frame = 0
     let last = 0
-    let count = 0
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick)
       const dt = Math.min((now - last) / 1000, 0.1)
@@ -213,37 +214,19 @@ export function StarMap() {
           )
         }
       }
+      // Each name sits on a plate of the page's color, so the lines that
+      // pass behind it do not run through its strokes.
+      const plate = getComputedStyle(document.documentElement)
+        .getPropertyValue("--background")
+        .trim()
       high.clearRect(0, 0, width, height)
+      for (const label of drawn.labels) {
+        high.fillStyle = plate
+        high.fillRect(label.x - 4, label.y - 11, label.width + 8, 22)
+      }
       for (const label of drawn.labels) {
         high.fillStyle = label.lit ? bright : dim
         high.fillText(label.text, label.x, label.y)
-      }
-
-      // The instruments read four times a second.
-      if (count++ % 8 || !readout.current) return
-      const slug = shown.current
-      const system = slug ? findSystem(slug) : undefined
-      const found = slug ? findBody(slug) : undefined
-      let text = COUNTS
-      if (system) {
-        const reading = systemReading(state, system)
-        text = [
-          `${MAP.position} ${signed(reading.x)} ${signed(reading.y)} ${signed(reading.h)}`,
-          `${MAP.bearing} ${String(reading.bearing).padStart(3, "0")}°`,
-          `${MAP.distance} ${reading.distance.toFixed(2)}`,
-          `${MAP.bodies} ${system.bodies.length}`,
-        ].join("   ")
-      } else if (found) {
-        const index = found.system.bodies.indexOf(found.body)
-        const reading = bodyReading(state, index)
-        text = [
-          `${MAP.orbit} ${index + 1}/${found.system.bodies.length}`,
-          `${MAP.radius} ${reading.radius.toFixed(2)}`,
-          `${MAP.angle} ${String(reading.angle).padStart(3, "0")}°`,
-        ].join("   ")
-      }
-      if (readout.current.textContent !== text) {
-        readout.current.textContent = text
       }
     }
     frame = requestAnimationFrame(tick)
@@ -360,46 +343,30 @@ export function StarMap() {
       >
         {/* The page's decoder swaps text nodes for its own, so text that
             changes is a new element, not new text in the old one. */}
-        <div key={target?.slug ?? "map"} className={enterRow(1)}>
+        <div key={`title ${target?.slug ?? ""}`} className={enterRow(1)}>
           <HeroTitle text={target?.name ?? MAP.title} />
         </div>
-        <div className={cn("flex flex-col gap-1", enterRow(2))}>
-          <div key={subject ?? "map"} className="flex flex-col gap-1">
-            {(system ?? found) && (
-              <p className="flex justify-between gap-x-5">
-                <span className="font-medium text-pretty">
-                  {system?.name ?? found?.body.name}
-                </span>
-                <span className="shrink-0 text-muted-foreground">
-                  {system
-                    ? `${MAP.system} ${systems.indexOf(system) + 1}/${systems.length}`
-                    : found?.body.kind
-                      ? MAP.course
-                      : MAP.note}
-                </span>
-              </p>
-            )}
-            {(system ?? found) && (
-              <p className="text-pretty text-muted-foreground">
-                {system?.line ?? found?.body.line}
-              </p>
-            )}
-            {found && (
-              <p className="text-caption text-muted-foreground">
-                {[
-                  !found.body.href && MAP.planned,
-                  after.length > 0 && `${MAP.after} ${after.join("、")}`,
-                ]
-                  .filter(Boolean)
-                  .join("   ")}
-              </p>
-            )}
-          </div>
-          {/* Filled in by the frame loop, four times a second. */}
-          <p
-            ref={readout}
-            className="text-caption whitespace-pre-wrap text-muted-foreground"
-          />
+        {/* One line for what it is, one for what is known about it. */}
+        <div
+          key={`facts ${subject ?? ""}`}
+          className={cn("flex w-fit flex-col gap-1 bg-background", enterRow(2))}
+        >
+          {(system ?? found) && (
+            <p className="font-medium text-balance">
+              {system ? `${system.name}：${system.line}` : found?.body.name}
+            </p>
+          )}
+          <p className="text-caption text-muted-foreground">
+            {(system
+              ? count(system.bodies)
+              : found
+                ? facts(found.body, after)
+                : [
+                    `${MAP.systems} ${systems.length}`,
+                    ...count(systems.flatMap(({ bodies }) => bodies)),
+                  ]
+            ).join("   ")}
+          </p>
         </div>
       </div>
     </>

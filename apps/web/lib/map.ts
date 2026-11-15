@@ -14,6 +14,12 @@ export type Body = {
   needs?: string[]
   /** Its page, once it is written. A body without one is planned. */
   href?: string
+  /** Once written: its length in characters and the minutes it takes to read. */
+  length?: number
+  minutes?: number
+  /** Once written: its version, and the day of its last change. */
+  version?: string
+  updated?: string
 }
 
 export type System = {
