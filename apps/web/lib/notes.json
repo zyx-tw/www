@@ -230,162 +230,465 @@
       }
     ],
     "intro": [
-      "網路上有很多開源的 MCP、Skill、Plugin。看到好用的就裝起來，是最常見的做法。",
-      "我不這樣做。我跟我的 Claude Code 已經有自己的習慣。==別人的做法裝進來，不會變成我的==。",
-      "我會去讀別人怎麼做，把用得上的部分學過來，寫成自己的。要學之前，先弄清楚 4 種擴充方式各是什麼、各省下什麼。"
+      "網路上有很多開源的 MCP、Skill、Plugin。==我不會看到好用的就裝==。",
+      "要判斷一個擴充值不值得用，得先知道那個擴充替 Claude Code 做了什麼。",
+      "這篇有 3 張可以操作的圖。每張圖只改 1 個條件，看 Claude Code 的工作怎麼變。"
     ],
     "sections": [
       {
-        "title": "原理：4 種擴充方式，各補 1 種缺口",
+        "title": "服務已經有 API，為什麼還要 MCP",
         "body": [
-          "先看一句我真的打過的話：「那有 cli 嗎？沒有的話感覺要用 api 做成 mcp 欸。」",
-          "當時 Claude Code 碰不到一個服務。碰不到系統，要補的就是 [[MCP]]。",
-          "其他 3 種補的是別的缺口。[[Skill]] 是一份做法，[[Plugin]] 把這些擴充包在一起，[[Mod]] 改的是 Claude Code 自己的畫面。"
+          "有一次，Claude Code 開了我的瀏覽器，要我登入某個服務的後台。我回了一句：「那有 cli 嗎？沒有的話感覺要用 api 做成 mcp 欸。」",
+          "服務有 API，Claude Code 用 curl 就能呼叫。那為什麼還要做成 [[MCP]]？",
+          "下面是同一個任務：找空檔，排一場會議。切換接法，看哪些事還留在 Claude Code 手上。"
         ],
         "figure": {
-          "kind": "diagram",
-          "wide": [
-            " Claude Code cannot...                 add",
-            " ─────────────────────────────────────────────",
-            " reach a system I use              ──>  MCP",
-            " do a task my way                  ──>  SKILL",
-            " keep all of it on a new machine   ──>  PLUGIN",
-            " show me a status in its screen    ──>  MOD"
-          ],
-          "narrow": [
-            "reach a system",
-            "  ──> MCP",
-            "do a task my way",
-            "  ──> SKILL",
-            "keep it on a new machine",
-            "  ──> PLUGIN",
-            "show me a status",
-            "  ──> MOD"
-          ],
-          "alt": "一張 4 列的對照表：碰不到系統用 MCP，不知道我的做法用 Skill，換電腦還要用就包成 Plugin，要在畫面上看狀態用 Mod。",
-          "steps": [
+          "kind": "lesson",
+          "ask": "接法",
+          "side": true,
+          "states": [
             {
-              "label": "MCP",
-              "lit": ["reach a system I use", "reach a system", "MCP"],
-              "text": "Claude Code 碰不到某個系統，就接 MCP。"
-            },
-            {
-              "label": "Skill",
-              "lit": ["do a task my way", "SKILL"],
-              "text": "Claude Code 不知道我的做法，就寫成 Skill。"
-            },
-            {
-              "label": "Plugin",
-              "lit": [
-                "keep all of it on a new machine",
-                "keep it on a new machine",
-                "PLUGIN"
+              "label": "只有 API",
+              "blocks": [
+                {
+                  "title": "Claude Code 要做的事",
+                  "numbered": true,
+                  "rows": [
+                    {
+                      "text": "找到 API 文件，讀完"
+                    },
+                    {
+                      "text": "處理登入"
+                    },
+                    {
+                      "text": "組請求：查空檔"
+                    },
+                    {
+                      "text": "讀完整包回應"
+                    },
+                    {
+                      "text": "組請求：排會議"
+                    },
+                    {
+                      "text": "讀完整包回應"
+                    }
+                  ]
+                },
+                {
+                  "title": "行事曆服務",
+                  "rows": [
+                    {
+                      "text": "提供 API",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
               ],
-              "text": "換一台電腦還要用，就包成 Plugin。"
+              "text": "每一步都在 Claude Code 手上。下一次新對話，這 6 步要重來。"
             },
             {
-              "label": "Mod",
-              "lit": [
-                "show me a status in its screen",
-                "show me a status",
-                "MOD"
+              "label": "接了 MCP",
+              "blocks": [
+                {
+                  "title": "Claude Code 要做的事",
+                  "numbered": true,
+                  "rows": [
+                    {
+                      "text": "讀 schedule_event 要填的欄位"
+                    },
+                    {
+                      "text": "呼叫 schedule_event"
+                    },
+                    {
+                      "text": "讀結果：會議排好了"
+                    }
+                  ]
+                },
+                {
+                  "title": "MCP server 接手的事",
+                  "rows": [
+                    {
+                      "text": "處理登入",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "用 API 查空檔",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "用 API 排會議",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "只回傳用得上的結果",
+                      "tone": "mark"
+                    }
+                  ]
+                }
               ],
-              "text": "我想在 Claude Code 的畫面上看到狀態，就做 Mod。"
+              "text": "API 還在，換成 MCP server 去呼叫。Claude Code 剩 3 步。"
             }
           ]
-        }
-      },
-      {
-        "title": "MCP：讓 Claude Code 碰得到別的系統",
-        "body": [
-          "MCP 是 Anthropic 開源的一套標準。以前每個系統的接法都不一樣，每一種 AI 工具都要替每個系統各寫一次。有了 MCP，系統只要寫 1 次，支援 MCP 的 AI 工具都能接。",
-          "==有 API 也值得接 MCP，因為 MCP 省下 Claude Code 每一次重新摸索的步驟==。"
-        ],
+        },
         "points": [
           {
-            "term": "MCP 怎麼運作",
-            "text": "MCP server 是一支程式，站在 Claude Code 和那個系統中間。Server 提供一組 tool，每個 tool 是 1 個動作，例如「查行程」「建立虛擬機」。每個 tool 有名字、說明、要填的欄位。"
+            "term": "MCP 是什麼",
+            "text": "MCP 是 Anthropic 提出的開放標準，用來把 AI 工具接上外部系統。以前每個系統都要各寫一套接法。照 MCP 寫 1 次，支援 MCP 的 AI 工具都能接。"
+          },
+          {
+            "term": "MCP server 提供什麼",
+            "text": "MCP server 是一支程式，提供一組 tool。每個 tool 是 1 個動作，有名字、說明、要填的欄位。==MCP server 接手登入和 API 呼叫==，Claude Code 只要選 tool、填欄位。"
           },
           {
             "term": "Claude Code 看到什麼",
-            "text": "開始工作時，Claude Code 只讀進 tool 的名字和 server 的簡短說明。完整的欄位等到要用那個 tool 才讀。所以多接幾個 MCP，平常幾乎不佔 Claude Code 的閱讀空間。"
+            "text": "新對話開始時，Claude Code 只讀進 tool 的名字和 server 的簡短說明。完整的欄位等到要用那個 tool 才讀。所以多接幾個 MCP，平常佔的閱讀空間很小。"
           },
           {
-            "term": "只有 API 也做得到，差在哪裡",
-            "text": "只有 API 的話，Claude Code 每次都要先找文件、處理登入、自己組請求，再從一大包回應裡找答案。接了 MCP，登入由 server 處理，Claude Code 直接看到有哪些動作可以用。"
-          },
-          {
-            "term": "MCP 省下什麼",
-            "text": "省步驟：1 個 tool 可以做完原本好幾次 API 呼叫。省 token（模型計算文字量的單位，也是費用的單位）：tool 只回傳用得上的內容，不是整包資料。步驟和文字都少了，任務也更快做完。"
+            "term": "省下什麼",
+            "text": "Claude Code 少做的步驟，是省下的時間。Claude Code 少讀的文件和回應，是省下的 token。token 是模型計算文字量的單位，也是費用的單位。省多少要看 tool 怎麼設計。Anthropic 的建議是：1 個 tool 做完一整件事，只回傳用得上的內容。"
           },
           {
             "term": "我的順序",
-            "text": "我在 CLAUDE.md 寫了操作外部服務的順序：那個服務的 MCP、API 或 CLI、最後才是瀏覽器。有官方的 MCP 就直接裝。沒有的話，我用那個服務的 API 自己做一個。"
+            "text": "我在 CLAUDE.md 寫了操作外部服務的順序。先用那個服務的 MCP，再來是 API 或 CLI，最後才開瀏覽器。同一個服務第 2 次要開瀏覽器，就先查有沒有 MCP、API 或 CLI。"
           }
         ]
       },
       {
-        "title": "Skill：做到那類任務才載入的做法",
+        "title": "做法為什麼不全寫進 CLAUDE.md",
         "body": [
-          "Skill 是一份寫給 Claude Code 的做法，例如怎麼寫文章、怎麼做簡報、怎麼發版。",
-          "Skill 和 [[CLAUDE.md]] 都是寫給 Claude Code 看的文字。==差別在什麼時候載入==。"
+          "我會對 Claude Code 說：「把這次學到的寫回 skill，記得要夠 general。」",
+          "[[Skill]] 是一份寫給 Claude Code 的做法，例如怎麼寫文章、怎麼做新頁面。做法也可以直接寫進 [[CLAUDE.md]]。那為什麼要另外寫成 Skill？",
+          "下面拿我常用的 15 份 Skill 當例子。選 1 個任務，看 Claude Code 在那一次新對話裡讀進了什麼。"
         ],
+        "figure": {
+          "kind": "lesson",
+          "ask": "新對話的任務",
+          "states": [
+            {
+              "label": "改一個錯字",
+              "blocks": [
+                {
+                  "title": "每次都讀",
+                  "rows": [
+                    {
+                      "text": "CLAUDE.md 全文",
+                      "value": "113 行"
+                    },
+                    {
+                      "text": "15 份 Skill 的名字和說明"
+                    }
+                  ]
+                },
+                {
+                  "title": "這次才讀",
+                  "rows": [
+                    {
+                      "text": "沒有用到 Skill",
+                      "tone": "quiet"
+                    }
+                  ]
+                },
+                {
+                  "title": "這次沒讀",
+                  "rows": [
+                    {
+                      "text": "15 份 Skill 的全文",
+                      "value": "2,067 行",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
+              ],
+              "text": "改錯字用不到任何一份 Skill，Claude Code 就不讀任何一份全文。"
+            },
+            {
+              "label": "寫一篇文章",
+              "blocks": [
+                {
+                  "title": "每次都讀",
+                  "rows": [
+                    {
+                      "text": "CLAUDE.md 全文",
+                      "value": "113 行"
+                    },
+                    {
+                      "text": "15 份 Skill 的名字和說明"
+                    }
+                  ]
+                },
+                {
+                  "title": "這次才讀",
+                  "rows": [
+                    {
+                      "text": "article 的全文",
+                      "value": "122 行",
+                      "tone": "mark"
+                    }
+                  ]
+                },
+                {
+                  "title": "這次沒讀",
+                  "rows": [
+                    {
+                      "text": "另外 14 份 Skill 的全文",
+                      "value": "1,945 行",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
+              ],
+              "text": "寫文章時，Claude Code 才讀進 article 這份做法。"
+            },
+            {
+              "label": "做一個新頁面",
+              "blocks": [
+                {
+                  "title": "每次都讀",
+                  "rows": [
+                    {
+                      "text": "CLAUDE.md 全文",
+                      "value": "113 行"
+                    },
+                    {
+                      "text": "15 份 Skill 的名字和說明"
+                    }
+                  ]
+                },
+                {
+                  "title": "這次才讀",
+                  "rows": [
+                    {
+                      "text": "simple-first 的全文",
+                      "value": "155 行",
+                      "tone": "mark"
+                    }
+                  ]
+                },
+                {
+                  "title": "這次沒讀",
+                  "rows": [
+                    {
+                      "text": "另外 14 份 Skill 的全文",
+                      "value": "1,912 行",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
+              ],
+              "text": "做新頁面時，讀進來的換成 simple-first 這份做法。"
+            }
+          ]
+        },
         "points": [
           {
-            "term": "CLAUDE.md 每次都整份載入",
-            "text": "不管這次的任務是什麼，Claude Code 都會先讀完整份 CLAUDE.md。寫得越長，每一次工作都要多讀那麼多。"
+            "term": "CLAUDE.md 每次整份載入",
+            "text": "不管這次的任務是什麼，Claude Code 都先讀完整份 CLAUDE.md。做法全寫進 CLAUDE.md 的話，改一個錯字也要先讀完怎麼寫文章。"
           },
           {
-            "term": "Skill 用到才載入",
-            "text": "平常 Claude Code 只看得到每個 Skill 的名字和 1 段說明。做到那類任務，Claude Code 才讀進全文。所以很長的做法放在 Skill 裡，平常幾乎不花成本。"
+            "term": "Skill 用到才載入全文",
+            "text": "平常 Claude Code 只看得到每份 Skill 的名字和 1 段說明。任務對上了說明，Claude Code 才讀進全文。==CLAUDE.md 每次整份載入，Skill 用到才載入全文==。"
           },
           {
             "term": "怎麼分",
-            "text": "每個任務都要知道的事，放 CLAUDE.md，例如我是誰、什麼時候才能問我。只有某類任務才用得到的步驟，寫成 Skill。官方文件建議 CLAUDE.md 不超過 200 行，長成步驟的段落就搬去 Skill。"
+            "text": "每個任務都要知道的事，放 CLAUDE.md，例如我是誰、什麼時候才能問我。只有某類任務才用得到的步驟，寫成 Skill。官方文件建議 CLAUDE.md 不超過 200 行。"
           },
           {
-            "term": "我的規矩",
-            "text": "我會說「把這次學到的寫回 skill，記得要夠 general」。寫了某一次的細節，Skill 會越來越長，下一個任務也用不上。"
+            "term": "為什麼要夠 general",
+            "text": "Skill 一載入就是整份全文。寫進某一次任務的細節，下一個任務用不上，Claude Code 還是要讀。"
+          },
+          {
+            "term": "圖裡的數字",
+            "text": "行數是我在 2026-11-15 數的。我的 CLAUDE.md 有 113 行。這 15 份 Skill 的全文加起來 2,067 行。"
           }
         ]
       },
       {
-        "title": "Plugin：把擴充包起來，有版本，能分享",
+        "title": "Skill 已經能用，為什麼還要包成 Plugin",
         "body": [
-          "Skill 和 MCP 不包成 Plugin 也能用。==要換電腦、要給別人用、要管版本的時候，才需要 Plugin==。"
+          "寫這篇的時候，我剛在 article 這份 Skill 加了 1 條規則。",
+          "我常用的 15 份 Skill 包在同一個 [[Plugin]] 裡，名字叫 zyx。假設另一台電腦也裝了 zyx。",
+          "我改了 Skill 的內容。另一台電腦執行更新，會拿到新的規則嗎？選 1 種做法看結果。"
         ],
+        "figure": {
+          "kind": "lesson",
+          "ask": "改完內容後，版本號",
+          "side": true,
+          "states": [
+            {
+              "label": "留在 0.49.0",
+              "blocks": [
+                {
+                  "title": "我的 Plugin：zyx",
+                  "rows": [
+                    {
+                      "text": "版本號",
+                      "value": "0.49.0"
+                    },
+                    {
+                      "text": "article 多了 1 條規則",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "15 份 Skill",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "5 個子 agent",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "1 個 MCP server",
+                      "tone": "quiet"
+                    }
+                  ]
+                },
+                {
+                  "title": "另一台電腦，執行更新之後",
+                  "rows": [
+                    {
+                      "text": "版本號",
+                      "value": "0.49.0"
+                    },
+                    {
+                      "text": "article 還是舊的內容"
+                    },
+                    {
+                      "text": "15 份 Skill",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "5 個子 agent",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "1 個 MCP server",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
+              ],
+              "text": "版本號沒變，另一台電腦就留著原本那一份。"
+            },
+            {
+              "label": "改成 0.49.1",
+              "blocks": [
+                {
+                  "title": "我的 Plugin：zyx",
+                  "rows": [
+                    {
+                      "text": "版本號",
+                      "value": "0.49.1",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "article 多了 1 條規則",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "15 份 Skill",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "5 個子 agent",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "1 個 MCP server",
+                      "tone": "quiet"
+                    }
+                  ]
+                },
+                {
+                  "title": "另一台電腦，執行更新之後",
+                  "rows": [
+                    {
+                      "text": "版本號",
+                      "value": "0.49.1",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "article 多了 1 條規則",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "15 份 Skill",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "5 個子 agent",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "1 個 MCP server",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
+              ],
+              "text": "版本號變了，另一台電腦才換成新的一整組。"
+            }
+          ]
+        },
         "points": [
           {
-            "term": "一次裝好一整組",
-            "text": "1 個 Plugin 可以同時裝進 Skill、MCP server、子 agent 和 hook（在特定時機自動執行的指令）。換一台電腦，1 行指令就全部回來。"
+            "term": "Plugin 裝的是一整組",
+            "text": "1 個 Plugin 可以同時裝進 Skill、MCP server、子 agent 和 hook。hook 是在特定時機自動執行的指令。Skill 和 MCP 不包成 Plugin 也能用。==Plugin 把擴充整組安裝，靠版本號更新==。"
           },
           {
-            "term": "有版本號",
-            "text": "Plugin 有自己的版本號，內容放在 Git 上。每次修改都留下紀錄，看得到改了什麼。改壞了可以退回上一版。"
+            "term": "版本號決定要不要更新",
+            "text": "Plugin 的版本號寫在 plugin.json 這個檔案裡。裝過的電腦會留著自己那一份，直到版本號改變。所以我每次改內容，都會一起改版本號。"
           },
           {
-            "term": "能分享，也能更新",
-            "text": "把 Plugin 放上 marketplace（一份 Plugin 的目錄），別人 1 行指令就能安裝。我發了新版，對方 1 行指令就能更新，不用再複製檔案。"
+            "term": "分享給別人",
+            "text": "marketplace 是一份 Plugin 的目錄。把 Plugin 放進 marketplace，別人 1 行指令就能安裝。之後我發新版，對方 1 行指令就能更新，不用再複製檔案。"
           },
           {
             "term": "名稱不會打架",
-            "text": "Plugin 裡的 Skill 會帶上 Plugin 的名字當前綴。裝了很多個 Plugin，同名的 Skill 也不會互相蓋掉。"
+            "text": "Plugin 裡的 Skill 會帶上 Plugin 的名字當前綴，例如 zyx:article。裝了很多個 Plugin，同名的 Skill 也不會互相蓋掉。"
+          },
+          {
+            "term": "我的做法",
+            "text": "我的 Plugin 放在 Git 倉庫裡。每次修改都留下紀錄，看得到改了什麼。"
           }
         ]
       },
       {
-        "title": "Mod：把狀態放進 Claude Code 的畫面",
+        "title": "Mod 改的是 Claude Code 的畫面",
         "body": [
-          "Mod 改的是 Claude Code 自己的介面。我做了幾個 Mod，把正在播的音樂、今天的行程、主機的狀態，顯示在輸入框上面。",
-          "我想知道的事直接在畫面上，就不用另外開口問。Mod 還是搶先體驗的功能，之後可能會變。"
+          "我把正在播的音樂、今天的行程、主機的狀態，顯示在 Claude Code 的輸入框上面。做這件事的擴充叫 [[Mod]]。",
+          "==Mod 改的是 Claude Code 自己的畫面==。我想知道的事直接在畫面上，就不用另外開口問。",
+          "Mod 還是搶先體驗的功能，之後可能會變。"
+        ]
+      },
+      {
+        "title": "4 種擴充，各用 1 句話說完",
+        "body": ["讀到這裡，可以先自己講講看，再對答案。"],
+        "points": [
+          {
+            "term": "MCP",
+            "text": "MCP server 接手登入和 API 呼叫，Claude Code 只要選 tool。"
+          },
+          {
+            "term": "Skill",
+            "text": "一份寫給 Claude Code 的做法，用到才載入全文。"
+          },
+          {
+            "term": "Plugin",
+            "text": "把 Skill、MCP 這些擴充整組安裝，靠版本號更新。"
+          },
+          {
+            "term": "Mod",
+            "text": "改 Claude Code 自己的畫面。"
+          }
         ]
       },
       {
         "title": "下一步：讀別人的做法，寫成自己的",
         "body": [
           "看到一個好用的開源 Skill，我不直接裝。我先讀內容：作者遇到什麼問題，用什麼方法解決。",
+          "讀的時候可以問 3 件事。作者要解決什麼問題？哪些步驟我的任務用得上？哪些前提跟我不一樣？",
           "用得上的部分，我改寫進自己的 Skill，用我的用詞，照我的習慣。我檢查文案的那份 Skill，有一部分就是讀了別人開源的 Skill 之後改寫的。",
-          "這跟學新知識一樣。照抄別人的筆記學不會，自己整理過一次才是自己的。",
+          "這跟學新知識一樣。讀懂、自己整理過一次，才會變成自己的。",
           "Claude Code 跟我配合得好，是因為每一份做法都是我們一起磨出來的。裝一份別人的做法進來，Claude Code 會照別人的習慣做事。"
         ],
         "callout": "==看別人怎麼做，學過來，內化成自己的==。"

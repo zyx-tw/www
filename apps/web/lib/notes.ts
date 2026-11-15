@@ -41,6 +41,9 @@ function prose({ intro, sections }: Note) {
       ...(figure?.kind === "diagram"
         ? (figure.steps ?? []).map(({ text }) => text)
         : []),
+      ...(figure?.kind === "lesson"
+        ? figure.states.map(({ text }) => text)
+        : []),
       ...(points ?? []).flatMap(({ term, text }) => [term, text]),
     ]),
   ]

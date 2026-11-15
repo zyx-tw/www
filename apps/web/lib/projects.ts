@@ -30,13 +30,41 @@ export type Diagram = {
   steps?: { label: string; lit: string[]; text: string }[]
 }
 
+/**
+ * A figure the reader operates (components/project-lesson.tsx): `ask` names
+ * the one choice, and each state is what one answer leads to. A state is a
+ * few titled blocks of rows, with the line to take from it under them.
+ */
+export type Lesson = {
+  kind: "lesson"
+  ask: string
+  /** Two blocks stand side by side from the sm breakpoint up. */
+  side?: boolean
+  states: {
+    label: string
+    blocks: {
+      title: string
+      /** The rows are steps in order, so each takes its number. */
+      numbered?: boolean
+      rows: {
+        text: string
+        /** A count or a version, set at the row's right edge. */
+        value?: string
+        /** `mark` is what this state adds, `dim` what it removes. */
+        tone?: "mark" | "dim" | "quiet"
+      }[]
+    }[]
+    text: string
+  }[]
+}
+
 /** One part of a project's page, from the overview toward the detail. */
 export type Section = {
   title: string
   body: string[]
   /** A note's one line to leave with, set apart in the middle. */
   callout?: string
-  figure?: Picture | Diagram
+  figure?: Picture | Diagram | Lesson
   /** Terms with one line each, set in the label column of the details. */
   points?: { term: string; text: string }[]
 }

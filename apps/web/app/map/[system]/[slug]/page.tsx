@@ -6,6 +6,7 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
+import { ProjectLesson } from "@/components/project-lesson"
 import { ProjectPicture } from "@/components/project-picture"
 import { NoteMap } from "@/components/note-map"
 import { Rich } from "@/components/rich"
@@ -145,6 +146,9 @@ export default async function NotePage({
           )}
           {section.figure?.kind === "diagram" && (
             <ProjectDiagram diagram={section.figure} className="mt-16" />
+          )}
+          {section.figure?.kind === "lesson" && (
+            <ProjectLesson lesson={section.figure} className="mt-10" />
           )}
           {section.points && (
             <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">

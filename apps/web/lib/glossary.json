@@ -11,7 +11,7 @@
     "note": "claude-md"
   },
   "MCP": {
-    "text": "Anthropic 開源的標準。MCP server 提供一組 tool，讓 Claude Code 能操作另一個系統。",
+    "text": "Anthropic 提出的開放標準。MCP server 提供一組 tool，替 Claude Code 接手登入和 API 呼叫。",
     "note": "four-ways-to-extend"
   },
   "Skill": {
@@ -19,7 +19,7 @@
     "note": "four-ways-to-extend"
   },
   "Plugin": {
-    "text": "把 Skill、MCP 這些擴充包成一組，有版本號，1 行指令就能安裝與更新。",
+    "text": "把 Skill、MCP 這些擴充包成一組，整組安裝，靠版本號更新。",
     "note": "four-ways-to-extend"
   },
   "Mod": {

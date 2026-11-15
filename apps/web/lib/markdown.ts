@@ -153,6 +153,27 @@ function sectionMarkdown({ title, body, callout, figure, points }: Section) {
             `${index + 1}. ${text(label)}: ${text(line)}`
         )
         .join("\n"),
+    // Every state of a lesson, as the page shows them one at a time.
+    figure?.kind === "lesson" &&
+      figure.states
+        .map(({ label, blocks, text: line }) =>
+          [
+            `**${text(figure.ask)} ${text(label)}**`,
+            ...blocks.map(({ title: name, rows }) =>
+              [
+                `${text(name)}:`,
+                ...rows
+                  .filter(({ tone }) => tone !== "dim")
+                  .map(
+                    ({ text: row, value }) =>
+                      `- ${text(row)}${value ? ` (${text(value)})` : ""}`
+                  ),
+              ].join("\n")
+            ),
+            text(line),
+          ].join("\n\n")
+        )
+        .join("\n\n"),
     points
       ?.map(({ term, text: line }) => `- ${text(term)}: ${text(plain(line))}`)
       .join("\n"),
