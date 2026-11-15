@@ -135,58 +135,105 @@
         "title": "原理：Claude Code 從哪裡開，就看得到哪裡",
         "body": [
           "先看一句我真的打過的話：「nas.zyx.tw 應該改成 ui.zyx.tw 的。」",
-          "這句話牽涉 2 個專案：要先讀 ui.zyx.tw 的樣式，再去改 nas.zyx.tw。Claude Code 開在家目錄，2 個專案都在底下，自己找得到，一次做完。",
-          "Claude Code 開在哪個資料夾，就從那裡往下找檔案。==開在專案裡，Claude Code 只認識那一個專案==。",
-          "家目錄的檔案很多，但 Claude Code 不會全部讀一遍。Claude Code 照 [[Agent Loop]] 做事，需要哪個檔案，才去找哪個檔案。"
+          "這句話牽涉 2 個專案：要先讀 ui.zyx.tw 的樣式，再去改 nas.zyx.tw。",
+          "Claude Code 開在不同的資料夾，這句話的結果會不一樣嗎？切換看看。"
         ],
         "figure": {
-          "kind": "diagram",
-          "wide": [
-            "~                        start here",
-            "├── .claude/",
-            "│   ├── CLAUDE.md        my rules",
-            "│   └── memory/          one memory",
-            "└── Projects/",
-            "    ├── <org>/<repo>/    own rules",
-            "    ├── <org>/<repo>/    own rules",
-            "    └── <org>/<repo>/    own rules"
-          ],
-          "narrow": [
-            "~  start here",
-            "├── .claude/",
-            "│   ├── CLAUDE.md",
-            "│   │   my rules",
-            "│   └── memory/",
-            "│       one memory",
-            "└── Projects/",
-            "    ├── <org>/<repo>/",
-            "    ├── <org>/<repo>/",
-            "    └── <org>/<repo>/"
-          ],
-          "alt": "家目錄的樹狀圖：.claude 底下有 CLAUDE.md 與 memory，Projects 底下是按組織分的 3 個專案。",
-          "steps": [
+          "kind": "lesson",
+          "ask": "Claude Code 開在",
+          "states": [
             {
-              "label": "Start",
-              "lit": ["~", "start here"],
-              "text": "我在家目錄開 Claude Code，不進任何專案。"
+              "label": "nas 的專案裡",
+              "blocks": [
+                {
+                  "title": "Claude Code 找得到的專案",
+                  "rows": [
+                    {
+                      "text": "nas.zyx.tw"
+                    },
+                    {
+                      "text": "ui.zyx.tw",
+                      "tone": "dim"
+                    }
+                  ]
+                },
+                {
+                  "title": "一開始就讀的規則",
+                  "rows": [
+                    {
+                      "text": "我的 CLAUDE.md"
+                    },
+                    {
+                      "text": "nas 專案自己的 CLAUDE.md"
+                    }
+                  ]
+                },
+                {
+                  "title": "記憶",
+                  "rows": [
+                    {
+                      "text": "nas 專案自己 1 份"
+                    }
+                  ]
+                }
+              ],
+              "text": "ui 的專案在這個資料夾外面。Claude Code 往下找，找不到要對照的樣式。"
             },
             {
-              "label": "Rules",
-              "lit": ["CLAUDE.md", "my rules"],
-              "text": "我自己的規則放在這裡，Claude Code 每次開都會讀。"
-            },
-            {
-              "label": "Memory",
-              "lit": ["memory/", "one memory"],
-              "text": "記憶只有 1 份，所有專案共用。"
-            },
-            {
-              "label": "Projects",
-              "lit": ["Projects/", "<org>/<repo>/", "own rules"],
-              "text": "專案按組織放在固定的位置，各有自己的規則檔。"
+              "label": "家目錄",
+              "blocks": [
+                {
+                  "title": "Claude Code 找得到的專案",
+                  "rows": [
+                    {
+                      "text": "nas.zyx.tw"
+                    },
+                    {
+                      "text": "ui.zyx.tw",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "其他每一個專案",
+                      "tone": "mark"
+                    }
+                  ]
+                },
+                {
+                  "title": "一開始就讀的規則",
+                  "rows": [
+                    {
+                      "text": "我的 CLAUDE.md"
+                    },
+                    {
+                      "text": "專案自己的 CLAUDE.md，動手前才讀",
+                      "tone": "quiet"
+                    }
+                  ]
+                },
+                {
+                  "title": "記憶",
+                  "rows": [
+                    {
+                      "text": "所有專案共用 1 份",
+                      "tone": "mark"
+                    }
+                  ]
+                }
+              ],
+              "text": "2 個專案都在家目錄底下。Claude Code 先讀 ui 的樣式，再改 nas，一次做完。"
             }
           ]
-        }
+        },
+        "points": [
+          {
+            "term": "Claude Code 從開的資料夾往下找",
+            "text": "Claude Code 開在哪個資料夾，就從那裡往下找檔案。==開在專案裡，Claude Code 只認識那一個專案==。"
+          },
+          {
+            "term": "家目錄的檔案很多，會不會很慢",
+            "text": "Claude Code 不會把家目錄全部讀一遍。Claude Code 照 [[Agent Loop]] 做事，需要哪個檔案，才去找哪個檔案。"
+          }
+        ]
       },
       {
         "title": "做法：我怎麼從家目錄用 Claude Code",
@@ -716,65 +763,88 @@
       {
         "title": "原理：寫進 CLAUDE.md 的話，我不用再講第 2 次",
         "body": [
-          "我的 CLAUDE.md 裡有一行：「沒驗證就不算完成。」",
-          "所以我交代任務的時候，不用每次說「測試要過才算好」。Claude Code 開始工作前就讀過這一行，做完會自己驗證，回報時附上怎麼驗的。",
-          "==每次都要講的話，就該寫進 CLAUDE.md==。"
+          "先看一句我真的打過的話：「設備檢查頁面沒有上下置中，處理一下。」",
+          "我沒有說改完要驗證，沒有說能不能問我，也沒有說做完怎麼回報。Claude Code 怎麼知道？",
+          "切換看看：Claude Code 開始工作時，手上其實有哪些話。"
         ],
         "figure": {
-          "kind": "diagram",
-          "wide": [
-            "CLAUDE.md",
-            "├── who         me, and a name for the agent",
-            "├── context     where I start, what to read first",
-            "├── style       how I work, when to ask me",
-            "├── skills      which skill to load by default",
-            "├── browser     which tool opens a web page",
-            "├── fleet       when to send a helper agent",
-            "├── verify      what counts as done",
-            "├── output      how to write to me",
-            "└── devices     which machines exist"
-          ],
-          "narrow": [
-            "CLAUDE.md",
-            "├── who",
-            "├── context",
-            "├── style",
-            "├── skills",
-            "├── browser",
-            "├── fleet",
-            "├── verify",
-            "├── output",
-            "└── devices"
-          ],
-          "alt": "我的 CLAUDE.md 的 9 個段落：who、context、style、skills、browser、fleet、verify、output、devices，各附一句它寫了什麼。",
-          "steps": [
+          "kind": "lesson",
+          "ask": "Claude Code 手上的話",
+          "states": [
             {
-              "label": "Who",
-              "lit": ["who", "me, and a name for the agent"],
-              "text": "我是誰，Claude Code 是誰。"
-            },
-            {
-              "label": "Ask",
-              "lit": ["style", "how I work, when to ask me"],
-              "text": "我怎麼工作，什麼時候才能問我。"
-            },
-            {
-              "label": "Done",
-              "lit": ["verify", "what counts as done"],
-              "text": "怎樣才算做完。"
-            },
-            {
-              "label": "Where",
-              "lit": [
-                "context",
-                "where I start, what to read first",
-                "devices",
-                "which machines exist"
+              "label": "只有我打的這句",
+              "blocks": [
+                {
+                  "title": "我這次打的",
+                  "rows": [
+                    {
+                      "text": "「設備檢查頁面沒有上下置中，處理一下。」"
+                    }
+                  ]
+                },
+                {
+                  "title": "我沒講的事",
+                  "rows": [
+                    {
+                      "text": "改完要不要驗證",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "什麼時候可以問我",
+                      "tone": "quiet"
+                    },
+                    {
+                      "text": "做完要怎麼回報",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
               ],
-              "text": "東西放在哪裡，動手前要先讀什麼。"
+              "text": "只看這 1 句，有 3 件事沒有交代。"
+            },
+            {
+              "label": "加上 CLAUDE.md",
+              "blocks": [
+                {
+                  "title": "我這次打的",
+                  "rows": [
+                    {
+                      "text": "「設備檢查頁面沒有上下置中，處理一下。」"
+                    }
+                  ]
+                },
+                {
+                  "title": "CLAUDE.md 早就寫好的",
+                  "rows": [
+                    {
+                      "text": "「沒驗證就不算完成。」",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "「只有不能復原、對外、品味選擇才問。」",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "「回報完成要附實測。」",
+                      "tone": "mark"
+                    }
+                  ]
+                }
+              ],
+              "text": "這 3 行我只寫過 1 次。每一次任務，Claude Code 開工前都會先讀到。"
             }
           ]
-        }
+        },
+        "points": [
+          {
+            "term": "寫 1 次，不用再講",
+            "text": "我交代任務的時候，不用每次說「測試要過才算好」。Claude Code 開始工作前就讀過那一行，做完會自己驗證，回報時附上怎麼驗的。"
+          },
+          {
+            "term": "什麼話該寫進去",
+            "text": "==每次都要講的話，就該寫進 CLAUDE.md==。只有某類任務才用得到的步驟，寫成 [[Skill]]。"
+          }
+        ]
       },
       {
         "title": "做法：我的 CLAUDE.md 寫了 4 種東西",
@@ -846,34 +916,7 @@
             "DAY 4  rules",
             "DAY 5  extend"
           ],
-          "alt": "5 天排成一列：第 1 天 ask、第 2 天 hand、第 3 天 home、第 4 天 rules、第 5 天 extend。",
-          "steps": [
-            {
-              "label": "Day 1",
-              "lit": ["DAY 1", "ask"],
-              "text": "問 Claude Code 1 個問題。"
-            },
-            {
-              "label": "Day 2",
-              "lit": ["DAY 2", "hand"],
-              "text": "交出 1 個小任務。"
-            },
-            {
-              "label": "Day 3",
-              "lit": ["DAY 3", "home"],
-              "text": "改從家目錄開 Claude Code。"
-            },
-            {
-              "label": "Day 4",
-              "lit": ["DAY 4", "rules"],
-              "text": "寫 3 行 CLAUDE.md。"
-            },
-            {
-              "label": "Day 5",
-              "lit": ["DAY 5", "extend"],
-              "text": "補 1 個缺口。"
-            }
-          ]
+          "alt": "5 天排成一列：第 1 天 ask、第 2 天 hand、第 3 天 home、第 4 天 rules、第 5 天 extend。"
         },
         "points": [
           {
@@ -894,7 +937,7 @@
           },
           {
             "term": "第 5 天：補 1 個缺口",
-            "text": "回想這 4 天 Claude Code 卡在哪裡。碰不到某個系統就接 [[MCP]]，不知道你的做法就寫成 [[Skill]]。"
+            "text": "回想這 4 天 Claude Code 卡在哪裡。Claude Code 每次都要重新摸索同一個系統，就接 [[MCP]]。Claude Code 不知道你的做法，就寫成 [[Skill]]。"
           }
         ]
       },
