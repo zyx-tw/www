@@ -219,8 +219,8 @@ function sectionMarkdown({ title, body, callout, figure, points }: Section) {
 }
 
 /**
- * One note: what is known about it, the paragraphs, its sections, the notes
- * around it, then its changes.
+ * One note: what is known about it, the paragraphs, its sections, then the
+ * notes around it.
  */
 export function noteMarkdown(system: System, body: Body, note: Note) {
   const named = (slug: string) => {
@@ -263,15 +263,6 @@ export function noteMarkdown(system: System, body: Body, note: Note) {
           ...after.map((item) => `- ${MAP.next}：${item}`),
           `- ${MAP.back}：${link(system.name, absoluteUrl("/map.md"))}`,
         ].join("\n"),
-      ].join("\n\n"),
-      [
-        `## ${MAP.changes}`,
-        note.changes
-          .map(
-            ({ version, date, text: line }) =>
-              `- v${version}，${date}：${text(line)}`
-          )
-          .join("\n"),
       ].join("\n\n"),
     ]
   )

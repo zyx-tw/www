@@ -18,6 +18,7 @@ export type Note = {
   version: string
   /** The day of its last change. */
   updated: string
+  /** Kept as a record. No page or Markdown twin shows it. */
   changes: Change[]
   intro: string[]
   sections: Section[]

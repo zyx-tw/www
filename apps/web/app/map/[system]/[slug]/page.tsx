@@ -53,10 +53,10 @@ export async function generateMetadata({
 
 /**
  * One note: its title, what is known about it (its number in the log,
- * length, reading time, version, last change, and the earlier versions once
- * there are any), the text in sections with their figures, then its system
- * as a small chart to go on from. The same sections and figures
- * as a project's page (app/project/[slug]/page.tsx).
+ * length, reading time, version and last change), the text in sections with
+ * their figures, then its system as a small chart to go on from. The same
+ * sections and figures as a project's page (app/project/[slug]/page.tsx).
+ * The list of earlier versions stays in the data and is not shown.
  */
 export default async function NotePage({
   params,
@@ -77,8 +77,6 @@ export default async function NotePage({
   const next = systems
     .flatMap(({ bodies }) => bodies)
     .find(({ needs }) => needs?.includes(body.slug))
-  // The first version needs no list: the line above already says it.
-  const changes = note.changes.length > 1 ? note.changes : []
   const below = enterRow(3 + note.intro.length)
 
   return (
@@ -88,15 +86,6 @@ export default async function NotePage({
         subtitle={<span className="text-caption">{facts}</span>}
         className="pb-16"
       />
-      {changes.length > 0 && (
-        <ol className="-mt-5 mb-10 flex flex-col text-caption text-muted-foreground">
-          {changes.map(({ version, date, text }) => (
-            <li key={version}>
-              v{version} {date} {text}
-            </li>
-          ))}
-        </ol>
-      )}
 
       <div className="flex max-w-2xl flex-col gap-y-5">
         {note.intro.map((paragraph, index) => (
