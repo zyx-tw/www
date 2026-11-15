@@ -83,7 +83,7 @@
           "kind": "picture",
           "src": "/works/aintern/build.webp",
           "ratio": "standard",
-          "alt": "The chat adds three steps to a workflow on the canvas, then reports its test."
+          "alt": "A leave request workflow of 5 nodes on the canvas, in Chinese. In the chat below, the agent has added 3 steps and reports its test."
         }
       },
       {
@@ -145,7 +145,7 @@
           "kind": "picture",
           "src": "/works/aintern/review.webp",
           "ratio": "standard",
-          "alt": "A review card shows a leave request with Send back and Approve, above the workflow that waits on it."
+          "alt": "A review card in Chinese shows a leave request with Send back and Approve. 2 of 3 reviewers must approve, and 1 has."
         }
       },
       {
@@ -230,7 +230,7 @@
           "kind": "picture",
           "src": "/works/aintern/team.webp",
           "ratio": "standard",
-          "alt": "A sheet of an HR office's rules above the agent's reply that follows them."
+          "alt": "4 rules from 3 layers on the left, in Chinese. On the right, a reply in the chat, with the words one rule changed lit."
         }
       },
       {
