@@ -7,11 +7,11 @@
     "body": "remembers-me"
   },
   "CLAUDE.md": {
-    "text": "Claude Code 每次開始工作前最先讀的檔案，寫的是跟我一起工作要知道的事。",
+    "text": "Claude Code 每次新對話開始時都會載入的規則檔。我自己的放在 ~/.claude/CLAUDE.md，專案的放在專案資料夾。",
     "note": "claude-md"
   },
   "MCP": {
-    "text": "Anthropic 提出的開放標準。MCP server 提供一組 tool，替 Claude Code 接手登入和 API 呼叫。",
+    "text": "Anthropic 提出的開放標準。MCP server 提供一組 tool，替 Claude Code 處理連線和登入。",
     "note": "four-ways-to-extend"
   },
   "Skill": {

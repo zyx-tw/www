@@ -12,40 +12,43 @@
     {
       "slug": "basics",
       "name": "基礎",
-      "line": "開始之前要先懂的事。",
+      "line": "先學會把整個任務交給 Claude Code。",
       "at": [0.5, 0.5, 0.45],
       "bodies": [
         {
           "slug": "what-claude-code-is",
-          "name": "Claude Code 不是聊天機器人：它會在你的電腦上動手",
-          "line": "Claude Code 會在你的電腦上動手，聊天機器人只會回答。",
+          "name": "Claude Code 不是聊天機器人，是會在你的電腦上動手的同事",
+          "line": "Claude Code 會找檔案、下指令、檢查結果，所以我把整個任務交出去。",
           "short": "入門"
         },
         {
           "slug": "start-from-home",
           "short": "家目錄",
-          "name": "我只在家目錄開 Claude Code，不再 cd 進專案",
-          "line": "在家目錄開，Claude Code 碰得到所有專案，跨專案的事 1 句話就做完，記憶也只有 1 份。",
+          "name": "我只在家目錄開 Claude Code，不 cd 進專案",
+          "line": "在家目錄開，我的專案都在 Claude Code 的工作範圍裡，記憶也存在同一個地方。",
           "needs": ["what-claude-code-is"]
         },
         {
           "slug": "four-ways-to-extend",
           "name": "MCP、Skill、Plugin、Mod：4 種擴充方式怎麼選",
           "line": "MCP、Skill、Plugin、Mod 各替 Claude Code 做了什麼，附 3 張可以操作的圖。",
-          "short": "擴充"
+          "short": "擴充",
+          "needs": ["start-from-home"]
         },
         {
           "slug": "claude-md",
           "name": "我的 CLAUDE.md 寫了什麼，為什麼這樣寫",
-          "line": "Claude Code 每次開始工作前最先讀的檔案。",
-          "short": "CLAUDE.md"
+          "line": "把糾正過的話寫成每次新對話都會載入的規則。",
+          "short": "CLAUDE.md",
+          "needs": ["four-ways-to-extend"]
         },
         {
           "slug": "course-basics",
           "name": "小課程：第一週的 Claude Code",
           "kind": "station",
           "line": "5 天，每天 1 個練習，用你自己的專案做。",
-          "short": "課程"
+          "short": "課程",
+          "needs": ["claude-md"]
         }
       ]
     },
