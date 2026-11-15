@@ -9,7 +9,7 @@ import { fontVariables } from "@workspace/ui/lib/fonts"
 
 import { SiteJsonLd } from "@/components/json-ld"
 import { PageDecode } from "@workspace/ui/components/page-decode"
-import { PondBackground } from "@/components/pond-background"
+import { HomeMark } from "@/components/home-mark"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { StarField } from "@/components/star-field"
@@ -88,7 +88,7 @@ export default async function RootLayout({
               <PageDecode />
               <TvStatic />
               <StarField />
-              <PondBackground />
+              <HomeMark />
               <SiteHeader projectNames={PROJECT_NAMES} />
               {children}
               <SiteFooter />
