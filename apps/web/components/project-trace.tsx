@@ -54,14 +54,16 @@ export function ProjectTrace({
               key={index}
               aria-hidden={index >= shown}
               className={cn(
-                "grid grid-cols-[4.5rem_1fr] gap-x-3",
+                "flex gap-x-3",
                 "motion-safe:transition-colors motion-safe:duration-state",
                 index >= shown && "invisible",
                 current ? "text-foreground" : "text-muted-foreground"
               )}
             >
-              <span className={cn(current && "text-(--mark)")}>{from}</span>
-              <span className="min-w-0 wrap-anywhere whitespace-pre-wrap">
+              <span className={cn("w-18 shrink-0", current && "text-(--mark)")}>
+                {from}
+              </span>
+              <span className="min-w-0 flex-1 wrap-anywhere whitespace-pre-wrap">
                 {lines.join("\n")}
               </span>
             </li>

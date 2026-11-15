@@ -51,15 +51,12 @@ export function ProjectDial({
 
       <ul className="mt-8 flex flex-col gap-y-2">
         {stop.bars.map(({ label, cells, value, tone }) => (
-          <li
-            key={label}
-            className="grid grid-cols-[1fr_auto] gap-x-3 sm:grid-cols-[9rem_1fr_auto]"
-          >
-            <span className="max-sm:col-span-2">{label}</span>
+          <li key={label} className="flex flex-wrap gap-x-3">
+            <span className="w-full shrink-0 sm:w-36">{label}</span>
             <span
               aria-hidden
               className={cn(
-                "overflow-hidden whitespace-pre",
+                "min-w-0 flex-1 overflow-hidden whitespace-pre",
                 tone === "mark" && "text-(--mark)",
                 tone === "quiet" && "text-muted-foreground"
               )}
@@ -69,7 +66,9 @@ export function ProjectDial({
                 {"░".repeat(Math.max(0, dial.scale - cells))}
               </span>
             </span>
-            <span className="text-right tabular-nums">{value ?? cells}</span>
+            <span className="shrink-0 text-right tabular-nums">
+              {value ?? cells}
+            </span>
           </li>
         ))}
       </ul>
