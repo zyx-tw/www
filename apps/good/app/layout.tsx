@@ -13,7 +13,7 @@ import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 
-import { SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
+import { MODEL_URL, SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://good.zyx.tw"),
@@ -56,7 +56,7 @@ export default async function RootLayout({
       <head>
         <link
           rel="preload"
-          href="/good.glb"
+          href={MODEL_URL}
           as="fetch"
           crossOrigin="anonymous"
         />
