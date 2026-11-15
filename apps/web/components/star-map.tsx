@@ -55,12 +55,11 @@ function plot(
   }
 }
 
-/** How many of `bodies` are notes, courses and written. */
+/** How many of `bodies` are notes and courses. */
 function count(bodies: Body[]) {
   return [
     `${MAP.notes} ${bodies.filter(({ kind }) => !kind).length}`,
     `${MAP.courses} ${bodies.filter(({ kind }) => kind).length}`,
-    `${MAP.written} ${bodies.filter(({ href }) => href).length}`,
   ]
 }
 

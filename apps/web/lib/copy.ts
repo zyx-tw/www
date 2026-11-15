@@ -16,7 +16,6 @@ export const MAP = {
   systems: "星系",
   notes: "文章",
   courses: "課程",
-  written: "已寫",
   length: "字",
   minutes: "分鐘",
   updated: "更新",
