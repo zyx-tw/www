@@ -96,8 +96,8 @@
     "body": "skills-stay-general"
   },
   "token": {
-    "text": "模型讀和寫文字的計量單位。用量是用 token 算的。",
-    "note": "subagent-bill"
+    "text": "模型讀寫文字的單位，可能是一個字、半個字或一個符號。用量以 token 計算。",
+    "note": "llm-basics"
   },
   "Git": {
     "text": "記錄檔案每次修改的工具。專案放在 Git 倉庫裡。",
@@ -161,5 +161,21 @@
   },
   "MCP 的訊息格式": {
     "body": "mcp-on-the-wire"
+  },
+  "LLM": {
+    "text": "大型語言模型：依照前面的文字，預測下一個 token 的程式。Claude 是一種 LLM。",
+    "note": "llm-basics"
+  },
+  "prompt cache": {
+    "text": "API 服務把請求前段的計算結果保留一段時間。下一個請求的前段相同時，直接重用。",
+    "note": "prompt-cache"
+  },
+  "prompt injection": {
+    "text": "把指令藏在模型會讀到的內容裡，讓模型照著執行的攻擊。",
+    "note": "untrusted-input"
+  },
+  "評測": {
+    "text": "一組固定的任務加上自動評分，用來比較修改前後的 agent。",
+    "note": "evals"
   }
 }

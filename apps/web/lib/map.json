@@ -356,11 +356,18 @@
       "at": [0.62, 0.8, 0.55],
       "bodies": [
         {
+          "slug": "llm-basics",
+          "name": "LLM 一次只預測下一個 token",
+          "line": "模型把文字切成 token，算出下一個 token 的機率，再重複。",
+          "short": "LLM",
+          "needs": ["what-claude-code-is"]
+        },
+        {
           "slug": "agent-loop",
           "name": "Agent Loop 是一個迴圈：問模型、執行工具、送回結果",
           "line": "模型只輸出文字與工具請求，執行與停止條件都在 harness。",
           "short": "迴圈",
-          "needs": ["what-claude-code-is"]
+          "needs": ["llm-basics"]
         },
         {
           "slug": "tool-calls",
@@ -377,6 +384,20 @@
           "needs": ["tool-calls"]
         },
         {
+          "slug": "prompt-cache",
+          "name": "相同的前段不必重算：KV cache 與 prompt cache",
+          "line": "模型保存每個 token 的中間結果，服務再把前段的結果跨請求保留。",
+          "short": "快取",
+          "needs": ["context-is-resent"]
+        },
+        {
+          "slug": "state-in-files",
+          "name": "長任務把進度寫進檔案，新的對話從檔案接手",
+          "line": "context 會用完，檔案與 Git 紀錄留得住，每次只做一項並留下紀錄。",
+          "short": "接手",
+          "needs": ["context-is-resent"]
+        },
+        {
           "slug": "mcp-on-the-wire",
           "name": "MCP 的訊息是 JSON-RPC：先列出工具，再呼叫工具",
           "line": "host 替每個 server 開一個 client，用 stdio 或 HTTP 傳送訊息。",
@@ -389,6 +410,13 @@
           "line": "規則依拒絕、詢問、放行的順序比對，沙箱限制檔案與網路。",
           "short": "權限",
           "needs": ["tool-calls"]
+        },
+        {
+          "slug": "untrusted-input",
+          "name": "工具讀進來的內容可能夾帶指令",
+          "line": "模型分不清資料與指令，所以要限制讀過不可信內容後的動作。",
+          "short": "注入",
+          "needs": ["permission-gates"]
         },
         {
           "slug": "subagent-fresh-context",
@@ -407,6 +435,13 @@
             "permission-gates",
             "subagent-fresh-context"
           ]
+        },
+        {
+          "slug": "evals",
+          "name": "修改 harness 之前，先準備能重跑的評測",
+          "line": "固定一組任務與評分方式，每次修改後重跑，才知道變好還是變壞。",
+          "short": "評測",
+          "needs": ["build-a-small-harness"]
         }
       ]
     }
