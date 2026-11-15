@@ -35,3 +35,35 @@
   background-color: var(--mark);
   color: var(--background);
 }
+
+/* A term in a note (components/term.tsx): four corner ticks around it, as
+   the map frames what the pointer is on. They take the mark's color when it
+   is pointed at. */
+.term {
+  position: relative;
+  margin-inline: 0.375rem;
+  cursor: pointer;
+  outline: none;
+}
+.term::before {
+  content: "";
+  position: absolute;
+  inset: -0.125rem -0.3125rem;
+  pointer-events: none;
+  color: var(--muted-foreground);
+  --tick: linear-gradient(currentColor, currentColor) no-repeat;
+  background:
+    var(--tick) left top / 0.375rem 1px,
+    var(--tick) left top / 1px 0.375rem,
+    var(--tick) right top / 0.375rem 1px,
+    var(--tick) right top / 1px 0.375rem,
+    var(--tick) left bottom / 0.375rem 1px,
+    var(--tick) left bottom / 1px 0.375rem,
+    var(--tick) right bottom / 0.375rem 1px,
+    var(--tick) right bottom / 1px 0.375rem;
+}
+.term:hover::before,
+.term:focus-visible::before,
+.term[data-open]::before {
+  color: var(--mark);
+}

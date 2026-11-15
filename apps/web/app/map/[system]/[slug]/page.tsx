@@ -81,15 +81,7 @@ export default async function NotePage({
     <main lang="zh-Hant" className={cn(column, page, "flex-1")}>
       <Hero
         title={<HeroTitle text={body.name} />}
-        subtitle={
-          <span className="text-caption">
-            <span className="bg-(--mark) px-1 text-background">
-              {MAP.log} {note.log}
-            </span>
-            {"   "}
-            {facts}
-          </span>
-        }
+        subtitle={<span className="text-caption">{facts}</span>}
         className="pb-16"
       />
       {changes.length > 0 && (
@@ -158,7 +150,7 @@ export default async function NotePage({
             <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">
               {section.points.map(({ term, text }) => (
                 <div key={term} className="flex flex-col items-start gap-y-2">
-                  <dt className="bg-(--mark) px-1 font-medium text-background">
+                  <dt className="bg-(--mark) font-medium text-background">
                     {term}
                   </dt>
                   <dd className="text-pretty">

@@ -374,7 +374,7 @@ export function StarMap() {
             <p className="font-medium text-balance">
               {system ? (
                 <>
-                  <span className="bg-(--mark) px-1 text-background">
+                  <span className="bg-(--mark) text-background">
                     {system.name}
                   </span>{" "}
                   {system.line}

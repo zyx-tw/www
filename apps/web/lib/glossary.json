@@ -1,0 +1,9 @@
+{
+  "Agent Loop": {
+    "text": "Claude Code 做事的流程：讀檔案、動手改、檢查結果，結果不對就再做一次。",
+    "note": "what-claude-code-is"
+  },
+  "記憶": {
+    "body": "remembers-me"
+  }
+}

@@ -1,4 +1,5 @@
 import data from "./notes.json"
+import { plain } from "./plain"
 import type { Section } from "./projects"
 
 /** One change to a note, newest first in its list. */
@@ -53,8 +54,8 @@ const PER_MINUTE = 400
  * letters or digits as one, and the minutes it takes to read.
  */
 export function measure(note: Note) {
-  const length = prose(note)
-    .join(" ")
-    .match(/\p{Script=Han}|[A-Za-z0-9][A-Za-z0-9,.'-]*/gu)!.length
+  const length = plain(prose(note).join(" ")).match(
+    /\p{Script=Han}|[A-Za-z0-9][A-Za-z0-9,.'-]*/gu
+  )!.length
   return { length, minutes: Math.max(1, Math.round(length / PER_MINUTE)) }
 }
