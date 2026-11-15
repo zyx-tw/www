@@ -21,6 +21,8 @@ export type Note = {
   changes: Change[]
   intro: string[]
   sections: Section[]
+  /** What the note was written from, for a reader who wants the original. */
+  sources?: { title: string; href: string; by?: string }[]
 }
 
 /** Every written note, from lib/notes.json: adding one is one edit there. */

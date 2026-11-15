@@ -209,6 +209,17 @@ export function noteMarkdown(system: System, body: Body, note: Note) {
       ].join("，"),
       ...note.intro.map((line) => text(plain(line))),
       ...note.sections.map(sectionMarkdown),
+      note.sources &&
+        [
+          `## ${MAP.sources}`,
+          note.sources
+            .map(({ title, href, by }) =>
+              [`- ${link(title, href)}`, by && `, ${text(by)}`]
+                .filter(Boolean)
+                .join("")
+            )
+            .join("\n"),
+        ].join("\n\n"),
       [
         `## ${MAP.title}`,
         [

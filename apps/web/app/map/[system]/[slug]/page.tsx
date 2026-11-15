@@ -167,6 +167,25 @@ export default async function NotePage({
         </section>
       ))}
 
+      {note.sources && (
+        <section aria-labelledby="sources" className={cn("mt-20", below)}>
+          <SectionTitle id="sources" title={MAP.sources} />
+          <ul className="mt-5 flex max-w-2xl flex-col gap-y-2">
+            {note.sources.map(({ title, href, by }) => (
+              <li key={href} className="text-pretty">
+                <a
+                  href={href}
+                  className="terminal-link underline decoration-muted-foreground/40 underline-offset-4"
+                >
+                  {title}
+                </a>
+                {by && <span className="text-muted-foreground"> {by}</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <NoteMap
         system={system}
         current={body.slug}

@@ -20,6 +20,7 @@ export const MAP = {
   changes: "版本紀錄",
   next: "接著讀",
   back: "回到",
+  sources: "來源",
 } as const
 
 export const INFO = { title: "Info" } as const

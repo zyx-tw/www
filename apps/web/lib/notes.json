@@ -502,9 +502,14 @@
   {
     "slug": "mcp-wraps-a-service",
     "log": "038",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上協定文章的連結。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -652,7 +657,8 @@
         "body": [
           "挑一個常用網頁操作的服務。",
           "先查服務有沒有現成的 MCP server。",
-          "選擇連線方式的順序，見 [[接上每個系統]]。"
+          "選擇連線方式的順序，見 [[接上每個系統]]。",
+          "訊息在線路上的格式，見 [[MCP 的訊息格式]]。"
         ],
         "callout": "==MCP server 處理連線，Claude Code 只呼叫工具==。"
       }
@@ -6099,6 +6105,1623 @@
           "讓 Claude Code 在製作頁面前先讀規則。"
         ],
         "callout": "==先刪減功能，再刪減文字，每頁只留 1 個主要動作==。"
+      }
+    ]
+  },
+  {
+    "slug": "agent-loop",
+    "log": "044",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "[[harness]] 是模型外圍的程式。",
+      "模型只做一件事：讀進一段內容，輸出下一段內容。",
+      "==讀檔、下指令、檢查結果，都由 harness 的迴圈完成==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：模型提出請求，harness 執行",
+        "body": [
+          "模型不能直接讀檔或下指令。",
+          "模型輸出的是一份請求：要用哪個工具，帶哪些參數。",
+          "harness 執行工具，把結果加進對話，再問模型一次。",
+          "模型不再要求工具時，迴圈結束。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭───────────╮  messages + tools   ╭───────────╮",
+            "│           │ ──────────────────> │           │",
+            "│  HARNESS  │                     │   MODEL   │",
+            "│           │ <────────────────── │           │",
+            "╰──┬─────┬──╯  text or tool_use   ╰───────────╯",
+            "   │     ^",
+            "   │ run │ tool_result",
+            "   v     │",
+            "╭──┴─────┴──╮",
+            "│   TOOLS   │  read  edit  bash",
+            "╰───────────╯"
+          ],
+          "narrow": [
+            "╭───────────╮",
+            "│   MODEL   │",
+            "╰──┬─────┬──╯",
+            "   ^     │",
+            "   │     │ text or tool_use",
+            "   │     v",
+            "╭──┴─────┴──╮",
+            "│  HARNESS  │ messages + tools",
+            "╰──┬─────┬──╯",
+            "   │     ^",
+            "   │ run │ tool_result",
+            "   v     │",
+            "╭──┴─────┴──╮",
+            "│   TOOLS   │ read edit bash",
+            "╰───────────╯"
+          ],
+          "alt": "A harness sends messages and tool definitions to a model. The model answers with text or a tool request. The harness runs the tool and sends the result back.",
+          "steps": [
+            {
+              "label": "Request",
+              "lit": ["HARNESS", "messages + tools"],
+              "text": "harness 把對話與工具定義送給模型。"
+            },
+            {
+              "label": "Reply",
+              "lit": ["MODEL", "text or tool_use"],
+              "text": "模型回覆文字，或提出工具請求。"
+            },
+            {
+              "label": "Run",
+              "lit": ["run", "TOOLS", "read", "edit", "bash"],
+              "text": "harness 執行工具。模型沒有碰到電腦。"
+            },
+            {
+              "label": "Result",
+              "lit": ["tool_result"],
+              "text": "工具結果加進對話，回到第 1 步。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "依 stop_reason 判斷",
+            "text": "Anthropic API 的回覆帶有 stop_reason。值是 tool_use 時繼續迴圈，是 end_turn 時結束。"
+          },
+          {
+            "term": "區分 workflow 與 agent",
+            "text": "Anthropic 把固定步驟的流程稱為 workflow。agent 則由模型依工具結果決定下一步。"
+          },
+          {
+            "term": "三個階段共用一個迴圈",
+            "text": "Claude Code 的文件把工作分成收集 context、採取行動、驗證結果。三個階段都靠同一個迴圈完成。"
+          }
+        ]
+      },
+      {
+        "title": "實作：迴圈只需要十幾行",
+        "body": [
+          "以下是 pseudo code，省略了錯誤處理。",
+          "tools 是工具定義，run_tool 是執行工具的函式。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "messages = [user(task)]",
+            "for turn in range(MAX_TURNS):",
+            "    reply = model(system, tools, messages)",
+            "    messages.append(reply)",
+            "    if reply.stop_reason != \"tool_use\":",
+            "        return reply.text",
+            "    results = []",
+            "    for call in reply.tool_calls:",
+            "        results.append(run_tool(call))",
+            "    messages.append(user(results))",
+            "raise TooManyTurns"
+          ],
+          "alt": "Pseudo code of an agent loop: ask the model, stop when it requests no tool, otherwise run each tool and append the results.",
+          "steps": [
+            {
+              "label": "Ask",
+              "lit": ["reply = model(system, tools, messages)"],
+              "text": "每一輪都送出完整的 messages。模型沒有記憶，只讀這次送來的內容。"
+            },
+            {
+              "label": "Stop",
+              "lit": [
+                "if reply.stop_reason != \"tool_use\":",
+                "return reply.text"
+              ],
+              "text": "模型沒有要求工具，迴圈結束。"
+            },
+            {
+              "label": "Run",
+              "lit": ["results.append(run_tool(call))"],
+              "text": "harness 逐一執行模型要求的工具。"
+            },
+            {
+              "label": "Feed",
+              "lit": ["messages.append(user(results))"],
+              "text": "工具結果以 user 訊息送回。下一輪模型就讀得到。"
+            },
+            {
+              "label": "Limit",
+              "lit": ["for turn in range(MAX_TURNS):", "raise TooManyTurns"],
+              "text": "輪數上限避免迴圈停不下來。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "對話存在 harness",
+            "text": "模型沒有狀態，對話存在 harness 的 messages。同一段 messages 可以交給另一個模型接著做。"
+          },
+          {
+            "term": "把錯誤當成結果",
+            "text": "工具失敗時，把錯誤訊息當成結果送回。模型讀到錯誤，才能換做法。"
+          },
+          {
+            "term": "結束不等於完成",
+            "text": "模型停止要求工具，只代表模型認為做完了。任務是否完成，要靠驗證判斷，見 [[怎樣才算完成]]。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：讀一份能執行的迴圈",
+        "body": [
+          "Thorsten Ball 的文章用 Go 寫出一個能改檔案的 agent。",
+          "照著文章做一次，確認迴圈真的只有這麼短。",
+          "接著讀工具請求的格式，見 [[工具呼叫的格式]]。"
+        ],
+        "callout": "==模型提出請求，harness 執行並把結果送回==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Building effective agents",
+        "href": "https://www.anthropic.com/engineering/building-effective-agents",
+        "by": "Anthropic"
+      },
+      {
+        "title": "How tool use works",
+        "href": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works",
+        "by": "Claude API docs"
+      },
+      {
+        "title": "How Claude Code works",
+        "href": "https://code.claude.com/docs/en/how-claude-code-works",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "How to Build an Agent",
+        "href": "https://ampcode.com/how-to-build-an-agent",
+        "by": "Thorsten Ball"
+      },
+      {
+        "title": "12-factor agents",
+        "href": "https://github.com/humanlayer/12-factor-agents",
+        "by": "Dex Horthy"
+      }
+    ]
+  },
+  {
+    "slug": "tool-calls",
+    "log": "045",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "工具對模型來說是三段文字：名稱、說明、參數格式。",
+      "模型輸出 tool_use 區塊，harness 回覆 tool_result 區塊。",
+      "==兩個區塊用同一個 id 對應==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：一次工具呼叫是兩則訊息",
+        "body": [
+          "工具定義隨每次請求送給模型。",
+          "模型要用工具時，輸出 tool_use 區塊。",
+          "區塊裡有 id、工具名稱 name 與參數 input。",
+          "harness 執行後，回覆帶有相同 id 的 tool_result。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "  MODEL                 HARNESS                 TOOL",
+            "    │                      │                      │",
+            "    │  id, name, input     │                      │",
+            "    │ ───────────────────> │                      │",
+            "    │                      │  read_file(path)     │",
+            "    │                      │ ───────────────────> │",
+            "    │                      │  file text           │",
+            "    │                      │ <─────────────────── │",
+            "    │  tool_use_id, text   │                      │",
+            "    │ <─────────────────── │                      │"
+          ],
+          "narrow": [
+            " MODEL      HARNESS      TOOL",
+            "   │           │           │",
+            "   │ id, name, │           │",
+            "   │ input     │           │",
+            "   │ ────────> │           │",
+            "   │           │ read_file │",
+            "   │           │ ────────> │",
+            "   │           │ file text │",
+            "   │           │ <──────── │",
+            "   │ tool_use_ │           │",
+            "   │ id, text  │           │",
+            "   │ <──────── │           │"
+          ],
+          "alt": "A sequence: the model sends a tool request with an id, a name and an input. The harness calls the tool, then answers the model with a result that carries the same id.",
+          "steps": [
+            {
+              "label": "tool_use",
+              "lit": ["MODEL", "id, name, input", "id, name,", "input"],
+              "text": "模型輸出 tool_use：一個 id、工具名稱與參數。"
+            },
+            {
+              "label": "Run",
+              "lit": [
+                "HARNESS",
+                "TOOL",
+                "read_file(path)",
+                "read_file",
+                "file text"
+              ],
+              "text": "harness 依名稱找到函式並執行。"
+            },
+            {
+              "label": "tool_result",
+              "lit": ["tool_use_id, text", "tool_use_", "id, text"],
+              "text": "harness 回覆 tool_result，用 tool_use_id 指回原本的請求。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "把說明當成介面",
+            "text": "模型只讀得到名稱、說明與參數格式。說明寫不清楚，模型就會選錯工具。"
+          },
+          {
+            "term": "用 JSON Schema 描述參數",
+            "text": "參數格式用 JSON Schema 描述。harness 執行前，先依格式檢查 input。"
+          },
+          {
+            "term": "結果緊接在請求之後",
+            "text": "tool_result 放在下一則 user 訊息的開頭。每個 tool_use 都要有對應的結果。"
+          }
+        ]
+      },
+      {
+        "title": "實作：依名稱分派工具",
+        "body": [
+          "工具表把名稱對應到說明、參數格式與函式。",
+          "run_tool 依名稱執行，並把結果包成 tool_result。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "TOOLS = {",
+            "  \"read_file\": {",
+            "    \"description\": \"Read a file. Returns its text.\",",
+            "    \"input_schema\": {\"path\": \"string\"},",
+            "    \"run\": read_file,",
+            "  },",
+            "}",
+            "",
+            "def run_tool(call):",
+            "    tool = TOOLS.get(call.name)",
+            "    if tool is None:",
+            "        return result(call.id, \"unknown tool\", error=True)",
+            "    try:",
+            "        output = tool[\"run\"](**call.input)",
+            "        return result(call.id, truncate(output))",
+            "    except Exception as e:",
+            "        return result(call.id, str(e), error=True)"
+          ],
+          "alt": "Pseudo code of a tool table and a dispatcher that looks a tool up by name, runs it and returns a result with the call's id.",
+          "steps": [
+            {
+              "label": "Define",
+              "lit": [
+                "\"description\": \"Read a file. Returns its text.\",",
+                "\"input_schema\": {\"path\": \"string\"},"
+              ],
+              "text": "說明與參數格式送給模型。函式留在 harness，模型看不到。"
+            },
+            {
+              "label": "Dispatch",
+              "lit": [
+                "tool = TOOLS.get(call.name)",
+                "output = tool[\"run\"](**call.input)"
+              ],
+              "text": "harness 依名稱找到函式，帶入模型給的參數。"
+            },
+            {
+              "label": "Id",
+              "lit": ["call.id"],
+              "text": "每個結果都帶回請求的 id。"
+            },
+            {
+              "label": "Error",
+              "lit": [
+                "return result(call.id, \"unknown tool\", error=True)",
+                "return result(call.id, str(e), error=True)"
+              ],
+              "text": "錯誤也回傳給模型，迴圈不會中斷。"
+            },
+            {
+              "label": "Truncate",
+              "lit": ["truncate(output)"],
+              "text": "過長的輸出先截短，或存成檔案後只回傳路徑。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "保持工具少而清楚",
+            "text": "讀檔、寫檔、改檔、執行指令，四個工具就能組成 coding agent。功能重疊的工具，會讓模型難以選擇。"
+          },
+          {
+            "term": "平行執行唯讀呼叫",
+            "text": "一則回覆可以帶多個 tool_use。唯讀的呼叫可以同時執行，會改動的呼叫依序執行。"
+          },
+          {
+            "term": "錯誤訊息寫出修法",
+            "text": "錯誤訊息寫明原因與下一步。模型讀到後，才能自己修正。"
+          },
+          {
+            "term": "把結果當成不可信的輸入",
+            "text": "網頁與檔案的內容可能夾帶指令。這些內容只放在 tool_result，不當成使用者的要求。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：替一個常用指令寫工具定義",
+        "body": [
+          "挑一個常用的指令，寫出名稱、說明與參數格式。",
+          "只讀名稱與說明，判斷模型能不能選對。",
+          "工具定義佔用的空間，見 [[context 的組成]]。"
+        ],
+        "callout": "==模型依說明選工具，harness 依名稱執行==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Handle tool calls",
+        "href": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls",
+        "by": "Claude API docs"
+      },
+      {
+        "title": "Parallel tool use",
+        "href": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use",
+        "by": "Claude API docs"
+      },
+      {
+        "title": "Writing tools for agents",
+        "href": "https://www.anthropic.com/engineering/writing-tools-for-agents",
+        "by": "Anthropic"
+      },
+      {
+        "title": "What I learned building an opinionated and minimal coding agent",
+        "href": "https://mariozechner.at/posts/2025-11-30-pi-coding-agent/",
+        "by": "Mario Zechner"
+      },
+      {
+        "title": "Agentic Coding Recommendations",
+        "href": "https://lucumr.pocoo.org/2025/6/12/agentic-coding/",
+        "by": "Armin Ronacher"
+      }
+    ]
+  },
+  {
+    "slug": "context-is-resent",
+    "log": "046",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "[[context]] 是一次請求送給模型的全部內容。",
+      "模型不記得上一輪，harness 每一輪都重送整段 context。",
+      "==context 的順序決定快取，長度影響品質==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：context 分成固定與成長兩段",
+        "body": [
+          "Anthropic API 的順序是工具定義、系統指示、對話。",
+          "前兩段每一輪都相同，對話則每一輪變長。",
+          "服務會快取已經算過的前段，稱為 prompt cache。",
+          "改動前面任何一處，後面的快取全部失效。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭──────────────────────────────╮",
+            "│ tools      definitions       │  STABLE PREFIX",
+            "│ system     instructions      │  cached",
+            "├──────────────────────────────┤",
+            "│ messages                     │",
+            "│   user       task            │  GROWS EVERY TURN",
+            "│   assistant  tool_use        │  append only",
+            "│   user       tool_result     │",
+            "│   ...                        │",
+            "╰──────────────────────────────╯"
+          ],
+          "narrow": [
+            "╭──────────────────────────╮",
+            "│ tools    definitions     │",
+            "│ system   instructions    │",
+            "│ STABLE PREFIX, cached    │",
+            "├──────────────────────────┤",
+            "│ messages                 │",
+            "│   user       task        │",
+            "│   assistant  tool_use    │",
+            "│   user       tool_result │",
+            "│ GROWS EVERY TURN         │",
+            "╰──────────────────────────╯"
+          ],
+          "alt": "A request in three parts: tool definitions and system instructions form a stable, cached prefix; the messages after them grow every turn and are only appended to.",
+          "steps": [
+            {
+              "label": "Prefix",
+              "lit": ["definitions", "instructions", "STABLE PREFIX"],
+              "text": "工具定義與系統指示每一輪都相同，放在最前面。"
+            },
+            {
+              "label": "Cache",
+              "lit": ["cached"],
+              "text": "前段與上一輪完全相同時，服務重用上次的計算。"
+            },
+            {
+              "label": "Append",
+              "lit": ["messages", "GROWS EVERY TURN", "append only"],
+              "text": "對話只往後接，不修改前面的內容。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "快取要求前段完全相同",
+            "text": "只要前段有一個字不同，就無法命中快取。命中時計費較低，回應也較快。"
+          },
+          {
+            "term": "不在中途更動工具清單",
+            "text": "工具定義排在最前面。中途增減工具，整段快取都要重算。"
+          },
+          {
+            "term": "context 越長，表現越不穩",
+            "text": "Chroma 的研究指出，輸入變長時模型的表現會下降。簡單的任務也一樣。"
+          }
+        ]
+      },
+      {
+        "title": "實作：固定前段，超過門檻就壓縮",
+        "body": [
+          "build_request 組出每一輪的請求。",
+          "maybe_compact 在對話太長時，用摘要取代舊訊息。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "def build_request(state):",
+            "    return {",
+            "        \"tools\": TOOLS,               # same order every turn",
+            "        \"system\": RULES,              # no timestamps",
+            "        \"messages\": state.messages,   # append only",
+            "    }",
+            "",
+            "def maybe_compact(state):",
+            "    if tokens(state.messages) < LIMIT:",
+            "        return",
+            "    summary = model(SUMMARIZE, state.messages).text",
+            "    recent = state.messages[-KEEP:]",
+            "    state.messages = [user(summary)] + recent"
+          ],
+          "alt": "Pseudo code: a request keeps tools and system unchanged and appends to messages; when messages pass a limit, a summary and the most recent messages replace them.",
+          "steps": [
+            {
+              "label": "Stable",
+              "lit": ["\"tools\": TOOLS,", "\"system\": RULES,"],
+              "text": "前段不放時間，也不換順序。每一輪的內容都相同。"
+            },
+            {
+              "label": "Append",
+              "lit": ["\"messages\": state.messages,"],
+              "text": "新訊息只接在最後。"
+            },
+            {
+              "label": "Limit",
+              "lit": ["if tokens(state.messages) < LIMIT:"],
+              "text": "接近上限前就處理，不等到請求失敗。"
+            },
+            {
+              "label": "Summarize",
+              "lit": ["summary = model(SUMMARIZE, state.messages).text"],
+              "text": "請模型把舊對話寫成摘要。"
+            },
+            {
+              "label": "Replace",
+              "lit": [
+                "recent = state.messages[-KEEP:]",
+                "state.messages = [user(summary)] + recent"
+              ],
+              "text": "摘要加上最近幾則訊息，取代原本的對話。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "壓縮會遺失細節",
+            "text": "摘要留下目標與結論，細節可能消失。重要的決定寫進檔案，壓縮後還讀得到。"
+          },
+          {
+            "term": "成對保留工具訊息",
+            "text": "保留最近訊息時，tool_use 與 tool_result 要成對保留。只留一半，請求會被拒絕。"
+          },
+          {
+            "term": "用到才讀",
+            "text": "不把所有資料先放進 context。先放路徑，需要時再用工具讀取。"
+          },
+          {
+            "term": "把長輸出存成檔案",
+            "text": "工具輸出太長時存成檔案，只回傳路徑與結尾。模型需要時再讀檔。"
+          },
+          {
+            "term": "延後載入工具定義",
+            "text": "工具很多時，先只放名稱。Claude Code 的 tool search 在需要時才載入完整定義。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：找出每一輪都載入的內容",
+        "body": [
+          "檢查規則檔與工具清單。",
+          "找出每一輪都載入、卻很少用到的內容。",
+          "把這些內容改成用到才載入，做法見 [[Skill]]。"
+        ],
+        "callout": "==固定的內容放前面，變動的內容接在後面，太長就壓縮==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Prompt caching",
+        "href": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+        "by": "Claude API docs"
+      },
+      {
+        "title": "Effective context engineering for AI agents",
+        "href": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+        "by": "Anthropic"
+      },
+      {
+        "title": "Unrolling the Codex agent loop",
+        "href": "https://openai.com/index/unrolling-the-codex-agent-loop/",
+        "by": "Michael Bolin, OpenAI"
+      },
+      {
+        "title": "Context Engineering for AI Agents: Lessons from Building Manus",
+        "href": "https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus",
+        "by": "Yichao Ji"
+      },
+      {
+        "title": "Dynamic context discovery",
+        "href": "https://cursor.com/blog/dynamic-context-discovery",
+        "by": "Jediah Katz, Cursor"
+      },
+      {
+        "title": "Context Rot",
+        "href": "https://research.trychroma.com/context-rot",
+        "by": "Chroma"
+      }
+    ]
+  },
+  {
+    "slug": "mcp-on-the-wire",
+    "log": "047",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "[[MCP]] 規定 harness 與外部工具之間的訊息格式。",
+      "訊息用 [[JSON-RPC]] 寫成，分為請求、回應與通知。",
+      "==最常用的方法只有兩個：tools/list 與 tools/call==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：host、client、server 三個角色",
+        "body": [
+          "host 是使用者操作的程式，例如 Claude Code。",
+          "client 是 host 裡負責連線的元件。",
+          "server 是提供工具的程式。",
+          "host 替每個 server 各開一個 client。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭────────────────── HOST (harness) ──────────────────╮",
+            "│  ╭──────────╮     ╭──────────╮     ╭──────────╮    │",
+            "│  │ CLIENT 1 │     │ CLIENT 2 │     │ CLIENT 3 │    │",
+            "│  ╰────┬─────╯     ╰────┬─────╯     ╰────┬─────╯    │",
+            "╰───────┼────────────────┼────────────────┼──────────╯",
+            "        │ stdio          │ stdio          │ HTTP",
+            "   ╭────┴─────╮     ╭────┴─────╮     ╭────┴─────╮",
+            "   │ SERVER   │     │ SERVER   │     │ SERVER   │",
+            "   │ files    │     │ database │     │ remote   │",
+            "   ╰──────────╯     ╰──────────╯     ╰──────────╯"
+          ],
+          "narrow": [
+            "╭───── HOST (harness) ─────╮",
+            "│ ╭──────────╮╭──────────╮ │",
+            "│ │ CLIENT 1 ││ CLIENT 2 │ │",
+            "│ ╰────┬─────╯╰────┬─────╯ │",
+            "╰──────┼───────────┼───────╯",
+            "       │ stdio     │ HTTP",
+            "  ╭────┴─────╮╭────┴─────╮",
+            "  │ SERVER   ││ SERVER   │",
+            "  │ files    ││ remote   │",
+            "  ╰──────────╯╰──────────╯"
+          ],
+          "alt": "A host holds one client per server. Local servers are reached over stdio and a remote server over HTTP.",
+          "steps": [
+            {
+              "label": "Host",
+              "lit": ["HOST (harness)"],
+              "text": "host 就是 harness。host 決定哪些 server 可以連線。"
+            },
+            {
+              "label": "Client",
+              "lit": ["CLIENT 1", "CLIENT 2", "CLIENT 3"],
+              "text": "一個 client 只對一個 server。"
+            },
+            {
+              "label": "Server",
+              "lit": ["SERVER", "files", "database", "remote"],
+              "text": "server 提供工具。server 讀不到完整對話，也看不到其他 server。"
+            },
+            {
+              "label": "Transport",
+              "lit": ["stdio", "HTTP"],
+              "text": "本機的 server 用 stdio，遠端的 server 用 HTTP。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "server 提供三種功能",
+            "text": "server 能提供 tools、resources 與 prompts。tools 由模型決定何時呼叫，也最常用。"
+          },
+          {
+            "term": "stdio 傳送本機訊息",
+            "text": "host 把 server 當成子程序啟動。訊息一行一則，寫進 stdin，再從 stdout 讀回。"
+          },
+          {
+            "term": "log 寫到 stderr",
+            "text": "stdout 只能出現 MCP 訊息。server 的 [[log]] 要寫到 stderr。"
+          },
+          {
+            "term": "HTTP 傳送遠端訊息",
+            "text": "Streamable HTTP 的每則訊息是一次 POST。server 用 JSON 回覆，或用 SSE 串流回覆。"
+          }
+        ]
+      },
+      {
+        "title": "實作：兩個方法完成一次呼叫",
+        "body": [
+          "以下省略每個請求都要帶的 _meta 欄位。",
+          "client 先列出工具，再轉送模型選定的呼叫。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "# 1. discover: which tools does the server have?",
+            "send({\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"tools/list\"})",
+            "tools = recv(id=1).result.tools",
+            "#    each tool: name, description, inputSchema",
+            "",
+            "# 2. the model picks one; the client forwards the call",
+            "send({\"jsonrpc\": \"2.0\", \"id\": 2, \"method\": \"tools/call\",",
+            "      \"params\": {\"name\": \"get_weather\",",
+            "                 \"arguments\": {\"location\": \"New York\"}}})",
+            "reply = recv(id=2).result",
+            "#    reply.content: [{\"type\": \"text\", \"text\": \"...\"}]",
+            "#    reply.isError: false"
+          ],
+          "alt": "Pseudo code of an MCP client: a tools/list request returns each tool's name, description and input schema; a tools/call request returns content blocks and an error flag.",
+          "steps": [
+            {
+              "label": "List",
+              "lit": ["\"method\": \"tools/list\""],
+              "text": "client 先問 server 有哪些工具。"
+            },
+            {
+              "label": "Schema",
+              "lit": ["name, description, inputSchema"],
+              "text": "每個工具有名稱、說明與參數格式。harness 轉成模型的工具定義。"
+            },
+            {
+              "label": "Call",
+              "lit": [
+                "\"method\": \"tools/call\"",
+                "\"name\": \"get_weather\"",
+                "\"arguments\": {\"location\": \"New York\"}"
+              ],
+              "text": "模型選定工具後，client 送出 tools/call。"
+            },
+            {
+              "label": "Id",
+              "lit": ["\"id\": 1", "\"id\": 2", "id=1", "id=2"],
+              "text": "回應用相同的 id 對回請求。"
+            },
+            {
+              "label": "Result",
+              "lit": ["reply.content", "reply.isError"],
+              "text": "結果是內容區塊。harness 把內容放進 tool_result 送回模型。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "每個請求帶上版本",
+            "text": "2026-07-28 版規格取消了連線時的握手。每個請求在 _meta 帶上協定版本與 client 的能力。"
+          },
+          {
+            "term": "舊版規格先握手",
+            "text": "2025-11-25 版的 client 先送 initialize 請求。收到回應後，再送 initialized 通知。"
+          },
+          {
+            "term": "用 server/discover 探測",
+            "text": "server/discover 回傳 server 支援的版本與能力。同時支援新舊 server 的 client，先送這個請求。"
+          },
+          {
+            "term": "區分兩種錯誤",
+            "text": "工具執行失敗時，回傳 isError 為 true 的結果，讓模型讀到。訊息格式錯誤，才回傳 JSON-RPC 的 error。"
+          },
+          {
+            "term": "遠端 server 用 OAuth 登入",
+            "text": "HTTP 的 server 用 OAuth 2.1 驗證身分。stdio 的 server 從環境變數讀取憑證。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：觀察一次真實的訊息往返",
+        "body": [
+          "用官方的 MCP Inspector 連上一個 server。",
+          "觀察 tools/list 與 tools/call 的請求與回應。",
+          "工具該包進哪些操作，見 [[MCP]]。"
+        ],
+        "callout": "==MCP 把工具呼叫變成跨程式的標準訊息==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "MCP specification 2026-07-28: Architecture",
+        "href": "https://modelcontextprotocol.io/specification/2026-07-28/architecture",
+        "by": "modelcontextprotocol.io"
+      },
+      {
+        "title": "MCP specification 2026-07-28: Tools",
+        "href": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools",
+        "by": "modelcontextprotocol.io"
+      },
+      {
+        "title": "MCP specification 2026-07-28: stdio",
+        "href": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio",
+        "by": "modelcontextprotocol.io"
+      },
+      {
+        "title": "MCP specification 2026-07-28: Streamable HTTP",
+        "href": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http",
+        "by": "modelcontextprotocol.io"
+      },
+      {
+        "title": "MCP specification 2026-07-28: Discovery",
+        "href": "https://modelcontextprotocol.io/specification/2026-07-28/server/discover",
+        "by": "modelcontextprotocol.io"
+      },
+      {
+        "title": "MCP specification 2025-11-25: Lifecycle",
+        "href": "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle",
+        "by": "modelcontextprotocol.io"
+      }
+    ]
+  },
+  {
+    "slug": "permission-gates",
+    "log": "048",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "模型提出的每個工具請求，harness 都能在執行前攔下。",
+      "權限規則決定拒絕、詢問或放行。",
+      "==[[沙箱]] 再限制放行後能碰到的範圍==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：請求先比對規則，再進沙箱",
+        "body": [
+          "Claude Code 的規則分成 deny、ask、allow 三種。",
+          "比對順序固定：先 deny，再 ask，最後 allow。",
+          "所以拒絕規則一定優先。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " tool_use",
+            "    │",
+            "    v",
+            "╭────────╮  match   ╭──────────────────────╮",
+            "│  DENY  │ ───────> │ refuse, say why      │",
+            "╰───┬────╯          ╰──────────────────────╯",
+            "    │ no match",
+            "╭───┴────╮  match   ╭──────────────────────╮",
+            "│  ASK   │ ───────> │ wait for a person    │",
+            "╰───┬────╯          ╰──────────────────────╯",
+            "    │ no match",
+            "╭───┴────╮  match   ╭──────────────────────╮",
+            "│ ALLOW  │ ───────> │ run inside a SANDBOX │",
+            "╰───┬────╯          ╰──────────────────────╯",
+            "    │ no match",
+            "    v",
+            " the MODE decides"
+          ],
+          "narrow": [
+            " tool_use",
+            "    │",
+            "╭───┴────╮",
+            "│  DENY  │ refuse, say why",
+            "╰───┬────╯",
+            "    │ no match",
+            "╭───┴────╮",
+            "│  ASK   │ wait for a person",
+            "╰───┬────╯",
+            "    │ no match",
+            "╭───┴────╮",
+            "│ ALLOW  │ run in a SANDBOX",
+            "╰───┬────╯",
+            "    │ no match",
+            "    v",
+            " the MODE decides"
+          ],
+          "alt": "A tool request meets deny rules, then ask rules, then allow rules. A denied request is refused with a reason. An asked one waits for a person. An allowed one runs inside a sandbox. The mode decides the rest.",
+          "steps": [
+            {
+              "label": "Deny",
+              "lit": ["DENY", "refuse, say why"],
+              "text": "先比對拒絕規則。命中就不執行，並把原因回傳給模型。"
+            },
+            {
+              "label": "Ask",
+              "lit": ["ASK", "wait for a person"],
+              "text": "再比對詢問規則。命中就停下來等人決定。"
+            },
+            {
+              "label": "Allow",
+              "lit": ["ALLOW", "run inside a SANDBOX", "run in a SANDBOX"],
+              "text": "最後比對放行規則。放行的指令在沙箱裡執行。"
+            },
+            {
+              "label": "Mode",
+              "lit": ["the MODE decides"],
+              "text": "三種規則都沒命中時，由權限模式決定。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "權限模式是預設行為",
+            "text": "模式決定沒有規則命中時怎麼辦。例如每次詢問、自動接受檔案修改，或只規劃不執行。"
+          },
+          {
+            "term": "沙箱由作業系統執行",
+            "text": "Claude Code 在 macOS 用 Seatbelt，在 Linux 用 bubblewrap。網路只放行清單上的網域。"
+          },
+          {
+            "term": "規則檔不是強制手段",
+            "text": "[[CLAUDE.md]] 的內容只是 context，模型可能沒有照做。不能有例外的限制，要寫成拒絕規則。"
+          }
+        ]
+      },
+      {
+        "title": "實作：在執行工具前加一道檢查",
+        "body": [
+          "gate 依序比對三組規則。",
+          "run_sandboxed 限制指令能寫入的目錄與能連線的網域。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "def gate(call, mode):",
+            "    for rule in DENY:",
+            "        if rule.matches(call):",
+            "            return refuse(call, rule.reason)",
+            "    for rule in ASK:",
+            "        if rule.matches(call):",
+            "            return ask_person(call)",
+            "    for rule in ALLOW:",
+            "        if rule.matches(call):",
+            "            return run_sandboxed(call)",
+            "    return fallback(mode, call)",
+            "",
+            "def run_sandboxed(call):",
+            "    box = sandbox(write=[PROJECT_DIR],",
+            "                  network=ALLOWED_DOMAINS)",
+            "    return box.run(call)"
+          ],
+          "alt": "Pseudo code of a permission gate: deny rules first, then ask rules, then allow rules, then a fallback set by the mode; an allowed call runs in a sandbox that limits writes and network.",
+          "steps": [
+            {
+              "label": "Deny",
+              "lit": ["for rule in DENY:", "return refuse(call, rule.reason)"],
+              "text": "拒絕的原因回傳給模型。模型讀到後才會換做法。"
+            },
+            {
+              "label": "Ask",
+              "lit": ["for rule in ASK:", "return ask_person(call)"],
+              "text": "詢問會打斷工作。只留給不能復原的動作。"
+            },
+            {
+              "label": "Allow",
+              "lit": ["for rule in ALLOW:", "return run_sandboxed(call)"],
+              "text": "放行的請求交給沙箱執行。"
+            },
+            {
+              "label": "Mode",
+              "lit": ["return fallback(mode, call)"],
+              "text": "沒有規則命中時，依模式決定詢問或放行。"
+            },
+            {
+              "label": "Sandbox",
+              "lit": ["write=[PROJECT_DIR],", "network=ALLOWED_DOMAINS)"],
+              "text": "沙箱只允許寫入專案目錄，只連線到清單上的網域。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "詢問太多就會失效",
+            "text": "每個指令都詢問，人會習慣直接同意。Cursor 加入沙箱，就是為了減少詢問。"
+          },
+          {
+            "term": "避免三個條件同時成立",
+            "text": "Simon Willison 列出三個條件：讀得到私人資料、讀進不可信內容、能對外傳送。三個同時成立時，夾帶的指令就能把資料送出去。"
+          },
+          {
+            "term": "沙箱不一定涵蓋 MCP 工具",
+            "text": "Codex 的沙箱只限制內建的 shell 工具。MCP 工具在另一個程序執行，要自己限制範圍。"
+          },
+          {
+            "term": "把界線告訴模型",
+            "text": "Cursor 把沙箱的限制寫進工具說明與錯誤訊息。模型知道被擋的原因，就不會重試同一個指令。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：列出不能復原的動作",
+        "body": [
+          "列出不能復原的動作，例如刪除、寄信與付款。",
+          "把這些動作寫成詢問或拒絕規則，其餘放行。",
+          "工作界線的寫法，見 [[CLAUDE.md]]。"
+        ],
+        "callout": "==規則決定能不能做，沙箱決定碰得到哪裡==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Configure permissions",
+        "href": "https://code.claude.com/docs/en/permissions",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Permission modes",
+        "href": "https://code.claude.com/docs/en/permission-modes",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Sandboxing",
+        "href": "https://code.claude.com/docs/en/sandboxing",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Codex sandboxing",
+        "href": "https://developers.openai.com/codex/concepts/sandboxing",
+        "by": "OpenAI"
+      },
+      {
+        "title": "Agent sandboxing",
+        "href": "https://cursor.com/blog/agent-sandboxing",
+        "by": "Cursor"
+      },
+      {
+        "title": "The lethal trifecta for AI agents",
+        "href": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/",
+        "by": "Simon Willison"
+      }
+    ]
+  },
+  {
+    "slug": "subagent-fresh-context",
+    "log": "049",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "[[子 agent]] 是 harness 另外啟動的一個迴圈。",
+      "子 agent 有自己的 context、系統指示與工具清單。",
+      "==主迴圈只收到最後的摘要==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：派工是一次工具呼叫",
+        "body": [
+          "對主迴圈來說，派工只是一次工具呼叫。",
+          "harness 收到請求後，用新的 messages 再跑一次迴圈。",
+          "子 agent 的最後一則訊息，就是這次呼叫的結果。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " MAIN LOOP                      SUBAGENT LOOP",
+            "╭────────────────────╮         ╭────────────────────╮",
+            "│ long context       │         │ empty context      │",
+            "│                    │ prompt  │                    │",
+            "│ tool_use: Agent    │ ──────> │ read  grep  read   │",
+            "│                    │         │ many tool results  │",
+            "│ tool_result        │ <────── │ final message      │",
+            "│ one summary        │ summary │                    │",
+            "╰────────────────────╯         ╰────────────────────╯"
+          ],
+          "narrow": [
+            " MAIN LOOP",
+            "╭────────────────────╮",
+            "│ long context       │",
+            "│ tool_use: Agent    │",
+            "│ tool_result        │",
+            "╰────┬──────────^────╯",
+            "     │ prompt   │ summary",
+            "╭────v──────────┴────╮",
+            "│ empty context      │",
+            "│ read  grep  read   │",
+            "│ many tool results  │",
+            "│ final message      │",
+            "╰────────────────────╯",
+            " SUBAGENT LOOP"
+          ],
+          "alt": "The main loop calls an Agent tool with a prompt. A subagent loop starts from an empty context, reads and searches, and its final message returns to the main loop as one summary.",
+          "steps": [
+            {
+              "label": "Spawn",
+              "lit": ["MAIN LOOP", "tool_use: Agent", "prompt"],
+              "text": "主迴圈呼叫派工工具，參數是一段任務說明。"
+            },
+            {
+              "label": "Fresh",
+              "lit": ["SUBAGENT LOOP", "empty context"],
+              "text": "子 agent 從空的 context 開始，只知道任務說明的內容。"
+            },
+            {
+              "label": "Work",
+              "lit": ["read  grep  read", "many tool results"],
+              "text": "讀檔與搜尋的結果，都留在子 agent 的 context。"
+            },
+            {
+              "label": "Return",
+              "lit": ["final message", "summary", "tool_result", "one summary"],
+              "text": "最後一則訊息成為工具結果，回到主迴圈。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "隔離查資料的內容",
+            "text": "查資料會讀進大量內容。交給子 agent 查，主對話只增加一段摘要。"
+          },
+          {
+            "term": "兩次交接都會遺漏",
+            "text": "任務說明沒寫到的背景，子 agent 不知道。摘要沒寫到的發現，主迴圈也不知道。"
+          },
+          {
+            "term": "token 用量更高",
+            "text": "每個子 agent 都從頭讀取需要的內容。Anthropic 的多 agent 研究系統，[[token]] 用量約為一般對話的 15 倍。"
+          }
+        ]
+      },
+      {
+        "title": "實作：把迴圈包成一個工具",
+        "body": [
+          "agent_loop 是主迴圈使用的同一個函式。",
+          "agent_tool 用新的 messages 呼叫迴圈，回傳最後的文字。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "def agent_tool(prompt, tools, depth):",
+            "    if depth >= MAX_DEPTH:",
+            "        return \"error: cannot spawn deeper\"",
+            "    messages = [user(prompt)]          # fresh context",
+            "    return agent_loop(SUB_SYSTEM, tools, messages)",
+            "",
+            "TOOLS[\"Agent\"] = {",
+            "    \"description\": \"Run a task in a separate context. \"",
+            "                   \"Returns only the final message.\",",
+            "    \"run\": agent_tool,",
+            "}"
+          ],
+          "alt": "Pseudo code: an Agent tool starts the same agent loop with a fresh message list that holds only the prompt, and returns the loop's final text.",
+          "steps": [
+            {
+              "label": "Fresh",
+              "lit": ["messages = [user(prompt)]"],
+              "text": "新的 messages 只有任務說明，沒有主對話。"
+            },
+            {
+              "label": "Reuse",
+              "lit": ["return agent_loop(SUB_SYSTEM, tools, messages)"],
+              "text": "同一個迴圈函式再跑一次，回傳最後的文字。"
+            },
+            {
+              "label": "Depth",
+              "lit": [
+                "if depth >= MAX_DEPTH:",
+                "return \"error: cannot spawn deeper\""
+              ],
+              "text": "限制層數，避免子 agent 不斷往下派工。"
+            },
+            {
+              "label": "Describe",
+              "lit": ["\"Returns only the final message.\","],
+              "text": "說明寫明只回傳最後一則訊息。主迴圈才知道要在任務說明裡要求回報格式。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "唯讀工作適合平行",
+            "text": "多個子 agent 同時讀檔不會衝突。同時修改檔案，就需要協調。"
+          },
+          {
+            "term": "先用好單一 agent",
+            "text": "OpenAI 的指南建議先把單一 agent 做好。工具太多或判斷太複雜時，再拆成多個。"
+          },
+          {
+            "term": "規劃與執行分開",
+            "text": "Cursor 的實驗讓多個 agent 用鎖互相協調，效果很差。改由規劃者分派、工作者執行後才順利。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：派一個只讀的任務",
+        "body": [
+          "挑一個需要讀很多檔案的問題，交給子 agent。",
+          "任務說明寫明目標、已知的事與回報格式。",
+          "哪些工作適合派出去，見 [[子 agent 只查與審]]。"
+        ],
+        "callout": "==子 agent 換來乾淨的主對話，代價是兩次交接==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Create custom subagents",
+        "href": "https://code.claude.com/docs/en/sub-agents",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "How we built our multi-agent research system",
+        "href": "https://www.anthropic.com/engineering/multi-agent-research-system",
+        "by": "Anthropic"
+      },
+      {
+        "title": "A practical guide to building agents",
+        "href": "https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+        "by": "OpenAI"
+      },
+      {
+        "title": "Scaling long-running autonomous coding",
+        "href": "https://cursor.com/blog/scaling-agents",
+        "by": "Wilson Lin, Cursor"
+      },
+      {
+        "title": "Towards self-driving codebases",
+        "href": "https://cursor.com/blog/self-driving-codebases",
+        "by": "Wilson Lin, Cursor"
+      }
+    ]
+  },
+  {
+    "slug": "build-a-small-harness",
+    "log": "050",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "前面的文章各講一個零件。",
+      "把零件接起來，就是一個能運作的 [[harness]]。",
+      "==先做出最小版本，遇到問題再加零件==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：五個零件圍著一個迴圈",
+        "body": [
+          "迴圈負責問模型、執行工具、把結果送回。",
+          "規則檔在啟動時讀入，放在 context 的前段。",
+          "工具可以是內建函式，也可以來自 MCP server。",
+          "權限檢查擋在工具之前，壓縮在 context 太長時執行。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "                 ╭───────────╮",
+            "   AGENTS.md ──> │   RULES   │",
+            "                 ╰─────┬─────╯",
+            "                       v",
+            "╭────────╮       ╭───────────╮       ╭───────────╮",
+            "│ person │ ────> │   LOOP    │ <───> │   model   │",
+            "╰────────╯       ╰──┬─────┬──╯       ╰───────────╯",
+            "                    v     v",
+            "            ╭────────╮  ╭──────────╮",
+            "            │  GATE  │  │ COMPACT  │",
+            "            ╰───┬────╯  ╰──────────╯",
+            "                v",
+            "            ╭────────╮       ╭─────────────╮",
+            "            │ TOOLS  │ <───> │ MCP servers │",
+            "            ╰────────╯       ╰─────────────╯"
+          ],
+          "narrow": [
+            "   AGENTS.md",
+            "       v",
+            " ╭───────────╮",
+            " │   RULES   │",
+            " ╰─────┬─────╯",
+            "       v",
+            " ╭───────────╮",
+            " │   LOOP    │ <──> model",
+            " ╰──┬─────┬──╯",
+            "    v     v",
+            "╭───────╮╭─────────╮",
+            "│ GATE  ││ COMPACT │",
+            "╰───┬───╯╰─────────╯",
+            "    v",
+            "╭───────╮",
+            "│ TOOLS │ <──> MCP servers",
+            "╰───────╯"
+          ],
+          "alt": "A small harness with a loop between a person and a model. Rules come from a file. A permission gate stands in front of the tools. Compaction sits beside the loop. Tools may come from MCP servers.",
+          "steps": [
+            {
+              "label": "Loop",
+              "lit": ["LOOP", "model", "person"],
+              "text": "迴圈是中心。其他零件都接在迴圈上。"
+            },
+            {
+              "label": "Rules",
+              "lit": ["AGENTS.md", "RULES"],
+              "text": "規則檔寫明工作背景與完成標準。"
+            },
+            {
+              "label": "Tools",
+              "lit": ["TOOLS", "MCP servers"],
+              "text": "工具讓模型讀檔、改檔與執行指令。"
+            },
+            {
+              "label": "Gate",
+              "lit": ["GATE"],
+              "text": "每個工具請求先過權限檢查。"
+            },
+            {
+              "label": "Compact",
+              "lit": ["COMPACT"],
+              "text": "對話太長時，用摘要取代舊訊息。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "harness 是工作環境",
+            "text": "learn-harness-engineering 課程把 harness 定義為圍繞模型的完整工作環境。目的是讓模型產出可靠的結果。"
+          },
+          {
+            "term": "零件各管一件事",
+            "text": "每個零件只解決一個問題。出問題時，就能判斷該調整哪一個。"
+          }
+        ]
+      },
+      {
+        "title": "實作：把零件接進同一個迴圈",
+        "body": ["每個函式都在前面的文章出現過。", "註解標出零件的名稱。"],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "def main(task):",
+            "    system = read(\"AGENTS.md\")               # rules",
+            "    tools = BUILTIN + mcp_list_tools()       # tools",
+            "    messages = [user(task)]",
+            "    for turn in range(MAX_TURNS):            # loop",
+            "        maybe_compact(messages)              # compact",
+            "        reply = model(system, tools, messages)",
+            "        messages.append(reply)",
+            "        if reply.stop_reason != \"tool_use\":",
+            "            return reply.text",
+            "        results = []",
+            "        for call in reply.tool_calls:",
+            "            if gate(call) is REFUSE:         # gate",
+            "                results.append(refused(call))",
+            "            else:",
+            "                results.append(run_tool(call))",
+            "        messages.append(user(results))"
+          ],
+          "alt": "Pseudo code of a whole small harness: read the rules, list built-in and MCP tools, then loop: compact, ask the model, stop or run each tool behind a permission gate, and append the results.",
+          "steps": [
+            {
+              "label": "Rules",
+              "lit": ["system = read(\"AGENTS.md\")"],
+              "text": "啟動時讀入規則檔，之後每一輪都不變。"
+            },
+            {
+              "label": "Tools",
+              "lit": ["tools = BUILTIN + mcp_list_tools()"],
+              "text": "內建工具加上 MCP server 列出的工具。"
+            },
+            {
+              "label": "Loop",
+              "lit": [
+                "for turn in range(MAX_TURNS):",
+                "reply = model(system, tools, messages)",
+                "messages.append(user(results))"
+              ],
+              "text": "迴圈與第 1 篇相同。"
+            },
+            {
+              "label": "Compact",
+              "lit": ["maybe_compact(messages)"],
+              "text": "每一輪開始前，檢查對話是否太長。"
+            },
+            {
+              "label": "Gate",
+              "lit": [
+                "if gate(call) is REFUSE:",
+                "results.append(refused(call))"
+              ],
+              "text": "被拒絕的請求不執行，原因當成結果送回。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "從四個工具開始",
+            "text": "讀檔、寫檔、改檔與執行指令。Mario Zechner 的 coding agent 只用這四個工具。"
+          },
+          {
+            "term": "把規則檔當成目錄",
+            "text": "OpenAI 的團隊把 AGENTS.md 維持在一百行左右。規則檔只當目錄，細節放進 docs 資料夾。"
+          },
+          {
+            "term": "記錄每一輪",
+            "text": "把每次請求、工具呼叫與結果寫成 [[log]]。出問題時，才看得出哪一輪走偏。"
+          }
+        ]
+      },
+      {
+        "title": "做法：依遇到的問題調整零件",
+        "body": ["==先觀察 agent 哪裡出錯，再決定調整哪個零件==。"],
+        "figure": {
+          "kind": "lesson",
+          "ask": "遇到的問題",
+          "side": true,
+          "states": [
+            {
+              "label": "選錯工具",
+              "blocks": [
+                {
+                  "title": "現象",
+                  "rows": [
+                    {
+                      "text": "模型呼叫了不適合的工具"
+                    },
+                    {
+                      "text": "或是填錯參數"
+                    }
+                  ]
+                },
+                {
+                  "title": "調整的零件",
+                  "rows": [
+                    {
+                      "text": "工具：改寫名稱與說明",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "合併功能重疊的工具",
+                      "tone": "mark"
+                    }
+                  ]
+                }
+              ],
+              "text": "模型只依名稱與說明選工具。先改說明，再考慮減少工具。"
+            },
+            {
+              "label": "忘記目標",
+              "blocks": [
+                {
+                  "title": "現象",
+                  "rows": [
+                    {
+                      "text": "對話很長之後偏離任務"
+                    },
+                    {
+                      "text": "壓縮後遺失先前的決定"
+                    }
+                  ]
+                },
+                {
+                  "title": "調整的零件",
+                  "rows": [
+                    {
+                      "text": "壓縮：把計畫與決定寫進檔案",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "長輸出存成檔案，只回傳路徑",
+                      "tone": "mark"
+                    }
+                  ]
+                }
+              ],
+              "text": "context 會被壓縮，檔案不會。重要的內容寫進檔案。"
+            },
+            {
+              "label": "做了不該做的事",
+              "blocks": [
+                {
+                  "title": "現象",
+                  "rows": [
+                    {
+                      "text": "執行了不能復原的指令"
+                    },
+                    {
+                      "text": "修改了任務範圍以外的檔案"
+                    }
+                  ]
+                },
+                {
+                  "title": "調整的零件",
+                  "rows": [
+                    {
+                      "text": "權限：加上拒絕或詢問規則",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "沙箱：限制可寫入的目錄",
+                      "tone": "mark"
+                    }
+                  ]
+                }
+              ],
+              "text": "規則檔只是提醒。不能有例外的限制，交給權限規則與沙箱。"
+            },
+            {
+              "label": "沒做完就回報完成",
+              "blocks": [
+                {
+                  "title": "現象",
+                  "rows": [
+                    {
+                      "text": "回報完成，但測試沒有通過"
+                    },
+                    {
+                      "text": "或是只完成一部分"
+                    }
+                  ]
+                },
+                {
+                  "title": "調整的零件",
+                  "rows": [
+                    {
+                      "text": "規則：寫明完成標準",
+                      "tone": "mark"
+                    },
+                    {
+                      "text": "工具：讓 agent 能自己跑測試",
+                      "tone": "mark"
+                    }
+                  ]
+                }
+              ],
+              "text": "模型停止不等於完成。提供驗證的工具，並要求回報附上實測結果。"
+            }
+          ]
+        }
+      },
+      {
+        "title": "下一步：寫出第一個版本",
+        "body": [
+          "照 Thorsten Ball 的文章寫出迴圈與三個工具。",
+          "再依序加上規則檔、權限檢查與壓縮。",
+          "learn-harness-engineering 有成套的課程與專案，可以接著練習。"
+        ],
+        "callout": "==harness 是一個迴圈，加上幾個各管一件事的零件==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "How to Build an Agent",
+        "href": "https://ampcode.com/how-to-build-an-agent",
+        "by": "Thorsten Ball"
+      },
+      {
+        "title": "learn-harness-engineering",
+        "href": "https://github.com/walkinglabs/learn-harness-engineering",
+        "by": "walkinglabs"
+      },
+      {
+        "title": "Harness engineering: leveraging Codex in an agent-first world",
+        "href": "https://openai.com/index/harness-engineering/",
+        "by": "Ryan Lopopolo, OpenAI"
+      },
+      {
+        "title": "What I learned building an opinionated and minimal coding agent",
+        "href": "https://mariozechner.at/posts/2025-11-30-pi-coding-agent/",
+        "by": "Mario Zechner"
+      },
+      {
+        "title": "Agent SDK overview",
+        "href": "https://code.claude.com/docs/en/agent-sdk/overview",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Continually improving our agent harness",
+        "href": "https://cursor.com/blog/continually-improving-agent-harness",
+        "by": "Cursor"
       }
     ]
   }

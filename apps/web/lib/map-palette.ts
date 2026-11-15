@@ -18,4 +18,5 @@ export const HUES: Record<string, Ink> = {
   machines: { bright: "oklch(0.72 0.14 260)", dim: "oklch(0.5 0.1 260)" },
   beyond: { bright: "oklch(0.72 0.17 310)", dim: "oklch(0.5 0.12 310)" },
   craft: { bright: "oklch(0.75 0.16 355)", dim: "oklch(0.5 0.11 355)" },
+  harness: { bright: "oklch(0.72 0.17 25)", dim: "oklch(0.5 0.12 25)" },
 }

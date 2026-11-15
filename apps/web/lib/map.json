@@ -6,7 +6,8 @@
     ["goals", "machines"],
     ["principles", "beyond"],
     ["fleet", "beyond"],
-    ["machines", "craft"]
+    ["machines", "craft"],
+    ["basics", "harness"]
   ],
   "systems": [
     {
@@ -331,6 +332,67 @@
           "name": "先刪減功能與文字，再讓主要動作最顯眼",
           "line": "刪除未經要求的內容，用版面交代操作，再把通用規則寫回 Skill。",
           "short": "簡單"
+        }
+      ]
+    },
+    {
+      "slug": "harness",
+      "name": "Harness",
+      "line": "模型外圍的程式怎麼運作，讀完能自己做一個。",
+      "at": [0.62, 0.8, 0.55],
+      "bodies": [
+        {
+          "slug": "agent-loop",
+          "name": "Agent Loop 是一個迴圈：問模型、執行工具、送回結果",
+          "line": "模型只輸出文字與工具請求，執行與停止條件都在 harness。",
+          "short": "迴圈",
+          "needs": ["what-claude-code-is"]
+        },
+        {
+          "slug": "tool-calls",
+          "name": "工具是一份 JSON 約定：名稱、說明與參數格式",
+          "line": "模型依說明選工具，harness 依名稱執行，再用 id 對回請求。",
+          "short": "工具",
+          "needs": ["agent-loop"]
+        },
+        {
+          "slug": "context-is-resent",
+          "name": "每一輪都重送整段 context，順序與長度都要管理",
+          "line": "固定的內容放前面讓快取命中，變動的接在後面，太長就壓縮。",
+          "short": "context",
+          "needs": ["tool-calls"]
+        },
+        {
+          "slug": "mcp-on-the-wire",
+          "name": "MCP 的訊息是 JSON-RPC：先列出工具，再呼叫工具",
+          "line": "host 替每個 server 開一個 client，用 stdio 或 HTTP 傳送訊息。",
+          "short": "協定",
+          "needs": ["tool-calls"]
+        },
+        {
+          "slug": "permission-gates",
+          "name": "工具執行前先比對權限規則，再用沙箱限制範圍",
+          "line": "規則依拒絕、詢問、放行的順序比對，沙箱限制檔案與網路。",
+          "short": "權限",
+          "needs": ["tool-calls"]
+        },
+        {
+          "slug": "subagent-fresh-context",
+          "name": "子 agent 是另一個迴圈，用新的 context 做完再交回摘要",
+          "line": "主迴圈只收到摘要，中間讀過的內容不會進入主對話。",
+          "short": "子 agent",
+          "needs": ["context-is-resent"]
+        },
+        {
+          "slug": "build-a-small-harness",
+          "name": "用五個零件組出自己的 harness",
+          "line": "迴圈、工具、規則檔、權限檢查與壓縮，各自只需要幾行。",
+          "short": "實作",
+          "needs": [
+            "mcp-on-the-wire",
+            "permission-gates",
+            "subagent-fresh-context"
+          ]
         }
       ]
     }
