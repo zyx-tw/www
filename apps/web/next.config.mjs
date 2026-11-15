@@ -50,6 +50,16 @@ const nextConfig = {
           destination: markdown,
         })),
         { source: "/works/:slug\\.md", destination: "/md/works/:slug" },
+        // Each note, /map/<system>/<slug>, has its twin the same way.
+        {
+          source: "/map/:system/:slug\\.md",
+          destination: "/md/map/:system/:slug",
+        },
+        {
+          source: "/map/:system/:slug",
+          has: [wantsMarkdown],
+          destination: "/md/map/:system/:slug",
+        },
         {
           source: "/works/:slug",
           has: [wantsMarkdown],

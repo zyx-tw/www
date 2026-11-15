@@ -17,7 +17,8 @@ const NAV = PAGES.filter((page) => page.nav)
 
 /**
  * The steps from the home page to `pathname`: the page it belongs to, then
- * the project when it is one's page (`names` maps a slug to its name).
+ * each step under it that has a name (`names` maps the path under the page
+ * to a name): a project, a system, or a system and its note.
  */
 function trailOf(pathname: string, names: Record<string, string>) {
   const page = PAGES.find(
@@ -25,10 +26,16 @@ function trailOf(pathname: string, names: Record<string, string>) {
       path !== "/" && (pathname === path || pathname.startsWith(`${path}/`))
   )
   if (!page) return []
-  const name = names[pathname.slice(page.path.length + 1)]
-  return name
-    ? [{ label: page.label, href: page.path }, { label: name }]
-    : [{ label: page.label }]
+  const parts = pathname.slice(page.path.length + 1).split("/")
+  const steps = parts.flatMap((_, index) => {
+    const under = parts.slice(0, index + 1).join("/")
+    const label = names[under]
+    return label ? [{ label, href: `${page.path}/${under}` }] : []
+  })
+  return [{ label: page.label, href: page.path }, ...steps].map(
+    (step, index, all) =>
+      index === all.length - 1 ? { label: step.label } : step
+  )
 }
 
 export function SiteHeader({

@@ -18,10 +18,16 @@ import { projects } from "@/lib/projects"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
 // Only the names cross to the client header, not every project's page: a
-// project's under /works, a system's under /map.
-const PROJECT_NAMES = Object.fromEntries(
-  [...projects, ...systems].map(({ slug, name }) => [slug, name])
-)
+// project's under /works, a system's and a note's under /map.
+const PROJECT_NAMES = Object.fromEntries([
+  ...[...projects, ...systems].map(({ slug, name }) => [slug, name]),
+  // A written note's page is one step further: /map/<system>/<slug>.
+  ...systems.flatMap((system) =>
+    system.bodies
+      .filter(({ href }) => href)
+      .map(({ slug, short }) => [`${system.slug}/${slug}`, short])
+  ),
+])
 
 import "./globals.css"
 

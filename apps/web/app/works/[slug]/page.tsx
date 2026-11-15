@@ -7,6 +7,7 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
 import { ProjectPicture } from "@/components/project-picture"
+import { Rows } from "@/components/rows"
 import { findProject, projectPath, projects } from "@/lib/projects"
 import { pageMetadata } from "@/lib/site"
 
@@ -32,45 +33,9 @@ export async function generateMetadata({
   })
 }
 
-const LINK =
-  "terminal-link underline decoration-muted-foreground/40 underline-offset-4"
-
 /** "https://github.com/zyx1121/peck" as "github.com/zyx1121/peck". */
 function bare(href: string) {
   return href.replace(/^https?:\/\//, "").replace(/\/$/, "")
-}
-
-/** Rows of a term and its line, in the label column About's facts use. */
-function Rows({
-  rows,
-  className,
-}: {
-  rows: { label: string; value: string; href?: string }[]
-  className?: string
-}) {
-  return (
-    <dl className={cn("flex flex-col gap-y-3", className)}>
-      {rows.map(({ label, value, href }) => (
-        <div key={label} className="flex gap-x-5 max-sm:flex-col">
-          <dt className="w-28 shrink-0 text-muted-foreground">{label}</dt>
-          <dd className="min-w-0 text-pretty break-words">
-            {href ? (
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={LINK}
-              >
-                {value}
-              </a>
-            ) : (
-              value
-            )}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  )
 }
 
 /**

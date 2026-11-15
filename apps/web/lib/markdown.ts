@@ -3,7 +3,14 @@ import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
 import { ABOUT, HOME, MAP, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
-import { findBody, systemPath, systems } from "@/lib/map"
+import {
+  type Body,
+  findBody,
+  type System,
+  systemPath,
+  systems,
+} from "@/lib/map"
+import type { Note } from "@/lib/notes"
 import { PRIVACY } from "@/lib/privacy"
 import {
   type Project,
@@ -114,7 +121,7 @@ export function mapMarkdown() {
               .map((slug) => findBody(slug)?.body.name)
               .filter((name) => name !== undefined)
             return [
-              `- ${linked(body.name, body.href)}`,
+              `- ${linked(body.name, body.href && `${body.href}.md`)}`,
               `：${text(body.line)}`,
               after.length > 0
                 ? `${MAP.after}：${text(after.join("、"))}。`
@@ -150,6 +157,53 @@ function sectionMarkdown({ title, body, figure, points }: Section) {
   ]
     .filter(Boolean)
     .join("\n\n")
+}
+
+/**
+ * One note: what is known about it, the paragraphs, its sections, the notes
+ * around it, then its changes.
+ */
+export function noteMarkdown(system: System, body: Body, note: Note) {
+  const named = (slug: string) => {
+    const item = findBody(slug)?.body
+    return item && linked(item.name, item.href && `${item.href}.md`)
+  }
+  const before = (body.needs ?? []).map(named).filter(Boolean)
+  const after = systems
+    .flatMap(({ bodies }) => bodies)
+    .filter(({ needs }) => needs?.includes(body.slug))
+    .map(({ slug }) => named(slug))
+  return markdownDocument(
+    { title: body.name, path: body.href, description: body.line },
+    [
+      `# ${text(body.name)}`,
+      [
+        `${body.length?.toLocaleString("en")} ${MAP.length}`,
+        `${body.minutes} ${MAP.minutes}`,
+        `v${note.version}`,
+        `${MAP.updated} ${note.updated}`,
+      ].join("，"),
+      ...note.intro.map(text),
+      ...note.sections.map(sectionMarkdown),
+      [
+        `## ${MAP.title}`,
+        [
+          ...before.map((item) => `- ${MAP.after}：${item}`),
+          ...after.map((item) => `- ${MAP.next}：${item}`),
+          `- ${MAP.back}：${link(system.name, absoluteUrl("/map.md"))}`,
+        ].join("\n"),
+      ].join("\n\n"),
+      [
+        `## ${MAP.changes}`,
+        note.changes
+          .map(
+            ({ version, date, text: line }) =>
+              `- v${version}，${date}：${text(line)}`
+          )
+          .join("\n"),
+      ].join("\n\n"),
+    ]
+  )
 }
 
 /**

@@ -1,4 +1,5 @@
 import data from "./map.json"
+import { findNote, measure } from "./notes"
 
 /** A note (planet) or a course (station) in a system. */
 export type Body = {
@@ -31,8 +32,25 @@ export type System = {
   bodies: Body[]
 }
 
-/** Every system and the lanes between them, from lib/map.json. */
-export const systems = data.systems as System[]
+/**
+ * Every system and the lanes between them, from lib/map.json. A body with a
+ * note (lib/notes.json) is written: it gets its page and its measures here,
+ * so the map never says them twice.
+ */
+export const systems = (data.systems as System[]).map((system) => ({
+  ...system,
+  bodies: system.bodies.map((body) => {
+    const note = findNote(body.slug)
+    if (!note) return body
+    return {
+      ...body,
+      href: `/map/${system.slug}/${body.slug}`,
+      version: note.version,
+      updated: note.updated,
+      ...measure(note),
+    }
+  }),
+}))
 export const lanes = data.lanes as [string, string][]
 
 export function systemPath({ slug }: Pick<System, "slug">) {

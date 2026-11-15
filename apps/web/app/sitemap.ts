@@ -19,6 +19,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
+    ...systems
+      .flatMap(({ bodies }) => bodies)
+      .flatMap(({ href }) => (href ? [href] : []))
+      .map((href) => ({
+        url: absoluteUrl(href),
+        lastModified,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      })),
     ...systems.map((system) => ({
       url: absoluteUrl(systemPath(system)),
       lastModified,
