@@ -21,64 +21,98 @@
         "title": "原理：Claude Code 怎麼把一個任務做完",
         "body": [
           "先看一句我真的打過的話：「設備檢查頁面沒有上下置中，處理一下。」",
-          "我沒有說是哪個檔案，也沒有說要怎麼改。Claude Code 收到這句話，會自己找出那一頁的檔案，讀懂版面，改掉樣式，再打開頁面檢查有沒有置中。==檢查過了才回報==。",
-          "讀檔案、動手改、檢查結果。結果不對，就從讀檔案再做一次。這個反覆的流程叫 [[Agent Loop]]。"
+          "我沒有說是哪個檔案，也沒有說要怎麼改。",
+          "Claude Code 改完之後，頁面如果還是沒置中，會怎麼樣？切換檢查的結果看看。"
         ],
         "figure": {
-          "kind": "diagram",
-          "wide": [
-            "╭────────╮   ╭────────╮   ╭────────╮   ╭────────╮   ╭────────╮",
-            "│  ASK   │──>│  READ  │──>│  ACT   │──>│ CHECK  │──>│ REPORT │",
-            "╰────────╯   ╰───┬────╯   ╰────────╯   ╰───┬────╯   ╰────────╯",
-            "                 ╰──── not done yet ───────╯",
-            " you say it   your files   commands     the result   to you"
-          ],
-          "narrow": [
-            "╭────────╮",
-            "│  ASK   │ you say it",
-            "╰───┬────╯",
-            "╭───┴────╮",
-            "│  READ  │ your files  <─╮",
-            "╰───┬────╯               │",
-            "╭───┴────╮               │",
-            "│  ACT   │ commands      │",
-            "╰───┬────╯               │",
-            "╭───┴────╮               │",
-            "│ CHECK  │ not done yet ─╯",
-            "╰───┬────╯",
-            "╭───┴────╮",
-            "│ REPORT │ to you",
-            "╰────────╯"
-          ],
-          "alt": "5 個步驟排成一列：ASK、READ、ACT、CHECK、REPORT。CHECK 有一條線繞回 READ，標著 not done yet。",
-          "steps": [
+          "kind": "lesson",
+          "ask": "Claude Code 檢查的結果",
+          "side": true,
+          "states": [
             {
-              "label": "Ask",
-              "lit": ["ASK", "you say it"],
-              "text": "我講一句話，說我想要什麼。"
+              "label": "還沒置中",
+              "blocks": [
+                {
+                  "title": "Claude Code 做的事",
+                  "numbered": true,
+                  "rows": [
+                    {
+                      "text": "讀：找出那一頁的檔案，讀懂版面"
+                    },
+                    {
+                      "text": "改：改掉樣式"
+                    },
+                    {
+                      "text": "檢查：打開頁面，看有沒有置中"
+                    },
+                    {
+                      "text": "還沒置中：回到第 1 步，再讀、再改",
+                      "tone": "mark"
+                    }
+                  ]
+                },
+                {
+                  "title": "我做的事",
+                  "rows": [
+                    {
+                      "text": "還沒有。Claude Code 還沒回報",
+                      "tone": "quiet"
+                    }
+                  ]
+                }
+              ],
+              "text": "結果不對，Claude Code 不會說做完了。Claude Code 回去再讀、再改、再檢查。"
             },
             {
-              "label": "Read",
-              "lit": ["READ", "your files"],
-              "text": "Claude Code 自己找檔案來讀。我不用給路徑，也不用貼內容。"
-            },
-            {
-              "label": "Act",
-              "lit": ["ACT", "commands"],
-              "text": "Claude Code 下指令、改檔案，用的是我這台電腦和我的帳號。"
-            },
-            {
-              "label": "Check",
-              "lit": ["CHECK", "the result", "not done yet"],
-              "text": "Claude Code 檢查結果對不對。不對就回到 Read 再做一次。"
-            },
-            {
-              "label": "Report",
-              "lit": ["REPORT", "to you"],
-              "text": "結果對了，Claude Code 才回報：改了什麼、怎麼驗證的。"
+              "label": "置中了",
+              "blocks": [
+                {
+                  "title": "Claude Code 做的事",
+                  "numbered": true,
+                  "rows": [
+                    {
+                      "text": "讀：找出那一頁的檔案，讀懂版面"
+                    },
+                    {
+                      "text": "改：改掉樣式"
+                    },
+                    {
+                      "text": "檢查：打開頁面，看有沒有置中"
+                    },
+                    {
+                      "text": "置中了：回報改了什麼、怎麼驗證的",
+                      "tone": "mark"
+                    }
+                  ]
+                },
+                {
+                  "title": "我做的事",
+                  "rows": [
+                    {
+                      "text": "看回報",
+                      "tone": "mark"
+                    }
+                  ]
+                }
+              ],
+              "text": "檢查過了，Claude Code 才回報。我只做 2 件事：講 1 句話，看結果。"
             }
           ]
-        }
+        },
+        "points": [
+          {
+            "term": "Claude Code 自己找、自己改、自己檢查",
+            "text": "Claude Code 收到這句話，會自己找出那一頁的檔案，讀懂版面，改掉樣式，再打開頁面檢查。==檢查過了才回報==。"
+          },
+          {
+            "term": "這個流程叫 Agent Loop",
+            "text": "讀檔案、動手改、檢查結果。結果不對，就從讀檔案再做一次。這個反覆的流程叫 [[Agent Loop]]。"
+          },
+          {
+            "term": "Claude Code 用的是我的電腦",
+            "text": "Claude Code 下指令、改檔案，用的是我這台電腦和我的帳號。所以找檔案、改檔案、開頁面，Claude Code 都能自己做。"
+          }
+        ]
       },
       {
         "title": "做法：我怎麼把任務交給 Claude Code",
