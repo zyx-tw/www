@@ -667,9 +667,14 @@
   {
     "slug": "skill-loads-on-demand",
     "log": "039",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.2.0",
+        "date": "2026-11-15",
+        "text": "把 pseudo code 換成可拉動的圖。"
+      },
       {
         "version": "1.1.0",
         "date": "2026-11-15",
@@ -821,54 +826,132 @@
         "body": [
           "Skill 是一個資料夾，裡面有 SKILL.md。",
           "SKILL.md 開頭的 name 與 description 是第 1 層。",
-          "第 1 層在新對話開始時載入，其餘等到需要時才讀。"
+          "第 1 層在新對話開始時載入，其餘等到需要時才讀。",
+          "拉動階段，觀察哪些內容進入 context。"
         ],
         "figure": {
-          "kind": "diagram",
-          "code": true,
-          "wide": [
-            "# SKILL.md",
-            "# ---",
-            "# name: pdf-processing",
-            "# description: Extracts PDF text. Use for PDF requests.",
-            "# ---",
-            "",
-            "index = [(s.name, s.description) for s in skills]   # tier 1",
-            "hit = model.match(request, index)",
-            "if hit:",
-            "    context += read(hit / \"SKILL.md\")               # tier 2",
-            "if needs_detail:",
-            "    context += read(hit / \"reference.md\")           # tier 3",
-            "output = shell(hit / \"scripts/extract.py\")          # run only"
-          ],
-          "alt": "Pseudo code of skill loading: names and descriptions form an index that is always in context; a matching skill's body is read, its linked files are read when needed, and its scripts are run without being read.",
-          "steps": [
+          "kind": "dial",
+          "ask": "階段",
+          "scale": 12,
+          "stops": [
             {
-              "label": "Index",
-              "lit": ["index = [(s.name, s.description) for s in skills]"],
+              "label": "對話開始",
+              "bars": [
+                {
+                  "label": "名稱與說明",
+                  "cells": 1,
+                  "value": "已載入",
+                  "tone": "mark"
+                },
+                {
+                  "label": "SKILL.md 全文",
+                  "cells": 0,
+                  "value": "未載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "附檔",
+                  "cells": 0,
+                  "value": "未載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "腳本的輸出",
+                  "cells": 0,
+                  "value": "未載入",
+                  "tone": "quiet"
+                }
+              ],
               "text": "名稱與說明組成索引。每次對話都在 context 裡。"
             },
             {
-              "label": "Match",
-              "lit": [
-                "# description: Extracts PDF text. Use for PDF requests.",
-                "hit = model.match(request, index)"
+              "label": "任務符合",
+              "bars": [
+                {
+                  "label": "名稱與說明",
+                  "cells": 1,
+                  "value": "已載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "SKILL.md 全文",
+                  "cells": 8,
+                  "value": "已載入",
+                  "tone": "mark"
+                },
+                {
+                  "label": "附檔",
+                  "cells": 0,
+                  "value": "未載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "腳本的輸出",
+                  "cells": 0,
+                  "value": "未載入",
+                  "tone": "quiet"
+                }
               ],
-              "text": "模型拿任務比對說明。說明就是觸發條件。"
+              "text": "模型拿任務比對說明。符合時，才讀入 SKILL.md 的全文。"
             },
             {
-              "label": "Body",
-              "lit": ["context += read(hit / \"SKILL.md\")"],
-              "text": "任務符合時，才讀入 SKILL.md 的全文。"
-            },
-            {
-              "label": "Detail",
-              "lit": ["context += read(hit / \"reference.md\")"],
+              "label": "需要細節",
+              "bars": [
+                {
+                  "label": "名稱與說明",
+                  "cells": 1,
+                  "value": "已載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "SKILL.md 全文",
+                  "cells": 8,
+                  "value": "已載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "附檔",
+                  "cells": 6,
+                  "value": "已載入",
+                  "tone": "mark"
+                },
+                {
+                  "label": "腳本的輸出",
+                  "cells": 0,
+                  "value": "未載入",
+                  "tone": "quiet"
+                }
+              ],
               "text": "全文提到的附檔，用到才讀。"
             },
             {
-              "label": "Script",
-              "lit": ["output = shell(hit / \"scripts/extract.py\")"],
+              "label": "執行腳本",
+              "bars": [
+                {
+                  "label": "名稱與說明",
+                  "cells": 1,
+                  "value": "已載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "SKILL.md 全文",
+                  "cells": 8,
+                  "value": "已載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "附檔",
+                  "cells": 6,
+                  "value": "已載入",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "腳本的輸出",
+                  "cells": 2,
+                  "value": "已載入",
+                  "tone": "mark"
+                }
+              ],
               "text": "附帶的程式直接執行。只有輸出進入 context。"
             }
           ]
@@ -1855,9 +1938,14 @@
   {
     "slug": "out-of-my-way",
     "log": "009",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.2.0",
+        "date": "2026-11-15",
+        "text": "分清楚內建功能與自製工具。"
+      },
       {
         "version": "1.1.0",
         "date": "2026-11-15",
@@ -1960,6 +2048,10 @@
           {
             "term": "使用專用的背景瀏覽器",
             "text": "[[pw]] 是在另一台機器執行的無視窗瀏覽器。Claude Code 可透過指令開啟頁面、讀取內容和截圖。"
+          },
+          {
+            "term": "官方功能與自製工具",
+            "text": "Claude Code 沒有內建無視窗瀏覽器。官方的 Chrome 擴充功能，操作的是看得見的視窗。[[pw]] 是自製的指令。"
           },
           {
             "term": "先讀文字，再檢查外觀",
@@ -2075,6 +2167,11 @@
         "title": "Chrome DevTools Protocol",
         "href": "https://chromedevtools.github.io/devtools-protocol/",
         "by": "Chrome DevTools"
+      },
+      {
+        "title": "Use Claude Code with Chrome",
+        "href": "https://code.claude.com/docs/en/chrome",
+        "by": "Claude Code docs"
       }
     ]
   },
@@ -2558,9 +2655,14 @@
   {
     "slug": "rules-become-checks",
     "log": "042",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.2.0",
+        "date": "2026-11-15",
+        "text": "加上判斷檢查方式的練習，分清楚內建功能與自製工具。"
+      },
       {
         "version": "1.1.0",
         "date": "2026-11-15",
@@ -2752,7 +2854,10 @@
       },
       {
         "title": "做法：把反覆出現的糾正寫成檢查規則",
-        "body": ["==同一條糾正出現第 2 次，就改成檢查==。"],
+        "body": [
+          "==同一條糾正出現第 2 次，就改成檢查==。",
+          "先判斷下列規則該用哪一種檢查。"
+        ],
         "points": [
           {
             "term": "每條規則一個檔案",
@@ -2769,8 +2874,39 @@
           {
             "term": "刪除已改成檢查的文字規則",
             "text": "規則改成檢查後，刪除原本的文字規則。避免同一條要求維護 2 份。"
+          },
+          {
+            "term": "官方功能與自製工具",
+            "text": "Claude Code 沒有內建這種規則檢查。這裡的檢查工具是自製的，也可以改用現成的 lint 工具。"
           }
-        ]
+        ],
+        "figure": {
+          "kind": "quiz",
+          "ask": "這條規則用哪一種檢查？",
+          "options": ["文字比對", "需要閱讀"],
+          "items": [
+            {
+              "text": "文案不使用破折號。",
+              "answer": 0,
+              "why": "破折號是固定的字元，比對得到。"
+            },
+            {
+              "text": "標題要寫成完整的句子。",
+              "answer": 1,
+              "why": "句子是否完整，要讀懂內容才能判斷。"
+            },
+            {
+              "text": "程式碼不留下 console.log。",
+              "answer": 0,
+              "why": "這是固定的字串，可以直接比對。"
+            },
+            {
+              "text": "錯誤訊息要寫出原因與修法。",
+              "answer": 1,
+              "why": "訊息有沒有交代修法，比對不出來。"
+            }
+          ]
+        }
       },
       {
         "title": "下一步：挑一條反覆出現的糾正改成檢查",
@@ -3243,9 +3379,14 @@
   {
     "slug": "subagent-bill",
     "log": "024",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.2.0",
+        "date": "2026-11-15",
+        "text": "把 pseudo code 換成可拉動的圖。"
+      },
       {
         "version": "1.1.0",
         "date": "2026-11-15",
@@ -3357,47 +3498,86 @@
         "body": [
           "harness 每一輪都把整段 [[context]] 送給模型。",
           "工具結果不斷加進 context，每一輪讀的內容都比上一輪多。",
-          "所以輪數加倍，輸入的 [[token]] 不只加倍。"
+          "所以輪數加倍，輸入的 [[token]] 不只加倍。",
+          "拉動輪數，比較累計的輸入 token。",
+          "圖中是示意數字。"
         ],
         "figure": {
-          "kind": "diagram",
-          "code": true,
-          "wide": [
-            "def input_tokens(turns, base, per_turn):",
-            "    total = 0",
-            "    context = base                  # rules and tool definitions",
-            "    for turn in range(turns):",
-            "        total += context            # the whole context, again",
-            "        context += per_turn         # tool results pile up",
-            "    return total",
-            "",
-            "input_tokens(10, 20_000, 5_000)     #   425,000",
-            "input_tokens(40, 20_000, 5_000)     # 4,700,000"
-          ],
-          "alt": "Pseudo code that adds up input tokens: every turn reads the whole context again, and the context grows each turn. With example numbers, four times the turns costs about eleven times the input tokens.",
-          "steps": [
+          "kind": "dial",
+          "ask": "輪數",
+          "scale": 20,
+          "stops": [
             {
-              "label": "Base",
-              "lit": ["context = base"],
-              "text": "規則檔與工具定義是每一輪的固定開銷。"
-            },
-            {
-              "label": "Reread",
-              "lit": ["total += context"],
-              "text": "每一輪都把目前的整段 context 再讀一次。"
-            },
-            {
-              "label": "Grow",
-              "lit": ["context += per_turn"],
-              "text": "工具結果加進 context，下一輪要讀的更多。"
-            },
-            {
-              "label": "Compare",
-              "lit": [
-                "input_tokens(10, 20_000, 5_000)     #   425,000",
-                "input_tokens(40, 20_000, 5_000)     # 4,700,000"
+              "label": "5 輪",
+              "bars": [
+                {
+                  "label": "固定開銷",
+                  "cells": 1,
+                  "value": "100k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "工具結果",
+                  "cells": 1,
+                  "value": "50k",
+                  "tone": "mark"
+                }
               ],
-              "text": "示意數字：輪數變成 4 倍，輸入 token 變成約 11 倍。"
+              "text": "輪數少時，固定開銷佔大部分。"
+            },
+            {
+              "label": "10 輪",
+              "bars": [
+                {
+                  "label": "固定開銷",
+                  "cells": 1,
+                  "value": "200k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "工具結果",
+                  "cells": 1,
+                  "value": "225k",
+                  "tone": "mark"
+                }
+              ],
+              "text": "工具結果累計的量，已經超過固定開銷。"
+            },
+            {
+              "label": "20 輪",
+              "bars": [
+                {
+                  "label": "固定開銷",
+                  "cells": 2,
+                  "value": "400k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "工具結果",
+                  "cells": 4,
+                  "value": "950k",
+                  "tone": "mark"
+                }
+              ],
+              "text": "輪數加倍，累計的輸入變成約 3 倍。"
+            },
+            {
+              "label": "40 輪",
+              "bars": [
+                {
+                  "label": "固定開銷",
+                  "cells": 3,
+                  "value": "800k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "工具結果",
+                  "cells": 17,
+                  "value": "3,900k",
+                  "tone": "mark"
+                }
+              ],
+              "text": "輪數變成 4 倍，累計的輸入變成約 11 倍。"
             }
           ]
         },
@@ -4494,9 +4674,14 @@
   {
     "slug": "numbers-are-addresses",
     "log": "019",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.2.0",
+        "date": "2026-11-15",
+        "text": "說明編號規則與建立工具都是自訂的。"
+      },
       {
         "version": "1.1.0",
         "date": "2026-11-15",
@@ -4728,6 +4913,10 @@
           {
             "term": "用服務命名",
             "text": "以執行的服務命名虛擬機和容器。不要另外取難以辨認用途的代號。"
+          },
+          {
+            "term": "自訂的約定",
+            "text": "編號規則是自訂的約定，不是虛擬化平台的功能。建立工具也是自製的 MCP 工具。"
           }
         ]
       },
@@ -5718,9 +5907,14 @@
   {
     "slug": "what-an-agent-has-seen",
     "log": "031",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.3.0",
+        "date": "2026-11-15",
+        "text": "分清楚內建功能與自製工具。"
+      },
       {
         "version": "1.2.0",
         "date": "2026-11-15",
@@ -5816,6 +6010,7 @@
       {
         "title": "機制：對話只有名稱，密碼在執行時才帶入",
         "body": [
+          "以下是自製工具的運作方式，不是 Claude Code 的內建功能。",
           "模型讀過的內容都留在 [[context]]，也會寫入對話紀錄。",
           "進入 context 的密碼，無法收回。",
           "所以密碼值只在工具與指令之間傳遞，不經過模型。"
@@ -5872,6 +6067,10 @@
         },
         "points": [
           {
+            "term": "官方功能與自製工具",
+            "text": "Claude Code 內建對話紀錄與 deny 規則。密碼表單與輸出遮罩，是自製工具 [[secret-mod]] 的功能。"
+          },
+          {
             "term": "環境變數不出現在指令文字",
             "text": "指令用變數名稱取用密碼。對話紀錄裡只看得到變數名稱。"
           },
@@ -5892,6 +6091,10 @@
           {
             "term": "用名稱執行指令",
             "text": "Claude Code 用名稱指定密碼。把指令交給表單工具執行。指令輸出若含密碼值，工具會遮住密碼值。"
+          },
+          {
+            "term": "用 deny 規則禁止讀檔",
+            "text": "Claude Code 的 deny 規則可以禁止讀取 .env 這類檔案。這是內建功能，在每種權限模式都有效。"
           }
         ]
       },
@@ -5918,6 +6121,11 @@
         "title": "The Twelve-Factor App: Config",
         "href": "https://12factor.net/config",
         "by": "12factor.net"
+      },
+      {
+        "title": "Best practices",
+        "href": "https://code.claude.com/docs/en/best-practices",
+        "by": "Claude Code docs"
       }
     ]
   },
@@ -7225,9 +7433,14 @@
   {
     "slug": "simple-first",
     "log": "037",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "改寫成分享：加上檢查表、用法與調整方式。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -7235,10 +7448,10 @@
       }
     ],
     "intro": [
-      "製作頁面前，先刪減功能，再刪減文字。",
-      "每頁只保留 1 個主要動作，將其他動作降低層級。",
-      "把規則寫成 simple-first [[Skill]]。",
-      "讓 Claude Code 製作頁面前先讀規則。"
+      "simple-first 是一份自己寫的 [[Skill]]，不是官方內容。",
+      "規則只有一個方向：先刪減功能，再刪減文字。",
+      "以下分享規則的內容與用法。",
+      "每個人的需求與風格不同，請照自己的情況調整。"
     ],
     "sections": [
       {
@@ -7345,6 +7558,90 @@
         ]
       },
       {
+        "title": "內容：每個頁面依序檢查",
+        "body": [
+          "Skill 的核心是一張檢查表。",
+          "依序檢查，遇到第 1 個不通過的項目，就停下來修改。",
+          "先判斷下列元件該不該留在畫面上。"
+        ],
+        "figure": {
+          "kind": "quiz",
+          "ask": "這個元件要留在畫面上嗎？",
+          "options": ["保留", "刪除或收合"],
+          "items": [
+            {
+              "text": "頁面最上方的一句標語。",
+              "answer": 1,
+              "why": "需要標語才看得懂，問題在版面。把主要內容移到最上方。"
+            },
+            {
+              "text": "送出表單的按鈕。",
+              "answer": 0,
+              "why": "這是頁面的主要動作。每頁保留 1 個。"
+            },
+            {
+              "text": "每個月只用 1 次的匯出功能。",
+              "answer": 1,
+              "why": "低頻的動作收進選單。常用的動作才留在畫面上。"
+            },
+            {
+              "text": "操作失敗時的原始錯誤訊息。",
+              "answer": 1,
+              "why": "畫面只說明失敗與下一步。原始錯誤寫進紀錄檔。"
+            },
+            {
+              "text": "會改變下一步的狀態，例如部署失敗。",
+              "answer": 0,
+              "why": "會影響下一步的狀態是訊號，不是雜訊。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "3 秒內看得出這是什麼",
+            "text": "第 1 個畫面直接放主要內容。不靠一句說明來交代。"
+          },
+          {
+            "term": "每頁 1 個主要動作",
+            "text": "其他動作改成不顯眼的按鈕，或收進選單。"
+          },
+          {
+            "term": "不放給開發者看的文字",
+            "text": "主機名稱、路徑與版本代碼，都不放在畫面上。"
+          },
+          {
+            "term": "相同的內容放在相同的位置",
+            "text": "與同一個網站的其他頁面比對，位置要一致。"
+          }
+        ]
+      },
+      {
+        "title": "用法：動手前讀一次，交付前再檢查一次",
+        "body": [
+          "==Claude Code 製作頁面前先讀 Skill，交付前再照流程檢查==。",
+          "例如：「做一個報名頁。」",
+          "Claude Code 會先寫下目標，列出功能，再開始刪減。"
+        ],
+        "points": [
+          {
+            "term": "先寫 1 行目標",
+            "text": "寫下誰在這個頁面做什麼。寫不出來，就還不該開始。"
+          },
+          {
+            "term": "先刪功能，再刪文字",
+            "text": "列出功能後先刪減。功能變少，需要說明的文字也跟著變少。"
+          },
+          {
+            "term": "在瀏覽器實際操作",
+            "text": "操作登入、送出與返回流程。電腦與手機寬度各檢查一次。"
+          },
+          {
+            "term": "每條原則都有邊界",
+            "text": "例如收合低頻動作：每天要用的動作不能收合，否則等於藏起來。"
+          }
+        ]
+      },
+      {
         "title": "做法：把通用修正寫回 Skill",
         "body": [
           "==將通用修正寫進 Skill，供後續開發使用==。",
@@ -7362,10 +7659,28 @@
           {
             "term": "改成檢查或元件",
             "text": "若文字規則無法避免問題重現，改成自動檢查或元件。再刪除原本的文字規則。"
+          }
+        ]
+      },
+      {
+        "title": "調整：照自己的需求與風格改寫",
+        "body": [
+          "這份 Skill 反映一種偏好：畫面越乾淨越好。",
+          "需求不同，規則就該不同。",
+          "==參考做法，不照抄內容=="
+        ],
+        "points": [
+          {
+            "term": "換掉參考的標準",
+            "text": "這份 Skill 以 Linear 網站與 Apple 備忘錄為標準。可以換成自己欣賞的產品。"
           },
           {
-            "term": "實際操作後交付",
-            "text": "在瀏覽器操作登入、送出與返回流程。分別檢查電腦與手機寬度的畫面。"
+            "term": "只留下適用的規則",
+            "text": "資料密集的後台，需要在同一個畫面放更多內容。不適用的規則就刪掉。"
+          },
+          {
+            "term": "從自己的糾正開始累積",
+            "text": "同樣的糾正出現第 2 次，就寫成 1 條規則。規則來自實際的修改，才會合用。"
           }
         ]
       },
@@ -7380,14 +7695,26 @@
         ],
         "callout": "==先刪減功能，再刪減文字，每頁只留 1 個主要動作==。"
       }
+    ],
+    "sources": [
+      {
+        "title": "simple-first",
+        "href": "https://github.com/zyx1121/plugin/tree/main/skills/simple-first",
+        "by": "zyx1121/plugin"
+      }
     ]
   },
   {
     "slug": "agent-loop",
     "log": "044",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上一次執行的重播。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -7478,6 +7805,45 @@
             "text": "Claude Code 的文件把工作分成收集 context、採取行動、驗證結果。三個階段都靠同一個迴圈完成。"
           }
         ]
+      },
+      {
+        "title": "一次執行：讀檔後回答",
+        "body": [
+          "以下重播一次完整的執行。",
+          "要求是：「README 的第一行寫什麼？」",
+          "每按一次，對話多一則訊息。"
+        ],
+        "figure": {
+          "kind": "trace",
+          "alt": "One run of the agent loop: the user asks, the model requests a tool, the harness runs it, the result goes back, and the model answers.",
+          "events": [
+            {
+              "from": "USER",
+              "lines": ["README 的第一行寫什麼？"],
+              "text": "使用者的要求是對話的第 1 則訊息。"
+            },
+            {
+              "from": "MODEL",
+              "lines": ["tool_use  read_file", "{\"path\": \"README.md\"}"],
+              "text": "模型不直接回答，先提出工具請求。"
+            },
+            {
+              "from": "HARNESS",
+              "lines": ["read_file(\"README.md\")"],
+              "text": "harness 執行工具。模型沒有碰到檔案。"
+            },
+            {
+              "from": "TOOL",
+              "lines": ["tool_result", "# Hello", "A small demo."],
+              "text": "結果加進對話，整段對話再送給模型一次。"
+            },
+            {
+              "from": "MODEL",
+              "lines": ["README 的第一行是「# Hello」。"],
+              "text": "模型不再要求工具，迴圈結束。"
+            }
+          ]
+        }
       },
       {
         "title": "實作：迴圈只需要十幾行",
@@ -7806,9 +8172,14 @@
   {
     "slug": "context-is-resent",
     "log": "046",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.2.0",
+        "date": "2026-11-15",
+        "text": "把 pseudo code 換成可拉動的圖。"
+      },
       {
         "version": "1.1.0",
         "date": "2026-11-15",
@@ -7896,56 +8267,112 @@
         ]
       },
       {
-        "title": "實作：固定前段，超過門檻就壓縮",
+        "title": "機制：前段固定，對話超過門檻就壓縮",
         "body": [
-          "build_request 組出每一輪的請求。",
-          "maybe_compact 在對話太長時，用摘要取代舊訊息。"
+          "每一輪的請求由固定的前段與對話組成。",
+          "前段不放時間，也不換順序。",
+          "對話接近上限時，請模型把舊對話寫成摘要。",
+          "拉動輪數，觀察 context 的組成。",
+          "圖中是示意數字。"
         ],
         "figure": {
-          "kind": "diagram",
-          "code": true,
-          "wide": [
-            "def build_request(state):",
-            "    return {",
-            "        \"tools\": TOOLS,               # same order every turn",
-            "        \"system\": RULES,              # no timestamps",
-            "        \"messages\": state.messages,   # append only",
-            "    }",
-            "",
-            "def maybe_compact(state):",
-            "    if tokens(state.messages) < LIMIT:",
-            "        return",
-            "    summary = model(SUMMARIZE, state.messages).text",
-            "    recent = state.messages[-KEEP:]",
-            "    state.messages = [user(summary)] + recent"
-          ],
-          "alt": "Pseudo code: a request keeps tools and system unchanged and appends to messages; when messages pass a limit, a summary and the most recent messages replace them.",
-          "steps": [
+          "kind": "dial",
+          "ask": "輪數",
+          "scale": 20,
+          "stops": [
             {
-              "label": "Stable",
-              "lit": ["\"tools\": TOOLS,", "\"system\": RULES,"],
-              "text": "前段不放時間，也不換順序。每一輪的內容都相同。"
+              "label": "第 1 輪",
+              "bars": [
+                {
+                  "label": "固定前段",
+                  "cells": 2,
+                  "value": "20k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "對話",
+                  "cells": 1,
+                  "value": "5k",
+                  "tone": "mark"
+                },
+                {
+                  "label": "剩餘空間",
+                  "cells": 17,
+                  "value": "175k",
+                  "tone": "quiet"
+                }
+              ],
+              "text": "工具定義與規則是固定的前段，每一輪都相同。"
             },
             {
-              "label": "Append",
-              "lit": ["\"messages\": state.messages,"],
-              "text": "新訊息只接在最後。"
+              "label": "第 10 輪",
+              "bars": [
+                {
+                  "label": "固定前段",
+                  "cells": 2,
+                  "value": "20k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "對話",
+                  "cells": 7,
+                  "value": "70k",
+                  "tone": "mark"
+                },
+                {
+                  "label": "剩餘空間",
+                  "cells": 11,
+                  "value": "110k",
+                  "tone": "quiet"
+                }
+              ],
+              "text": "新訊息只接在最後。前段不變，對話變長。"
             },
             {
-              "label": "Limit",
-              "lit": ["if tokens(state.messages) < LIMIT:"],
-              "text": "接近上限前就處理，不等到請求失敗。"
+              "label": "第 30 輪",
+              "bars": [
+                {
+                  "label": "固定前段",
+                  "cells": 2,
+                  "value": "20k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "對話",
+                  "cells": 16,
+                  "value": "160k",
+                  "tone": "mark"
+                },
+                {
+                  "label": "剩餘空間",
+                  "cells": 2,
+                  "value": "20k",
+                  "tone": "quiet"
+                }
+              ],
+              "text": "空間快用完。要在請求失敗之前處理。"
             },
             {
-              "label": "Summarize",
-              "lit": ["summary = model(SUMMARIZE, state.messages).text"],
-              "text": "請模型把舊對話寫成摘要。"
-            },
-            {
-              "label": "Replace",
-              "lit": [
-                "recent = state.messages[-KEEP:]",
-                "state.messages = [user(summary)] + recent"
+              "label": "壓縮後",
+              "bars": [
+                {
+                  "label": "固定前段",
+                  "cells": 2,
+                  "value": "20k",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "對話",
+                  "cells": 3,
+                  "value": "30k",
+                  "tone": "mark"
+                },
+                {
+                  "label": "剩餘空間",
+                  "cells": 15,
+                  "value": "150k",
+                  "tone": "quiet"
+                }
               ],
               "text": "摘要加上最近幾則訊息，取代原本的對話。"
             }
@@ -8020,9 +8447,14 @@
   {
     "slug": "mcp-on-the-wire",
     "log": "047",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "把 pseudo code 換成訊息的重播。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -8115,56 +8547,52 @@
       {
         "title": "實作：兩個方法完成一次呼叫",
         "body": [
-          "以下省略每個請求都要帶的 _meta 欄位。",
+          "以下重播一次工具呼叫的訊息。",
+          "省略了每個請求都要帶的 _meta 欄位。",
           "client 先列出工具，再轉送模型選定的呼叫。"
         ],
         "figure": {
-          "kind": "diagram",
-          "code": true,
-          "wide": [
-            "# 1. discover: which tools does the server have?",
-            "send({\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"tools/list\"})",
-            "tools = recv(id=1).result.tools",
-            "#    each tool: name, description, inputSchema",
-            "",
-            "# 2. the model picks one; the client forwards the call",
-            "send({\"jsonrpc\": \"2.0\", \"id\": 2, \"method\": \"tools/call\",",
-            "      \"params\": {\"name\": \"get_weather\",",
-            "                 \"arguments\": {\"location\": \"New York\"}}})",
-            "reply = recv(id=2).result",
-            "#    reply.content: [{\"type\": \"text\", \"text\": \"...\"}]",
-            "#    reply.isError: false"
-          ],
-          "alt": "Pseudo code of an MCP client: a tools/list request returns each tool's name, description and input schema; a tools/call request returns content blocks and an error flag.",
-          "steps": [
+          "kind": "trace",
+          "alt": "Four JSON-RPC messages: the client lists the tools, the server answers with their schemas, the client calls one tool, and the server returns the result under the same id.",
+          "events": [
             {
-              "label": "List",
-              "lit": ["\"method\": \"tools/list\""],
+              "from": "CLIENT",
+              "lines": [
+                "{\"jsonrpc\": \"2.0\", \"id\": 1,",
+                " \"method\": \"tools/list\"}"
+              ],
               "text": "client 先問 server 有哪些工具。"
             },
             {
-              "label": "Schema",
-              "lit": ["name, description, inputSchema"],
+              "from": "SERVER",
+              "lines": [
+                "{\"jsonrpc\": \"2.0\", \"id\": 1,",
+                " \"result\": {\"tools\": [{",
+                "   \"name\": \"get_weather\",",
+                "   \"description\": \"Get the weather.\",",
+                "   \"inputSchema\": {\"type\": \"object\"}}]}}"
+              ],
               "text": "每個工具有名稱、說明與參數格式。harness 轉成模型的工具定義。"
             },
             {
-              "label": "Call",
-              "lit": [
-                "\"method\": \"tools/call\"",
-                "\"name\": \"get_weather\"",
-                "\"arguments\": {\"location\": \"New York\"}"
+              "from": "CLIENT",
+              "lines": [
+                "{\"jsonrpc\": \"2.0\", \"id\": 2,",
+                " \"method\": \"tools/call\",",
+                " \"params\": {\"name\": \"get_weather\",",
+                "   \"arguments\": {\"location\": \"New York\"}}}"
               ],
               "text": "模型選定工具後，client 送出 tools/call。"
             },
             {
-              "label": "Id",
-              "lit": ["\"id\": 1", "\"id\": 2", "id=1", "id=2"],
-              "text": "回應用相同的 id 對回請求。"
-            },
-            {
-              "label": "Result",
-              "lit": ["reply.content", "reply.isError"],
-              "text": "結果是內容區塊。harness 把內容放進 tool_result 送回模型。"
+              "from": "SERVER",
+              "lines": [
+                "{\"jsonrpc\": \"2.0\", \"id\": 2,",
+                " \"result\": {\"content\": [",
+                "   {\"type\": \"text\", \"text\": \"Sunny\"}],",
+                "   \"isError\": false}}"
+              ],
+              "text": "回應用相同的 id 對回請求。內容放進 tool_result 送回模型。"
             }
           ]
         },
@@ -9600,9 +10028,14 @@
   {
     "slug": "prompt-cache",
     "log": "054",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上三個請求的計費試算。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -9770,6 +10203,75 @@
         ]
       },
       {
+        "title": "試算：三個請求的計費",
+        "body": [
+          "拉動請求，比較寫入與讀取的 token 數量。",
+          "長條是 token 的數量，右側是計費倍率。",
+          "圖中是示意數字。"
+        ],
+        "figure": {
+          "kind": "dial",
+          "ask": "請求",
+          "scale": 20,
+          "stops": [
+            {
+              "label": "第 1 個請求",
+              "bars": [
+                {
+                  "label": "寫入快取",
+                  "cells": 16,
+                  "value": "1.25 倍",
+                  "tone": "mark"
+                },
+                {
+                  "label": "讀取快取",
+                  "cells": 0,
+                  "value": "0.1 倍",
+                  "tone": "quiet"
+                }
+              ],
+              "text": "快取是空的。整個前段都要寫入，計費比一般輸入高。"
+            },
+            {
+              "label": "5 分鐘內再送",
+              "bars": [
+                {
+                  "label": "寫入快取",
+                  "cells": 2,
+                  "value": "1.25 倍",
+                  "tone": "quiet"
+                },
+                {
+                  "label": "讀取快取",
+                  "cells": 16,
+                  "value": "0.1 倍",
+                  "tone": "mark"
+                }
+              ],
+              "text": "前段命中快取，只計 0.1 倍。新增的部分寫入快取。"
+            },
+            {
+              "label": "停頓超過 5 分鐘",
+              "bars": [
+                {
+                  "label": "寫入快取",
+                  "cells": 18,
+                  "value": "1.25 倍",
+                  "tone": "mark"
+                },
+                {
+                  "label": "讀取快取",
+                  "cells": 0,
+                  "value": "0.1 倍",
+                  "tone": "quiet"
+                }
+              ],
+              "text": "快取已經失效。整個前段要重新寫入。"
+            }
+          ]
+        }
+      },
+      {
         "title": "做法：讓前段保持不變",
         "body": ["==前段只要有一處不同，後面的快取就全部失效==。"],
         "points": [
@@ -9832,9 +10334,14 @@
   {
     "slug": "state-in-files",
     "log": "055",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "分清楚實驗做法與內建功能。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -9926,6 +10433,10 @@
           {
             "term": "Git 紀錄提供退路",
             "text": "每完成 1 項就 commit。程式壞掉時，可以退回上一個能運作的狀態。"
+          },
+          {
+            "term": "實驗做法與內建功能",
+            "text": "功能清單與進度筆記，是 Anthropic 實驗裡的做法。Claude Code 內建的是 CLAUDE.md 與自動記憶。"
           }
         ]
       },
@@ -10032,15 +10543,25 @@
         "title": "Context Engineering for AI Agents: Lessons from Building Manus",
         "href": "https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus",
         "by": "Yichao Ji"
+      },
+      {
+        "title": "How Claude remembers your project",
+        "href": "https://code.claude.com/docs/en/memory",
+        "by": "Claude Code docs"
       }
     ]
   },
   {
     "slug": "untrusted-input",
     "log": "056",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上判斷風險的練習，標明示意的設計。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -10134,7 +10655,7 @@
       {
         "title": "實作：讀過不可信的內容後，收緊對外的動作",
         "body": [
-          "以下是其中一種設計。",
+          "以下是示意的設計，不是 Claude Code 的內建功能。",
           "harness 記住對話是否讀過不可信的內容。"
         ],
         "figure": {
@@ -10199,9 +10720,37 @@
         "body": [
           "列出 agent 會讀到的外部內容。",
           "列出 agent 能對外傳送的工具。",
-          "兩者同時存在時，替傳送的工具加上詢問規則，見 [[沙箱]]。"
+          "兩者同時存在時，替傳送的工具加上詢問規則，見 [[沙箱]]。",
+          "先判斷下列組合的風險。"
         ],
-        "callout": "==讀過不可信的內容後，對外的動作要再確認==。"
+        "callout": "==讀過不可信的內容後，對外的動作要再確認==。",
+        "figure": {
+          "kind": "quiz",
+          "ask": "這組工具放在同一個 agent，危險嗎？",
+          "options": ["危險", "風險較低"],
+          "items": [
+            {
+              "text": "讀信箱、讀私人檔案、能寄信。",
+              "answer": 0,
+              "why": "三個條件都成立。信裡夾帶的指令，可以把檔案寄出去。"
+            },
+            {
+              "text": "讀網頁，沒有私人資料，不能對外傳送。",
+              "answer": 1,
+              "why": "夾帶的指令拿不到資料，也送不出去。"
+            },
+            {
+              "text": "讀私人檔案、能寄信，不讀外部內容。",
+              "answer": 1,
+              "why": "沒有不可信的內容進入，就沒有夾帶的指令。"
+            },
+            {
+              "text": "讀 issue、讀私人程式碼、能留言。",
+              "answer": 0,
+              "why": "issue 是別人寫的內容。留言就是對外傳送。"
+            }
+          ]
+        }
       }
     ],
     "sources": [
@@ -10230,9 +10779,14 @@
   {
     "slug": "evals",
     "log": "057",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上官方的 claude plugin eval，標明示意的程式。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -10323,7 +10877,10 @@
       },
       {
         "title": "實作：修改前後各跑一次",
-        "body": ["以下是最小的評測程式。", "每次 trial 都從乾淨的環境開始。"],
+        "body": [
+          "以下是示意的最小評測程式，不是官方工具。",
+          "每次 trial 都從乾淨的環境開始。"
+        ],
         "figure": {
           "kind": "diagram",
           "code": true,
@@ -10391,6 +10948,32 @@
         ]
       },
       {
+        "title": "官方工具：claude plugin eval 評測 plugin",
+        "body": [
+          "Claude Code 內建 claude plugin eval 指令，需要 2.1.269 以上的版本。",
+          "同一組案例，載入 plugin 跑一次，不載入再跑一次。",
+          "==兩次結果的差距，就是 plugin 帶來的改變==。"
+        ],
+        "points": [
+          {
+            "term": "案例放在 evals 資料夾",
+            "text": "案例放在 plugin 的 evals 資料夾，每個案例一個子資料夾。"
+          },
+          {
+            "term": "每個案例預設跑 3 次",
+            "text": "模型每次的輸出不同，所以每個案例預設執行 3 次。"
+          },
+          {
+            "term": "報表比較有無 plugin",
+            "text": "WITH 是載入 plugin 的結果，W/OUT 是不載入的結果。Δ 是兩者的差距。"
+          },
+          {
+            "term": "範圍只有 plugin 與 Skill",
+            "text": "官方指令評測的是 plugin 與 Skill。CLAUDE.md 這類規則，沒有官方的評測指令。"
+          }
+        ]
+      },
+      {
         "title": "下一步：把 3 次失敗寫成任務",
         "body": [
           "挑 3 個 agent 做錯過的任務。",
@@ -10415,6 +10998,11 @@
         "title": "Software Engineering at Google: Testing Overview",
         "href": "https://abseil.io/resources/swe-book/html/ch11.html",
         "by": "Google"
+      },
+      {
+        "title": "Evaluate a plugin",
+        "href": "https://code.claude.com/docs/en/plugin-evals",
+        "by": "Claude Code docs"
       }
     ]
   }
