@@ -61,7 +61,7 @@
     "body": "network-in-git"
   },
   "子 agent": {
-    "text": "Claude Code 另外派出去做事的 agent。看不到原本的對話，做完只交回 1 段摘要。",
+    "text": "Claude Code 另外派出去做事的 agent。一般看不到原本的對話，做完只交回 1 段摘要。",
     "note": "subagent-bill"
   },
   "Codex": {
@@ -94,5 +94,17 @@
   },
   "Skill 不寫個案": {
     "body": "skills-stay-general"
+  },
+  "token": {
+    "text": "模型讀和寫文字的計量單位。用量是用 token 算的。",
+    "note": "subagent-bill"
+  },
+  "Git": {
+    "text": "記錄檔案每次修改的工具。專案放在 Git 倉庫裡。",
+    "note": "network-in-git"
+  },
+  "log": {
+    "text": "程式執行時留下的紀錄。",
+    "note": "observability-first"
   }
 }

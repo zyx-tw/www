@@ -153,13 +153,13 @@
         {
           "slug": "subagent-bill",
           "name": "子 agent 用掉一半的用量，所以我只讓子 agent 查與審",
-          "line": "量了 30 天的用量之後，我改了派工的規則。",
+          "line": "2026-09 量了 30 天的用量之後，我改了派工的規則。現在子 agent 佔 9.9%。",
           "short": "花費"
         },
         {
           "slug": "review-by-risk",
           "name": "152 次審查跑了 314 輪，所以我只審高風險的修改",
-          "line": "審查抓到的問題集中在少數幾類修改，所以只審那幾類。",
+          "line": "2026-09 到 10 月的 30 天裡量到的。審查抓到的問題，集中在少數幾類修改。",
           "needs": ["subagent-bill"],
           "short": "審查"
         },
@@ -253,20 +253,20 @@
         {
           "slug": "changing-the-interface",
           "name": "我做過 9 個 Mod，現在開著 3 個：想看的狀態放進 Claude Code 的畫面",
-          "line": "Mod 做了不合用，就關掉或刪掉。輸入框上方的位置很少。",
+          "line": "Mod 做了不合用，就關掉或刪掉。輸入框上方的位置有限。",
           "needs": ["four-ways-to-extend"],
           "short": "mod"
         },
         {
           "slug": "outside-the-terminal",
-          "name": "Telegram 上的 bot 是另一個 agent：有自己的工具和對話紀錄",
-          "line": "終端機以外的每個入口，只拿到事先列好的工具。",
+          "name": "Telegram 上的 bot 是另一個 agent：有自己的 MCP 清單和對話紀錄",
+          "line": "bot 和按鈕能用什麼，都是事先列好的。",
           "short": "Telegram"
         },
         {
           "slug": "monitoring-for-agents",
           "name": "監控有 2 個入口：畫面給我看，MCP 給 Claude Code 查",
-          "line": "監控只做畫面的話，Claude Code 讀不到。",
+          "line": "畫面是拿來看的。Claude Code 要查資料、要登記新的專案，都走 MCP。",
           "needs": ["agent-experience"],
           "short": "監控"
         },
@@ -293,12 +293,12 @@
         {
           "slug": "one-design-system",
           "name": "畫面的修正改在共用的元件庫，不改在單一網站",
-          "line": "只改一個網站的話，下一個網站會把舊的樣子帶回來。",
+          "line": "只改一個網站的話，共用的元件沒有改到。下一個網站拿到的還是舊的。",
           "short": "設計"
         },
         {
           "slug": "one-way-to-deploy",
-          "name": "pull request 的階段就打包好：合併到上線從 228 秒變成 42 秒",
+          "name": "pull request 的階段就打包好：試行的專案，合併到上線從 228 秒變成 42 秒",
           "line": "打包放在合併之前。合併之後只換標籤，然後上線。",
           "short": "部署"
         },
