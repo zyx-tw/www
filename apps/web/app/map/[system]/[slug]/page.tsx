@@ -53,7 +53,7 @@ export async function generateMetadata({
  * length, reading time, version, last change, and the earlier versions once
  * there are any), the text in sections with their figures, then its system
  * as a small chart to go on from. The same sections and figures
- * as a project's page (app/works/[slug]/page.tsx).
+ * as a project's page (app/project/[slug]/page.tsx).
  */
 export default async function NotePage({
   params,

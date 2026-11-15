@@ -12,8 +12,8 @@ const LINK =
   "terminal-link underline decoration-muted-foreground/40 underline-offset-4"
 
 /**
- * About's GitHub status as terminal output: `git log` with one line per
- * recent event in About's columns (when, what, where), then the year's
+ * Info's GitHub status as terminal output: `git log` with one line per
+ * recent event in Info's columns (when, what, where), then the year's
  * contributions as a character heatmap.
  */
 export function GitLog({

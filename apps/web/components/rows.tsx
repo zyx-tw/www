@@ -6,7 +6,7 @@ const LINK =
   "terminal-link underline decoration-muted-foreground/40 underline-offset-4"
 
 /**
- * Rows of a term and its line, in the label column About's facts use. A
+ * Rows of a term and its line, in the label column Info's facts use. A
  * row's link opens in a new tab unless it is a page of this site.
  */
 export function Rows({

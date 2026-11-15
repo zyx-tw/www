@@ -21,7 +21,7 @@ function randomKoi(): SharkSpec[] {
 }
 
 /** The pages the pond swims behind. */
-const POND_PATHS = ["/", "/works", "/about", "/privacy", "/terms"]
+const POND_PATHS = ["/", "/project", "/info", "/privacy", "/terms"]
 
 /** Dispatched on the document to drop food in the middle of the pond. */
 export const FEED_EVENT = "pond:feed"

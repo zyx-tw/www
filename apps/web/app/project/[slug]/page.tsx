@@ -43,7 +43,7 @@ function bare(href: string) {
  * on what it does. A project with more to say goes on from that overview
  * into sections, each with its own figure. The page ends with where the
  * project lives and what it is built with, in the same label column as
- * About's facts.
+ * Info's facts.
  */
 export default async function Project({
   params,

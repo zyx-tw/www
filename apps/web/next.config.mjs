@@ -25,23 +25,33 @@ const nextConfig = {
     : {}),
   transpilePackages: ["@workspace/3d", "@workspace/otel", "@workspace/ui"],
   serverExternalPackages: ["exifr"],
-  // Contact was its own page until 2026-09-28; the email is on About now.
+  // Old addresses keep working: Contact joined About on 2026-09-28, the Made
+  // pages joined Works on 2026-10-16, and on 2026-11-15 About became Info
+  // and Works became Project.
   async redirects() {
     return [
-      { source: "/contact", destination: "/about", permanent: true },
-      { source: "/contact.md", destination: "/about.md", permanent: true },
-      // The Made product pages were removed on 2026-10-16; Works lists them.
-      { source: "/made", destination: "/works", permanent: true },
-      { source: "/made.md", destination: "/works.md", permanent: true },
-      { source: "/made/:path*", destination: "/works", permanent: true },
+      { source: "/contact", destination: "/info", permanent: true },
+      { source: "/contact.md", destination: "/info.md", permanent: true },
+      { source: "/about", destination: "/info", permanent: true },
+      { source: "/about.md", destination: "/info.md", permanent: true },
+      { source: "/made", destination: "/project", permanent: true },
+      { source: "/made.md", destination: "/project.md", permanent: true },
+      { source: "/made/:path*", destination: "/project", permanent: true },
+      { source: "/works", destination: "/project", permanent: true },
+      { source: "/works.md", destination: "/project.md", permanent: true },
+      {
+        source: "/works/:slug",
+        destination: "/project/:slug",
+        permanent: true,
+      },
     ]
   },
   // Content negotiation in the router, so no function runs for it: a page
   // asked for as Markdown is served its twin, and a Markdown request for a
   // path that does not exist gets the Markdown 404.
   async rewrites() {
-    // Each project's page, /works/<slug>, has its twin at /works/<slug>.md,
-    // served by app/md/works/[slug]/route.ts.
+    // Each project's page, /project/<slug>, has its twin at /project/<slug>.md,
+    // served by app/md/project/[slug]/route.ts.
     return {
       beforeFiles: [
         ...site.pages.map(({ path, markdown }) => ({
@@ -49,7 +59,7 @@ const nextConfig = {
           has: [wantsMarkdown],
           destination: markdown,
         })),
-        { source: "/works/:slug\\.md", destination: "/md/works/:slug" },
+        { source: "/project/:slug\\.md", destination: "/md/project/:slug" },
         // Each note, /map/<system>/<slug>, has its twin the same way.
         {
           source: "/map/:system/:slug\\.md",
@@ -61,9 +71,9 @@ const nextConfig = {
           destination: "/md/map/:system/:slug",
         },
         {
-          source: "/works/:slug",
+          source: "/project/:slug",
           has: [wantsMarkdown],
-          destination: "/md/works/:slug",
+          destination: "/md/project/:slug",
         },
       ],
       afterFiles: [],
@@ -77,19 +87,22 @@ const nextConfig = {
   async headers() {
     const projectPages = [
       {
-        source: "/works/:slug",
+        source: "/project/:slug",
         headers: [
           { key: "Vary", value: "Accept" },
           {
             key: "Link",
-            value: `<${site.url}/llms.txt>; rel="describedby", <${site.url}/works/:slug.md>; rel="alternate"; type="text/markdown"`,
+            value: `<${site.url}/llms.txt>; rel="describedby", <${site.url}/project/:slug.md>; rel="alternate"; type="text/markdown"`,
           },
         ],
       },
       {
-        source: "/works/:slug\\.md",
+        source: "/project/:slug\\.md",
         headers: [
-          { key: "Link", value: `<${site.url}/works/:slug>; rel="canonical"` },
+          {
+            key: "Link",
+            value: `<${site.url}/project/:slug>; rel="canonical"`,
+          },
         ],
       },
     ]

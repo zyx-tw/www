@@ -63,7 +63,7 @@ const COMMANDS: Record<string, Command> = {
     help: "print a file",
     run: ([file], sh) => {
       if (!file) return sh.out("usage: cat <file>")
-      if (file.replace(/\.md$/, "") === "about")
+      if (file.replace(/\.md$/, "") === "info")
         return sh.out(
           "Loki, 詹詠翔.",
           ...FACTS.map((fact) => `${fact.label.padEnd(8)}${fact.value}`)
@@ -108,7 +108,7 @@ function complete(input: string) {
   if (parts.length === 2 && ["cd", "cat"].includes(parts[0]!)) {
     const names = [
       ...DIRS.map((d) => d.name),
-      ...(parts[0] === "cat" ? ["about.md"] : []),
+      ...(parts[0] === "cat" ? ["info.md"] : []),
     ]
     return names
       .filter((name) => name.startsWith(parts[1]!))

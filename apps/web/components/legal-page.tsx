@@ -31,6 +31,17 @@ function Paragraph({ runs }: { runs: Run[] }) {
   )
 }
 
+/** Reading time at 200 words a minute, at least 1. */
+function minutes(doc: LegalDoc) {
+  const words = doc.sections
+    .flatMap(({ paragraphs }) => paragraphs.flat())
+    .reduce(
+      (sum, { text }) => sum + text.split(/\s+/).filter(Boolean).length,
+      0
+    )
+  return Math.max(1, Math.round(words / 200))
+}
+
 /** Privacy and Terms: the title, the date of the last change, the sections. */
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
@@ -38,13 +49,16 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
       <Hero
         title={<HeroTitle text={doc.title} />}
         subtitle={
-          <>
-            Last updated{" "}
-            <time dateTime={doc.updated} className="tabular-nums">
-              {doc.updated}
-            </time>
-            .
-          </>
+          <span className="flex flex-wrap gap-x-5 text-caption">
+            <span>
+              updated{" "}
+              <time dateTime={doc.updated} className="tabular-nums">
+                {doc.updated}
+              </time>
+            </span>
+            <span>sections {doc.sections.length}</span>
+            <span>{minutes(doc)} min</span>
+          </span>
         }
         className="pb-25"
       />

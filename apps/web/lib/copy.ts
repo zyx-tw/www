@@ -5,7 +5,7 @@
  */
 export const HOME = { title: "Loki, 詹詠翔." } as const
 
-export const WORKS = { title: "Works" } as const
+export const PROJECT = { title: "Project" } as const
 
 export const MAP = {
   title: "地圖",
@@ -25,7 +25,7 @@ export const MAP = {
   back: "回到",
 } as const
 
-export const ABOUT = { title: "About" } as const
+export const INFO = { title: "Info" } as const
 
 export const NOT_FOUND = {
   title: "Not found.",

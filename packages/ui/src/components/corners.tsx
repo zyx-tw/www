@@ -30,7 +30,7 @@ const AT: Record<At, string> = {
  * text line.
  */
 export const cornerLink =
-  "relative uppercase text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:top-1/2 after:h-6 after:-translate-y-1/2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
+  "[font-variant-ligatures:none] relative uppercase text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:top-1/2 after:h-6 after:-translate-y-1/2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
 
 /**
  * A nav label in brackets, as in a terminal menu: the brackets show on the

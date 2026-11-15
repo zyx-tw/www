@@ -7,7 +7,7 @@
 # ///
 """Regenerates the project previews in apps/web/public/previews/.
 
-Reads lib/projects.json, the same list /works renders, and writes two
+Reads lib/projects.json, the same list /project renders, and writes two
 files per project to the paths in its "preview" field:
 
   <slug>.webp         a 1440x1080 screenshot of the live site in dark mode

@@ -71,7 +71,7 @@ export function ProjectsJsonLd({ projects }: { projects: Project[] }) {
       data={{
         "@context": "https://schema.org",
         "@type": "ItemList",
-        name: "Works",
+        name: "Project",
         itemListElement: projects.map(({ name, href, purpose }, index) => ({
           "@type": "ListItem",
           position: index + 1,

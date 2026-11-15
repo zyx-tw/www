@@ -17,7 +17,7 @@ export const metadata = {
 /**
  * The home is the mark alone, in characters, over the pond that swims behind
  * the site, filling the viewport under the corners. Everything else about
- * Loki is on About. "/" opens a small shell over it, as an easter egg.
+ * Loki is on Info. "/" opens a small shell over it, as an easter egg.
  */
 export default function Home() {
   return (
