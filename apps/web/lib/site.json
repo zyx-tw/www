@@ -10,20 +10,30 @@
       "priority": 1
     },
     {
-      "path": "/works",
-      "label": "Works",
+      "path": "/project",
+      "label": "Project",
       "tip": "Every project and its link",
-      "markdown": "/works.md",
+      "markdown": "/project.md",
       "summary": "every project with its purpose and link",
       "nav": true,
       "changeFrequency": "monthly",
       "priority": 0.8
     },
     {
-      "path": "/about",
-      "label": "About",
+      "path": "/map",
+      "label": "Map",
+      "tip": "Every note, as a star chart",
+      "markdown": "/map.md",
+      "summary": "how Loki works with Claude Code: every note and course, with what to read first",
+      "nav": true,
+      "changeFrequency": "weekly",
+      "priority": 0.8
+    },
+    {
+      "path": "/info",
+      "label": "Info",
       "tip": "CV and GitHub status",
-      "markdown": "/about.md",
+      "markdown": "/info.md",
       "summary": "his CV: facts, education, experience, publications, projects, awards and GitHub status",
       "nav": true,
       "changeFrequency": "daily",

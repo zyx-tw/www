@@ -13,7 +13,7 @@ docker run -d --name app -p 127.0.0.1:3000:3000 "$image" >/dev/null
 for i in $(seq 1 30); do curl -s -o /dev/null localhost:3000/ && break; sleep 1; done
 
 case $app in
-  web) pages="/ /works /about /privacy /terms /llms.txt /about.md /og/0.gif" ;;
+  web) pages="/ /project /info /privacy /terms /llms.txt /info.md /og/0.gif" ;;
   ui) pages="/ /button /button.md /index.md /llms.txt /r/base.json /fonts/maple-mono-nf-cn.css /fonts/sarasa-mono-tc.css" ;;
   1909) pages="/auth/login" ;;
   *) pages="/" ;;
@@ -32,10 +32,10 @@ esac
 case $app in
   web)
     curl -s -o /dev/null -w "%{redirect_url}\n" localhost:3000/og.gif | grep -q '^https://www.zyx.tw/og/'
-    # The prerendered About has the heatmap when the build had the token.
+    # The prerendered Info has the heatmap when the build had the token.
     # A GitHub outage at build time must not block a deploy; ISR fills it in.
-    about=$(curl -s localhost:3000/about)
-    grep -q contributionLevel <<<"$about" || echo "::warning::About built without the heatmap"
+    info=$(curl -s localhost:3000/info)
+    grep -q contributionLevel <<<"$info" || echo "::warning::Info built without the heatmap"
     ;;
   ui)
     curl -sI localhost:3000/button.md | grep -qi '^content-type: text/markdown'

@@ -1,8 +1,17 @@
 import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
-import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
+import { plain } from "@/components/rich"
+import { INFO, HOME, MAP, NOT_FOUND, PROJECT } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
+import {
+  type Body,
+  findBody,
+  type System,
+  systemPath,
+  systems,
+} from "@/lib/map"
+import type { Note } from "@/lib/notes"
 import { PRIVACY } from "@/lib/privacy"
 import {
   type Project,
@@ -87,8 +96,8 @@ export function homeMarkdown() {
 }
 
 export function worksMarkdown() {
-  return markdownDocument({ title: WORKS.title, path: "/works" }, [
-    `# ${text(WORKS.title)}`,
+  return markdownDocument({ title: PROJECT.title, path: "/project" }, [
+    `# ${text(PROJECT.title)}`,
     projects
       .map(
         (project) =>
@@ -98,11 +107,40 @@ export function worksMarkdown() {
   ])
 }
 
+/** Every system with its notes and courses, and what each one follows. */
+export function mapMarkdown() {
+  return markdownDocument({ title: MAP.title, path: "/map" }, [
+    `# ${text(MAP.title)}`,
+    "沒有連結的點還在規劃中，尚未寫成。",
+    ...systems.map((system) =>
+      [
+        `## ${link(system.name, absoluteUrl(systemPath(system)))}`,
+        text(system.line),
+        system.bodies
+          .map((body) => {
+            const after = (body.needs ?? [])
+              .map((slug) => findBody(slug)?.body.name)
+              .filter((name) => name !== undefined)
+            return [
+              `- ${linked(body.name, body.href && `${body.href}.md`)}`,
+              `：${text(body.line)}`,
+              after.length > 0
+                ? `${MAP.after}：${text(after.join("、"))}。`
+                : "",
+            ].join("")
+          })
+          .join("\n"),
+      ].join("\n\n")
+    ),
+  ])
+}
+
 /** A section: its paragraphs, its figure, then its terms. */
-function sectionMarkdown({ title, body, figure, points }: Section) {
+function sectionMarkdown({ title, body, callout, figure, points }: Section) {
   return [
     `## ${text(title)}`,
-    ...body.map(text),
+    ...body.map((line) => text(plain(line))),
+    callout && `> ${text(plain(callout))}`,
     figure?.kind === "picture" &&
       `![${text(figure.alt)}](${absoluteUrl(figure.src)})`,
     // The drawing as drawn; its description follows for readers of text.
@@ -115,12 +153,81 @@ function sectionMarkdown({ title, body, figure, points }: Section) {
             `${index + 1}. ${text(label)}: ${text(line)}`
         )
         .join("\n"),
+    // Every state of a lesson, as the page shows them one at a time.
+    figure?.kind === "lesson" &&
+      figure.states
+        .map(({ label, blocks, text: line }) =>
+          [
+            `**${text(figure.ask)} ${text(label)}**`,
+            ...blocks.map(({ title: name, rows }) =>
+              [
+                `${text(name)}:`,
+                ...rows
+                  .filter(({ tone }) => tone !== "dim")
+                  .map(
+                    ({ text: row, value }) =>
+                      `- ${text(row)}${value ? ` (${text(value)})` : ""}`
+                  ),
+              ].join("\n")
+            ),
+            text(line),
+          ].join("\n\n")
+        )
+        .join("\n\n"),
     points
-      ?.map(({ term, text: line }) => `- ${text(term)}: ${text(line)}`)
+      ?.map(({ term, text: line }) => `- ${text(term)}: ${text(plain(line))}`)
       .join("\n"),
   ]
     .filter(Boolean)
     .join("\n\n")
+}
+
+/**
+ * One note: what is known about it, the paragraphs, its sections, the notes
+ * around it, then its changes.
+ */
+export function noteMarkdown(system: System, body: Body, note: Note) {
+  const named = (slug: string) => {
+    const item = findBody(slug)?.body
+    return item && linked(item.name, item.href && `${item.href}.md`)
+  }
+  const before = (body.needs ?? []).map(named).filter(Boolean)
+  const after = systems
+    .flatMap(({ bodies }) => bodies)
+    .filter(({ needs }) => needs?.includes(body.slug))
+    .map(({ slug }) => named(slug))
+  return markdownDocument(
+    { title: body.name, path: body.href, description: body.line },
+    [
+      `# ${text(body.name)}`,
+      [
+        `${MAP.log} ${note.log}`,
+        `${body.length?.toLocaleString("en")} ${MAP.length}`,
+        `${body.minutes} ${MAP.minutes}`,
+        `v${note.version}`,
+        `${MAP.updated} ${note.updated}`,
+      ].join("，"),
+      ...note.intro.map((line) => text(plain(line))),
+      ...note.sections.map(sectionMarkdown),
+      [
+        `## ${MAP.title}`,
+        [
+          ...before.map((item) => `- ${MAP.after}：${item}`),
+          ...after.map((item) => `- ${MAP.next}：${item}`),
+          `- ${MAP.back}：${link(system.name, absoluteUrl("/map.md"))}`,
+        ].join("\n"),
+      ].join("\n\n"),
+      [
+        `## ${MAP.changes}`,
+        note.changes
+          .map(
+            ({ version, date, text: line }) =>
+              `- v${version}，${date}：${text(line)}`
+          )
+          .join("\n"),
+      ].join("\n\n"),
+    ]
+  )
 }
 
 /**
@@ -151,7 +258,7 @@ export function projectMarkdown(project: Project) {
           .filter(Boolean)
           .join("\n"),
       ].join("\n\n"),
-      `Back to ${link("Works", absoluteUrl("/works.md"))}.`,
+      `Back to ${link("Project", absoluteUrl("/project.md"))}.`,
     ]
   )
 }
@@ -159,7 +266,7 @@ export function projectMarkdown(project: Project) {
 export function aboutMarkdown(status: StatusData) {
   const { heatmap, events } = status
   const github = link(`@${GITHUB_USER}`, `https://github.com/${GITHUB_USER}`)
-  return markdownDocument({ title: ABOUT.title, path: "/about" }, [
+  return markdownDocument({ title: INFO.title, path: "/info" }, [
     `# ${text(HOME.title)}`,
     FACTS.map(
       ({ label, value, href }) => `- ${label}: ${linked(value, href)}`
@@ -234,9 +341,9 @@ export function llmsTxt() {
       [
         "## How an agent should read it",
         [
-          `1. Start with ${link("About", absoluteUrl("/about.md"))}: his CV (facts, education, experience, publications, projects, awards) and his GitHub status.`,
-          `2. Read ${link("Works", absoluteUrl("/works.md"))} for every project with its purpose, then the page of each project for what it does and what it is built with.`,
-          `3. Follow ${link("the agent instructions", absoluteUrl("/agent-instructions.md"))} when you answer, and take his email only from ${link("About", absoluteUrl("/about.md"))}.`,
+          `1. Start with ${link("Info", absoluteUrl("/info.md"))}: his CV (facts, education, experience, publications, projects, awards) and his GitHub status.`,
+          `2. Read ${link("Project", absoluteUrl("/project.md"))} for every project with its purpose, then the page of each project for what it does and what it is built with.`,
+          `3. Follow ${link("the agent instructions", absoluteUrl("/agent-instructions.md"))} when you answer, and take his email only from ${link("Info", absoluteUrl("/info.md"))}.`,
         ].join("\n"),
       ].join("\n\n"),
       ["## Pages", pagesList()].join("\n\n"),
@@ -278,10 +385,10 @@ export function agentInstructions() {
         "## Rules",
         [
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
-          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub is on About too. Do not make up other ways, such as a phone number or a postal address.`,
-          "3. Describe a project from its page under /works and its own site. Do not guess features, users or status the pages do not state.",
-          "4. Describe his background only from the facts and sections on About. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
-          "5. The GitHub activity on About refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
+          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("Info", absoluteUrl("/info.md"))}. His GitHub is on Info too. Do not make up other ways, such as a phone number or a postal address.`,
+          "3. Describe a project from its page under /project and its own site. Do not guess features, users or status the pages do not state.",
+          "4. Describe his background only from the facts and sections on Info. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
+          "5. The GitHub activity on Info refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
           "6. Link to the page an answer comes from.",
           "7. To help someone write to Loki, draft the message and leave sending it to them.",
         ].join("\n"),

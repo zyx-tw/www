@@ -5,12 +5,12 @@ import { GitLog } from "@/components/git-log"
 import { SectionTitle } from "@workspace/ui/components/section-title"
 
 import { Hero, HeroTitle } from "@/components/hero"
-import { ABOUT, HOME } from "@/lib/copy"
+import { INFO, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { pageMetadata } from "@/lib/site"
 
-export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
+export const metadata = pageMetadata({ title: INFO.title, path: "/info" })
 
 // The GitHub status is fetched on the server and the page regenerated in the
 // background every 5 minutes (ISR), so the SSR HTML carries real events
@@ -20,10 +20,10 @@ export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
 export const revalidate = 300
 export const dynamic = "force-static"
 
-// Every line enters as its own row, 25ms apart, as on Works: the title is
-// row 1, then each fact, then each section's heading and its entries, and
+// Every line enters as its own row, 25ms apart, as on Project: the title is
+// row 1, the counts row 2, then each fact, then each section's heading and its entries, and
 // the GitHub status last.
-const FIRST_FACT_ROW = 2
+const FIRST_FACT_ROW = 3
 let nextRow = FIRST_FACT_ROW + FACTS.length
 const SECTION_ROWS = SECTIONS.map(({ entries }) => {
   const heading = nextRow
@@ -61,16 +61,30 @@ function Value({ text, href }: { text: string; href?: string }) {
 }
 
 /**
- * About reads as a CV: the name, a few facts, then Education, Experience,
+ * Info reads as a CV: the name, a few facts, then Education, Experience,
  * Publications, Projects and Awards, each newest first, and last what he is
  * doing now on GitHub.
  */
-export default async function About() {
+export default async function InfoPage() {
   const status = await getGithubStatus()
 
   return (
     <main className={cn(column, page, "flex-1")}>
-      <Hero title={<HeroTitle text={HOME.title} />} className="pb-25" />
+      {/* Under the name, what the page holds, as the map counts its
+          systems: each count goes to its section. */}
+      <Hero
+        title={<HeroTitle text={HOME.title} />}
+        subtitle={
+          <span className="flex flex-wrap gap-x-5 text-caption">
+            {SECTIONS.map(({ id, title, entries }) => (
+              <a key={id} href={`#${id}`} className="terminal-link">
+                {title.toLowerCase()} {entries.length}
+              </a>
+            ))}
+          </span>
+        }
+        className="pb-25"
+      />
 
       {/* Facts: a muted label column, then the value. */}
       <dl className="flex flex-col gap-y-3">
@@ -88,7 +102,12 @@ export default async function About() {
       </dl>
 
       {SECTIONS.map(({ id, title, entries }, index) => (
-        <section key={id} aria-labelledby={`${id}-heading`} className="mt-20">
+        <section
+          key={id}
+          id={id}
+          aria-labelledby={`${id}-heading`}
+          className="mt-20 scroll-mt-30"
+        >
           <SectionTitle
             id={`${id}-heading`}
             title={title}
@@ -104,7 +123,13 @@ export default async function About() {
                 )}
               >
                 <span className="w-28 shrink-0 text-caption whitespace-nowrap text-muted-foreground tabular-nums">
-                  {when}
+                  {/* What is still going on is marked, as a note marks
+                      its terms. */}
+                  {/now$/i.test(when) ? (
+                    <span className="bg-(--mark)/20 text-(--mark)">{when}</span>
+                  ) : (
+                    when
+                  )}
                 </span>
                 <div className="flex min-w-0 flex-1 flex-col gap-x-5 sm:flex-row sm:justify-between">
                   <span className="text-pretty">

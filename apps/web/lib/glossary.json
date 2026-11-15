@@ -1,0 +1,134 @@
+{
+  "Agent Loop": {
+    "text": "Claude Code 做事的流程：讀檔案、動手改、檢查結果，結果不對就再做一次。",
+    "note": "what-claude-code-is"
+  },
+  "記憶": {
+    "body": "remembers-me"
+  },
+  "CLAUDE.md": {
+    "text": "Claude Code 每次新對話開始時都會載入的規則檔。個人的放在 ~/.claude/CLAUDE.md，專案的放在專案資料夾。",
+    "note": "claude-md"
+  },
+  "MCP": {
+    "text": "Anthropic 提出的開放標準。MCP server 提供一組 tool，替 Claude Code 處理連線和登入。",
+    "note": "four-ways-to-extend"
+  },
+  "Skill": {
+    "text": "寫給 Claude Code 的一份做法。平常只載入名字和說明，做到那類任務才載入全文。",
+    "note": "four-ways-to-extend"
+  },
+  "Plugin": {
+    "text": "把 Skill、MCP 這些擴充包成一組，整組安裝，靠版本號更新。",
+    "note": "four-ways-to-extend"
+  },
+  "Mod": {
+    "text": "改 Claude Code 自己介面的擴充，例如在輸入框上方顯示狀態。",
+    "note": "four-ways-to-extend"
+  },
+  "家目錄": {
+    "body": "start-from-home"
+  },
+  "接上每個系統": {
+    "body": "acts-for-me"
+  },
+  "pw": {
+    "text": "替 Claude Code 準備的瀏覽器：沒有視窗，開在另一台機器上，不動使用者的 Safari。",
+    "note": "out-of-my-way"
+  },
+  "pull request": {
+    "text": "修改合併進專案之前的那一關。自動檢查通常放在這一關。",
+    "note": "remembers-me"
+  },
+  "CI": {
+    "text": "每次修改都會自動跑的檢查。",
+    "note": "done-means-verified"
+  },
+  "筆電只編輯": {
+    "body": "one-job-per-machine"
+  },
+  "ssh": {
+    "text": "從一台電腦對另一台電腦下指令的工具。",
+    "note": "one-claude-many-machines"
+  },
+  "機器的名字": {
+    "body": "names-to-guess"
+  },
+  "固定的位置": {
+    "body": "fixed-place"
+  },
+  "網路寫成檔案": {
+    "body": "network-in-git"
+  },
+  "子 agent": {
+    "text": "Claude Code 另外派出去做事的 agent。一般看不到原本的對話，做完只交回 1 段摘要。",
+    "note": "subagent-bill"
+  },
+  "Codex": {
+    "text": "OpenAI 的 coding agent。",
+    "note": "two-agents"
+  },
+  "只審高風險": {
+    "body": "review-by-risk"
+  },
+  "子 agent 只查與審": {
+    "body": "subagent-bill"
+  },
+  "Plugin 目錄": {
+    "body": "one-plugin-catalog"
+  },
+  "密碼不貼進對話": {
+    "body": "what-an-agent-has-seen"
+  },
+  "筆電關了之後": {
+    "body": "while-i-am-away"
+  },
+  "監控的 MCP": {
+    "body": "monitoring-for-agents"
+  },
+  "怎樣才算完成": {
+    "body": "done-means-verified"
+  },
+  "把 agent 當成使用者": {
+    "body": "agent-experience"
+  },
+  "Skill 不寫個案": {
+    "body": "skills-stay-general"
+  },
+  "token": {
+    "text": "模型讀和寫文字的計量單位。用量是用 token 算的。",
+    "note": "subagent-bill"
+  },
+  "Git": {
+    "text": "記錄檔案每次修改的工具。專案放在 Git 倉庫裡。",
+    "note": "network-in-git"
+  },
+  "log": {
+    "text": "程式執行時留下的紀錄。",
+    "note": "observability-first"
+  },
+  "hum": {
+    "text": "顯示主機狀態的 Mod：主機回報用量，顯示在 Claude Code 的輸入框上方。",
+    "href": "https://github.com/zyx1121/hum"
+  },
+  "secret-mod": {
+    "text": "保管密碼的 Mod：密碼存進 macOS 鑰匙圈，Claude Code 能使用，但看不到內容。",
+    "href": "https://github.com/zyx1121/secret-mod"
+  },
+  "sensorium": {
+    "text": "給 agent 用的監控服務：收集 log 與監控資料，透過 MCP 查詢。",
+    "href": "/project/sensorium"
+  },
+  "golem": {
+    "text": "維運服務：定期檢查主機與網站，發現問題時通知，並提出修復計畫。",
+    "href": "/project/golem"
+  },
+  "ui.zyx.tw": {
+    "text": "共用元件庫：各個網站從這裡安裝相同的介面元件。",
+    "href": "/project/ui"
+  },
+  "AIntern": {
+    "text": "AI 實習生：把團隊的流程做成可以執行的工作流。",
+    "href": "/project/aintern"
+  }
+}

@@ -53,7 +53,7 @@ export function markdownFor(path: string) {
   return PAGES.find((page) => page.path === path)?.markdown
 }
 
-/** `path` on the canonical origin, e.g. https://www.zyx.tw/works. */
+/** `path` on the canonical origin, e.g. https://www.zyx.tw/project. */
 export function absoluteUrl(path: string) {
   return new URL(path, SITE_URL).href
 }

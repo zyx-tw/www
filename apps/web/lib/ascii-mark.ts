@@ -167,7 +167,8 @@ export class AsciiMark {
   constructor(
     private canvas: HTMLCanvasElement,
     shape: SceneV1["shape"],
-    private obstacle: Obstacle,
+    /** What swims around the mark, if anything does. */
+    private obstacle: Obstacle | null,
     /** The pond's cell scale, so the mark draws on the pond's grid. */
     private cellScale: number
   ) {
@@ -303,6 +304,11 @@ export class AsciiMark {
     this.begin(LEAVE)
   }
 
+  /** Stop drawing, while the mark is out of view. */
+  stop() {
+    cancelAnimationFrame(this.raf)
+  }
+
   start() {
     cancelAnimationFrame(this.raf)
     this.last = performance.now()
@@ -316,7 +322,7 @@ export class AsciiMark {
     this.canvas.removeEventListener("pointermove", this.onPointerMove)
     this.canvas.removeEventListener("pointerup", this.onPointerUp)
     this.canvas.removeEventListener("pointercancel", this.onPointerUp)
-    this.obstacle.clear()
+    this.obstacle?.clear()
     this.mesh.geometry.dispose()
     this.shadeMaterial.dispose()
     this.glyphMaterial.dispose()
@@ -359,7 +365,8 @@ export class AsciiMark {
     const renderer = this.renderer
     renderer.setRenderTarget(this.target)
     renderer.render(this.shadeScene, this.camera)
-    if (this.frame++ % MARK.maskEvery === 0 && !this.reading) this.readMask()
+    if (this.obstacle && this.frame++ % MARK.maskEvery === 0 && !this.reading)
+      this.readMask()
     const uniforms = this.glyphMaterial.uniforms
     if (this.phase !== STILL) {
       const elapsed = performance.now() - this.phaseStart
@@ -437,7 +444,7 @@ export class AsciiMark {
         mask[row * cols + col] = pixels[(from + col) * 4 + 3]! > 127 ? 1 : 0
       }
     }
-    this.obstacle.update(mask, cols, rows, this.cellW, this.cellH)
+    this.obstacle?.update(mask, cols, rows, this.cellW, this.cellH)
   }
 
   /** The ramp's glyphs side by side, one cell each, white on clear. */

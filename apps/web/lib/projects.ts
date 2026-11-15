@@ -30,11 +30,41 @@ export type Diagram = {
   steps?: { label: string; lit: string[]; text: string }[]
 }
 
+/**
+ * A figure the reader operates (components/project-lesson.tsx): `ask` names
+ * the one choice, and each state is what one answer leads to. A state is a
+ * few titled blocks of rows, with the line to take from it under them.
+ */
+export type Lesson = {
+  kind: "lesson"
+  ask: string
+  /** Two blocks stand side by side from the sm breakpoint up. */
+  side?: boolean
+  states: {
+    label: string
+    blocks: {
+      title: string
+      /** The rows are steps in order, so each takes its number. */
+      numbered?: boolean
+      rows: {
+        text: string
+        /** A count or a version, set at the row's right edge. */
+        value?: string
+        /** `mark` is what this state adds, `dim` what it removes. */
+        tone?: "mark" | "dim" | "quiet"
+      }[]
+    }[]
+    text: string
+  }[]
+}
+
 /** One part of a project's page, from the overview toward the detail. */
 export type Section = {
   title: string
   body: string[]
-  figure?: Picture | Diagram
+  /** A note's one line to leave with, set apart in the middle. */
+  callout?: string
+  figure?: Picture | Diagram | Lesson
   /** Terms with one line each, set in the label column of the details. */
   points?: { term: string; text: string }[]
 }
@@ -43,14 +73,14 @@ export type Project = {
   /** File-safe id; the preview files are named after it. */
   slug: string
   name: string
-  /** The year it started, for About's list of projects. */
+  /** The year it started, for Info's list of projects. */
   year: number
   href: string
   /** Its source code, when the repository is public. */
   code?: string
   /** What it is for, in about 32 characters: the row shows it on one line. */
   purpose: string
-  /** Its page at /works/<slug>: a few short paragraphs, one idea each. */
+  /** Its page at /project/<slug>: a few short paragraphs, one idea each. */
   intro: string[]
   /**
    * The rest of its page, for a project with more to say: how it works, its
@@ -60,14 +90,10 @@ export type Project = {
   /** What it is built with, a handful of names. */
   stack: string[]
   /**
-   * Written by `bun run previews` (scripts/previews.py): a 1440x1080 color
-   * screenshot and its dithered twin. The window uses a matching 4:3 image
-   * area and contains other aspect ratios without cropping.
-   * `focus` places any spare space as two percentages ("50% 0%" aligns top).
-   * `zoom` captures a viewport that many times smaller at that pixel density,
-   * so the site's text is larger in the same 1440x1080 file. `source` is the
-   * page to capture when it is not `href`, and `selector` captures one
-   * element of it, centered on the page's background.
+   * Written by `bun run pictures` (scripts/pixel): a 1440x1080 pixel drawing
+   * of the product as one machine, and its dithered twin. `focus` places any
+   * spare space as two percentages. `zoom`, `source` and `selector` belong to
+   * `bun run previews`, which captures the live site instead.
    */
   preview: {
     image: string
@@ -80,15 +106,15 @@ export type Project = {
 }
 
 /**
- * The single project list: /works with its preview stage, each project's
- * page at /works/<slug>, their Markdown twins and llms.txt (lib/markdown.ts),
+ * The single project list: /project with its preview stage, each project's
+ * page at /project/<slug>, their Markdown twins and llms.txt (lib/markdown.ts),
  * the JSON-LD and the preview capture script all read lib/projects.json, so adding a project is one edit there.
  */
 export const projects = data as Project[]
 
 /** The project's own page on this site. */
 export function projectPath(project: Pick<Project, "slug">) {
-  return `/works/${project.slug}`
+  return `/project/${project.slug}`
 }
 
 export function findProject(slug: string) {

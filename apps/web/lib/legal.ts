@@ -1,5 +1,10 @@
 /** A run of a paragraph; a run with `href` renders as a link. */
-export type Run = { text: string; href?: string }
+export type Run = {
+  text: string
+  href?: string
+  /** The words of `text` to mark: read alone, the marks are the page in brief. */
+  mark?: string
+}
 
 export type LegalSection = { heading: string; paragraphs: Run[][] }
 

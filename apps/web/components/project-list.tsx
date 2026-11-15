@@ -9,14 +9,14 @@ import { useShowcase } from "@/components/showcase"
 import { projectPath } from "@/lib/projects"
 
 /**
- * One row per project. A ">" marks the project in the window, as a cursor in
- * a terminal menu. Below lg the window sits above the list and each row adds
+ * One row per project. The project in the window is marked, as the map
+ * marks the name pointed at. Below lg the window sits above the list and each row adds
  * its purpose in muted text on the right, wrapping below the name when both
  * do not fit; phones show the names alone. From lg the list is the left
  * column beside the window, whose title bar carries the purpose, so the rows
  * are names alone there too; the purpose stays for screen readers. Hovering a
  * row or focusing its link from the keyboard puts that project in the window.
- * A row opens the project's own page (/works/<slug>), which links out.
+ * A row opens the project's own page (/project/<slug>), which links out.
  */
 export function ProjectList({ className }: { className?: string }) {
   const { projects, active, engage, release } = useShowcase()
@@ -47,15 +47,9 @@ export function ProjectList({ className }: { className?: string }) {
             {/* The link stretches over the whole row, and on phones over
                 half the gap on each side, so a tap between rows still lands
                 on one (36 px per row instead of 24). */}
-            <span
-              aria-hidden
-              className="invisible absolute -left-4 group-data-active:visible"
-            >
-              &gt;
-            </span>
             <Link
               href={projectPath(project)}
-              className="terminal-link after:absolute after:inset-0 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground max-sm:after:-inset-y-1.5"
+              className="terminal-link group-data-active:bg-(--mark)/20 group-data-active:text-(--mark) after:absolute after:inset-0 max-sm:text-muted-foreground max-sm:after:-inset-y-1.5"
               onFocus={(event) => {
                 if (event.currentTarget.matches(":focus-visible")) engage(index)
               }}

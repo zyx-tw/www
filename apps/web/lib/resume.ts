@@ -4,10 +4,10 @@ import { projectPath, projects } from "@/lib/projects"
 import { SOCIAL } from "@/lib/site"
 
 /**
- * The about page's CV, as data so /about and /about.md say the same thing.
+ * The about page's CV, as data so /info and /info.md say the same thing.
  * Entries come from a record or from Loki himself: the degrees, the award
  * and the coaching from school documents, each paper from its DOI or its
- * PDF, each project from Works or from its repository or report, and the MediaTek
+ * PDF, each project from Project or from its repository or report, and the MediaTek
  * course, the TANET paper and the internship's end from Loki. Other
  * client work stays off.
  */
@@ -38,8 +38,8 @@ export type Section = {
 }
 
 /**
- * Everything on Works, in its order, each linked to its page here. The list
- * comes from lib/projects.json, so a project added to Works is on the CV.
+ * Everything on Project, in its order, each linked to its page here. The list
+ * comes from lib/projects.json, so a project added to Project is on the CV.
  */
 const WORKS: Entry[] = projects.map((project) => ({
   when: String(project.year),

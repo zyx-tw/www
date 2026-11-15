@@ -13,7 +13,7 @@
 </div>
 
 ```
-zyx.tw          the site: a 3D home, works and a resume
+zyx.tw          the site: a 3D home, projects, a star map of notes and a resume
 link.zyx.tw     a URL shortener
 time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers

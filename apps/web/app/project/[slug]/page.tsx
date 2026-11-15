@@ -7,6 +7,7 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
 import { ProjectPicture } from "@/components/project-picture"
+import { Rows } from "@/components/rows"
 import { findProject, projectPath, projects } from "@/lib/projects"
 import { pageMetadata } from "@/lib/site"
 
@@ -32,53 +33,17 @@ export async function generateMetadata({
   })
 }
 
-const LINK =
-  "terminal-link underline decoration-muted-foreground/40 underline-offset-4"
-
 /** "https://github.com/zyx1121/peck" as "github.com/zyx1121/peck". */
 function bare(href: string) {
   return href.replace(/^https?:\/\//, "").replace(/\/$/, "")
 }
 
-/** Rows of a term and its line, in the label column About's facts use. */
-function Rows({
-  rows,
-  className,
-}: {
-  rows: { label: string; value: string; href?: string }[]
-  className?: string
-}) {
-  return (
-    <dl className={cn("flex flex-col gap-y-3", className)}>
-      {rows.map(({ label, value, href }) => (
-        <div key={label} className="flex gap-x-5 max-sm:flex-col">
-          <dt className="w-28 shrink-0 text-muted-foreground">{label}</dt>
-          <dd className="min-w-0 text-pretty break-words">
-            {href ? (
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={LINK}
-              >
-                {value}
-              </a>
-            ) : (
-              value
-            )}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  )
-}
-
 /**
  * One project: its name and purpose, its picture and a few short paragraphs
  * on what it does. A project with more to say goes on from that overview
- * into sections, each with its own figure. The page ends with where the
- * project lives and what it is built with, in the same label column as
- * About's facts.
+ * into sections, each with its own figure. Under the title are its year and
+ * what it is built with; the page ends with where it lives, in the same
+ * label column as Info's facts.
  */
 export default async function Project({
   params,
@@ -93,7 +58,6 @@ export default async function Project({
     ...(project.code && project.code !== project.href
       ? [{ label: "Code", value: bare(project.code), href: project.code }]
       : []),
-    { label: "Built with", value: project.stack.join(", ") },
   ]
   const sections = project.sections ?? []
   // Rows below the first screen all enter together: the decoder caps the
@@ -104,7 +68,18 @@ export default async function Project({
     <main className={cn(column, page, "flex-1")}>
       <Hero
         title={<HeroTitle text={project.name} />}
-        subtitle={project.purpose}
+        subtitle={
+          <>
+            {project.purpose}
+            {/* What is known about it, as under a note's title. */}
+            <span className="mt-3 flex flex-wrap gap-x-5 text-caption">
+              <span>{project.year}</span>
+              {project.stack.map((name) => (
+                <span key={name}>{name}</span>
+              ))}
+            </span>
+          </>
+        }
         className="pb-10"
       />
 

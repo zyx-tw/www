@@ -9,17 +9,26 @@ import { fontVariables } from "@workspace/ui/lib/fonts"
 
 import { SiteJsonLd } from "@/components/json-ld"
 import { PageDecode } from "@workspace/ui/components/page-decode"
-import { PondBackground } from "@/components/pond-background"
+import { HomeMark } from "@/components/home-mark"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { StarField } from "@/components/star-field"
 import { TvBoot, TvStatic } from "@/components/tv"
+import { systems } from "@/lib/map"
 import { projects } from "@/lib/projects"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
-// Only the names cross to the client header, not every project's page.
-const PROJECT_NAMES = Object.fromEntries(
-  projects.map(({ slug, name }) => [slug, name])
-)
+// Only the names cross to the client header, not every project's page: a
+// project's under /project, a system's and a note's under /map.
+const PROJECT_NAMES = Object.fromEntries([
+  ...[...projects, ...systems].map(({ slug, name }) => [slug, name]),
+  // A written note's page is one step further: /map/<system>/<slug>.
+  ...systems.flatMap((system) =>
+    system.bodies
+      .filter(({ href }) => href)
+      .map(({ slug, short }) => [`${system.slug}/${slug}`, short])
+  ),
+])
 
 import "./globals.css"
 
@@ -78,7 +87,8 @@ export default async function RootLayout({
             <MotionProvider>
               <PageDecode />
               <TvStatic />
-              <PondBackground />
+              <StarField />
+              <HomeMark />
               <SiteHeader projectNames={PROJECT_NAMES} />
               {children}
               <SiteFooter />

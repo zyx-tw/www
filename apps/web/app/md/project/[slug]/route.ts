@@ -1,7 +1,7 @@
 import { markdownResponse, projectMarkdown } from "@/lib/markdown"
 import { findProject, projects } from "@/lib/projects"
 
-// Served at /works/<slug>.md through the rewrite in next.config.mjs.
+// Served at /project/<slug>.md through the rewrite in next.config.mjs.
 export const dynamic = "force-static"
 export const dynamicParams = false
 

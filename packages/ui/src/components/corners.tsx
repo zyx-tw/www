@@ -10,7 +10,7 @@ export { CornerTip }
 /*
  * The frame every zyx.tw site shares: the logo top left, the page nav top
  * right, secondary links bottom left and the copyright bottom right. Each
- * corner is fixed 20px in from the viewport's corner, or from the screen's
+ * corner is fixed 12px (`--gutter`) in from the viewport's corner, or from the screen's
  * when the site wears the TV frame (`tv` on <html>). All corners use
  * text-body (16px on 24px lines). An item in a corner
  * can carry a tip (`CornerTip`), which opens toward the page.
@@ -30,7 +30,7 @@ const AT: Record<At, string> = {
  * text line.
  */
 export const cornerLink =
-  "relative uppercase text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:top-1/2 after:h-6 after:-translate-y-1/2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
+  "[font-variant-ligatures:none] relative uppercase text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:top-1/2 after:h-6 after:-translate-y-1/2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
 
 /**
  * A nav label in brackets, as in a terminal menu: the brackets show on the
@@ -61,8 +61,8 @@ export function CornerLabel({
 
 /** The tips on Privacy and Terms, which www.zyx.tw's own links share. */
 export const LEGAL_TIPS = {
-  privacy: "What every zyx.tw site stores and logs",
-  terms: "The rules for every zyx.tw site",
+  privacy: "What we store",
+  terms: "The rules",
 }
 
 /**

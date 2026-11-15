@@ -84,7 +84,8 @@ function Lines({
 /**
  * A drawing in box-drawing characters (app/globals.css, `diagram`): real
  * text in the page's own face, so it is exactly as legible as the paragraphs
- * beside it and decodes in with them. Phones get the narrow drawing.
+ * beside it and decodes in with them. Phones get the narrow drawing. The
+ * drawing, its steps and their lines sit in the middle of the column.
  *
  * Every figure with steps works the same way: while it is on screen it
  * lights one step after another, with that step's line under the drawing;
@@ -132,24 +133,24 @@ export function ProjectDiagram({
       <div
         role="img"
         aria-label={diagram.alt}
-        className="overflow-x-auto text-muted-foreground"
+        className="overflow-x-auto overflow-y-hidden text-muted-foreground"
       >
         <Lines
           lines={diagram.wide}
           lit={lit}
           active={active}
-          className="max-sm:hidden"
+          className="mx-auto w-fit max-sm:hidden"
         />
         <Lines
           lines={diagram.narrow}
           lit={lit}
           active={active}
-          className="sm:hidden"
+          className="mx-auto w-fit sm:hidden"
         />
       </div>
       {steps.length > 0 && (
         <>
-          <ol className="mt-5 flex flex-wrap gap-x-2 gap-y-1">
+          <ol className="mt-5 flex flex-wrap justify-center gap-x-2 gap-y-1">
             {steps.map(({ label }, index) => {
               const current = index === active
               return (
@@ -166,7 +167,7 @@ export function ProjectDiagram({
                       "cursor-pointer uppercase outline-offset-4 focus-visible:outline-2",
                       "motion-safe:transition-colors motion-safe:duration-state",
                       current
-                        ? "text-foreground"
+                        ? "bg-(--mark)/20 text-(--mark)"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
@@ -187,7 +188,7 @@ export function ProjectDiagram({
           </ol>
           {/* Every step's line shares one cell, so the tallest sets the
               height and nothing below moves as the steps change. */}
-          <div className="mt-3 grid max-w-2xl">
+          <div className="mx-auto mt-3 grid max-w-2xl text-center">
             {steps.map(({ label, text }, index) => (
               <p
                 key={label}

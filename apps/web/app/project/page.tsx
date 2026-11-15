@@ -6,21 +6,26 @@ import { ProjectsJsonLd } from "@/components/json-ld"
 import { ProjectList } from "@/components/project-list"
 import { ProjectWindow } from "@/components/project-window"
 import { Showcase } from "@/components/showcase"
-import { WORKS } from "@/lib/copy"
+import { PROJECT } from "@/lib/copy"
 import { projects } from "@/lib/projects"
 import { pageMetadata } from "@/lib/site"
 
-export const metadata = pageMetadata({ title: WORKS.title, path: "/works" })
+export const metadata = pageMetadata({ title: PROJECT.title, path: "/project" })
 
 export const dynamic = "force-static"
 
-export default function Works() {
+export default function ProjectPage() {
   return (
     // The picture keeps the capture's aspect ratio at every viewport size.
     <main className={cn(column, page, "flex flex-1 flex-col")}>
       <ProjectsJsonLd projects={projects} />
       <Showcase projects={projects}>
-        <Hero title={<HeroTitle text={WORKS.title} />} />
+        <Hero
+          title={<HeroTitle text={PROJECT.title} />}
+          subtitle={
+            <span className="text-caption">projects {projects.length}</span>
+          }
+        />
         {/* Below lg the window sits above the list; from lg the list is the
             left column and the window takes the remaining width. */}
         <div className="mt-10 flex flex-1 flex-col gap-5 lg:flex-row lg:gap-10">
