@@ -9,7 +9,7 @@ import type { LegalDoc } from "@/lib/legal"
  */
 export const PRIVACY: LegalDoc = {
   title: "Privacy",
-  updated: "2026-10-29",
+  updated: "2026-11-15",
   sections: [
     {
       heading: "What this covers",
@@ -17,6 +17,7 @@ export const PRIVACY: LegalDoc = {
         [
           {
             text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, plump (formerly 3d), link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts sensorium, derp and data.",
+            mark: "every site under zyx.tw",
           },
         ],
       ],
@@ -27,6 +28,7 @@ export const PRIVACY: LegalDoc = {
         [
           {
             text: "No site runs analytics or tracking scripts. None sets cookies, except 1909, whose sign-in sets cookies that keep its members signed in.",
+            mark: "No site runs analytics or tracking scripts.",
           },
         ],
         [
@@ -52,6 +54,7 @@ export const PRIVACY: LegalDoc = {
         [
           {
             text: "www, ui, plump, 3d, link, time, good and 1909 run on Loki's own server behind a gateway, which logs each request (your IP address, the request and its headers without credentials, and the response status) and keeps the log for up to 30 days.",
+            mark: "keeps the log for up to 30 days",
           },
         ],
         [
@@ -71,7 +74,7 @@ export const PRIVACY: LegalDoc = {
         ],
         [
           {
-            text: "The GitHub activity on About is fetched by the server from the GitHub API. Your browser does not contact GitHub for it.",
+            text: "The GitHub activity on Info is fetched by the server from the GitHub API. Your browser does not contact GitHub for it.",
           },
         ],
       ],
@@ -112,6 +115,7 @@ export const PRIVACY: LegalDoc = {
         [
           {
             text: "Apart from the logs above, no other site keeps anything about you.",
+            mark: "Apart from the logs above, no other site keeps anything about you.",
           },
         ],
       ],
@@ -122,6 +126,7 @@ export const PRIVACY: LegalDoc = {
         [
           {
             text: "Links to sites outside zyx.tw open in a new tab and send them no referrer. A short link sends you to whatever address its maker gave.",
+            mark: "send them no referrer",
           },
         ],
         [
@@ -137,6 +142,7 @@ export const PRIVACY: LegalDoc = {
         [
           {
             text: "To ask what is kept about you, or to have a short link or your data removed, write to ",
+            mark: "to have a short link or your data removed",
           },
           { text: EMAIL, href: `mailto:${EMAIL}` },
           {

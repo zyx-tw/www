@@ -8,10 +8,23 @@ import type { LegalDoc, Run } from "@/lib/legal"
 
 const LINK = "terminal-link underline underline-offset-4"
 
+/** A run with its marked words in the mark's color, as a note marks them. */
+function Marked({ text, mark }: { text: string; mark?: string }) {
+  const at = mark ? text.indexOf(mark) : -1
+  if (!mark || at < 0) return <span>{text}</span>
+  return (
+    <span>
+      {text.slice(0, at)}
+      <mark className="bg-(--mark)/20 text-(--mark)">{mark}</mark>
+      {text.slice(at + mark.length)}
+    </span>
+  )
+}
+
 function Paragraph({ runs }: { runs: Run[] }) {
   return (
     <p className="mt-3">
-      {runs.map(({ text, href }, index) =>
+      {runs.map(({ text, href, mark }, index) =>
         href ? (
           <a
             key={index}
@@ -24,7 +37,7 @@ function Paragraph({ runs }: { runs: Run[] }) {
             {text}
           </a>
         ) : (
-          <span key={index}>{text}</span>
+          <Marked key={index} text={text} mark={mark} />
         )
       )}
     </p>

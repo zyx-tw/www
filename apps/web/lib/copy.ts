@@ -28,7 +28,7 @@ export const MAP = {
 export const INFO = { title: "Info" } as const
 
 export const NOT_FOUND = {
-  title: "Not found.",
+  title: "Signal lost.",
   lead: "These pages exist:",
   agents: "For agents",
   llms: "what this site is and how an agent should read it",

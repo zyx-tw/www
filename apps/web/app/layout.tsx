@@ -12,6 +12,7 @@ import { PageDecode } from "@workspace/ui/components/page-decode"
 import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { StarField } from "@/components/star-field"
 import { TvBoot, TvStatic } from "@/components/tv"
 import { systems } from "@/lib/map"
 import { projects } from "@/lib/projects"
@@ -86,6 +87,7 @@ export default async function RootLayout({
             <MotionProvider>
               <PageDecode />
               <TvStatic />
+              <StarField />
               <PondBackground />
               <SiteHeader projectNames={PROJECT_NAMES} />
               {children}

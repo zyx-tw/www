@@ -41,9 +41,9 @@ function bare(href: string) {
 /**
  * One project: its name and purpose, its picture and a few short paragraphs
  * on what it does. A project with more to say goes on from that overview
- * into sections, each with its own figure. The page ends with where the
- * project lives and what it is built with, in the same label column as
- * Info's facts.
+ * into sections, each with its own figure. Under the title are its year and
+ * what it is built with; the page ends with where it lives, in the same
+ * label column as Info's facts.
  */
 export default async function Project({
   params,
@@ -58,7 +58,6 @@ export default async function Project({
     ...(project.code && project.code !== project.href
       ? [{ label: "Code", value: bare(project.code), href: project.code }]
       : []),
-    { label: "Built with", value: project.stack.join(", ") },
   ]
   const sections = project.sections ?? []
   // Rows below the first screen all enter together: the decoder caps the
@@ -69,7 +68,18 @@ export default async function Project({
     <main className={cn(column, page, "flex-1")}>
       <Hero
         title={<HeroTitle text={project.name} />}
-        subtitle={project.purpose}
+        subtitle={
+          <>
+            {project.purpose}
+            {/* What is known about it, as under a note's title. */}
+            <span className="mt-3 flex flex-wrap gap-x-5 text-caption">
+              <span>{project.year}</span>
+              {project.stack.map((name) => (
+                <span key={name}>{name}</span>
+              ))}
+            </span>
+          </>
+        }
         className="pb-10"
       />
 

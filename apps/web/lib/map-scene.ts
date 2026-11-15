@@ -73,25 +73,6 @@ export type Hit = {
   body?: string
 }
 
-/** A small seeded generator, so the far stars are the same on every frame. */
-function random(seed: number) {
-  return () => {
-    seed = (seed + 0x6d2b79f5) | 0
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-const FAR = (() => {
-  const next = random(7)
-  return Array.from({ length: 48 }, () => ({
-    u: next(),
-    v: next(),
-    size: next() < 0.2 ? 4 : 2,
-  }))
-})()
-
 /** A system's place in the world: x and y from -1 to 1, then its height. */
 function place({ at: [x, y, z] }: System) {
   return { x: x * 2 - 1, y: y * 2 - 1, h: z * 0.8 }
@@ -276,12 +257,6 @@ export function drawScene(
       height: ROW + 4,
     }
     hits.push({ ...box, ...hit })
-  }
-
-  // The far stars slide a little as the camera turns.
-  for (const { u, v, size } of FAR) {
-    const x = (((u * width + yaw * 40) % width) + width) % width
-    dots.push({ x, y: v * height, size })
   }
 
   // Two rings on the plane.

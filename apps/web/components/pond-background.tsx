@@ -20,8 +20,9 @@ function randomKoi(): SharkSpec[] {
   ]
 }
 
-/** The pages the pond swims behind. */
-const POND_PATHS = ["/", "/project", "/info", "/privacy", "/terms"]
+/** The pond swims behind the home alone; every page has the stars
+ * (components/star-field.tsx). */
+const POND_PATHS = ["/"]
 
 /** Dispatched on the document to drop food in the middle of the pond. */
 export const FEED_EVENT = "pond:feed"

@@ -10,6 +10,7 @@ import { MAP } from "@/lib/copy"
 import { findBody, findSystem, systemPath, systems, type Body } from "@/lib/map"
 import { HUES } from "@/lib/map-palette"
 import { aim, drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
+import { DRIFT, sky } from "@/lib/sky"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 /** CSS pixels to one pixel of the wireframe. */
@@ -145,6 +146,11 @@ export function StarMap() {
     const high = names.current?.getContext("2d")
     if (!element || !low || !high) return
 
+    // The map takes the sky's turn as it opens, and gives it back as it
+    // closes, so the stars do not jump.
+    state.yaw = sky.yaw
+    sky.mapped = true
+
     let width = 0
     let height = 0
     let ratio = 1
@@ -170,9 +176,12 @@ export function StarMap() {
       last = now
       const drift = !still.current && !state.held && !state.drag
       if (drift) {
-        state.yaw += dt * 0.03
+        state.yaw += dt * DRIFT
         state.time += dt
       }
+      // The far stars are the layout's (components/star-field.tsx): they
+      // turn with the map.
+      sky.yaw = state.yaw
       state.focus = still.current
         ? state.goal
         : state.focus + (state.goal - state.focus) * Math.min(1, dt * 4)
@@ -258,6 +267,7 @@ export function StarMap() {
       ?.load("16px " + getComputedStyle(element).fontFamily)
       .catch(() => undefined)
     return () => {
+      sky.mapped = false
       cancelAnimationFrame(frame)
       resize.disconnect()
     }
