@@ -667,9 +667,14 @@
   {
     "slug": "skill-loads-on-demand",
     "log": "039",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -812,6 +817,82 @@
         ]
       },
       {
+        "title": "機制：Skill 分三層載入",
+        "body": [
+          "Skill 是一個資料夾，裡面有 SKILL.md。",
+          "SKILL.md 開頭的 name 與 description 是第 1 層。",
+          "第 1 層在新對話開始時載入，其餘等到需要時才讀。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "# SKILL.md",
+            "# ---",
+            "# name: pdf-processing",
+            "# description: Extracts PDF text. Use for PDF requests.",
+            "# ---",
+            "",
+            "index = [(s.name, s.description) for s in skills]   # tier 1",
+            "hit = model.match(request, index)",
+            "if hit:",
+            "    context += read(hit / \"SKILL.md\")               # tier 2",
+            "if needs_detail:",
+            "    context += read(hit / \"reference.md\")           # tier 3",
+            "output = shell(hit / \"scripts/extract.py\")          # run only"
+          ],
+          "alt": "Pseudo code of skill loading: names and descriptions form an index that is always in context; a matching skill's body is read, its linked files are read when needed, and its scripts are run without being read.",
+          "steps": [
+            {
+              "label": "Index",
+              "lit": ["index = [(s.name, s.description) for s in skills]"],
+              "text": "名稱與說明組成索引。每次對話都在 context 裡。"
+            },
+            {
+              "label": "Match",
+              "lit": [
+                "# description: Extracts PDF text. Use for PDF requests.",
+                "hit = model.match(request, index)"
+              ],
+              "text": "模型拿任務比對說明。說明就是觸發條件。"
+            },
+            {
+              "label": "Body",
+              "lit": ["context += read(hit / \"SKILL.md\")"],
+              "text": "任務符合時，才讀入 SKILL.md 的全文。"
+            },
+            {
+              "label": "Detail",
+              "lit": ["context += read(hit / \"reference.md\")"],
+              "text": "全文提到的附檔，用到才讀。"
+            },
+            {
+              "label": "Script",
+              "lit": ["output = shell(hit / \"scripts/extract.py\")"],
+              "text": "附帶的程式直接執行。只有輸出進入 context。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "規格限制長度",
+            "text": "Agent Skills 規格限制 name 最多 64 個字元，description 最多 1024 個字元。SKILL.md 建議少於 500 行。"
+          },
+          {
+            "term": "與作業系統的延後載入相同",
+            "text": "作業系統等到程式用到某段記憶體，才把內容載入。Skill 用相同的做法節省 [[context]]。"
+          },
+          {
+            "term": "取捨：說明決定一切",
+            "text": "全文寫得再完整，模型也只依說明決定是否載入。說明要寫出適用的任務與常見的說法。"
+          },
+          {
+            "term": "載入後留在對話裡",
+            "text": "全文載入後持續佔用 context。對話被壓縮時，只保留每個 Skill 的開頭部分。"
+          }
+        ]
+      },
+      {
         "title": "做法：把特定任務的步驟寫成 Skill",
         "body": ["==Skill 只寫同類任務都能使用的步驟==。"],
         "points": [
@@ -838,14 +919,41 @@
         ],
         "callout": "==通用規則放 CLAUDE.md，特定任務的步驟放 Skill==。"
       }
+    ],
+    "sources": [
+      {
+        "title": "Agent Skills specification",
+        "href": "https://agentskills.io/specification",
+        "by": "agentskills.io"
+      },
+      {
+        "title": "Extend Claude with skills",
+        "href": "https://code.claude.com/docs/en/skills",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Equipping agents for the real world with Agent Skills",
+        "href": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+        "by": "Anthropic"
+      },
+      {
+        "title": "Operating Systems: Three Easy Pieces",
+        "href": "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+        "by": "Arpaci-Dusseau"
+      }
     ]
   },
   {
     "slug": "plugin-ships-by-version",
     "log": "040",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -949,6 +1057,85 @@
         ]
       },
       {
+        "title": "機制：安裝端比對版本字串",
+        "body": [
+          "目錄檔列出每個 Plugin 的名稱與來源。",
+          "安裝時，Claude Code 把 Plugin 存進本機的快取。",
+          "更新時只比對版本字串。字串沒變，就不會取得新內容。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭─────────────╮  list   ╭─────────────╮  copy   ╭─────────────╮",
+            "│ MARKETPLACE │ ──────> │   PLUGIN    │ ──────> │    CACHE    │",
+            "│ catalog     │         │ source repo │         │ by version  │",
+            "╰─────────────╯         ╰─────────────╯         ╰──────┬──────╯",
+            "                                                       │ load",
+            "                                                ╭──────┴──────╮",
+            "                                                │   SESSION   │",
+            "                                                ╰─────────────╯"
+          ],
+          "narrow": [
+            "╭─────────────╮",
+            "│ MARKETPLACE │ catalog",
+            "╰──────┬──────╯",
+            "       │ list",
+            "╭──────┴──────╮",
+            "│   PLUGIN    │ source repo",
+            "╰──────┬──────╯",
+            "       │ copy",
+            "╭──────┴──────╮",
+            "│    CACHE    │ by version",
+            "╰──────┬──────╯",
+            "       │ load",
+            "╭──────┴──────╮",
+            "│   SESSION   │",
+            "╰─────────────╯"
+          ],
+          "alt": "A marketplace catalog lists plugins. A plugin is copied from its source repository into a local cache named by version, and a session loads it from the cache.",
+          "steps": [
+            {
+              "label": "Catalog",
+              "lit": ["MARKETPLACE", "catalog", "list"],
+              "text": "marketplace.json 列出每個 Plugin 的名稱與來源。"
+            },
+            {
+              "label": "Source",
+              "lit": ["PLUGIN", "source repo"],
+              "text": "來源是 Git 倉庫或資料夾，裡面有 plugin.json。"
+            },
+            {
+              "label": "Cache",
+              "lit": ["copy", "CACHE", "by version"],
+              "text": "安裝時依版本存進本機快取。"
+            },
+            {
+              "label": "Session",
+              "lit": ["load", "SESSION"],
+              "text": "新對話從快取載入 Plugin。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "版本的判斷順序",
+            "text": "先看 plugin.json 的 version，再看目錄檔的 version。兩者都沒有時，用 Git commit 的編號。"
+          },
+          {
+            "term": "SemVer 的三個數字",
+            "text": "不相容的修改加第 1 個數字，新增功能加第 2 個，修正錯誤加第 3 個。已發布的版本，內容不能再修改。"
+          },
+          {
+            "term": "取捨：寫了版本號就要更新",
+            "text": "plugin.json 寫了 version 之後，只推送新內容不會觸發更新。版本字串改變，安裝端才會取得新內容。"
+          },
+          {
+            "term": "三種安裝範圍",
+            "text": "安裝範圍分成個人、專案與本機，各自寫進不同的設定檔。專案範圍的設定會跟著倉庫分享。"
+          }
+        ]
+      },
+      {
         "title": "做法：用目錄與 Git 分享 Plugin",
         "body": ["==把 Plugin 放進 Git 倉庫，再透過目錄安裝==。"],
         "points": [
@@ -975,14 +1162,36 @@
         ],
         "callout": "==修改 Plugin 內容時，同時更新版本號==。"
       }
+    ],
+    "sources": [
+      {
+        "title": "Plugin manifest reference",
+        "href": "https://code.claude.com/docs/en/plugins-reference",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Create a marketplace",
+        "href": "https://code.claude.com/docs/en/plugin-marketplaces",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Semantic Versioning 2.0.0",
+        "href": "https://semver.org/",
+        "by": "semver.org"
+      }
     ]
   },
   {
     "slug": "claude-md",
     "log": "004",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -1086,6 +1295,81 @@
         ]
       },
       {
+        "title": "機制：規則檔由外到內串接",
+        "body": [
+          "Claude Code 從工作目錄往上找每一層的 CLAUDE.md。",
+          "找到的檔案全部串接，範圍大的排在前面。",
+          "內層的檔案不會覆蓋外層，兩者同時生效。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "context = []",
+            "context += read(\"~/.claude/CLAUDE.md\")          # user",
+            "for dir in path_from_root_to(cwd):              # broad first",
+            "    context += expand(dir / \"CLAUDE.md\")        # follows @imports",
+            "    context += expand(dir / \"CLAUDE.local.md\")",
+            "context += head(\"MEMORY.md\", lines=200)         # index only",
+            "",
+            "def on_read(file):                              # later, on demand",
+            "    context += expand(dirname(file) / \"CLAUDE.md\")"
+          ],
+          "alt": "Pseudo code of how instruction files load: the user file first, then each directory from the root to the working directory, then the head of the memory index; a subdirectory's file loads when a file there is read.",
+          "steps": [
+            {
+              "label": "User",
+              "lit": ["context += read(\"~/.claude/CLAUDE.md\")"],
+              "text": "個人的規則檔先載入，適用所有專案。"
+            },
+            {
+              "label": "Walk",
+              "lit": [
+                "for dir in path_from_root_to(cwd):",
+                "context += expand(dir / \"CLAUDE.md\")"
+              ],
+              "text": "從最外層走到工作目錄，每一層的規則檔依序接上。"
+            },
+            {
+              "label": "Import",
+              "lit": ["# follows @imports"],
+              "text": "規則檔可以用 @ 引入其他檔案，最多 4 層。"
+            },
+            {
+              "label": "Memory",
+              "lit": ["context += head(\"MEMORY.md\", lines=200)"],
+              "text": "記憶只載入索引的前 200 行。詳細內容用到才讀。"
+            },
+            {
+              "label": "Lazy",
+              "lit": [
+                "def on_read(file):",
+                "context += expand(dirname(file) / \"CLAUDE.md\")"
+              ],
+              "text": "子資料夾的規則檔，等讀到那裡的檔案才載入。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "串接，不是覆蓋",
+            "text": "兩條規則互相矛盾時，沒有固定的優先順序。發現矛盾，就刪掉其中一條。"
+          },
+          {
+            "term": "引入不會節省 context",
+            "text": "被引入的檔案同樣在啟動時載入。要節省 [[context]]，把內容改寫成 [[Skill]]。"
+          },
+          {
+            "term": "取捨：規則檔不是強制設定",
+            "text": "Claude Code 的文件說明，規則檔是 context，不是強制執行的設定。不能有例外的限制，改用 [[自動檢查]] 或權限規則。"
+          },
+          {
+            "term": "AGENTS.md 是備用檔名",
+            "text": "找不到 CLAUDE.md 時，Claude Code 會讀 AGENTS.md。Codex 等工具則直接讀 AGENTS.md。"
+          }
+        ]
+      },
+      {
         "title": "做法：寫明背景、詢問條件與完成標準",
         "body": ["==規則要交代工作所需的背景與判斷條件==。"],
         "points": [
@@ -1118,6 +1402,23 @@
           "若未照做，就把規則改得更明確。"
         ],
         "callout": "==把糾正改成規則，再用新對話測試==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "How Claude remembers your project",
+        "href": "https://code.claude.com/docs/en/memory",
+        "by": "Claude Code docs"
+      },
+      {
+        "title": "Custom instructions with AGENTS.md",
+        "href": "https://developers.openai.com/codex/guides/agents-md",
+        "by": "OpenAI"
+      },
+      {
+        "title": "Harness engineering: leveraging Codex in an agent-first world",
+        "href": "https://openai.com/index/harness-engineering/",
+        "by": "Ryan Lopopolo, OpenAI"
       }
     ]
   },
@@ -2173,9 +2474,14 @@
   {
     "slug": "rules-become-checks",
     "log": "042",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -2284,6 +2590,83 @@
         ]
       },
       {
+        "title": "機制：修改通過每一道關卡才能合併",
+        "body": [
+          "合併前的檢查是一連串的關卡。",
+          "任何一道沒通過，修改就退回。",
+          "執行越快的檢查，排在越前面。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭────────╮   ╭────────╮   ╭────────╮   ╭────────╮   ╭────────╮",
+            "│ CHANGE │──>│  LINT  │──>│ TESTS  │──>│ REVIEW │──>│ MERGE  │",
+            "╰────────╯   ╰───┬────╯   ╰───┬────╯   ╰───┬────╯   ╰────────╯",
+            "    ^            │ fail       │ fail       │ fail",
+            "    ╰────────────┴────────────┴────────────╯"
+          ],
+          "narrow": [
+            "╭────────╮",
+            "│ CHANGE │ <──────╮",
+            "╰───┬────╯        │",
+            "╭───┴────╮  fail  │",
+            "│  LINT  │ ───────┤",
+            "╰───┬────╯        │",
+            "╭───┴────╮  fail  │",
+            "│ TESTS  │ ───────┤",
+            "╰───┬────╯        │",
+            "╭───┴────╮  fail  │",
+            "│ REVIEW │ ───────╯",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│ MERGE  │",
+            "╰────────╯"
+          ],
+          "alt": "A change passes lint, then tests, then review before it merges. A failure at any gate sends it back to be changed.",
+          "steps": [
+            {
+              "label": "Lint",
+              "lit": ["LINT"],
+              "text": "靜態分析不執行程式，只讀程式碼與文字。規則檢查屬於這一類。"
+            },
+            {
+              "label": "Tests",
+              "lit": ["TESTS"],
+              "text": "測試會執行程式，確認原有的行為沒有被改壞。"
+            },
+            {
+              "label": "Review",
+              "lit": ["REVIEW"],
+              "text": "高風險的修改，再交給人或另一個 agent 審查。"
+            },
+            {
+              "label": "Fail",
+              "lit": ["fail", "CHANGE"],
+              "text": "沒通過的修改退回。錯誤訊息要說明原因與修法。"
+            },
+            {
+              "label": "Merge",
+              "lit": ["MERGE"],
+              "text": "全部通過，修改才合併。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "不想被改壞的都寫成測試",
+            "text": "Google 的工程書把這條稱為 Beyoncé Rule。沒有測試保護的行為，被改壞時不會有人發現。"
+          },
+          {
+            "term": "誤報要少",
+            "text": "靜態分析的誤報太多，就沒有人理會結果。規則要寫到能精確判斷。"
+          },
+          {
+            "term": "取捨：檢查只涵蓋寫下來的行為",
+            "text": "檢查通過，不代表沒有錯誤。沒寫成檢查的部分，仍要實際操作，見 [[怎樣才算完成]]。"
+          }
+        ]
+      },
+      {
         "title": "做法：把反覆出現的糾正寫成檢查規則",
         "body": ["==同一條糾正出現第 2 次，就改成檢查==。"],
         "points": [
@@ -2313,6 +2696,23 @@
           "能比對的規則，請 Claude Code 寫成 pull request 的自動檢查。"
         ],
         "callout": "==能自動判斷的規則，改成合併前的自動檢查==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Software Engineering at Google: Testing Overview",
+        "href": "https://abseil.io/resources/swe-book/html/ch11.html",
+        "by": "Google"
+      },
+      {
+        "title": "Software Engineering at Google: Static Analysis",
+        "href": "https://abseil.io/resources/swe-book/html/ch20.html",
+        "by": "Google"
+      },
+      {
+        "title": "Software Engineering at Google: Code Review",
+        "href": "https://abseil.io/resources/swe-book/html/ch09.html",
+        "by": "Google"
       }
     ]
   },
@@ -4077,9 +4477,14 @@
   {
     "slug": "network-in-git",
     "log": "021",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -4176,6 +4581,75 @@
         ]
       },
       {
+        "title": "機制：反覆比對，直到實際狀態符合檔案",
+        "body": [
+          "檔案寫的是想要的狀態，不是操作步驟。",
+          "程式定期讀取檔案，再觀察設備的實際狀態。",
+          "兩者不同時，修正實際狀態，或發出通知。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "while True:",
+            "    want = read(git, \"main\")        # desired state",
+            "    have = observe(devices)         # actual state",
+            "    for change in diff(want, have):",
+            "        if AUTO_APPLY:",
+            "            apply(change)           # must be idempotent",
+            "        else:",
+            "            notify(change)          # drift report",
+            "    sleep(INTERVAL)"
+          ],
+          "alt": "Pseudo code of a reconciliation loop: read the desired state from Git, observe the actual state, and for each difference either apply it or report it, then wait and repeat.",
+          "steps": [
+            {
+              "label": "Want",
+              "lit": ["want = read(git, \"main\")"],
+              "text": "想要的狀態來自 Git 的主分支。"
+            },
+            {
+              "label": "Have",
+              "lit": ["have = observe(devices)"],
+              "text": "實際狀態直接向設備查詢。"
+            },
+            {
+              "label": "Diff",
+              "lit": ["for change in diff(want, have):"],
+              "text": "兩者的差異，就是需要處理的項目。"
+            },
+            {
+              "label": "Apply",
+              "lit": ["apply(change)"],
+              "text": "自動套用差異，讓實際狀態回到檔案寫的樣子。"
+            },
+            {
+              "label": "Notify",
+              "lit": ["notify(change)"],
+              "text": "不自動套用時，只回報差異，由人決定。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "宣告式的寫法",
+            "text": "宣告式的檔案只寫結果。達成結果的步驟由程式決定。"
+          },
+          {
+            "term": "修改要冪等",
+            "text": "冪等是指同一個修改套用 2 次，結果與套用 1 次相同。迴圈才能安全地重複執行。"
+          },
+          {
+            "term": "飄移",
+            "text": "實際狀態與檔案不同，稱為飄移。只在後台修改的設定，就是飄移的來源。"
+          },
+          {
+            "term": "取捨：自動修正或只通知",
+            "text": "自動修正最省事，但寫錯的檔案也會被套用。風險高的設備先只通知，確認後再套用。"
+          }
+        ]
+      },
+      {
         "title": "做法：讀取狀態用工具，修改設定送審",
         "body": ["==讀取狀態用工具，修改規則走 pull request==。"],
         "points": [
@@ -4202,6 +4676,18 @@
           "有了登記資料，再加入自動套用。"
         ],
         "callout": "==先改檔案，再動設備==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "OpenGitOps principles",
+        "href": "https://opengitops.dev/",
+        "by": "OpenGitOps"
+      },
+      {
+        "title": "Controllers",
+        "href": "https://kubernetes.io/docs/concepts/architecture/controller/",
+        "by": "Kubernetes docs"
       }
     ]
   },
@@ -4943,9 +5429,14 @@
   {
     "slug": "backup-memory-and-keys",
     "log": "043",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -5055,6 +5546,83 @@
         ]
       },
       {
+        "title": "機制：先加密檔案，再加密金鑰",
+        "body": [
+          "這種做法稱為信封加密。",
+          "檔案用隨機產生的 file key 加密。",
+          "file key 再用收件者的公鑰加密，放在檔案開頭。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭───────────╮   FILE KEY     ╭─────────────╮",
+            "│ PLAINTEXT │ ─────────────> │ CIPHERTEXT  │ ──╮",
+            "╰───────────╯   encrypts     ╰─────────────╯   │   ╭──────────╮",
+            "                                               ├─> │ GIT REPO │",
+            "╭───────────╮   PUBLIC KEY   ╭─────────────╮   │   ╰──────────╯",
+            "│ FILE KEY  │ ─────────────> │ WRAPPED KEY │ ──╯",
+            "╰───────────╯   wraps        ╰─────────────╯"
+          ],
+          "narrow": [
+            "╭───────────╮",
+            "│ PLAINTEXT │",
+            "╰─────┬─────╯",
+            "      │ FILE KEY encrypts",
+            "╭─────┴──────╮",
+            "│ CIPHERTEXT │",
+            "╰─────┬──────╯",
+            "      │ PUBLIC KEY wraps",
+            "╭─────┴───────╮",
+            "│ WRAPPED KEY │",
+            "╰─────┬───────╯",
+            "      v",
+            "   GIT REPO"
+          ],
+          "alt": "Envelope encryption: a random file key encrypts the plaintext into ciphertext, a public key wraps the file key, and the ciphertext and the wrapped key are stored together in a Git repository.",
+          "steps": [
+            {
+              "label": "File key",
+              "lit": ["FILE KEY"],
+              "text": "加密工具 age 替每個檔案產生隨機的 file key。"
+            },
+            {
+              "label": "Encrypt",
+              "lit": [
+                "PLAINTEXT",
+                "encrypts",
+                "FILE KEY encrypts",
+                "CIPHERTEXT"
+              ],
+              "text": "file key 把明文加密成密文。"
+            },
+            {
+              "label": "Wrap",
+              "lit": ["PUBLIC KEY", "wraps", "PUBLIC KEY wraps", "WRAPPED KEY"],
+              "text": "公鑰把 file key 加密。只有持有私鑰的人能解開。"
+            },
+            {
+              "label": "Store",
+              "lit": ["GIT REPO"],
+              "text": "密文與加密過的 file key 一起放進 Git。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "一份檔案，多個收件者",
+            "text": "同一把 file key 可以分別加密給多個收件者。每個收件者都能用自己的私鑰解開。"
+          },
+          {
+            "term": "3-2-1 原則",
+            "text": "保留 3 份資料，放在 2 種不同的媒體，其中 1 份放在異地。"
+          },
+          {
+            "term": "取捨：私鑰是唯一的弱點",
+            "text": "加密後的備份可以放在任何地方。私鑰一旦遺失，所有備份都無法還原。"
+          }
+        ]
+      },
+      {
         "title": "做法：自動同步記憶，加密後備份金鑰",
         "body": ["==備份由排程自動執行，不依賴手動操作==。"],
         "points": [
@@ -5088,6 +5656,23 @@
           "再處理金鑰的加密備份，並測試還原。"
         ],
         "callout": "==記憶放進 Git，金鑰加密後再備份==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "age encryption format v1",
+        "href": "https://age-encryption.org/v1",
+        "by": "age-encryption.org"
+      },
+      {
+        "title": "SOPS: Secrets OPerationS",
+        "href": "https://github.com/getsops/sops",
+        "by": "getsops"
+      },
+      {
+        "title": "Data Backup Options",
+        "href": "https://www.cisa.gov/sites/default/files/publications/data_backup_options.pdf",
+        "by": "CISA"
       }
     ]
   },
@@ -5500,9 +6085,14 @@
   {
     "slug": "one-way-to-deploy",
     "log": "034",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -5596,6 +6186,70 @@
         ]
       },
       {
+        "title": "機制：標籤會移動，digest 不會",
+        "body": [
+          "映像檔的 digest 是由內容算出的雜湊值。",
+          "內容相同，digest 就相同。",
+          "標籤只是指向某個 digest 的名字，可以改指別的映像檔。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "digest = build(commit)                  # sha256:..., once",
+            "push(registry, digest)",
+            "",
+            "# after merge: no rebuild, only a new name",
+            "tag(registry, digest, \"sha-\" + commit)",
+            "release = {\"image\": digest, \"config\": config[env]}",
+            "deploy(release)",
+            "",
+            "if not healthy():",
+            "    deploy(previous_release)            # rollback"
+          ],
+          "alt": "Pseudo code of build once and promote: build an image once and push it by digest, give it a new tag after merge, deploy a release made of the image and the configuration, and roll back to the previous release when it is unhealthy.",
+          "steps": [
+            {
+              "label": "Build",
+              "lit": ["digest = build(commit)", "push(registry, digest)"],
+              "text": "每個 commit 只打包 1 次，得到固定的 digest。"
+            },
+            {
+              "label": "Tag",
+              "lit": ["tag(registry, digest, \"sha-\" + commit)"],
+              "text": "合併後不重新打包，只替同一個 digest 加上新標籤。"
+            },
+            {
+              "label": "Release",
+              "lit": [
+                "release = {\"image\": digest, \"config\": config[env]}",
+                "deploy(release)"
+              ],
+              "text": "發布是映像檔加上環境設定。"
+            },
+            {
+              "label": "Rollback",
+              "lit": ["if not healthy():", "deploy(previous_release)"],
+              "text": "新版不健康時，改回前一次發布。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "建置、發布與執行分開",
+            "text": "Twelve-Factor App 把流程分成三個階段。建置產生映像檔，發布加上設定，執行才啟動程式。"
+          },
+          {
+            "term": "發布不能修改",
+            "text": "每次發布都有新的編號，內容不再更動。退回就是改用前一次發布。"
+          },
+          {
+            "term": "取捨：上線的就是測試過的",
+            "text": "合併後重新打包，上線的映像檔可能與測試過的不同。只換標籤時，兩者是同一份內容。"
+          }
+        ]
+      },
+      {
         "title": "做法：讓各專案呼叫共用部署流程",
         "body": [
           "==把部署流程寫在共用處，讓各專案呼叫==。",
@@ -5629,6 +6283,23 @@
           "上線後驗證實際行為。"
         ],
         "callout": "==在合併前完成打包，合併後換標籤並上線==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "The Twelve-Factor App: Build, release, run",
+        "href": "https://12factor.net/build-release-run",
+        "by": "12factor.net"
+      },
+      {
+        "title": "OCI Image Format: Content Descriptors",
+        "href": "https://github.com/opencontainers/image-spec/blob/main/descriptor.md",
+        "by": "Open Container Initiative"
+      },
+      {
+        "title": "Release Engineering",
+        "href": "https://sre.google/sre-book/release-engineering/",
+        "by": "Google SRE Book"
       }
     ]
   },
@@ -5791,9 +6462,14 @@
   {
     "slug": "observability-first",
     "log": "036",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-11-15",
     "changes": [
+      {
+        "version": "1.1.0",
+        "date": "2026-11-15",
+        "text": "加上機制的圖解與來源。"
+      },
       {
         "version": "1.0.0",
         "date": "2026-11-15",
@@ -5918,6 +6594,87 @@
         ]
       },
       {
+        "title": "機制：三種訊號經過同一條管線",
+        "body": [
+          "服務送出三種訊號：metrics、logs 與 traces。",
+          "OpenTelemetry 規定訊號的格式與傳送方式，傳送協定稱為 OTLP。",
+          "Collector 收下訊號，處理後轉送到儲存服務。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭─────────╮  OTLP   ╭──────────── COLLECTOR ────────────╮",
+            "│ SERVICE │ ──────> │ receiver > processor > exporter   │",
+            "│ and SDK │         ╰────┬────────────┬────────────┬────╯",
+            "╰─────────╯              v            v            v",
+            "                    ╭─────────╮  ╭─────────╮  ╭─────────╮",
+            "                    │ METRICS │  │  LOGS   │  │ TRACES  │",
+            "                    ╰────┬────╯  ╰────┬────╯  ╰────┬────╯",
+            "                         ╰────────────┴────────────╯",
+            "                              queried by an AGENT"
+          ],
+          "narrow": [
+            "╭─────────╮",
+            "│ SERVICE │ and SDK",
+            "╰────┬────╯",
+            "     │ OTLP",
+            "╭────┴──────╮",
+            "│ COLLECTOR │ receiver >",
+            "╰────┬──────╯ processor >",
+            "     │        exporter",
+            "╭────┴────╮",
+            "│ METRICS │",
+            "│ LOGS    │",
+            "│ TRACES  │",
+            "╰────┬────╯",
+            "     │",
+            " queried by an AGENT"
+          ],
+          "alt": "A service with an SDK sends signals over OTLP to a collector, which receives, processes and exports them to stores for metrics, logs and traces that an agent queries.",
+          "steps": [
+            {
+              "label": "Service",
+              "lit": ["SERVICE", "and SDK"],
+              "text": "服務裡的 SDK 產生訊號。"
+            },
+            {
+              "label": "OTLP",
+              "lit": ["OTLP"],
+              "text": "訊號用 OTLP 傳送。任何支援 OTLP 的服務都能接收。"
+            },
+            {
+              "label": "Collector",
+              "lit": ["COLLECTOR", "receiver >", "processor >", "exporter"],
+              "text": "receiver 接收，processor 處理，exporter 轉送。"
+            },
+            {
+              "label": "Signals",
+              "lit": ["METRICS", "LOGS", "TRACES"],
+              "text": "metrics 是數字，logs 是事件，traces 是一次請求經過的路徑。"
+            },
+            {
+              "label": "Query",
+              "lit": ["queried by an AGENT"],
+              "text": "agent 透過查詢介面讀取訊號，不需要監控畫面。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "三種訊號回答不同問題",
+            "text": "metrics 回答有沒有問題。traces 回答問題在哪一段。logs 回答當時發生了什麼事。"
+          },
+          {
+            "term": "四個黃金訊號",
+            "text": "Google SRE 建議先量四件事：延遲、流量、錯誤與飽和度。"
+          },
+          {
+            "term": "取捨：訊號越多，成本越高",
+            "text": "每筆訊號都要傳送與儲存。先送四個黃金訊號與錯誤的 [[log]]，再依需要增加。"
+          }
+        ]
+      },
+      {
         "title": "做法：確認紀錄送得出、查得到並持續檢查",
         "body": ["==上線前要確認紀錄送得出、查得到並有人查看==。"],
         "points": [
@@ -5945,6 +6702,28 @@
           "頁面緩慢時，分層檢查後再決定修改位置。"
         ],
         "callout": "==紀錄要送得出去、查得到、有人看==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "OpenTelemetry: Signals",
+        "href": "https://opentelemetry.io/docs/concepts/signals/",
+        "by": "OpenTelemetry"
+      },
+      {
+        "title": "OpenTelemetry Collector architecture",
+        "href": "https://opentelemetry.io/docs/collector/architecture/",
+        "by": "OpenTelemetry"
+      },
+      {
+        "title": "OTLP specification",
+        "href": "https://opentelemetry.io/docs/specs/otlp/",
+        "by": "OpenTelemetry"
+      },
+      {
+        "title": "Monitoring Distributed Systems",
+        "href": "https://sre.google/sre-book/monitoring-distributed-systems/",
+        "by": "Google SRE Book"
       }
     ]
   },
@@ -7722,6 +8501,387 @@
         "title": "Continually improving our agent harness",
         "href": "https://cursor.com/blog/continually-improving-agent-harness",
         "by": "Cursor"
+      }
+    ]
+  },
+  {
+    "slug": "vm-and-container",
+    "log": "051",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "一台實體主機可以切成多個獨立的環境。",
+      "虛擬機模擬整台電腦，裡面有自己的作業系統核心。",
+      "==容器只是主機上被隔離的一組程序==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：兩種隔離方式",
+        "body": [
+          "Proxmox VE 這類平台同時提供虛擬機與容器。",
+          "虛擬機用 KVM 與 QEMU，容器用 LXC。",
+          "兩者的差別，在於有沒有自己的核心。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " VIRTUAL MACHINE              CONTAINER",
+            "╭──────────────────╮         ╭──────────────────╮",
+            "│ app              │         │ app              │",
+            "│ GUEST KERNEL     │         │ namespaces       │",
+            "│ QEMU process     │         │ cgroups          │",
+            "├──────────────────┤         ├──────────────────┤",
+            "│ HOST KERNEL  KVM │         │ HOST KERNEL      │",
+            "│ hardware         │         │ hardware         │",
+            "╰──────────────────╯         ╰──────────────────╯"
+          ],
+          "narrow": [
+            " VIRTUAL MACHINE",
+            "╭──────────────────╮",
+            "│ app              │",
+            "│ GUEST KERNEL     │",
+            "│ QEMU process     │",
+            "├──────────────────┤",
+            "│ HOST KERNEL  KVM │",
+            "╰──────────────────╯",
+            " CONTAINER",
+            "╭──────────────────╮",
+            "│ app              │",
+            "│ namespaces       │",
+            "│ cgroups          │",
+            "├──────────────────┤",
+            "│ HOST KERNEL      │",
+            "╰──────────────────╯"
+          ],
+          "alt": "Two stacks. A virtual machine runs an app on a guest kernel inside a QEMU process, above the host kernel with KVM. A container runs an app as processes limited by namespaces and cgroups, directly on the host kernel.",
+          "steps": [
+            {
+              "label": "VM",
+              "lit": ["VIRTUAL MACHINE", "GUEST KERNEL", "QEMU process"],
+              "text": "QEMU 程序模擬硬體。虛擬機裡跑完整的作業系統。"
+            },
+            {
+              "label": "KVM",
+              "lit": ["KVM"],
+              "text": "KVM 是 Linux 核心的模組，讓虛擬機使用處理器的虛擬化功能。"
+            },
+            {
+              "label": "Container",
+              "lit": ["CONTAINER", "namespaces", "cgroups"],
+              "text": "容器沒有自己的核心。namespace 限制看得到什麼，cgroup 限制用得到多少。"
+            },
+            {
+              "label": "Shared",
+              "lit": ["HOST KERNEL"],
+              "text": "所有容器共用主機的核心，所以只能執行 Linux。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "hypervisor 管理虛擬機",
+            "text": "管理虛擬機的軟體稱為 hypervisor。教科書 OSTEP 把 hypervisor 形容成作業系統的作業系統。"
+          },
+          {
+            "term": "namespace 隔離視野",
+            "text": "namespace 把系統資源包起來，程序只看得到自己的那一份。例如程序編號、網路與掛載點。"
+          },
+          {
+            "term": "cgroup 限制用量",
+            "text": "cgroup 把程序分組，限制每組能使用的記憶體與處理器。"
+          }
+        ]
+      },
+      {
+        "title": "實作：用核心功能做出容器",
+        "body": [
+          "容器由兩個核心功能組成。",
+          "以下用系統呼叫與指令示意，省略了檔案系統的準備。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "# 1. isolate what the process can see",
+            "pid = clone(CLONE_NEWPID | CLONE_NEWNET |",
+            "            CLONE_NEWNS  | CLONE_NEWUSER)",
+            "",
+            "# 2. limit what the process can use",
+            "mkdir /sys/fs/cgroup/demo",
+            "echo 512M > /sys/fs/cgroup/demo/memory.max",
+            "echo $pid > /sys/fs/cgroup/demo/cgroup.procs"
+          ],
+          "alt": "Two steps that make a container: clone a process into new PID, network, mount and user namespaces, then put it in a cgroup with a memory limit.",
+          "steps": [
+            {
+              "label": "Clone",
+              "lit": [
+                "pid = clone(CLONE_NEWPID | CLONE_NEWNET |",
+                "CLONE_NEWNS  | CLONE_NEWUSER)"
+              ],
+              "text": "clone 建立新程序。每個旗標給新程序一個獨立的 namespace。"
+            },
+            {
+              "label": "Group",
+              "lit": ["mkdir /sys/fs/cgroup/demo"],
+              "text": "建立一個 cgroup。"
+            },
+            {
+              "label": "Limit",
+              "lit": ["echo 512M > /sys/fs/cgroup/demo/memory.max"],
+              "text": "寫入上限。這組程序最多使用 512 MB 記憶體。"
+            },
+            {
+              "label": "Join",
+              "lit": ["echo $pid > /sys/fs/cgroup/demo/cgroup.procs"],
+              "text": "把程序放進 cgroup，上限開始生效。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "取捨：隔離強度與成本",
+            "text": "虛擬機隔離較強，也能執行不同的作業系統，但啟動較慢、佔用較多記憶體。容器啟動快，但共用核心。"
+          },
+          {
+            "term": "非特權容器",
+            "text": "非特權容器使用 user namespace。容器內的 root，對應到主機上的一般使用者。"
+          },
+          {
+            "term": "給 agent 一個可以重建的環境",
+            "text": "讓 agent 在容器或虛擬機裡執行指令。環境弄壞時刪掉重建，不影響主機。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：替每個服務選擇環境",
+        "body": [
+          "列出跑在同一台主機上的服務。",
+          "需要不同作業系統或較強隔離的服務，放進虛擬機。",
+          "其餘放進容器。機器的分工，見 [[筆電只編輯]]。"
+        ],
+        "callout": "==虛擬機隔離整台電腦，容器隔離一組程序==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "namespaces(7)",
+        "href": "https://man7.org/linux/man-pages/man7/namespaces.7.html",
+        "by": "Linux manual pages"
+      },
+      {
+        "title": "cgroups(7)",
+        "href": "https://man7.org/linux/man-pages/man7/cgroups.7.html",
+        "by": "Linux manual pages"
+      },
+      {
+        "title": "user_namespaces(7)",
+        "href": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+        "by": "Linux manual pages"
+      },
+      {
+        "title": "Virtual Machine Monitors",
+        "href": "https://pages.cs.wisc.edu/~remzi/OSTEP/vmm-intro.pdf",
+        "by": "OSTEP"
+      }
+    ]
+  },
+  {
+    "slug": "private-network",
+    "log": "052",
+    "version": "1.0.0",
+    "updated": "2026-11-15",
+    "changes": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-15",
+        "text": "第一版。"
+      }
+    ],
+    "intro": [
+      "機器分散在家裡、學校與雲端，位址各不相同。",
+      "私有網路替每台機器加上固定的位址與名稱。",
+      "==ssh 與工具都用名稱連線，不必知道機器在哪個網路==。"
+    ],
+    "sections": [
+      {
+        "title": "原理：控制與資料走不同的路",
+        "body": [
+          "Tailscale 這類服務在 WireGuard 上建立私有網路。",
+          "每台機器產生一組金鑰，把公鑰交給協調伺服器。",
+          "協調伺服器再把公鑰與存取規則發給其他機器。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "            ╭──────────────────────╮",
+            "            │ COORDINATION SERVER  │",
+            "            │ keys and policy only │",
+            "            ╰────┬────────────┬────╯",
+            "                 │            │",
+            "           ╭─────┴────╮  ╭────┴─────╮",
+            "           │  LAPTOP  │<>│  REMOTE  │",
+            "           ╰──────────╯  ╰──────────╯",
+            "            behind NAT    behind NAT",
+            "          WireGuard tunnel, peer to peer"
+          ],
+          "narrow": [
+            "╭──────────────────────╮",
+            "│ COORDINATION SERVER  │",
+            "│ keys and policy only │",
+            "╰───┬─────────────┬────╯",
+            "    │             │",
+            "╭───┴────╮   ╭────┴───╮",
+            "│ LAPTOP │<─>│ REMOTE │",
+            "╰────────╯   ╰────────╯",
+            " behind NAT, both sides",
+            " WireGuard tunnel"
+          ],
+          "alt": "A coordination server exchanges only keys and policy with a laptop and a server. The two machines, each behind NAT, send data to each other directly through a WireGuard tunnel.",
+          "steps": [
+            {
+              "label": "Control",
+              "lit": ["COORDINATION SERVER", "keys and policy only"],
+              "text": "協調伺服器只保存公鑰與存取規則，不經手資料。"
+            },
+            {
+              "label": "Data",
+              "lit": [
+                "LAPTOP",
+                "REMOTE",
+                "WireGuard tunnel, peer to peer",
+                "WireGuard tunnel"
+              ],
+              "text": "資料在兩台機器之間直接傳送，用 WireGuard 加密。"
+            },
+            {
+              "label": "NAT",
+              "lit": ["behind NAT", "behind NAT, both sides"],
+              "text": "兩台機器都在 NAT 後面時，先找出彼此的對外位址。直連失敗才改走中繼伺服器。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "私有位址",
+            "text": "RFC 1918 保留了三段私有位址，例如 10.0.0.0/8。這些位址不會出現在公開的網際網路。"
+          },
+          {
+            "term": "CIDR 的斜線",
+            "text": "斜線後的數字是前綴長度。10.0.0.0/8 表示前 8 個位元固定，其餘用來編號。"
+          },
+          {
+            "term": "NAT 擋住連入",
+            "text": "NAT 讓多台機器共用一個對外位址。外面的機器因此無法直接連進來。"
+          }
+        ]
+      },
+      {
+        "title": "實作：把存取規則與名稱寫成檔案",
+        "body": [
+          "存取規則檔寫明誰能連到什麼。",
+          "ssh 設定檔替每台機器取短名字。"
+        ],
+        "figure": {
+          "kind": "diagram",
+          "code": true,
+          "wide": [
+            "# policy file: who may reach what",
+            "{\"acls\": [",
+            "  {\"action\": \"accept\",",
+            "   \"src\": [\"group:admin\"],",
+            "   \"dst\": [\"tag:server:22,443\"]}",
+            "]}",
+            "",
+            "# ~/.ssh/config: short names, one hop through a jump host",
+            "Host build",
+            "  HostName build.internal.example",
+            "  ProxyJump gateway"
+          ],
+          "alt": "An access policy that lets one group reach tagged servers on two ports, and an ssh configuration that gives a machine a short name and reaches it through a jump host.",
+          "steps": [
+            {
+              "label": "Accept",
+              "lit": ["{\"action\": \"accept\","],
+              "text": "規則只列出允許的連線。沒有列出的連線會被拒絕。"
+            },
+            {
+              "label": "Who",
+              "lit": [
+                "\"src\": [\"group:admin\"],",
+                "\"dst\": [\"tag:server:22,443\"]}"
+              ],
+              "text": "來源是使用者群組，目的地是機器的標籤與連接埠。"
+            },
+            {
+              "label": "Name",
+              "lit": ["Host build", "HostName build.internal.example"],
+              "text": "ssh 設定檔把短名字對應到機器的完整名稱。"
+            },
+            {
+              "label": "Jump",
+              "lit": ["ProxyJump gateway"],
+              "text": "ProxyJump 讓連線先經過另一台機器。"
+            }
+          ]
+        },
+        "points": [
+          {
+            "term": "取捨：連得到不等於可以連",
+            "text": "Tailscale 的文章指出，VPN 是連線工具。誰能連到什麼，要另外用存取規則限制。"
+          },
+          {
+            "term": "規則放進 Git",
+            "text": "存取規則是一個檔案，可以放進 Git 並經過審查，見 [[網路寫成檔案]]。"
+          },
+          {
+            "term": "ssh 採用第一個符合的設定",
+            "text": "同一個選項出現多次時，ssh 採用最先符合的值。針對特定機器的設定要寫在前面。"
+          }
+        ]
+      },
+      {
+        "title": "下一步：先設定名稱，再收緊規則",
+        "body": [
+          "替常用的機器設定 [[ssh]] 短名字。",
+          "列出哪些機器需要互相連線，寫成存取規則。",
+          "其餘的連線保持關閉。"
+        ],
+        "callout": "==協調伺服器管金鑰與規則，資料在機器之間直接傳送==。"
+      }
+    ],
+    "sources": [
+      {
+        "title": "How Tailscale works",
+        "href": "https://tailscale.com/blog/how-tailscale-works",
+        "by": "Avery Pennarun, Tailscale"
+      },
+      {
+        "title": "Manage permissions using ACLs",
+        "href": "https://tailscale.com/kb/1018/acls",
+        "by": "Tailscale docs"
+      },
+      {
+        "title": "RFC 1918: Address Allocation for Private Internets",
+        "href": "https://www.rfc-editor.org/rfc/rfc1918",
+        "by": "IETF"
+      },
+      {
+        "title": "RFC 4632: Classless Inter-domain Routing",
+        "href": "https://www.rfc-editor.org/rfc/rfc4632",
+        "by": "IETF"
+      },
+      {
+        "title": "ssh_config(5)",
+        "href": "https://man.openbsd.org/ssh_config",
+        "by": "OpenBSD manual pages"
       }
     ]
   }
