@@ -28,5 +28,16 @@
   },
   "家目錄": {
     "body": "start-from-home"
+  },
+  "接上每個系統": {
+    "body": "acts-for-me"
+  },
+  "pw": {
+    "text": "我替 Claude Code 準備的瀏覽器：沒有視窗，開在另一台機器上，不動我的 Safari。",
+    "note": "out-of-my-way"
+  },
+  "pull request": {
+    "text": "修改合併進專案之前的那一關。我的自動檢查放在這一關。",
+    "note": "remembers-me"
   }
 }

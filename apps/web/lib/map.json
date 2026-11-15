@@ -60,36 +60,38 @@
       "bodies": [
         {
           "slug": "knows-me",
-          "name": "我只講半句，Claude Code 就懂：讓它看得到我的生活",
-          "line": "它看得到我的行事曆、信件與死線，所以我講半句就夠。",
+          "name": "我只講半句，Claude Code 就懂：缺的背景讓 Claude Code 自己查",
+          "line": "Claude Code 查得到我的課程平台和信箱，所以我講半句就夠。",
           "needs": ["four-ways-to-extend"],
           "short": "Context"
         },
         {
           "slug": "remembers-me",
-          "name": "同一句糾正我不講第 2 次：把糾正變成規則",
-          "line": "同一句糾正，我不講第 2 次。",
+          "name": "同一句糾正，我不想講第 2 次：把糾正寫成規則，再寫成檢查",
+          "line": "糾正寫成規則會載入，寫成檢查才擋得住。",
           "needs": ["claude-md"],
           "short": "記憶"
         },
         {
           "slug": "acts-for-me",
-          "name": "接了 25 個 MCP server 之後：讓它碰得到我用的每個系統",
-          "line": "我用的每個系統它都碰得到，而且走最省的路。",
+          "name": "我接了 25 個 MCP server：我用的每個系統，Claude Code 都要碰得到",
+          "line": "我用的每個系統 Claude Code 都碰得到，而且走要讀最少東西的那條路。",
           "needs": ["four-ways-to-extend"],
           "short": "MCP"
         },
         {
           "slug": "out-of-my-way",
-          "name": "Safari 被呼叫 1,916 次之後，我把瀏覽器還給自己",
-          "line": "它在背景做事，我的瀏覽器還是我的。",
-          "short": "瀏覽器"
+          "name": "Claude Code 用了我的 Safari 1,988 次：我給 Claude Code 一個自己的瀏覽器",
+          "line": "Claude Code 在背景用自己的瀏覽器，我的 Safari 留給我。",
+          "short": "瀏覽器",
+          "needs": ["acts-for-me"]
         },
         {
           "slug": "while-i-am-away",
-          "name": "筆電關了它還在：把能力搬到 server 上",
-          "line": "能力放在 server 上，不綁在我的筆電。",
-          "short": "雲端"
+          "name": "筆電關了，哪些事還在跑：把能力放到一直開著的機器上",
+          "line": "綁在筆電上的能力，筆電關了就停。放在會自己排程的服務上，才會繼續。",
+          "short": "雲端",
+          "needs": ["out-of-my-way"]
         }
       ]
     },
