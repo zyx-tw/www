@@ -201,7 +201,7 @@
         },
         {
           "slug": "one-job-per-machine",
-          "name": "筆電只編輯：每台設備只做 1 件事",
+          "name": "筆電只編輯：每種工作有固定的機器",
           "line": "筆電只編輯，其他機器負責編譯、運算和儲存。",
           "short": "分工",
           "needs": ["one-claude-many-machines"]
@@ -230,7 +230,7 @@
         {
           "slug": "one-plugin-catalog",
           "name": "1 份 Plugin 目錄，Claude Code 和 Codex 都從這裡裝",
-          "line": "目錄寫死每個 Plugin 的版本，2 邊才會裝到同一版。",
+          "line": "目錄寫死每個 Plugin 的版本，2 邊才會裝到同一版。我自己的 zyx 是例外，2 邊現在不同版。",
           "needs": ["four-ways-to-extend"],
           "short": "plugin"
         },
