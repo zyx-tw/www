@@ -102,7 +102,7 @@ export function Paragraph({ text }: { text: string }) {
   const code = fenced(text)
   if (code !== undefined)
     return (
-      <pre className="overflow-x-auto border-t border-b border-border py-5 text-caption text-muted-foreground">
+      <pre className="overflow-x-auto border-t border-b border-border py-6 text-caption leading-6 text-muted-foreground">
         {code}
       </pre>
     )
