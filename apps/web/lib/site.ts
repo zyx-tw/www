@@ -81,10 +81,14 @@ export function pageMetadata({
   return {
     ...(title ? { title } : {}),
     description,
-    // <link rel="alternate" type="text/markdown"> to the Markdown twin.
+    // <link rel="alternate">: the Markdown twin, and the feed of the notes,
+    // which a feed reader finds from any page.
     alternates: {
       canonical: path,
-      ...(markdown ? { types: { "text/markdown": markdown } } : {}),
+      types: {
+        ...(markdown ? { "text/markdown": markdown } : {}),
+        "application/atom+xml": "/feed.xml",
+      },
     },
     openGraph: {
       type: "website",

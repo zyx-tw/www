@@ -397,7 +397,10 @@ export function llmsTxt() {
       ].join("\n\n"),
       [
         "## Optional",
-        `- ${link("Sitemap", absoluteUrl("/sitemap.xml"))}: the HTML pages`,
+        [
+          `- ${link("Sitemap", absoluteUrl("/sitemap.xml"))}: the HTML pages`,
+          `- ${link("Feed", absoluteUrl("/feed.xml"))}: the notes on the map as Atom, last changed first`,
+        ].join("\n"),
       ].join("\n\n"),
     ].join("\n\n") + "\n"
   )
