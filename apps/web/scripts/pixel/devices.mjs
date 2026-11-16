@@ -576,6 +576,283 @@ Object.assign(S, {
     return p
   },
 })
+Object.assign(S, {
+  // aias: a vending cabinet. Models in rows behind the window, the one in use lit, a tray under them.
+  aias() {
+    const p = [...body(7.0, 4.0, 4.8)],
+      f = 2.0
+    p.push(
+      frame(-3.0, f, 1.7, 4.2, 2.9),
+      box(-3.0, f, 1.7, 4.2, 0.04, 2.9, K, { lift: -0.25 })
+    )
+    for (let k = 0; k < 12; k++) {
+      const x = -2.8 + (k % 4) * 1.0,
+        z = 1.9 + ((k / 4) | 0) * 0.92
+      p.push(
+        k === 6
+          ? lit(x, f + 0.06, z, 0.8, 0.7, 1.4)
+          : box(x, f + 0.06, z, 0.8, 0.03, 0.7, k % 5 === 0 ? L : G, {
+              lift: -0.05,
+            })
+      )
+    }
+    p.push(
+      box(-3.0, f, 0.6, 4.2, 0.3, 0.7, G, { lift: -0.1 }),
+      box(-2.6, f + 0.3, 0.7, 3.4, 0.03, 0.4, K)
+    )
+    for (let k = 0; k < 6; k++)
+      p.push(
+        box(
+          1.7 + (k % 2) * 0.6,
+          f,
+          2.6 + ((k / 2) | 0) * 0.6,
+          0.44,
+          0.2,
+          0.44,
+          k === 3 ? MAT.orange : L,
+          { lift: 0.05 }
+        )
+      )
+    p.push(
+      lit(1.7, f + 0.06, 4.5, 1.04, 0.3, 0.8),
+      box(1.7, f, 1.0, 1.04, 0.3, 1.0, G, { lift: -0.1 }),
+      glow(ball(2.22, f + 0.36, 1.5, 0.18), A, 1.0)
+    )
+    for (let i = 0; i < 7; i++)
+      p.push(box(-2.6 + i * 0.8, -1.4, 5.16, 0.5, 2.4, 0.1, K))
+    return p
+  },
+  // sense: a listening post. A horn for an ear, a lens for an eye, the caption on the front: heard words lit, the draft still grey.
+  sense() {
+    const p = [...body(9.0, 4.4, 1.8)],
+      t = 2.16,
+      f = 2.2
+    p.push(
+      frame(-4.0, f, 0.6, 8.0, 1.2),
+      box(-4.0, f, 0.6, 8.0, 0.04, 1.2, K, { lift: -0.25 })
+    )
+    for (let i = 0; i < 16; i++)
+      p.push(
+        i < 10
+          ? lit(-3.8 + i * 0.48, f + 0.06, 1.25, 0.34, 0.36, 1.3)
+          : box(-3.8 + i * 0.48, f + 0.06, 1.25, 0.34, 0.03, 0.36, G)
+      )
+    for (let i = 0; i < 11; i++)
+      p.push(
+        box(-3.8 + i * 0.48, f + 0.06, 0.72, 0.34, 0.03, 0.36, G, {
+          lift: -0.05,
+        })
+      )
+    p.push(
+      cyl(-2.4, -0.3, t, 0.7, 0.3, G),
+      cyl(-2.4, -0.3, t + 0.3, 0.2, 0.7, L),
+      cone(-2.4, -0.3, t + 1.0, 0.25, 1.7, 1.7, L),
+      disc(-2.4, -0.3, t + 2.7, 1.5, 0.2, K)
+    )
+    p.push(
+      cyl(2.2, -0.3, t, 0.7, 0.3, G),
+      cyl(2.2, -0.3, t + 0.3, 0.12, 1.2, L),
+      ball(2.2, -0.3, t + 2.1, 0.75, K),
+      glow(ball(2.2, 0.3, t + 2.1, 0.3), A, 1.6)
+    )
+    p.push(
+      ...knob(0, 1.2, t, 0.36, true),
+      ...knob(-0.9, 1.2, t),
+      ...knob(0.9, 1.2, t)
+    )
+    return p
+  },
+  // quickvm: two screens, one keyboard. The lit screen is the one the keys go to; the cursor has just crossed.
+  quickvm() {
+    const p = [...body(10.4, 4.8, 1.0)],
+      t = 1.36
+    for (const [x, on] of [
+      [-4.6, false],
+      [0.8, true],
+    ]) {
+      p.push(
+        cyl(x + 1.9, -1.2, t, 0.7, 0.2, G),
+        cyl(x + 1.9, -1.2, t + 0.2, 0.16, 0.7, L),
+        box(x, -1.4, t + 0.9, 3.8, 0.4, 2.7, K),
+        frame(x + 0.3, -1.0, t + 1.2, 3.2, 2.1),
+        on
+          ? lit(x + 0.3, -0.94, t + 1.2, 3.2, 2.1, 1.2)
+          : box(x + 0.3, -0.94, t + 1.2, 3.2, 0.03, 2.1, K, { lift: -0.2 })
+      )
+      if (on) p.push(box(x + 0.5, -0.88, t + 2.2, 0.36, 0.03, 0.5, K))
+      else
+        for (let k = 0; k < 4; k++)
+          p.push(
+            box(
+              x + 0.6,
+              -0.9,
+              t + 1.5 + k * 0.42,
+              1.2 + ((k * 7) % 3) * 0.5,
+              0.03,
+              0.16,
+              G
+            )
+          )
+    }
+    p.push(
+      ...keys(-3.0, 0.5, t, 11, 3, 16),
+      box(3.2, 0.7, t, 0.8, 1.2, 0.3, L, { lift: 0.08 }),
+      box(3.2, 0.7, t + 0.3, 0.8, 0.5, 0.04, MAT.orange),
+      ...grille(-4.6, 2.42, 14, 0.4, 0.6)
+    )
+    return p
+  },
+  // PerfectSocket: a sender, a receiver and the fragments sent between them. Three are lost; the amber parity ones make up for them.
+  perfectsocket() {
+    const p = [...body(10.4, 4.8, 1.0)],
+      t = 1.36
+    for (const x of [-4.8, 3.2])
+      p.push(
+        box(x, -2.0, t, 1.6, 1.6, 2.0, K),
+        box(x - 0.1, -2.1, t + 2.0, 1.8, 1.8, 0.14, G),
+        frame(x + 0.3, -0.4, t + 0.9, 1.0, 0.7)
+      )
+    p.push(
+      lit(-4.5, -0.34, t + 0.9, 1.0, 0.7, 0.5),
+      lit(3.5, -0.34, t + 0.9, 1.0, 0.7, 1.4),
+      box(-4.6, 0.1, t, 9.2, 1.0, 0.1, G)
+    )
+    for (let i = 0; i < 8; i++) {
+      const x = -4.1 + i * 1.08
+      p.push(
+        [1, 2, 6].includes(i)
+          ? box(x, 0.25, t + 0.1, 0.7, 0.7, 0.04, K)
+          : i < 4
+            ? box(x, 0.25, t + 0.1, 0.7, 0.7, 0.7, L, { lift: 0.08 })
+            : glow(box(x, 0.25, t + 0.1, 0.7, 0.7, 0.7), A, 1.1)
+      )
+    }
+    p.push(
+      ...knob(-3.9, 1.8, t, 0.34, true),
+      ...knob(-3.0, 1.8, t),
+      ...keys(1.6, 1.5, t, 5, 1, -1, 0.6),
+      ...grille(-4.6, 2.42, 14, 0.4, 0.6)
+    )
+    return p
+  },
+  // mmwave-dashboard: a map table. Masts stand on the grid; the links from the busy one are lit.
+  "mmwave-dashboard"() {
+    const p = [...body(9.6, 6.0, 1.2)],
+      t = 1.56
+    p.push(box(-4.3, -2.5, t, 8.6, 5.0, 0.12, G))
+    for (let i = 1; i < 8; i++)
+      p.push(box(-4.3 + i * 1.075, -2.5, t + 0.12, 0.05, 5.0, 0.02, K))
+    for (let j = 1; j < 5; j++)
+      p.push(box(-4.3, -2.5 + j, t + 0.12, 8.6, 0.05, 0.02, K))
+    const nodes = [
+      [-3.0, -1.4, 1.6],
+      [-0.6, -0.2, 2.2],
+      [2.4, -1.5, 1.8],
+      [1.6, 1.4, 1.4],
+      [-2.6, 1.5, 1.2],
+    ]
+    nodes.forEach(([x, y, h], i) =>
+      p.push(
+        cyl(x, y, t + 0.12, 0.3, 0.14, K),
+        cyl(x, y, t + 0.26, 0.07, h, L),
+        glow(ball(x, y, t + 0.4 + h, 0.2), A, i === 1 ? 1.8 : 0.8)
+      )
+    )
+    const [ax, ay] = nodes[1]
+    for (const k of [0, 2, 3])
+      for (let s = 1; s < 6; s++)
+        p.push(
+          glow(
+            box(
+              ax + ((nodes[k][0] - ax) * s) / 6 - 0.08,
+              ay + ((nodes[k][1] - ay) * s) / 6 - 0.08,
+              t + 0.12,
+              0.16,
+              0.16,
+              0.04
+            ),
+            A,
+            0.9
+          )
+        )
+    p.push(...grille(-4.3, 3.02, 13, 0.4, 0.8))
+    return p
+  },
+  // openwifi-afc: a radio that asks first. A band of channels on the display, only the allowed ones lit; the bare board and its antennas on top.
+  "openwifi-afc"() {
+    const p = [...body(9.0, 4.4, 2.6)],
+      t = 2.96,
+      f = 2.2
+    p.push(
+      frame(-4.0, f, 0.9, 5.6, 1.6),
+      box(-4.0, f, 0.9, 5.6, 0.04, 1.6, K, { lift: -0.25 })
+    )
+    for (let i = 0; i < 12; i++)
+      p.push(
+        i >= 5 && i <= 7
+          ? lit(-3.85 + i * 0.45, f + 0.06, 1.05, 0.32, 1.3, 1.3)
+          : box(
+              -3.85 + i * 0.45,
+              f + 0.06,
+              1.05,
+              0.32,
+              0.03,
+              0.3 + ((i * 5) % 4) * 0.2,
+              G
+            )
+      )
+    for (let k = 0; k < 2; k++)
+      p.push(
+        box(2.2 + k, f, 1.0, 0.7, 0.3, 0.7, k ? MAT.orange : L, { lift: 0.05 })
+      )
+    p.push(
+      lit(2.2, f + 0.06, 2.1, 1.7, 0.3, 0.7),
+      box(-3.6, -1.6, t, 5.0, 3.0, 0.12, G),
+      box(-2.9, -1.0, t + 0.12, 1.4, 1.4, 0.3, K),
+      box(-0.8, -1.1, t + 0.12, 0.8, 0.8, 0.2, K),
+      box(-0.8, 0.2, t + 0.12, 1.6, 0.6, 0.24, L)
+    )
+    for (const x of [2.4, 3.4])
+      p.push(
+        cyl(x, -0.8, t, 0.3, 0.24, G),
+        cyl(x, -0.8, t + 0.24, 0.07, 2.6, L),
+        glow(ball(x, -0.8, t + 3.0, 0.16), A, x > 3 ? 1.4 : 0.3)
+      )
+    p.push(...knob(2.9, 1.0, t, 0.36))
+    return p
+  },
+  // jenkins-terminal: a teletype. A keyboard, a sheet of build lines, the newest one lit, one key to build.
+  "jenkins-terminal"() {
+    const p = [...body(8.8, 5.2, 1.4)],
+      t = 1.76
+    p.push(
+      box(-4.0, -2.4, t, 8.0, 1.9, 1.5, K),
+      box(-4.1, -2.5, t + 1.5, 8.2, 2.1, 0.14, G),
+      box(-2.7, -1.5, t + 1.64, 5.4, 0.08, 2.6, L, { lift: 0.1 })
+    )
+    for (let k = 0; k < 6; k++)
+      p.push(
+        k === 0
+          ? lit(-2.4, -1.4, t + 1.9, 2.2, 0.2, 1.4)
+          : box(
+              -2.4,
+              -1.4,
+              t + 1.9 + k * 0.38,
+              1.6 + ((k * 7) % 4) * 0.7,
+              0.03,
+              0.16,
+              K
+            )
+      )
+    p.push(
+      ...keys(-3.8, 0.1, t, 12, 4, -1, 0.52),
+      box(2.7, 0.3, t, 1.0, 1.0, 0.2, G),
+      cyl(3.2, 0.8, t + 0.2, 0.36, 0.3, MAT.orange, { lift: 0.08 }),
+      ...grille(-4.0, 2.62, 12, 0.5, 0.8)
+    )
+    return p
+  },
+})
 for (const [name, build] of Object.entries(S)) {
   if (only && only !== name) continue
   const prims = build()

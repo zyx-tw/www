@@ -900,6 +900,132 @@
     }
   },
   {
+    "slug": "aias",
+    "name": "aias",
+    "year": 2026,
+    "purpose": "a model and app store for Windows",
+    "intro": [
+      "AIAS turns a Windows PC with an NVIDIA or Intel GPU into a local model host. You browse chat, image and audio models from Hugging Face, check what each one needs, and open a workspace when it is ready.",
+      "The same models answer on HTTP endpoints an OpenAI client can call, and over MCP. Reviewed Hugging Face Spaces install as local applications, each with its own web interface.",
+      "One MSI sets it up. NVIDIA machines run CUDA containers under WSL, and Intel machines run OpenVINO on the Arc GPU. Before a model starts, AIAS checks GPU, memory and disk, so a busy model is never pushed out."
+    ],
+    "stack": ["Go", "TypeScript", "Python", "OpenVINO", "MCP"],
+    "preview": {
+      "image": "/previews/aias.webp",
+      "dither": "/previews/aias-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "sense",
+    "name": "sense",
+    "year": 2026,
+    "href": "https://github.com/zyx1121/sense",
+    "code": "https://github.com/zyx1121/sense",
+    "purpose": "hearing and sight for Claude Code",
+    "intro": [
+      "In a lecture or a meeting you either take notes with half your attention or take none. sense keeps a live caption under the MacBook's notch and a running transcript beside it.",
+      "The Mac transcribes the system audio itself, in Chinese and English at once, and a small model fixes punctuation in batches. Ask Sense sends your question and the recent transcript to Claude Code.",
+      "Hold right Shift to dictate, or shake the cursor to capture the interface element under it."
+    ],
+    "stack": ["Swift", "Python", "Claude Code"],
+    "preview": {
+      "image": "/previews/sense.webp",
+      "dither": "/previews/sense-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "quickvm",
+    "name": "quickvm",
+    "year": 2026,
+    "href": "https://github.com/zyx1121/quickvm",
+    "code": "https://github.com/zyx1121/quickvm",
+    "purpose": "a software KVM over QUIC",
+    "intro": [
+      "Push the cursor off the edge of one screen and the keyboard and mouse drive the machine beside it. No hardware switch, only the local network.",
+      "The MacBook captures the input and sends it over QUIC, and the Windows PC injects it. The cursor is held on one side and appears on the other, and the clipboard follows it across."
+    ],
+    "stack": ["Rust", "QUIC", "Swift"],
+    "preview": {
+      "image": "/previews/quickvm.webp",
+      "dither": "/previews/quickvm-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "perfectsocket",
+    "name": "PerfectSocket",
+    "year": 2025,
+    "href": "https://github.com/zyx1121/network-final-project",
+    "code": "https://github.com/zyx1121/network-final-project",
+    "purpose": "reliable UDP with Reed-Solomon",
+    "intro": [
+      "A socket that keeps UDP's speed and survives its losses. The sender splits the data into k fragments and encodes them into n with Reed-Solomon coding.",
+      "Any k of the n fragments rebuild the data, so up to n minus k packets can be lost with no resend. It was the final project of a communication networks course."
+    ],
+    "stack": ["Python", "zfec", "Docker"],
+    "preview": {
+      "image": "/previews/perfectsocket.webp",
+      "dither": "/previews/perfectsocket-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "mmwave-dashboard",
+    "name": "mmwave-dashboard",
+    "year": 2024,
+    "href": "https://github.com/zyx1121/mmwave-dashboard",
+    "code": "https://github.com/zyx1121/mmwave-dashboard",
+    "purpose": "a live map of mmWave nodes",
+    "intro": [
+      "A satellite map with every mmWave node on it, each with its name and signal strength (RSSI). Selecting a node opens a drawer with its details.",
+      "The readings refresh every second, so a weak link shows on the map as it happens."
+    ],
+    "stack": ["Next.js", "Prisma", "Postgres", "Google Maps"],
+    "preview": {
+      "image": "/previews/mmwave-dashboard.webp",
+      "dither": "/previews/mmwave-dashboard-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "openwifi-afc",
+    "name": "openwifi-afc",
+    "year": 2024,
+    "href": "https://github.com/zyx1121/openwifi-afc",
+    "code": "https://github.com/zyx1121/openwifi-afc",
+    "purpose": "experimental AFC on openwifi",
+    "intro": [
+      "A 6 GHz Wi-Fi access point must ask an automated frequency coordination (AFC) server which channels it may use, and at what power, before it transmits.",
+      "This client runs on openwifi, an open-source Wi-Fi stack on a ZedBoard FPGA with a software radio. It sends the access point's location to an OpenAFC server and sets the radio to an allowed channel."
+    ],
+    "stack": ["Python", "openwifi", "ZedBoard", "OpenAFC"],
+    "preview": {
+      "image": "/previews/openwifi-afc.webp",
+      "dither": "/previews/openwifi-afc-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "jenkins-terminal",
+    "name": "jenkins-terminal",
+    "year": 2024,
+    "href": "https://pypi.org/project/jenkins-terminal",
+    "code": "https://github.com/zyx1121/jenkins-terminal",
+    "purpose": "a terminal client for Jenkins",
+    "intro": [
+      "Jenkins from the command line: start a job with its parameters, read its status and console output, and list its builds.",
+      "Parameters come from flags, a YAML file or an earlier build. The last job is kept as a template, so running it again takes one command."
+    ],
+    "stack": ["Python", "Typer", "PyPI"],
+    "preview": {
+      "image": "/previews/jenkins-terminal.webp",
+      "dither": "/previews/jenkins-terminal-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
     "slug": "link",
     "name": "Link",
     "year": 2026,

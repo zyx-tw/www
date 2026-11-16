@@ -139,7 +139,8 @@ export type Project = {
   name: string
   /** The year it started, for Info's list of projects. */
   year: number
-  href: string
+  /** Where it runs, or its public repository. Left out when neither is public. */
+  href?: string
   /** Its source code, when the repository is public. */
   code?: string
   /** What it is for, in about 32 characters: the row shows it on one line. */

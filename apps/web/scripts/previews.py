@@ -322,7 +322,7 @@ def main() -> int:
             color_path.parent.mkdir(parents=True, exist_ok=True)
             zoom = project["preview"].get("zoom", 1)
             selector = project["preview"].get("selector")
-            page_url = project["preview"].get("source", project["href"])
+            page_url = project["preview"].get("source", project.get("href", ""))
 
             if args.dither_only:
                 color = Image.open(color_path).convert("RGB")

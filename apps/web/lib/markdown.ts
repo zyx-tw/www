@@ -102,7 +102,11 @@ export function worksMarkdown() {
     projects
       .map(
         (project) =>
-          `- ${link(project.name, absoluteUrl(`${projectPath(project)}.md`))}: ${text(project.purpose)}. ${link("Site", project.href)}`
+          `- ${link(project.name, absoluteUrl(`${projectPath(project)}.md`))}: ${text(project.purpose)}.${
+            project.href
+              ? ` ${link(project.href === project.code ? "Code" : "Site", project.href)}`
+              : ""
+          }`
       )
       .join("\n"),
   ])
@@ -289,10 +293,10 @@ export function projectMarkdown(project: Project) {
       [
         "## Details",
         [
-          `- Site: ${link(project.href, project.href)}`,
-          project.code && project.code !== project.href
-            ? `- Code: ${link(project.code, project.code)}`
+          project.href && project.href !== project.code
+            ? `- Site: ${link(project.href, project.href)}`
             : null,
+          project.code ? `- Code: ${link(project.code, project.code)}` : null,
           `- Built with: ${text(project.stack.join(", "))}`,
         ]
           .filter(Boolean)
