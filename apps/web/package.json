@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "previews": "uv run scripts/previews.py",
     "pictures": "node scripts/pixel/devices.mjs /tmp/zyx-pictures && uv run scripts/pixel/webp.py /tmp/zyx-pictures public/previews && uv run scripts/previews.py --dither-only",
-    "og": "uv run scripts/og-image.py"
+    "og": "uv run scripts/og-image.py",
+    "cv": "bun scripts/cv.ts"
   },
   "dependencies": {
     "@workspace/3d": "workspace:*",
