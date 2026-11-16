@@ -17,26 +17,33 @@ export const dynamic = "force-static"
 export default function ProjectPage() {
   return (
     // The picture keeps the capture's aspect ratio at every viewport size.
-    <main className={cn(column, page, "flex flex-1 flex-col")}>
+    // Below lg the page is one column: title, window, list. From lg the
+    // title and the list are the left column and scroll with the page, while
+    // the window stays in the middle of the screen: its cell is as tall as
+    // the screen (the viewport less the bezel), sticks to the top, and
+    // centres the window. The negative
+    // margins take back the page's own top and bottom space, so the cell
+    // starts at the screen's top edge and adds no scroll of its own.
+    <main
+      className={cn(
+        column,
+        page,
+        "flex flex-1 flex-col lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10"
+      )}
+    >
       <ProjectsJsonLd projects={projects} />
       <Showcase projects={projects}>
         <Hero
+          className="lg:col-start-1 lg:row-start-1"
           title={<HeroTitle text={PROJECT.title} />}
           subtitle={
             <span className="text-caption">projects {projects.length}</span>
           }
         />
-        {/* Below lg the window sits above the list; from lg the list is the
-            left column and the window takes the remaining width. */}
-        <div className="mt-10 flex flex-1 flex-col gap-5 lg:flex-row lg:gap-10">
-          <ProjectWindow
-            className={cn(
-              "w-full self-start lg:order-last lg:flex-1",
-              enterRow(2)
-            )}
-          />
-          <ProjectList className="lg:w-52 lg:shrink-0" />
+        <div className="mt-10 lg:sticky lg:top-0 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:-mt-30 lg:-mb-25 lg:flex lg:h-[calc(100dvh-var(--bezel)*2)] lg:items-center lg:self-start">
+          <ProjectWindow className={cn("w-full", enterRow(2))} />
         </div>
+        <ProjectList className="mt-5 lg:col-start-1 lg:row-start-2 lg:mt-10" />
       </Showcase>
     </main>
   )
