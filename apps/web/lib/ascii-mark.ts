@@ -32,7 +32,7 @@ export const MARK = {
   /** The spring that brings a thrown mark back to face front. */
   stiffness: 6,
   damping: 3,
-  /** Frames between obstacle updates. */
+  /** Frames between reads of the covered cells. */
   maskEvery: 3,
   /** Vertical field of view, in degrees. */
   fov: 30,
@@ -365,8 +365,9 @@ export class AsciiMark {
     const renderer = this.renderer
     renderer.setRenderTarget(this.target)
     renderer.render(this.shadeScene, this.camera)
-    if (this.obstacle && this.frame++ % MARK.maskEvery === 0 && !this.reading)
-      this.readMask()
+    // The mask is also what a drag is tested against, so it is read with or
+    // without a pond to hand it to.
+    if (this.frame++ % MARK.maskEvery === 0 && !this.reading) this.readMask()
     const uniforms = this.glyphMaterial.uniforms
     if (this.phase !== STILL) {
       const elapsed = performance.now() - this.phaseStart
@@ -435,7 +436,8 @@ export class AsciiMark {
       })
   }
 
-  /** The covered cells, top row first, to the pond. */
+  /** The covered cells, top row first: kept for the drag's hit test, and
+   *  handed to the pond when there is one. */
   private updateObstacle() {
     const { cols, rows, pixels, mask } = this
     for (let row = 0; row < rows; row++) {
