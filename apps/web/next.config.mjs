@@ -44,6 +44,15 @@ const nextConfig = {
         destination: "/project/:slug",
         permanent: true,
       },
+      // Four notes on the map joined the notes that cover them (2026-11-16).
+      { source: "/map/beyond/names-to-guess", destination: "/map/machines/what-runs-where", permanent: true },
+      { source: "/map/beyond/names-to-guess.md", destination: "/map/machines/what-runs-where.md", permanent: true },
+      { source: "/map/machines/one-plugin-catalog", destination: "/map/basics/plugin-ships-by-version", permanent: true },
+      { source: "/map/machines/one-plugin-catalog.md", destination: "/map/basics/plugin-ships-by-version.md", permanent: true },
+      { source: "/map/principles/skills-stay-general", destination: "/map/basics/skill-loads-on-demand", permanent: true },
+      { source: "/map/principles/skills-stay-general.md", destination: "/map/basics/skill-loads-on-demand.md", permanent: true },
+      { source: "/map/principles/done-means-verified", destination: "/map/basics/what-claude-code-is", permanent: true },
+      { source: "/map/principles/done-means-verified.md", destination: "/map/basics/what-claude-code-is.md", permanent: true },
     ]
   },
   // Content negotiation in the router, so no function runs for it: a page

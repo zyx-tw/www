@@ -18,8 +18,8 @@
       "bodies": [
         {
           "slug": "what-claude-code-is",
-          "name": "交代完整任務，讓 Claude Code 修改並驗證結果",
-          "line": "說明目標與確認界線，依實測回報判斷是否完成。",
+          "name": "把完整任務交給 Claude Code，以實際操作結果判斷完成",
+          "line": "交代目標與界線，讓 Claude Code 找檔、修改並驗證。",
           "short": "入門",
           "kind": "concept",
           "level": 1
@@ -37,7 +37,7 @@
         {
           "slug": "four-ways-to-extend",
           "name": "先確認任務缺什麼，再選擇擴充方式",
-          "line": "缺連線用 MCP，缺做法用 Skill，要整組安裝用 Plugin，要改畫面用 Mod。",
+          "line": "從連線、做法、安裝與畫面，判斷任務需要哪種擴充。",
           "short": "擴充",
           "kind": "concept",
           "level": 1,
@@ -54,8 +54,8 @@
         },
         {
           "slug": "skill-loads-on-demand",
-          "name": "把特定任務的步驟寫成 Skill",
-          "line": "通用規則放 CLAUDE.md，Skill 在任務符合說明時才載入全文。",
+          "name": "Skill 保存同類任務的做法，個案細節留在專案",
+          "line": "用適用範圍判斷哪些步驟值得重用，哪些資料應留在專案。",
           "short": "Skill",
           "kind": "concept",
           "level": 1,
@@ -63,8 +63,8 @@
         },
         {
           "slug": "plugin-ships-by-version",
-          "name": "用 Plugin 打包擴充，並依版本號更新",
-          "line": "把擴充包成一組安裝，修改內容時同時更新版本號。",
+          "name": "Plugin 發版要同步更新目錄，跨 agent 才能安裝同一版本",
+          "line": "從版本判斷、固定來源到目錄同步，串起完整發版流程。",
           "short": "Plugin",
           "kind": "deep",
           "level": 2,
@@ -72,8 +72,8 @@
         },
         {
           "slug": "claude-md",
-          "name": "把通用工作要求寫進 CLAUDE.md，並用新任務測試",
-          "line": "寫明工作背景、詢問條件與完成標準，再檢查規則是否落實。",
+          "name": "CLAUDE.md 依範圍串接規則，寫好後仍要用新任務確認落實",
+          "line": "先分清規則的作用範圍，再檢查新對話中的實際行為。",
           "short": "CLAUDE.md",
           "kind": "deep",
           "level": 2,
@@ -82,7 +82,7 @@
         {
           "slug": "how-a-skill-loads",
           "name": "Skill 的載入由模型決定，harness 負責把全文送進對話",
-          "line": "模型靠 `name` 與 `description` 選 Skill，harness 再把全文放進對話。",
+          "line": "模型靠 name 與 description 選 Skill，harness 再把全文放進對話。",
           "short": "載入",
           "kind": "deep",
           "level": 2,
@@ -99,8 +99,8 @@
       "bodies": [
         {
           "slug": "knows-me",
-          "name": "讓 Claude Code 直接查詢任務所需的背景",
-          "line": "接上資料所在的服務，省去複製貼上的步驟。",
+          "name": "我把常貼的資料接成 Claude Code 能查詢的來源",
+          "line": "從常貼的資料選服務，讓任務背景能直接查詢。",
           "short": "Context",
           "kind": "field",
           "level": 2,
@@ -108,8 +108,8 @@
         },
         {
           "slug": "remembers-me",
-          "name": "把糾正寫到新對話會載入的地方",
-          "line": "依適用範圍，把糾正保存到記憶、專案文件或 CLAUDE.md。",
+          "name": "把糾正存成規則，保存位置依適用範圍決定",
+          "line": "糾正後當場保存，再確認新對話從哪裡讀到。",
           "short": "記憶",
           "kind": "field",
           "level": 2,
@@ -117,8 +117,8 @@
         },
         {
           "slug": "acts-for-me",
-          "name": "依固定順序接上 Claude Code 需要的服務",
-          "line": "先找 MCP，再用 API 或 CLI，必要時才操作瀏覽器。",
+          "name": "我按固定順序選服務介面，做得到就不開網頁",
+          "line": "從常用的網頁操作盤點需求，再決定接上哪些服務介面。",
           "short": "服務",
           "kind": "field",
           "level": 2,
@@ -126,8 +126,8 @@
         },
         {
           "slug": "out-of-my-way",
-          "name": "給 Claude Code 專用的背景瀏覽器",
-          "line": "一般網頁操作在背景執行，需要既有登入狀態時才用 Safari。",
+          "name": "我把一般操作交給背景瀏覽器，只在需要登入狀態時使用 Safari",
+          "line": "用獨立瀏覽器減少工作干擾，代價是沒有既有登入狀態。",
           "short": "瀏覽器",
           "kind": "field",
           "level": 2,
@@ -135,8 +135,8 @@
         },
         {
           "slug": "while-i-am-away",
-          "name": "把持續執行的工作交給遠端服務排程",
-          "line": "列出各項能力依賴的機器，移走不能隨筆電關閉的工作。",
+          "name": "我把持續執行的工作交給不依賴筆電的遠端排程",
+          "line": "遠端主機負責持續檢查，手機通知與修復同意保留人的介入。",
           "short": "雲端",
           "kind": "field",
           "level": 2,
@@ -152,8 +152,8 @@
       "bodies": [
         {
           "slug": "agent-experience",
-          "name": "為畫面上的功能提供對應的 tool",
-          "line": "共用動作定義，讓 Claude Code 執行畫面上的功能。",
+          "name": "我把畫面動作與 tool 放進同一份定義，讓 agent 也能操作產品",
+          "line": "共用動作定義，再檢查畫面與 tool 是否漏了對應。",
           "short": "AX",
           "kind": "field",
           "level": 2,
@@ -162,8 +162,8 @@
         },
         {
           "slug": "rules-from-numbers",
-          "name": "從對話紀錄找出問題，再調整規則",
-          "line": "檢查出錯的步驟，把重複問題整理成規則或自動檢查。",
+          "name": "我先從對話紀錄定位問題，再修改對應規則",
+          "line": "把反覆糾正整理成通則，改完再回查同一步驟。",
           "short": "量測",
           "kind": "field",
           "level": 2,
@@ -171,39 +171,21 @@
         },
         {
           "slug": "rules-become-checks",
-          "name": "把能自動判斷的規則改成合併前的檢查",
-          "line": "同一條糾正反覆出現時，改用 pull request 的自動檢查擋下。",
+          "name": "把能自動判斷的規則設成合併條件",
+          "line": "讓規則決定修改能否合併，不再只靠 agent 記得執行。",
           "short": "檢查",
           "kind": "deep",
           "level": 2,
           "related": ["remembers-me"]
         },
         {
-          "slug": "skills-stay-general",
-          "name": "把通則寫進 Skill，把個案留在專案",
-          "line": "依適用範圍整理做法，讓通用 Skill 保持可重用。",
-          "short": "skill",
-          "kind": "deep",
-          "level": 2,
-          "requires": ["skill-loads-on-demand"]
-        },
-        {
           "slug": "read-before-adopting",
-          "name": "讀懂開源做法，再採用符合任務的部分",
-          "line": "安裝前讀完全文，挑出適用的步驟並改寫。",
+          "name": "我先讀懂開源做法，再把適用步驟寫成自己的規則",
+          "line": "採用哪些步驟，取決於任務前提，也取決於誰負責維護。",
           "short": "開源",
           "kind": "field",
           "level": 2,
           "applies": ["skill-loads-on-demand"]
-        },
-        {
-          "slug": "done-means-verified",
-          "name": "實際操作並附上結果，再回報完成",
-          "line": "檢查通過後，仍要確認頁面與部署後的實際行為。",
-          "short": "驗證",
-          "kind": "concept",
-          "level": 1,
-          "related": ["what-claude-code-is"]
         }
       ]
     },
@@ -215,8 +197,8 @@
       "bodies": [
         {
           "slug": "subagent-bill",
-          "name": "把過程長、結論短的工作交給子 agent",
-          "line": "開發留在主線，依任務分配查詢、審查與規劃。",
+          "name": "我把過程長、結論短的工作交給子 agent",
+          "line": "派工前，我先衡量中間資訊、重讀成本與交接需求。",
           "short": "花費",
           "kind": "field",
           "level": 2,
@@ -224,8 +206,8 @@
         },
         {
           "slug": "review-by-risk",
-          "name": "依修改出錯的後果決定是否送審",
-          "line": "先修已知問題，再依風險與審查分類處理合併。",
+          "name": "我依修改出錯的後果，決定是否送審",
+          "line": "高風險修改交給不同模型審查，並限制審查範圍與輪次。",
           "short": "審查",
           "kind": "field",
           "level": 2,
@@ -233,17 +215,26 @@
         },
         {
           "slug": "many-at-once",
-          "name": "逐項完成工作，避免並行耗盡用量",
-          "line": "共用用量上限時，逐項執行並及時 commit。",
+          "name": "我按合計用量決定是否並行，不確定就逐項完成",
+          "line": "並行集中消耗共用額度，我把逐項完成當成用量不明時的預設。",
           "short": "並行",
           "kind": "field",
           "level": 2,
           "related": ["subagent-bill"]
         },
         {
+          "slug": "isolate-parallel-work",
+          "name": "git worktree 隔離檔案，測試資源仍要另外安排",
+          "line": "每個 agent 使用自己的工作目錄，測試仍須檢查共用資源。",
+          "short": "隔離",
+          "kind": "deep",
+          "level": 2,
+          "deepens": ["many-at-once"]
+        },
+        {
           "slug": "two-agents",
-          "name": "讓 Claude Code 與 Codex 讀取同一份專案規則",
-          "line": "集中專案規則，再逐項確認記憶與 Skill 的同步方式。",
+          "name": "我把專案規則放進 AGENTS.md，讓 Claude Code 與 Codex 共讀",
+          "line": "專案規則共用檔案，個人規則與安裝內容另查同步。",
           "short": "Codex",
           "kind": "field",
           "level": 2,
@@ -261,16 +252,16 @@
         {
           "slug": "one-claude-many-machines",
           "short": "遠端",
-          "name": "讓 Claude Code 從筆電連到適合的機器",
-          "line": "對話留在筆電，透過 ssh 名稱把指令送到遠端。",
+          "name": "Claude Code 留在筆電，用 ssh 把完整指令送到遠端",
+          "line": "每次遠端指令都要完整，共用 ssh 連線不會保留執行環境。",
           "kind": "deep",
           "level": 2,
           "related": ["start-from-home"]
         },
         {
           "slug": "private-network",
-          "name": "用私有網路替每台機器加上固定的名稱",
-          "line": "協調伺服器只交換金鑰與規則，資料在機器之間直接加密傳送。",
+          "name": "私有網路由協調伺服器管金鑰與規則，資料在機器之間傳送",
+          "line": "協調伺服器分發公鑰與規則，機器之間直接傳送資料。",
           "short": "私網",
           "kind": "deep",
           "level": 2,
@@ -279,8 +270,8 @@
         {
           "slug": "what-runs-where",
           "short": "登記",
-          "name": "把設備與專案登記成 Claude Code 會讀的檔案",
-          "line": "分層記錄設備與專案，規定 Claude Code 動手前先讀。",
+          "name": "我用環境目錄把設備名稱接到用途、連線與詳細筆記",
+          "line": "名稱與連線放在規則，規格與位址留在按需讀取的筆記。",
           "kind": "field",
           "level": 2,
           "applies": ["claude-md"],
@@ -288,8 +279,8 @@
         },
         {
           "slug": "one-job-per-machine",
-          "name": "把每種工作交給固定的機器",
-          "line": "筆電負責編輯和 git，其他機器分擔編譯、運算與儲存。",
+          "name": "我把工作的執行位置寫成分工表，讓 Claude Code 依表選機器",
+          "line": "筆電留給編輯，編譯、測試、運算與備份各有固定去處。",
           "short": "分工",
           "kind": "field",
           "level": 2,
@@ -298,7 +289,7 @@
         {
           "slug": "vm-and-container",
           "name": "虛擬機有自己的核心，容器共用主機的核心",
-          "line": "虛擬機隔離較強，容器啟動較快，依需要的隔離程度選擇。",
+          "line": "虛擬機隔離整台電腦，容器隔離一組程序。",
           "short": "虛擬化",
           "kind": "concept",
           "level": 1,
@@ -306,8 +297,8 @@
         },
         {
           "slug": "numbers-are-addresses",
-          "name": "用可反推位址的規則替虛擬機編號",
-          "line": "讓編號對應主機與位址，並在建立工具中檢查範圍。",
+          "name": "我用主機代碼與位址尾碼替虛擬機編號",
+          "line": "讓編號能反推位址，並把可檢查的限制寫進建立工具。",
           "short": "編號",
           "kind": "field",
           "level": 2,
@@ -316,8 +307,8 @@
         },
         {
           "slug": "fixed-place",
-          "name": "替專案保留可重複使用的測試位置",
-          "line": "固定程式碼與環境說明的位置，讓新對話接著使用。",
+          "name": "我替常用專案保留固定位置，讓新對話沿用測試環境",
+          "line": "保留程式碼與環境說明，再依使用情況分配工作位置。",
           "short": "sandbox",
           "kind": "field",
           "level": 2,
@@ -325,21 +316,12 @@
         },
         {
           "slug": "network-in-git",
-          "name": "先修改 Git 裡的網路設定，再操作設備",
-          "line": "把網段、設備與存取規則寫成檔案，透過 pull request 檢查修改。",
+          "name": "我把網路設定放進 Git，先改檔案再動設備",
+          "line": "以檔案記錄預期狀態，合併後套用規則，持續比對設備差異。",
           "short": "網路",
           "kind": "field",
           "level": 2,
           "related": ["private-network", "what-runs-where"]
-        },
-        {
-          "slug": "one-plugin-catalog",
-          "name": "用固定版本的目錄管理 Plugin 安裝",
-          "line": "讓 Claude Code 與 Codex 共用目錄，發版後同步更新版本。",
-          "short": "plugin",
-          "kind": "deep",
-          "level": 2,
-          "requires": ["plugin-ships-by-version"]
         }
       ]
     },
@@ -351,8 +333,8 @@
       "bodies": [
         {
           "slug": "changing-the-interface",
-          "name": "用 Mod 把需要的狀態放進 Claude Code 畫面",
-          "line": "依用途保留狀態面板，關閉或刪除不合用的 Mod。",
+          "name": "我用 Mod 把常查的狀態放進 Claude Code 畫面",
+          "line": "把常查的狀態做成面板，再依用途與空間決定去留。",
           "short": "mod",
           "kind": "field",
           "level": 2,
@@ -360,8 +342,8 @@
         },
         {
           "slug": "outside-the-terminal",
-          "name": "為通訊 bot 分開設定工具、對話紀錄與工作空間",
-          "line": "先列出 bot 可用的能力，讓修改動作經過核准。",
+          "name": "我把通訊 bot 的工具、對話與工作空間分開設定",
+          "line": "通訊入口獨立運作，修改動作依計畫核准。",
           "short": "Telegram",
           "kind": "field",
           "level": 2,
@@ -369,8 +351,8 @@
         },
         {
           "slug": "monitoring-for-agents",
-          "name": "替監控提供 Claude Code 可查詢的入口",
-          "line": "分開收集、儲存與維運工作，透過 MCP 查詢及登記專案。",
+          "name": "替監控提供 agent 可查詢的入口",
+          "line": "讓 agent 直接查監控資料，問題處理另依規則與核准流程執行。",
           "short": "監控",
           "kind": "field",
           "level": 2,
@@ -379,8 +361,8 @@
         },
         {
           "slug": "what-an-agent-has-seen",
-          "name": "把密碼存進鑰匙圈，讓 Claude Code 用名稱指定",
-          "line": "用表單傳入密碼，遮住指令輸出中的值。",
+          "name": "我用鑰匙圈傳入密碼，隔開模型讀取與程式使用",
+          "line": "密碼只在執行時帶入，但程式仍能接觸密碼值。",
           "short": "安全",
           "kind": "field",
           "level": 2,
@@ -388,22 +370,21 @@
         },
         {
           "slug": "backup-memory-and-keys",
-          "name": "把記憶放進 Git，金鑰加密後再備份",
-          "line": "自動同步記憶，加密備份鑰匙圈，並測試還原。",
+          "name": "我把記憶留在筆電，讓 Git 自動保存備份",
+          "line": "本機繼續讀取記憶，變更自動推送，遇到密碼就停止。",
           "short": "備份",
           "kind": "field",
           "level": 2,
           "related": ["what-an-agent-has-seen", "remembers-me"]
         },
         {
-          "slug": "names-to-guess",
-          "name": "把設備名稱、用途與連線方式寫進 CLAUDE.md",
-          "line": "統一設備名稱與連線名稱，再用新對話檢查是否連對。",
-          "short": "命名",
-          "kind": "field",
-          "level": 2,
-          "applies": ["claude-md"],
-          "related": ["what-runs-where"]
+          "slug": "envelope-encryption",
+          "name": "信封加密用 file key 加密檔案，再用收件者公鑰加密 file key",
+          "line": "拆開檔案與 file key 的加密流程，看懂誰能解開備份。",
+          "short": "加密",
+          "kind": "deep",
+          "level": 3,
+          "deepens": ["backup-memory-and-keys"]
         }
       ]
     },
@@ -415,8 +396,8 @@
       "bodies": [
         {
           "slug": "one-design-system",
-          "name": "把畫面修正寫回共用元件庫",
-          "line": "更新共用元件與設計規範，再用自動檢查擋下違規修改。",
+          "name": "我把畫面修正寫回共用元件庫，再更新各網站的舊寫法",
+          "line": "共用修正需要更新元件，也需要替各網站換掉舊寫法。",
           "short": "設計",
           "kind": "field",
           "level": 2,
@@ -424,16 +405,16 @@
         },
         {
           "slug": "one-way-to-deploy",
-          "name": "在合併前打包，讓各專案共用部署流程",
-          "line": "在 pull request 階段打包，合併後換標籤並驗證上線結果。",
+          "name": "合併前打包，合併後沿用同一份映像檔部署",
+          "line": "用內容辨認映像檔，再讓各專案呼叫共用部署流程。",
           "short": "部署",
           "kind": "deep",
           "level": 2
         },
         {
           "slug": "where-files-live",
-          "name": "按 PARA 分類，讓 Claude Code 依用途找檔案",
-          "line": "固定分類與命名規則，再用檔名或用途交代查找與歸檔。",
+          "name": "我用 PARA 固定檔案位置，讓 Claude Code 按用途查找",
+          "line": "先定分類與命名規則，再用檔名或用途交代工作。",
           "short": "PARA",
           "kind": "field",
           "level": 1,
@@ -441,20 +422,20 @@
         },
         {
           "slug": "observability-first",
-          "name": "讓新服務上線時就能查到紀錄",
-          "line": "接上紀錄套件，驗證查詢結果，再加入定時檢查。",
+          "name": "新服務的 log 要從監控端查到，才算完成驗證",
+          "line": "沿著訊號傳送與查詢的路徑，安排上線驗證與故障排查。",
           "short": "log",
           "kind": "deep",
           "level": 2
         },
         {
           "slug": "simple-first",
-          "name": "先刪減功能與文字，再讓主要動作最顯眼",
-          "line": "刪除未經要求的內容，用版面交代操作，再把通用規則寫回 Skill。",
+          "name": "我先刪掉不需要的功能，再讓主要動作最顯眼",
+          "line": "先判斷內容該不該留，再決定怎麼呈現。",
           "short": "簡單",
           "kind": "field",
           "level": 2,
-          "related": ["skills-stay-general"]
+          "related": ["skill-loads-on-demand"]
         }
       ]
     },
@@ -466,16 +447,16 @@
       "bodies": [
         {
           "slug": "llm-basics",
-          "name": "LLM 一次只預測下一個 token",
-          "line": "模型把文字切成 token，算出下一個 token 的機率，再重複。",
+          "name": "LLM 每次只預測下一個 token，長回覆靠反覆生成",
+          "line": "理解文字生成的迴圈，判斷回覆速度、記憶與正確性的限制。",
           "short": "LLM",
           "kind": "concept",
           "level": 1
         },
         {
           "slug": "agent-loop",
-          "name": "Agent Loop 是一個迴圈：問模型、執行工具、送回結果",
-          "line": "模型只輸出文字與工具請求，執行與停止條件都在 harness。",
+          "name": "Agent Loop 讓模型提出請求，由程式執行並送回結果",
+          "line": "理解模型與程式的分工，才能分清停止與完成。",
           "short": "迴圈",
           "kind": "concept",
           "level": 1,
@@ -484,8 +465,8 @@
         },
         {
           "slug": "tool-calls",
-          "name": "工具是一份 JSON 約定：名稱、說明與參數格式",
-          "line": "模型依說明選工具，harness 依名稱執行，再用 id 對回請求。",
+          "name": "工具以名稱、說明與參數格式約定請求，再用同一個 id 對回結果",
+          "line": "模型選工具，外圍程式執行，請求與結果靠 id 配對。",
           "short": "工具",
           "kind": "deep",
           "level": 2,
@@ -494,8 +475,8 @@
         },
         {
           "slug": "context-is-resent",
-          "name": "每一輪都重送整段 context，順序與長度都要管理",
-          "line": "固定的內容放前面讓快取命中，變動的接在後面，太長就壓縮。",
+          "name": "每輪重送 context，固定前段與對話長度要分開管理",
+          "line": "前段是否相同決定快取能否重用，對話長度則影響模型表現。",
           "short": "context",
           "kind": "deep",
           "level": 2,
@@ -504,8 +485,8 @@
         },
         {
           "slug": "prompt-cache",
-          "name": "相同的前段不必重算：KV cache 與 prompt cache",
-          "line": "模型保存每個 token 的中間結果，服務再把前段的結果跨請求保留。",
+          "name": "Prompt cache 只重用完全相同的前段，變動內容要放後面",
+          "line": "理解跨請求的前段比對，安排內容順序並查出未命中的位置。",
           "short": "快取",
           "kind": "deep",
           "level": 2,
@@ -513,9 +494,18 @@
           "related": ["llm-basics"]
         },
         {
+          "slug": "kv-cache",
+          "name": "KV cache 保存注意力中間值，只能重用從開頭連續相同的前段",
+          "line": "前文決定每個位置的計算結果，也決定快取能重用到哪裡。",
+          "short": "KV",
+          "kind": "deep",
+          "level": 3,
+          "deepens": ["prompt-cache"]
+        },
+        {
           "slug": "state-in-files",
-          "name": "長任務把進度寫進檔案，新的對話從檔案接手",
-          "line": "context 會用完，檔案與 Git 紀錄留得住，每次只做一項並留下紀錄。",
+          "name": "把長任務的狀態寫進檔案，讓新對話有依據接手",
+          "line": "用功能清單定義完成，用進度筆記交接，用 Git 保留退路。",
           "short": "接手",
           "kind": "deep",
           "level": 2,
@@ -524,8 +514,8 @@
         },
         {
           "slug": "mcp-on-the-wire",
-          "name": "MCP 的訊息是 JSON-RPC：先列出工具，再呼叫工具",
-          "line": "host 替每個 server 開一個 client，用 stdio 或 HTTP 傳送訊息。",
+          "name": "MCP 用 JSON-RPC 傳訊息：先取得工具定義，再轉送模型選定的操作",
+          "line": "沿著 client 與 server 的訊息往返，分清工具發現、執行與錯誤。",
           "short": "協定",
           "kind": "deep",
           "level": 2,
@@ -534,17 +524,26 @@
         },
         {
           "slug": "permission-gates",
-          "name": "工具執行前先比對權限規則，再用沙箱限制範圍",
-          "line": "規則依拒絕、詢問、放行的順序比對，沙箱限制檔案與網路。",
+          "name": "權限規則先拒絕、再詢問、最後放行，沒有命中才交給模式",
+          "line": "沿著執行前的比對順序，設定不可越過的界線。",
           "short": "權限",
           "kind": "deep",
           "level": 2,
           "requires": ["tool-calls"]
         },
         {
+          "slug": "os-sandbox",
+          "name": "作業系統沙箱限制指令能碰到的資源，與權限規則是兩道邊界",
+          "line": "沿著指令的執行位置，查清檔案、網路與外部程序的限制。",
+          "short": "沙箱層",
+          "kind": "deep",
+          "level": 3,
+          "deepens": ["permission-gates"]
+        },
+        {
           "slug": "untrusted-input",
-          "name": "工具讀進來的內容可能夾帶指令",
-          "line": "模型分不清資料與指令，所以要限制讀過不可信內容後的動作。",
+          "name": "工具讀回的內容可能被當成指令，防護要限制讀取與傳送的組合",
+          "line": "從外部文字進入模型的路徑，判斷資料外流風險。",
           "short": "注入",
           "kind": "deep",
           "level": 2,
@@ -553,8 +552,8 @@
         },
         {
           "slug": "subagent-fresh-context",
-          "name": "子 agent 是另一個迴圈，用新的 context 做完再交回摘要",
-          "line": "主迴圈只收到摘要，中間讀過的內容不會進入主對話。",
+          "name": "子 agent 另開迴圈，交接內容決定彼此知道多少",
+          "line": "派工與回報各有一道邊界，背景與發現都要明確交接。",
           "short": "子 agent",
           "kind": "deep",
           "level": 2,
@@ -562,8 +561,8 @@
         },
         {
           "slug": "build-a-small-harness",
-          "name": "用五個零件組出自己的 harness",
-          "line": "迴圈、工具、規則檔、權限檢查與壓縮，各自只需要幾行。",
+          "name": "先做最小的 harness，遇到問題再加零件",
+          "line": "從迴圈與工具起步，依錯誤補上規則、權限與壓縮。",
           "short": "實作",
           "kind": "deep",
           "level": 3,
@@ -572,8 +571,8 @@
         },
         {
           "slug": "evals",
-          "name": "修改 harness 之前，先準備能重跑的評測",
-          "line": "固定一組任務與評分方式，每次修改後重跑，才知道變好還是變壞。",
+          "name": "修改規則前，先用固定任務與自動評分建立比較基準",
+          "line": "用相同任務重跑修改前後的行為，依過程與環境判斷成敗。",
           "short": "評測",
           "kind": "deep",
           "level": 2,

@@ -17,7 +17,7 @@ const CLAUSE =
  * words are the note in brief. `[[a term]]` is a term from lib/glossary.json,
  * framed and linked to where it is explained. Words between backticks are
  * code: a path, a command or a field, on a quiet plate. Everything else is
- * plain.
+ * plain, and so is any markup inside emphasis: marked words stay one mark.
  *
  * Chinese has no spaces, so a browser breaks a line between any two
  * characters. Each clause is kept whole instead (an inline block), so a
@@ -29,9 +29,9 @@ export function Rich({ text }: { text: string }) {
     .filter(Boolean)
     .map((part) =>
       part.startsWith("**")
-        ? { kind: "strong" as const, text: part.slice(2, -2) }
+        ? { kind: "strong" as const, text: plain(part.slice(2, -2)) }
         : part.startsWith("==")
-          ? { kind: "mark" as const, text: part.slice(2, -2) }
+          ? { kind: "mark" as const, text: plain(part.slice(2, -2)) }
           : part.startsWith("[[")
             ? { kind: "term" as const, text: part.slice(2, -2) }
             : part.startsWith("`")
