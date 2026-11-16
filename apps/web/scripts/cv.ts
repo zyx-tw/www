@@ -92,6 +92,11 @@ function row({ when, what, note, where, href, points }: Entry) {
   ].join("\n")
 }
 
+/** An award or a certificate on one line: nothing more is said of it. */
+function line({ when, what, where }: Entry) {
+  return `\\textbf{${tex(what)}}\\quad ${tex(where)}\\hfill ${period(when)}\\par\\vspace{2pt}`
+}
+
 function section({ id, title, entries, more }: (typeof SECTIONS)[number]) {
   const heading = `\\section{${tex(title)}}`
   if (entries.some(({ authors }) => authors)) {
@@ -103,21 +108,23 @@ function section({ id, title, entries, more }: (typeof SECTIONS)[number]) {
     ].join("\n")
   }
   if (more) {
-    // A long list prints its selection, then where the whole list is.
+    // A long list prints its selection, and its heading says where the
+    // whole list is.
     const all = `${site.url}/info`
+    const count = `${entries.length} of ${entries.length + more.length}, all at`
     return [
-      heading,
+      `\\section{${tex(title)}\\hfill{\\small\\normalfont ${count} ${link(`${all}#${id}`, tex(bare(all)))}}}`,
       "\\begin{itemize}[itemsep=0pt]",
       ...entries.map(
         ({ when, what, where, stack = [] }) =>
           `\\item \\textbf{${tex(where)}}\\quad ${tex(what)} \\hfill {\\small\\itshape ${tex(stack.slice(0, 4).join(", "))}}\\quad ${period(when)}`
       ),
       "\\end{itemize}",
-      "\\vspace{3pt}",
-      `All ${entries.length + more.length} projects: ${link(`${all}#${id}`, tex(bare(all)))}`,
     ].join("\n")
   }
-  return [heading, ...entries.map(row)].join("\n")
+  // Entries with a line under them take two lines each; plain ones take one.
+  const plain = entries.every(({ note, points }) => !note && !points)
+  return [heading, ...entries.map(plain ? line : row)].join("\n")
 }
 
 function document() {
@@ -129,7 +136,7 @@ function document() {
     link(site.url, tex(bare(site.url))),
   ]
   return `\\documentclass[10pt,a4paper]{article}
-\\usepackage[margin=16mm,top=13mm,bottom=13mm]{geometry}
+\\usepackage[margin=16mm,top=12mm,bottom=12mm]{geometry}
 \\usepackage{fontspec}
 \\usepackage{enumitem}
 \\usepackage{titlesec}
@@ -141,7 +148,7 @@ function document() {
 \\setlength{\\parindent}{0pt}
 \\setlist{nosep,leftmargin=0pt,label={}}
 \\titleformat{\\section}{\\large\\scshape}{}{0pt}{}[\\vspace{-6pt}\\rule{\\linewidth}{0.4pt}]
-\\titlespacing{\\section}{0pt}{8pt}{4pt}
+\\titlespacing{\\section}{0pt}{7pt}{4pt}
 \\newcommand{\\row}[3]{\\textbf{#1}\\hfill #3\\par #2\\par}
 
 \\begin{document}
