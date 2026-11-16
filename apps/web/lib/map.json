@@ -86,7 +86,7 @@
           "short": "載入",
           "kind": "deep",
           "level": 2,
-          "requires": ["skill-loads-on-demand"],
+          "requires": ["agent-loop", "skill-loads-on-demand"],
           "deepens": ["skill-loads-on-demand"]
         }
       ]
