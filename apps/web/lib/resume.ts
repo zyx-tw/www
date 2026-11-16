@@ -30,6 +30,11 @@ export const FACTS: Fact[] = [
     value: "Author profile",
     href: "https://ieeexplore.ieee.org/author/640961431173820",
   },
+  {
+    label: "Google Scholar",
+    value: "Profile",
+    href: "https://scholar.google.com/citations?user=SNFwXa4AAAAJ",
+  },
   // The same CV set in LaTeX: scripts/cv.ts writes it from this file.
   { label: "CV", value: "PDF", href: "/info.pdf" },
 ]
