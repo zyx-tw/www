@@ -100,7 +100,10 @@ export default async function NotePage({
       {links.before.length > 0 && (
         <nav
           aria-labelledby="before"
-          className={cn("mb-10 flex max-w-xl flex-col gap-y-2 leading-7", enterRow(3))}
+          className={cn(
+            "mb-10 flex max-w-xl flex-col gap-y-2 leading-7",
+            enterRow(3)
+          )}
         >
           <h2 id="before" className="text-caption text-muted-foreground">
             {MAP.before}
