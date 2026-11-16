@@ -46,6 +46,11 @@ type Showcase = {
   release: (index: number) => void
   /** Touch screens have no hover: a tap on the window decodes and pauses. */
   toggleHold: () => void
+  /**
+   * The list picks by scroll position: show this project and stop rotating.
+   * `null` hands the window back to the rotation.
+   */
+  point: (index: number | null) => void
 }
 
 const ShowcaseContext = createContext<Showcase | null>(null)
@@ -61,7 +66,8 @@ export function useShowcase() {
  * advances to the next project every ADVANCE_MS; hovering or focusing a row
  * (or tapping the window on touch screens) takes over, pauses the rotation and
  * decodes the window to color. Leaving hands control back after RESUME_MS.
- * Hidden tabs pause, and reduced motion never advances on its own.
+ * Hidden tabs pause, and reduced motion never advances on its own. Where the
+ * list picks by scroll position (`point`), the rotation stays off.
  */
 export function Showcase({
   projects,
@@ -74,6 +80,7 @@ export function Showcase({
   const [engaged, setEngaged] = useState<number | null>(null)
   const [held, setHeld] = useState(false)
   const [resuming, setResuming] = useState(false)
+  const [pointed, setPointed] = useState(false)
   const [engagement, setEngagement] = useState(0)
   const engagedRef = useRef<number | null>(null)
   const heldRef = useRef(false)
@@ -83,7 +90,7 @@ export function Showcase({
 
   // One timeout per project in the window, so every project, including one a
   // visitor just left, gets the full ADVANCE_MS.
-  const paused = engaged !== null || held || resuming
+  const paused = engaged !== null || held || resuming || pointed
   const reducedMotion = useReducedMotion()
   const visible = usePageVisible()
   const count = projects.length
@@ -142,6 +149,11 @@ export function Showcase({
     hold()
   }, [hold, letGo])
 
+  const point = useCallback((index: number | null) => {
+    setPointed(index !== null)
+    if (index !== null) setActive(index)
+  }, [])
+
   const value = useMemo<Showcase>(
     () => ({
       projects,
@@ -151,8 +163,19 @@ export function Showcase({
       engage,
       release,
       toggleHold,
+      point,
     }),
-    [projects, active, engaged, held, engagement, engage, release, toggleHold]
+    [
+      projects,
+      active,
+      engaged,
+      held,
+      engagement,
+      engage,
+      release,
+      toggleHold,
+      point,
+    ]
   )
 
   return <ShowcaseContext value={value}>{children}</ShowcaseContext>

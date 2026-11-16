@@ -544,6 +544,10 @@ html[data-boot] [data-slot="tv-boot"] {
 @utility h-screen-inner {
   height: calc(100dvh - 2 * var(--bezel));
 }
+/* Half of that: from the screen's top edge to its middle line. */
+@utility h-screen-half {
+  height: calc(50dvh - var(--bezel));
+}
 
 /*
  * Corners sit one gutter in from the screen, past the TV bezel when there is
