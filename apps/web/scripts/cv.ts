@@ -129,9 +129,13 @@ function section({ id, title, entries, more }: (typeof SECTIONS)[number]) {
 
 function document() {
   // The facts on one line under the name, without the link to this file.
+  // An address too long for that line is printed as its label.
   const facts = [
     ...FACTS.filter(({ href }) => !href?.endsWith(".pdf")).map(
-      ({ value, href }) => (href ? link(href, tex(bare(href))) : tex(value))
+      ({ label, value, href }) =>
+        href
+          ? link(href, tex(bare(href).length > 28 ? label : bare(href)))
+          : tex(value)
     ),
     link(site.url, tex(bare(site.url))),
   ]

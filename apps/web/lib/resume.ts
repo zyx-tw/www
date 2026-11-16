@@ -24,6 +24,12 @@ export const FACTS: Fact[] = [
   { label: "From", value: "Changhua, Taiwan" },
   { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
   ...SOCIAL.map(({ label, handle, href }) => ({ label, value: handle, href })),
+  // His author profile, which lists the three IEEE papers below.
+  {
+    label: "IEEE Xplore",
+    value: "Author profile",
+    href: "https://ieeexplore.ieee.org/author/640961431173820",
+  },
   // The same CV set in LaTeX: scripts/cv.ts writes it from this file.
   { label: "CV", value: "PDF", href: "/info.pdf" },
 ]
