@@ -20,6 +20,13 @@ export const MAP = {
   next: "接著讀",
   back: "回到",
   sources: "來源",
+  depth: "深度",
+  /** By Depth: 1, 2, 3. */
+  depths: ["理解", "實作", "底層"],
+  kinds: { concept: "觀念", deep: "深讀", field: "經驗" },
+  deeper: "往下追原理",
+  uses: "往上找應用",
+  related: "相關",
 } as const
 
 /** The controls of a note's figures. */

@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { notFound } from "next/navigation"
 
 import { SectionTitle } from "@workspace/ui/components/section-title"
@@ -14,7 +15,7 @@ import { ProjectTrace } from "@/components/project-trace"
 import { NoteMap } from "@/components/note-map"
 import { Rich } from "@/components/rich"
 import { MAP } from "@/lib/copy"
-import { findBody, findSystem, systems } from "@/lib/map"
+import { around, findBody, findSystem, systems } from "@/lib/map"
 import { findNote, notes } from "@/lib/notes"
 import { pageMetadata } from "@/lib/site"
 
@@ -53,8 +54,9 @@ export async function generateMetadata({
 
 /**
  * One note: its title, what is known about it (its number in the log,
- * length, reading time, version and last change), the text in sections with
- * their figures, then its system as a small chart to go on from. The same
+ * kind and depth, length, reading time, version and last change), the text
+ * in sections with their figures, the notes around it by the way they are
+ * linked, then its system as a small chart to go on from. The same
  * sections and figures as a project's page (app/project/[slug]/page.tsx).
  * The list of earlier versions stays in the data and is not shown.
  */
@@ -68,15 +70,24 @@ export default async function NotePage({
   const { system, body, note } = found
 
   const facts = [
+    `${MAP.kinds[body.kind]} L${body.level}`,
     `${body.length?.toLocaleString("en")} ${MAP.length}`,
     `${body.minutes} ${MAP.minutes}`,
     `v${note.version}`,
     `${MAP.updated} ${note.updated}`,
   ].join("   ")
-  // The first note that needs this one, written or not.
+  // The notes around this one, each group under the way it is linked.
+  const links = around(body)
+  const groups = [
+    [MAP.after, links.requires],
+    [MAP.deeper, links.deeper],
+    [MAP.uses, links.uses],
+    [MAP.related, links.related],
+  ] as const
+  // The first note that cannot be read without this one, written or not.
   const next = systems
     .flatMap(({ bodies }) => bodies)
-    .find(({ needs }) => needs?.includes(body.slug))
+    .find(({ requires }) => requires?.includes(body.slug))
   const below = enterRow(3 + note.intro.length)
 
   return (
@@ -185,6 +196,37 @@ export default async function NotePage({
             ))}
           </ul>
         </section>
+      )}
+
+      {groups.some(([, items]) => items.length > 0) && (
+        <nav
+          aria-label={MAP.title}
+          className={cn("mt-20 flex max-w-2xl flex-col gap-y-2", below)}
+        >
+          {groups.map(
+            ([label, items]) =>
+              items.length > 0 && (
+                <p key={label} className="text-pretty">
+                  <span className="text-muted-foreground">{label}</span>{" "}
+                  {items.map((item, at) => (
+                    <span key={item.slug}>
+                      {at > 0 && "、"}
+                      {item.href ? (
+                        <Link
+                          href={item.href}
+                          className="terminal-link underline decoration-muted-foreground/40 underline-offset-4"
+                        >
+                          {item.name}
+                        </Link>
+                      ) : (
+                        item.name
+                      )}
+                    </span>
+                  ))}
+                </p>
+              )
+          )}
+        </nav>
       )}
 
       <NoteMap

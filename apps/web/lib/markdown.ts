@@ -5,6 +5,7 @@ import { plain } from "@/components/rich"
 import { INFO, HOME, MAP, NOT_FOUND, PROJECT } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import {
+  around,
   type Body,
   findBody,
   type System,
@@ -118,11 +119,12 @@ export function mapMarkdown() {
         text(system.line),
         system.bodies
           .map((body) => {
-            const after = (body.needs ?? [])
+            const after = (body.requires ?? [])
               .map((slug) => findBody(slug)?.body.name)
               .filter((name) => name !== undefined)
             return [
               `- ${linked(body.name, body.href && `${body.href}.md`)}`,
+              `（${MAP.kinds[body.kind]}，L${body.level}）`,
               `：${text(body.line)}`,
               after.length > 0
                 ? `${MAP.after}：${text(after.join("、"))}。`
@@ -223,21 +225,20 @@ function sectionMarkdown({ title, body, callout, figure, points }: Section) {
  * notes around it.
  */
 export function noteMarkdown(system: System, body: Body, note: Note) {
-  const named = (slug: string) => {
-    const item = findBody(slug)?.body
-    return item && linked(item.name, item.href && `${item.href}.md`)
-  }
-  const before = (body.needs ?? []).map(named).filter(Boolean)
+  const named = (item: Body) =>
+    linked(item.name, item.href && `${item.href}.md`)
+  const links = around(body)
   const after = systems
     .flatMap(({ bodies }) => bodies)
-    .filter(({ needs }) => needs?.includes(body.slug))
-    .map(({ slug }) => named(slug))
+    .filter(({ requires }) => requires?.includes(body.slug))
+    .filter((item) => !links.deeper.includes(item))
   return markdownDocument(
     { title: body.name, path: body.href, description: body.line },
     [
       `# ${text(body.name)}`,
       [
         `${MAP.log} ${note.log}`,
+        `${MAP.kinds[body.kind]} L${body.level}`,
         `${body.length?.toLocaleString("en")} ${MAP.length}`,
         `${body.minutes} ${MAP.minutes}`,
         `v${note.version}`,
@@ -259,8 +260,11 @@ export function noteMarkdown(system: System, body: Body, note: Note) {
       [
         `## ${MAP.title}`,
         [
-          ...before.map((item) => `- ${MAP.after}：${item}`),
-          ...after.map((item) => `- ${MAP.next}：${item}`),
+          ...links.requires.map((item) => `- ${MAP.after}：${named(item)}`),
+          ...links.deeper.map((item) => `- ${MAP.deeper}：${named(item)}`),
+          ...links.uses.map((item) => `- ${MAP.uses}：${named(item)}`),
+          ...links.related.map((item) => `- ${MAP.related}：${named(item)}`),
+          ...after.map((item) => `- ${MAP.next}：${named(item)}`),
           `- ${MAP.back}：${link(system.name, absoluteUrl("/map.md"))}`,
         ].join("\n"),
       ].join("\n\n"),

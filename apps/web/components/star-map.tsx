@@ -7,7 +7,15 @@ import { cn } from "@workspace/ui/lib/utils"
 import { enterRow, page } from "@workspace/ui/lib/layout"
 
 import { MAP } from "@/lib/copy"
-import { findBody, findSystem, systemPath, systems, type Body } from "@/lib/map"
+import {
+  findBody,
+  findSystem,
+  shows,
+  systemPath,
+  systems,
+  type Body,
+  type Depth,
+} from "@/lib/map"
 import { HUES } from "@/lib/map-palette"
 import { aim, drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
 import { DRIFT, sky } from "@/lib/sky"
@@ -56,14 +64,19 @@ function plot(
   }
 }
 
-/** How many notes `bodies` holds. */
-function count(bodies: Body[]) {
-  return [`${MAP.notes} ${bodies.length}`]
+/** Where the reader's depth is kept from one visit to the next. */
+const DEPTH_KEY = "map-depth"
+const DEPTHS: Depth[] = [1, 2, 3]
+
+/** How many notes of `bodies` show at `depth`. */
+function count(bodies: Body[], depth: Depth) {
+  return [`${MAP.notes} ${bodies.filter((body) => shows(body, depth)).length}`]
 }
 
 /** What is known about a body: its state or its measures. */
 function facts(body: Body, after: string[]) {
   return [
+    `${MAP.kinds[body.kind]} L${body.level}`,
     !body.href && MAP.planned,
     body.length && `${body.length.toLocaleString("en")} ${MAP.length}`,
     body.minutes && `${body.minutes} ${MAP.minutes}`,
@@ -92,6 +105,7 @@ export function StarMap() {
   const target = findSystem(pathname.split("/")[2] ?? "") ?? null
   const [hover, setHover] = useState<string>()
   const [picked, setPinned] = useState<string>()
+  const [depth, setDepth] = useState<Depth>(1)
   // A body stays picked only while its own system is the one flown to.
   const pinned =
     picked && findBody(picked)?.system === target ? picked : undefined
@@ -107,6 +121,7 @@ export function StarMap() {
     center: { x: 0, y: 0, h: 0, outer: 1 },
     goal: 0,
     time: 0,
+    depth: 1,
     hits: [],
     held: false,
     drag: null,
@@ -124,6 +139,26 @@ export function StarMap() {
   useEffect(() => {
     scene.current.pinned = pinned
   }, [pinned])
+
+  // The depth a reader chose stays with their browser. Storage can be
+  // blocked, and the map works without it.
+  useEffect(() => {
+    try {
+      const kept = Number(localStorage.getItem(DEPTH_KEY))
+      if (kept === 2 || kept === 3) setDepth(kept)
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    scene.current.depth = depth
+  }, [depth])
+
+  const dive = (to: Depth) => {
+    setDepth(to)
+    try {
+      localStorage.setItem(DEPTH_KEY, String(to))
+    } catch {}
+  }
 
   useEffect(() => {
     const state = scene.current
@@ -305,7 +340,7 @@ export function StarMap() {
 
   const system = subject ? findSystem(subject) : undefined
   const found = subject ? findBody(subject) : undefined
-  const after = (found?.body.needs ?? [])
+  const after = (found?.body.requires ?? [])
     .map((slug) => findBody(slug)?.body.short)
     .filter((name) => name !== undefined)
 
@@ -370,12 +405,44 @@ export function StarMap() {
       <div
         className={cn(
           page,
-          "pointer-events-none relative flex flex-1 flex-col justify-end px-(--gutter)"
+          "pointer-events-none relative flex flex-1 flex-col justify-end gap-3 px-(--gutter)"
         )}
       >
-        {/* One line for what it is, one for what is known about it. */}
+        {/* How deep the map shows: the notes past it are left out. */}
         <div
-          key={`facts ${subject ?? ""}`}
+          role="group"
+          aria-label={MAP.depth}
+          className="pointer-events-auto flex w-fit gap-x-5 bg-background"
+        >
+          {DEPTHS.map((value) => {
+            const current = value === depth
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={current}
+                onClick={() => dive(value)}
+                className={cn(
+                  // Tall enough to tap, without making the row taller.
+                  "-my-2.5 cursor-pointer py-2.5 outline-offset-4 focus-visible:outline-2",
+                  "motion-safe:transition-colors motion-safe:duration-state",
+                  current
+                    ? "text-(--mark)"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <span aria-hidden>{current ? "●" : "○"} </span>
+                <span className={cn(current && "bg-(--mark)/20")}>
+                  {MAP.depths[value - 1]}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+        {/* One line for what it is, one for what is known about it. The
+            count follows the depth, so the depth is part of the key. */}
+        <div
+          key={`facts ${subject ?? ""} ${depth}`}
           data-slot="map-facts"
           className={cn(
             "flex w-fit max-w-xl flex-col gap-1 bg-background",
@@ -398,12 +465,15 @@ export function StarMap() {
           )}
           <p className="text-caption text-muted-foreground">
             {(system
-              ? count(system.bodies)
+              ? count(system.bodies, depth)
               : found
                 ? facts(found.body, after)
                 : [
                     `${MAP.systems} ${systems.length}`,
-                    ...count(systems.flatMap(({ bodies }) => bodies)),
+                    ...count(
+                      systems.flatMap(({ bodies }) => bodies),
+                      depth
+                    ),
                   ]
             ).join("   ")}
           </p>
