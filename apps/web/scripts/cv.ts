@@ -76,10 +76,20 @@ function citation({ when, what, authors, proceedings, pages, href }: Entry) {
   ].join("\n")
 }
 
-/** Where, what and when: a degree, a job or an award. */
-function row({ when, what, note, where, href }: Entry) {
+/** Where, what and when: a degree, a job or an award, then what he did. */
+function row({ when, what, note, where, href, points }: Entry) {
   const place = href ? link(href, tex(where)) : tex(where)
-  return `\\row{${place}}{${tex(what)}${note ? ` (${tex(note)})` : ""}}{${period(when)}}`
+  return [
+    `\\row{${place}}{${tex(what)}${note ? ` (${tex(note)})` : ""}}{${period(when)}}`,
+    ...(points
+      ? [
+          "\\begin{itemize}[label={\\textbullet},leftmargin=12pt,itemsep=1pt]",
+          ...points.map((point) => `\\item ${tex(point)}`),
+          "\\end{itemize}",
+        ]
+      : []),
+    "\\vspace{3pt}",
+  ].join("\n")
 }
 
 function section({ id, title, entries, more }: (typeof SECTIONS)[number]) {
@@ -99,8 +109,8 @@ function section({ id, title, entries, more }: (typeof SECTIONS)[number]) {
       heading,
       "\\begin{itemize}[itemsep=2pt]",
       ...entries.map(
-        ({ when, what, where }) =>
-          `\\item \\textbf{${tex(where)}}\\quad ${tex(what)} \\hfill ${period(when)}`
+        ({ when, what, where, stack = [] }) =>
+          `\\item \\textbf{${tex(where)}}\\quad ${tex(what)} \\hfill {\\small\\itshape ${tex(stack.slice(0, 4).join(", "))}}\\quad ${period(when)}`
       ),
       "\\end{itemize}",
       "\\vspace{3pt}",
@@ -119,7 +129,7 @@ function document() {
     link(site.url, tex(bare(site.url))),
   ]
   return `\\documentclass[10pt,a4paper]{article}
-\\usepackage[margin=18mm,top=16mm,bottom=16mm]{geometry}
+\\usepackage[margin=16mm,top=13mm,bottom=13mm]{geometry}
 \\usepackage{fontspec}
 \\usepackage{enumitem}
 \\usepackage{titlesec}
@@ -131,8 +141,8 @@ function document() {
 \\setlength{\\parindent}{0pt}
 \\setlist{nosep,leftmargin=0pt,label={}}
 \\titleformat{\\section}{\\large\\scshape}{}{0pt}{}[\\vspace{-6pt}\\rule{\\linewidth}{0.4pt}]
-\\titlespacing{\\section}{0pt}{10pt}{5pt}
-\\newcommand{\\row}[3]{\\textbf{#1}\\hfill #3\\par #2\\par\\vspace{3pt}}
+\\titlespacing{\\section}{0pt}{8pt}{4pt}
+\\newcommand{\\row}[3]{\\textbf{#1}\\hfill #3\\par #2\\par}
 
 \\begin{document}
 

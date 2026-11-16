@@ -316,9 +316,12 @@ export function aboutMarkdown(status: StatusData) {
       [
         `## ${text(title)}`,
         [...entries, ...more]
-          .map(({ when, what, note, authors, pages, where, href }) => {
+          .map(({ when, what, note, authors, pages, where, href, points }) => {
             const aside = note ?? authors?.join(", ")
-            return `- ${text(when)}: ${text(what)}, ${linked(where, href)}${pages ? `, pp. ${pages}` : ""}${aside ? ` (${text(aside)})` : ""}`
+            return [
+              `- ${text(when)}: ${text(what)}, ${linked(where, href)}${pages ? `, pp. ${pages}` : ""}${aside ? ` (${text(aside)})` : ""}`,
+              ...(points ?? []).map((point) => `  - ${text(point)}`),
+            ].join("\n")
           })
           .join("\n"),
       ].join("\n\n")

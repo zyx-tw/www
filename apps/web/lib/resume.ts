@@ -10,7 +10,8 @@ import { SOCIAL } from "@/lib/site"
  * from its DOI record or its PDF, each project from Project or from its
  * repository or report, and the advisor, the lab work, the MediaTek course
  * and its head count, the TANET paper and the internship's months from
- * Loki. Other client work stays off.
+ * Loki, and what he did at the internship from his own report on it.
+ * Other client work stays off.
  */
 
 /** His name as his papers print it, and as their author lists shorten it. */
@@ -42,6 +43,13 @@ export type Entry = {
   proceedings?: string
   /** A paper's pages in its proceedings. */
   pages?: string
+  /**
+   * What he did there, a line each. The PDF and the Markdown twin carry
+   * them; a row of the page does not have the room.
+   */
+  points?: string[]
+  /** What a project is built with, beside its name in the PDF. */
+  stack?: string[]
 }
 
 export type Section = {
@@ -61,6 +69,7 @@ const WORKS: Entry[] = projects.map((project) => ({
   what: project.purpose[0]!.toUpperCase() + project.purpose.slice(1),
   where: project.name,
   href: projectPath(project),
+  stack: project.stack,
 }))
 
 /** Public repositories and school work that have no page on Project. */
@@ -105,6 +114,7 @@ const REPOS: Entry[] = [
     when: "2026",
     what: "A software KVM over QUIC",
     where: "quickvm",
+    stack: ["Rust", "QUIC", "Swift"],
     href: "https://github.com/zyx1121/quickvm",
   },
   {
@@ -147,6 +157,7 @@ const REPOS: Entry[] = [
     when: "2025",
     what: "Reliable UDP streaming with Reed-Solomon coding",
     where: "PerfectSocket",
+    stack: ["Python", "Docker"],
     href: "https://github.com/zyx1121/network-final-project",
   },
   {
@@ -222,12 +233,16 @@ export const SECTIONS: Section[] = [
         when: "2025–NOW",
         what: "M.S. Computer Science",
         note: "Advisor: Chien-Chao Tseng",
+        points: [
+          "Research: automated frequency coordination (AFC) for 6 GHz Wi-Fi and its compliance testing",
+        ],
         where: "NYCU WinLab",
         href: "https://www.winlab.tw",
       },
       {
         when: "2021–2025",
         what: "B.S. Electronic Engineering",
+        points: ["Capstone: FPGA data system for a lunar magnetometer"],
         where: "NTUST",
         href: "https://www.ntust.edu.tw",
       },
@@ -241,6 +256,10 @@ export const SECTIONS: Section[] = [
         when: "2025–NOW",
         what: "Builds and runs the lab's services",
         note: "Portal, Carrel, Video and the lab website",
+        points: [
+          "Carrel: every member asks an agent for machines on the lab's Proxmox VE cluster, through one MCP endpoint",
+          "Portal: one site for the lab's meetings, door access, orders and paperwork, open to agents over MCP",
+        ],
         where: "NYCU WinLab",
         href: "https://www.winlab.tw",
       },
@@ -248,17 +267,28 @@ export const SECTIONS: Section[] = [
         when: "2026",
         what: "Instructor, Claude Code course",
         note: "80 attendees",
+        points: [
+          "Wrote the course, Claude Code CLI: Concepts and Practice, and built its hands-on lab platform",
+        ],
         where: "MediaTek",
       },
       {
         when: "2024–2025",
         what: "Intern, SONiC switch test automation",
         note: "May 2024 to May 2025",
+        points: [
+          "Turned manual switch tests into automated ones with pytest, Ixia and Jenkins",
+          "Cut the setup of the daily build and weekly regression tests from 15 to 20 minutes to one trigger",
+          "Wrote jenkins-terminal, a command-line client that starts and looks up Jenkins jobs",
+        ],
         where: "Clounix",
       },
       {
         when: "2022–2024",
         what: "Volunteer coach, skills competition",
+        points: [
+          "Prepared the school's contestants in computer repair for the national skills competition",
+        ],
         where: "Shalu Vocational High School",
       },
     ],
