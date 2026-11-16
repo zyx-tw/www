@@ -10,8 +10,7 @@ import { SOCIAL } from "@/lib/site"
  * from its DOI record or its PDF, each project from Project or from its
  * repository or report, and the advisor, the lab work, the MediaTek course
  * and its head count, the TANET paper and the internship's months from
- * Loki, and what he did at the internship from his own report on it.
- * Other client work stays off.
+ * Loki. Other client work stays off.
  */
 
 /** His name as his papers print it, and as their author lists shorten it. */
@@ -78,6 +77,7 @@ const REPOS: Entry[] = [
     when: "2026",
     what: "A local model host for agents on Windows",
     where: "aias",
+    stack: ["Go", "TypeScript", "Python"],
     href: "https://github.com/zyx1121/aias",
   },
   {
@@ -108,6 +108,7 @@ const REPOS: Entry[] = [
     when: "2026",
     what: "Hearing and sight for Claude Code on macOS",
     where: "sense",
+    stack: ["Swift", "Python"],
     href: "https://github.com/zyx1121/sense",
   },
   {
@@ -170,18 +171,21 @@ const REPOS: Entry[] = [
     when: "2024",
     what: "SDN dashboard for mmWave nodes",
     where: "mmwave-dashboard",
+    stack: ["TypeScript", "Python"],
     href: "https://github.com/zyx1121/mmwave-dashboard",
   },
   {
     when: "2024",
     what: "Experimental AFC on OpenWiFi",
     where: "openwifi-afc",
+    stack: ["Python", "openwifi", "ZedBoard"],
     href: "https://github.com/zyx1121/openwifi-afc",
   },
   {
     when: "2024",
     what: "A terminal client for Jenkins",
     where: "jenkins-terminal",
+    stack: ["Python"],
     href: "https://pypi.org/project/jenkins-terminal",
   },
   {
@@ -209,9 +213,15 @@ const SELECTED = [
   "Golem",
   "Sensorium",
   "Plump",
+  "NYCU AI",
   "WinLab Portal",
+  "aias",
+  "sense",
   "quickvm",
   "PerfectSocket",
+  "mmwave-dashboard",
+  "openwifi-afc",
+  "jenkins-terminal",
 ]
 
 for (const name of SELECTED) {
@@ -276,19 +286,11 @@ export const SECTIONS: Section[] = [
         when: "2024–2025",
         what: "Intern, SONiC switch test automation",
         note: "May 2024 to May 2025",
-        points: [
-          "Turned manual switch tests into automated ones with pytest, Ixia and Jenkins",
-          "Cut the setup of the daily build and weekly regression tests from 15 to 20 minutes to one trigger",
-          "Wrote jenkins-terminal, a command-line client that starts and looks up Jenkins jobs",
-        ],
         where: "Clounix",
       },
       {
         when: "2022–2024",
         what: "Volunteer coach, skills competition",
-        points: [
-          "Prepared the school's contestants in computer repair for the national skills competition",
-        ],
         where: "Shalu Vocational High School",
       },
     ],

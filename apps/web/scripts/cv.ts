@@ -107,7 +107,7 @@ function section({ id, title, entries, more }: (typeof SECTIONS)[number]) {
     const all = `${site.url}/info`
     return [
       heading,
-      "\\begin{itemize}[itemsep=2pt]",
+      "\\begin{itemize}[itemsep=0pt]",
       ...entries.map(
         ({ when, what, where, stack = [] }) =>
           `\\item \\textbf{${tex(where)}}\\quad ${tex(what)} \\hfill {\\small\\itshape ${tex(stack.slice(0, 4).join(", "))}}\\quad ${period(when)}`
