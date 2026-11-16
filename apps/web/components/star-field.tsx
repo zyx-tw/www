@@ -71,13 +71,16 @@ export function StarField() {
     }
   }, [])
 
-  // Behind text the stars are dimmer, so none reads as a full stop.
+  // Behind text the stars are dimmer, so none reads as a full stop. On a
+  // note they keep to the margins, clear of the column being read.
+  const note = /^\/map\/[^/]+\/[^/]+/.test(pathname)
   return (
     <div
       aria-hidden
       className={cn(
         "pointer-events-none fixed inset-(--bezel) -z-10",
-        !pathname.startsWith("/map") && "opacity-50"
+        !pathname.startsWith("/map") && "opacity-50",
+        note && "sky-margins"
       )}
     >
       <canvas ref={ref} className="pixelated size-full text-muted-foreground" />

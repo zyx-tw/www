@@ -42,7 +42,7 @@
   },
   "CI": {
     "text": "每次修改都會自動跑的檢查。",
-    "note": "done-means-verified"
+    "note": "what-claude-code-is"
   },
   "筆電只編輯": {
     "body": "one-job-per-machine"
@@ -52,7 +52,7 @@
     "note": "one-claude-many-machines"
   },
   "機器的名字": {
-    "body": "names-to-guess"
+    "body": "what-runs-where"
   },
   "固定的位置": {
     "body": "fixed-place"
@@ -75,7 +75,7 @@
     "body": "subagent-bill"
   },
   "Plugin 目錄": {
-    "body": "one-plugin-catalog"
+    "body": "plugin-ships-by-version"
   },
   "密碼不貼進對話": {
     "body": "what-an-agent-has-seen"
@@ -87,13 +87,13 @@
     "body": "monitoring-for-agents"
   },
   "怎樣才算完成": {
-    "body": "done-means-verified"
+    "body": "what-claude-code-is"
   },
   "把 agent 當成使用者": {
     "body": "agent-experience"
   },
   "Skill 不寫個案": {
-    "body": "skills-stay-general"
+    "body": "skill-loads-on-demand"
   },
   "token": {
     "text": "模型讀寫文字的單位，可能是一個字、半個字或一個符號。用量以 token 計算。",
@@ -177,5 +177,24 @@
   "評測": {
     "text": "一組固定的任務加上自動評分，用來比較修改前後的 agent。",
     "note": "evals"
+  },
+  "並行工作的隔離": {
+    "body": "isolate-parallel-work"
+  },
+  "信封加密": {
+    "body": "envelope-encryption"
+  },
+  "KV cache": {
+    "body": "kv-cache"
+  },
+  "作業系統沙箱": {
+    "body": "os-sandbox"
+  },
+  "Skill 的載入過程": {
+    "body": "how-a-skill-loads"
+  },
+  "工具呼叫": {
+    "text": "模型提出請求(用哪個工具、帶哪些參數)，harness 執行後把結果送回對話。",
+    "note": "agent-loop"
   }
 }

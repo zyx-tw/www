@@ -13,9 +13,9 @@ import { ProjectPicture } from "@/components/project-picture"
 import { ProjectQuiz } from "@/components/project-quiz"
 import { ProjectTrace } from "@/components/project-trace"
 import { NoteMap } from "@/components/note-map"
-import { Rich } from "@/components/rich"
+import { Paragraph, Rich } from "@/components/rich"
 import { MAP } from "@/lib/copy"
-import { around, findBody, findSystem, systems } from "@/lib/map"
+import { around, type Body, findBody, findSystem } from "@/lib/map"
 import { findNote, notes } from "@/lib/notes"
 import { pageMetadata } from "@/lib/site"
 
@@ -54,9 +54,9 @@ export async function generateMetadata({
 
 /**
  * One note: its title, what is known about it (its number in the log,
- * kind and depth, length, reading time, version and last change), the text
- * in sections with their figures, the notes around it by the way they are
- * linked, then its system as a small chart to go on from. The same
+ * kind and depth, length, reading time, version and last change), the notes
+ * to know first, the text in sections with their figures, the notes to go
+ * on to by the way they are linked, then its system as a small chart. The same
  * sections and figures as a project's page (app/project/[slug]/page.tsx).
  * The list of earlier versions stays in the data and is not shown.
  */
@@ -76,19 +76,18 @@ export default async function NotePage({
     `v${note.version}`,
     `${MAP.updated} ${note.updated}`,
   ].join("   ")
-  // The notes around this one, each group under the way it is linked.
+  // The notes to know first go above the text; the ones to go on to come
+  // after it, each group under the way it is linked.
   const links = around(body)
-  const groups = [
-    [MAP.after, links.requires],
-    [MAP.deeper, links.deeper],
-    [MAP.uses, links.uses],
-    [MAP.related, links.related],
-  ] as const
-  // The first note that cannot be read without this one, written or not.
-  const next = systems
-    .flatMap(({ bodies }) => bodies)
-    .find(({ requires }) => requires?.includes(body.slug))
-  const below = enterRow(3 + note.intro.length)
+  const groups = (
+    [
+      [MAP.deeper, links.deeper],
+      [MAP.uses, links.uses],
+      [MAP.related, links.related],
+    ] as const
+  ).filter(([, items]) => items.length > 0)
+  const first = links.before.length > 0 ? 4 : 3
+  const below = enterRow(first + note.intro.length)
 
   return (
     <main lang="zh-Hant" className={cn(column, page, "flex-1")}>
@@ -98,11 +97,26 @@ export default async function NotePage({
         className="pb-16"
       />
 
-      <div className="flex max-w-2xl flex-col gap-y-5">
+      {links.before.length > 0 && (
+        <nav
+          aria-labelledby="before"
+          className={cn(
+            "mb-10 flex max-w-xl flex-col gap-y-2 leading-7",
+            enterRow(3)
+          )}
+        >
+          <h2 id="before" className="text-caption text-muted-foreground">
+            {MAP.before}
+          </h2>
+          <NoteLinks items={links.before} />
+        </nav>
+      )}
+
+      <div className="flex max-w-xl flex-col gap-y-6 leading-7">
         {note.intro.map((paragraph, index) => (
-          <p key={index} className={cn("text-pretty", enterRow(3 + index))}>
-            <Rich text={paragraph} />
-          </p>
+          <div key={index} className={enterRow(first + index)}>
+            <Paragraph text={paragraph} />
+          </div>
         ))}
       </div>
 
@@ -121,14 +135,12 @@ export default async function NotePage({
                 <div key={part}>
                   <div
                     className={cn(
-                      "flex max-w-2xl flex-col gap-y-5",
+                      "flex max-w-xl flex-col gap-y-6 leading-7",
                       (part === 0 || !section.callout) && "mt-5"
                     )}
                   >
                     {paragraphs.map((paragraph, at) => (
-                      <p key={at} className="text-pretty">
-                        <Rich text={paragraph} />
-                      </p>
+                      <Paragraph key={at} text={paragraph} />
                     ))}
                   </div>
                   {part === 0 && section.callout && (
@@ -163,7 +175,7 @@ export default async function NotePage({
             <ProjectDial dial={section.figure} className="mt-10" />
           )}
           {section.points && (
-            <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">
+            <dl className="mt-10 flex max-w-xl flex-col gap-y-8 leading-7">
               {section.points.map(({ term, text }) => (
                 <div key={term} className="flex flex-col items-start gap-y-2">
                   <dt className="bg-(--mark)/20 font-medium text-(--mark)">
@@ -182,7 +194,7 @@ export default async function NotePage({
       {note.sources && (
         <section aria-labelledby="sources" className={cn("mt-20", below)}>
           <SectionTitle id="sources" title={MAP.sources} />
-          <ul className="mt-5 flex max-w-2xl flex-col gap-y-2">
+          <ul className="mt-5 flex max-w-xl flex-col gap-y-2 leading-7">
             {note.sources.map(({ title, href, by }) => (
               <li key={href} className="text-pretty">
                 <a
@@ -198,43 +210,47 @@ export default async function NotePage({
         </section>
       )}
 
-      {groups.some(([, items]) => items.length > 0) && (
-        <nav
-          aria-label={MAP.title}
-          className={cn("mt-20 flex max-w-2xl flex-col gap-y-2", below)}
-        >
-          {groups.map(
-            ([label, items]) =>
-              items.length > 0 && (
-                <p key={label} className="text-pretty">
-                  <span className="text-muted-foreground">{label}</span>{" "}
-                  {items.map((item, at) => (
-                    <span key={item.slug}>
-                      {at > 0 && "、"}
-                      {item.href ? (
-                        <Link
-                          href={item.href}
-                          className="terminal-link underline decoration-muted-foreground/40 underline-offset-4"
-                        >
-                          {item.name}
-                        </Link>
-                      ) : (
-                        item.name
-                      )}
-                    </span>
-                  ))}
-                </p>
-              )
-          )}
-        </nav>
+      {groups.length > 0 && (
+        <section aria-labelledby="beyond" className={cn("mt-20", below)}>
+          <SectionTitle id="beyond" title={MAP.beyond} />
+          <div className="mt-5 flex max-w-xl flex-col gap-y-8 leading-7">
+            {groups.map(([label, items]) => (
+              <div key={label} className="flex flex-col gap-y-2">
+                <h3 className="text-caption text-muted-foreground">{label}</h3>
+                <NoteLinks items={items} />
+              </div>
+            ))}
+          </div>
+        </section>
       )}
 
       <NoteMap
         system={system}
         current={body.slug}
-        next={next && { name: next.name, href: next.href }}
         className={cn("mt-20", below)}
       />
     </main>
+  )
+}
+
+/** Notes as links, one to a row; a planned one is its name alone. */
+function NoteLinks({ items }: { items: Body[] }) {
+  return (
+    <ul className="flex flex-col gap-y-2">
+      {items.map((item) => (
+        <li key={item.slug} className="text-pretty">
+          {item.href ? (
+            <Link
+              href={item.href}
+              className="terminal-link underline decoration-muted-foreground/40 underline-offset-4"
+            >
+              {item.name}
+            </Link>
+          ) : (
+            <span className="text-muted-foreground">{item.name}</span>
+          )}
+        </li>
+      ))}
+    </ul>
   )
 }

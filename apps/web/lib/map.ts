@@ -95,9 +95,11 @@ export function shows({ kind, level }: Body, depth: Depth) {
 }
 
 /**
- * The notes around a body, by the way they are linked: the ones to read
- * first, the ones that explain what is under it, the ones that put it to
- * use, and the rest. A note is listed once, in the first group it fits.
+ * The notes around a body, by the way they are linked. Before it: the ones
+ * it cannot be read without and the shallower ones it goes deeper into.
+ * After it: the ones that explain what is under it or build on it, the ones
+ * that put it to use, and the rest. A note is listed once, in the first
+ * group it fits.
  */
 export function around(body: Body) {
   const seen = new Set([body.slug])
@@ -108,12 +110,16 @@ export function around(body: Body) {
       const found = bodies.find((item) => item.slug === slug)
       return found ? [found] : []
     })
-  const pointing = (key: "deepens" | "applies" | "related") =>
+  const pointing = (key: "requires" | "deepens" | "applies" | "related") =>
     bodies.filter((item) => item[key]?.includes(body.slug)).map((b) => b.slug)
   return {
-    requires: pick(body.requires ?? []),
-    deeper: pick([...pointing("deepens"), ...(body.applies ?? [])]),
-    uses: pick([...pointing("applies"), ...(body.deepens ?? [])]),
+    before: pick([...(body.requires ?? []), ...(body.deepens ?? [])]),
+    deeper: pick([
+      ...pointing("deepens"),
+      ...(body.applies ?? []),
+      ...pointing("requires"),
+    ]),
+    uses: pick(pointing("applies")),
     related: pick([...(body.related ?? []), ...pointing("related")]),
   }
 }

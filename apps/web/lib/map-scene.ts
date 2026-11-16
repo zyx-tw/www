@@ -330,7 +330,7 @@ export function drawScene(
     if (from && held) {
       const links = around(held)
       const groups = [
-        [links.requires, 1],
+        [links.before, 1],
         [[...links.deeper, ...links.uses], 2],
         [links.related, 4],
       ] as const

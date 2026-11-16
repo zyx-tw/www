@@ -1,7 +1,7 @@
 import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
-import { plain } from "@/components/rich"
+import { fenced, plain } from "@/components/rich"
 import { INFO, HOME, MAP, NOT_FOUND, PROJECT } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import {
@@ -141,7 +141,10 @@ export function mapMarkdown() {
 function sectionMarkdown({ title, body, callout, figure, points }: Section) {
   return [
     `## ${text(title)}`,
-    ...body.map((line) => text(plain(line))),
+    // A block of code goes out as it is written.
+    ...body.map((line) =>
+      fenced(line) === undefined ? text(plain(line)) : line
+    ),
     callout && `> ${text(plain(callout))}`,
     figure?.kind === "picture" &&
       `![${text(figure.alt)}](${absoluteUrl(figure.src)})`,
@@ -228,10 +231,6 @@ export function noteMarkdown(system: System, body: Body, note: Note) {
   const named = (item: Body) =>
     linked(item.name, item.href && `${item.href}.md`)
   const links = around(body)
-  const after = systems
-    .flatMap(({ bodies }) => bodies)
-    .filter(({ requires }) => requires?.includes(body.slug))
-    .filter((item) => !links.deeper.includes(item))
   return markdownDocument(
     { title: body.name, path: body.href, description: body.line },
     [
@@ -260,11 +259,10 @@ export function noteMarkdown(system: System, body: Body, note: Note) {
       [
         `## ${MAP.title}`,
         [
-          ...links.requires.map((item) => `- ${MAP.after}：${named(item)}`),
+          ...links.before.map((item) => `- ${MAP.after}：${named(item)}`),
           ...links.deeper.map((item) => `- ${MAP.deeper}：${named(item)}`),
           ...links.uses.map((item) => `- ${MAP.uses}：${named(item)}`),
           ...links.related.map((item) => `- ${MAP.related}：${named(item)}`),
-          ...after.map((item) => `- ${MAP.next}：${named(item)}`),
           `- ${MAP.back}：${link(system.name, absoluteUrl("/map.md"))}`,
         ].join("\n"),
       ].join("\n\n"),
