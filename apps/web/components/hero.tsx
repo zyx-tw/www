@@ -5,8 +5,18 @@ import { enterRow } from "@workspace/ui/lib/layout"
  * The page title at hero size. It decodes in with the rest of the page
  * (page-decode.tsx).
  */
-export function HeroTitle({ text }: { text: string }) {
-  return <h1 className="text-title font-medium text-pretty">{text}</h1>
+export function HeroTitle({
+  text,
+  className,
+}: {
+  text: string
+  className?: string
+}) {
+  return (
+    <h1 className={cn("text-title font-medium text-pretty", className)}>
+      {text}
+    </h1>
+  )
 }
 
 /**
