@@ -61,11 +61,13 @@ export default async function SystemPage({
               )}
               {!body.href && <Badge variant="muted">{MAP.planned}</Badge>}
             </div>
-            <p className="text-muted-foreground">{body.line}</p>
-            {body.needs && (
+            <p className="text-muted-foreground">
+              {MAP.kinds[body.kind]} L{body.level}　{body.line}
+            </p>
+            {body.requires && (
               <p className="text-muted-foreground">
                 {MAP.after}{" "}
-                {body.needs.map((slug, at) => {
+                {body.requires.map((slug, at) => {
                   const found = findBody(slug)
                   if (!found) return null
                   return (

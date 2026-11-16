@@ -1,4 +1,4 @@
-import { lanes, systems, type System } from "./map"
+import { around, type Depth, lanes, shows, systems, type System } from "./map"
 
 /*
  * The map is one scene in wireframe: the systems stand over a plane, each
@@ -27,6 +27,8 @@ export type View = {
   center: Aim
   /** Seconds the bodies have been in orbit. */
   time: number
+  /** How deep the map shows: a body past it is left out (lib/map.ts). */
+  depth: Depth
   /** The slug under the pointer. */
   hover?: string
   /** The body picked by a click, which keeps its frame. */
@@ -283,7 +285,12 @@ export function drawScene(
     lines.push({ x0: star.x, y0: star.y, x1: base.x, y1: base.y, every: 2 })
     lines.push({ x0: base.x - 4, y0: base.y, x1: base.x + 4, y1: base.y })
 
+    // Where each body of the target is drawn, for the links between them.
+    const spots = new Map<string, { x: number; y: number }>()
     system.bodies.forEach((body, index) => {
+      // A body keeps its orbit whatever the depth, so none jumps as the
+      // depth changes.
+      if (!shows(body, view.depth)) return
       const { radius, angle } = orbit(index, time)
       if (here) ring(at.x, at.y, at.h, radius, 3)
       const { x, y } = project(
@@ -292,6 +299,7 @@ export function drawScene(
         at.h
       )
       if (!here) return dots.push({ x, y, size: 2 })
+      spots.set(body.slug, { x, y })
       const hover = view.hover === body.slug || view.pinned === body.slug
       const lit = Boolean(body.href) || hover
       // A written note takes its system's color, and grows a little with
@@ -311,6 +319,36 @@ export function drawScene(
         )
       ink = undefined
     })
+
+    // The body pointed at shows its links inside the system: solid to a
+    // note to read first, dashed to one a level down or up, dotted to the
+    // rest. A link to another system is on the instruments only.
+    const from = spots.get(view.hover ?? view.pinned ?? "")
+    const held = system.bodies.find(
+      ({ slug }) => slug === (view.hover ?? view.pinned)
+    )
+    if (from && held) {
+      const links = around(held)
+      const groups = [
+        [links.requires, 1],
+        [[...links.deeper, ...links.uses], 2],
+        [links.related, 4],
+      ] as const
+      for (const [group, every] of groups)
+        for (const { slug } of group) {
+          const to = spots.get(slug)
+          if (!to) continue
+          lines.push({
+            x0: from.x,
+            y0: from.y,
+            x1: to.x,
+            y1: to.y,
+            lit: true,
+            hue: system.slug,
+            every,
+          })
+        }
+    }
 
     ink = system.slug
     if (here) {
