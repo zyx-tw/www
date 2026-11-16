@@ -538,6 +538,14 @@ html[data-boot] [data-slot="tv-boot"] {
 }
 
 /*
+ * As tall as the screen: the viewport less the TV bezel on both sides. For a
+ * block that stays put while the page scrolls under it.
+ */
+@utility h-screen-inner {
+  height: calc(100dvh - 2 * var(--bezel));
+}
+
+/*
  * Corners sit one gutter in from the screen, past the TV bezel when there is
  * one. The column (lib/layout.ts) has the same gutter, so on a narrow screen
  * a page's text starts under the mark.
