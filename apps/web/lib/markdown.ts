@@ -311,14 +311,15 @@ export function aboutMarkdown(status: StatusData) {
     FACTS.map(
       ({ label, value, href }) => `- ${label}: ${linked(value, href)}`
     ).join("\n"),
-    ...SECTIONS.map(({ title, entries }) =>
+    // A folded list is whole here, and a paper carries its pages and authors.
+    ...SECTIONS.map(({ title, entries, more = [] }) =>
       [
         `## ${text(title)}`,
-        entries
-          .map(
-            ({ when, what, note, where, href }) =>
-              `- ${text(when)}: ${text(what)}, ${linked(where, href)}${note ? ` (${text(note)})` : ""}`
-          )
+        [...entries, ...more]
+          .map(({ when, what, note, authors, pages, where, href }) => {
+            const aside = note ?? authors?.join(", ")
+            return `- ${text(when)}: ${text(what)}, ${linked(where, href)}${pages ? `, pp. ${pages}` : ""}${aside ? ` (${text(aside)})` : ""}`
+          })
           .join("\n"),
       ].join("\n\n")
     ),

@@ -43,6 +43,10 @@ jobs:
         working-directory: packages/agent
         run: bun run test
 
+      - name: The CV's LaTeX source matches the resume
+        working-directory: apps/web
+        run: bun run cv --check
+
       - name: Lint
         run: bun run lint
 

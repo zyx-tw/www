@@ -6,11 +6,16 @@ import { SOCIAL } from "@/lib/site"
 /**
  * The about page's CV, as data so /info and /info.md say the same thing.
  * Entries come from a record or from Loki himself: the degrees, the award
- * and the coaching from school documents, each paper from its DOI or its
- * PDF, each project from Project or from its repository or report, and the MediaTek
- * course, the TANET paper and the internship's end from Loki. Other
- * client work stays off.
+ * and the coaching from school documents, each paper's authors and pages
+ * from its DOI record or its PDF, each project from Project or from its
+ * repository or report, and the advisor, the lab work, the MediaTek course
+ * and its head count, the TANET paper and the internship's months from
+ * Loki. Other client work stays off.
  */
+
+/** His name as his papers print it, and as their author lists shorten it. */
+export const NAME = "Yong-Xiang Zhan"
+export const ME = "Y.-X. Zhan"
 
 /** A labelled fact; one with `href` renders as a link. */
 export type Fact = { label: string; value: string; href?: string }
@@ -19,6 +24,8 @@ export const FACTS: Fact[] = [
   { label: "From", value: "Changhua, Taiwan" },
   { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
   ...SOCIAL.map(({ label, handle, href }) => ({ label, value: handle, href })),
+  // The same CV set in LaTeX: scripts/cv.ts writes it from this file.
+  { label: "CV", value: "PDF", href: "/info.pdf" },
 ]
 
 /** A row of a resume list: when, what, and where, linked when it has an address. */
@@ -27,14 +34,22 @@ export type Entry = {
   what: string
   where: string
   href?: string
-  /** A muted line under `what`, such as the author position of a paper. */
+  /** A muted line under `what`, such as an advisor or a head count. */
   note?: string
+  /** A paper's authors in print order, as initials; Loki is `ME`. */
+  authors?: string[]
+  /** The proceedings a paper is in, as a citation names them. */
+  proceedings?: string
+  /** A paper's pages in its proceedings. */
+  pages?: string
 }
 
 export type Section = {
   id: string
   title: string
   entries: Entry[]
+  /** The rest of a long list: folded on the page, left off the PDF. */
+  more?: Entry[]
 }
 
 /**
@@ -48,6 +63,152 @@ const WORKS: Entry[] = projects.map((project) => ({
   href: projectPath(project),
 }))
 
+/** Public repositories and school work that have no page on Project. */
+const REPOS: Entry[] = [
+  {
+    when: "2026",
+    what: "A local model host for agents on Windows",
+    where: "aias",
+    href: "https://github.com/zyx1121/aias",
+  },
+  {
+    when: "2026",
+    what: "Now playing inside Claude Code",
+    where: "music-mod",
+    href: "https://github.com/zyx1121/music-mod",
+  },
+  {
+    when: "2026",
+    what: "Today's schedule inside Claude Code",
+    where: "today-mod",
+    href: "https://github.com/zyx1121/today-mod",
+  },
+  {
+    when: "2026",
+    what: "Idea to paper with simulated peer review",
+    where: "paper-generator",
+    href: "https://github.com/zyx1121/paper-generator",
+  },
+  {
+    when: "2026",
+    what: "A Telegram to Claude Code agent template",
+    where: "agent-template",
+    href: "https://github.com/zyx1121/agent-template",
+  },
+  {
+    when: "2026",
+    what: "Hearing and sight for Claude Code on macOS",
+    where: "sense",
+    href: "https://github.com/zyx1121/sense",
+  },
+  {
+    when: "2026",
+    what: "A software KVM over QUIC",
+    where: "quickvm",
+    href: "https://github.com/zyx1121/quickvm",
+  },
+  {
+    when: "2026",
+    what: "A Pokémon trail behind the cursor",
+    where: "cursormon",
+    href: "https://github.com/zyx1121/cursormon",
+  },
+  {
+    when: "2026",
+    what: "Shake the cursor to act on the UI under it",
+    where: "shake",
+    href: "https://github.com/zyx1121/shake",
+  },
+  {
+    when: "2026",
+    what: "A pixel-art Ditto statusline for Claude Code",
+    where: "ditto",
+    href: "https://github.com/zyx1121/ditto",
+  },
+  {
+    when: "2025",
+    what: "Meal ordering for NYCU WinLab",
+    where: "bento.winlab.tw",
+    href: "https://github.com/NYCU-WinLab/bento.winlab.tw",
+  },
+  {
+    when: "2025",
+    what: "Personal file search with hybrid retrieval",
+    where: "archive",
+    href: "https://github.com/zyx1121/archive",
+  },
+  {
+    when: "2025",
+    what: "A command-line tool for Google searches",
+    where: "autosearch",
+    href: "https://github.com/zyx1121/autosearch",
+  },
+  {
+    when: "2025",
+    what: "Reliable UDP streaming with Reed-Solomon coding",
+    where: "PerfectSocket",
+    href: "https://github.com/zyx1121/network-final-project",
+  },
+  {
+    when: "2024",
+    what: "Find My item locations as an API",
+    where: "findmy-api",
+    href: "https://github.com/zyx1121/findmy-api",
+  },
+  {
+    when: "2024",
+    what: "SDN dashboard for mmWave nodes",
+    where: "mmwave-dashboard",
+    href: "https://github.com/zyx1121/mmwave-dashboard",
+  },
+  {
+    when: "2024",
+    what: "Experimental AFC on OpenWiFi",
+    where: "openwifi-afc",
+    href: "https://github.com/zyx1121/openwifi-afc",
+  },
+  {
+    when: "2024",
+    what: "A terminal client for Jenkins",
+    where: "jenkins-terminal",
+    href: "https://pypi.org/project/jenkins-terminal",
+  },
+  {
+    when: "2023–2024",
+    what: "FPGA data system for a lunar magnetometer",
+    where: "NTUST capstone",
+  },
+  {
+    when: "2023",
+    what: "WebRTC live streaming site",
+    where: "ntust.live",
+    href: "https://github.com/zyx1121/ntust.live",
+  },
+]
+
+const PROJECTS = [...WORKS, ...REPOS]
+
+/**
+ * The projects the page opens on and the PDF lists, by name. The others
+ * fold under "more".
+ */
+const SELECTED = [
+  "AIntern",
+  "Carrel",
+  "Golem",
+  "Sensorium",
+  "Plump",
+  "WinLab Portal",
+  "quickvm",
+  "PerfectSocket",
+]
+
+for (const name of SELECTED) {
+  if (!PROJECTS.some(({ where }) => where === name)) {
+    throw new Error(`resume: no project named ${name}`)
+  }
+}
+
 /**
  * The resume's lists in page order, by kind as a CV sorts them, newest
  * entry first in each.
@@ -60,6 +221,7 @@ export const SECTIONS: Section[] = [
       {
         when: "2025–NOW",
         what: "M.S. Computer Science",
+        note: "Advisor: Chien-Chao Tseng",
         where: "NYCU WinLab",
         href: "https://www.winlab.tw",
       },
@@ -76,18 +238,27 @@ export const SECTIONS: Section[] = [
     title: "Experience",
     entries: [
       {
+        when: "2025–NOW",
+        what: "Builds and runs the lab's services",
+        note: "Portal, Carrel, Video and the lab website",
+        where: "NYCU WinLab",
+        href: "https://www.winlab.tw",
+      },
+      {
         when: "2026",
-        what: "Taught a Claude Code course",
+        what: "Instructor, Claude Code course",
+        note: "80 attendees",
         where: "MediaTek",
       },
       {
         when: "2024–2025",
-        what: "Intern in SONiC switch test automation",
+        what: "Intern, SONiC switch test automation",
+        note: "May 2024 to May 2025",
         where: "Clounix",
       },
       {
         when: "2022–2024",
-        what: "Volunteer coach for the skills competition",
+        what: "Volunteer coach, skills competition",
         where: "Shalu Vocational High School",
       },
     ],
@@ -99,28 +270,65 @@ export const SECTIONS: Section[] = [
       {
         when: "2026",
         what: "An Automated and Optimized Framework for 6 GHz Wi-Fi AFC Compliance Verification",
-        note: "First author",
+        authors: [
+          ME,
+          "C.-Y. Huang",
+          "C.-C. Tseng",
+          "Z.-H. Wu",
+          "J.-L. Lin",
+          "J.-R. Li",
+          "Y.-M. Chen",
+        ],
+        proceedings:
+          "IEEE VTS Asia Pacific Wireless Communications Symposium (APWCS)",
+        pages: "236–240",
         where: "APWCS 2026",
-        href: "https://apwcs2026.org",
+        href: "https://doi.org/10.1109/APWCS71511.2026.11742901",
       },
       {
         when: "2025",
         what: "6 GHz Wi-Fi 自動頻率協調系統之 DUT 測試環境自動化改良",
-        note: "First author",
+        authors: [
+          ME,
+          "C.-Y. Huang",
+          "C.-C. Tseng",
+          "Z.-H. Wu",
+          "J.-L. Lin",
+          "J.-R. Li",
+          "Y.-M. Chen",
+        ],
+        proceedings: "Taiwan Academic Network Conference (TANET)",
         where: "TANET 2025",
         href: "https://tanet2025.niu.edu.tw",
       },
       {
         when: "2025",
         what: "CodedMyRoute: Design and Implementation of Software Defined Reliable Routing Scheme for Satellite IoTs",
-        note: "Co-author",
+        authors: ["J.-D. Lin", "C.-Y. Huang", "S.-H. Lin", "W. Chen", ME],
+        proceedings:
+          "IEEE VTS Asia Pacific Wireless Communications Symposium (APWCS)",
+        pages: "1–5",
         where: "APWCS 2025",
         href: "https://doi.org/10.1109/APWCS67981.2025.11151927",
       },
       {
         when: "2024",
         what: "Exploring Automated Frequency Coordination System for 6 GHz Wi-Fi in Taiwan",
-        note: "Co-author",
+        authors: [
+          "P.-Y. Ho",
+          "L. Lee",
+          "Y.-T. Kuo",
+          "C.-C. Chien",
+          ME,
+          "M.-H. Ho",
+          "C.-Y. Huang",
+          "Y.-M. Chen",
+          "C.-L. Lin",
+          "C.-H. Wu",
+          "C.-C. Tseng",
+        ],
+        proceedings: "International Computer Symposium (ICS)",
+        pages: "139–144",
         where: "ICS 2024",
         href: "https://doi.org/10.1109/ICS64339.2024.00032",
       },
@@ -129,128 +337,8 @@ export const SECTIONS: Section[] = [
   {
     id: "projects",
     title: "Projects",
-    entries: [
-      ...WORKS,
-      {
-        when: "2026",
-        what: "A local model host for agents on Windows",
-        where: "aias",
-        href: "https://github.com/zyx1121/aias",
-      },
-      {
-        when: "2026",
-        what: "Now playing inside Claude Code",
-        where: "music-mod",
-        href: "https://github.com/zyx1121/music-mod",
-      },
-      {
-        when: "2026",
-        what: "Today's schedule inside Claude Code",
-        where: "today-mod",
-        href: "https://github.com/zyx1121/today-mod",
-      },
-      {
-        when: "2026",
-        what: "Idea to paper with simulated peer review",
-        where: "paper-generator",
-        href: "https://github.com/zyx1121/paper-generator",
-      },
-      {
-        when: "2026",
-        what: "A Telegram to Claude Code agent template",
-        where: "agent-template",
-        href: "https://github.com/zyx1121/agent-template",
-      },
-      {
-        when: "2026",
-        what: "Hearing and sight for Claude Code on macOS",
-        where: "sense",
-        href: "https://github.com/zyx1121/sense",
-      },
-      {
-        when: "2026",
-        what: "A software KVM over QUIC",
-        where: "quickvm",
-        href: "https://github.com/zyx1121/quickvm",
-      },
-      {
-        when: "2026",
-        what: "A Pokémon trail behind the cursor",
-        where: "cursormon",
-        href: "https://github.com/zyx1121/cursormon",
-      },
-      {
-        when: "2026",
-        what: "Shake the cursor to act on the UI under it",
-        where: "shake",
-        href: "https://github.com/zyx1121/shake",
-      },
-      {
-        when: "2026",
-        what: "A pixel-art Ditto statusline for Claude Code",
-        where: "ditto",
-        href: "https://github.com/zyx1121/ditto",
-      },
-      {
-        when: "2025",
-        what: "Meal ordering for NYCU WinLab",
-        where: "bento.winlab.tw",
-        href: "https://github.com/NYCU-WinLab/bento.winlab.tw",
-      },
-      {
-        when: "2025",
-        what: "Personal file search with hybrid retrieval",
-        where: "archive",
-        href: "https://github.com/zyx1121/archive",
-      },
-      {
-        when: "2025",
-        what: "A command-line tool for Google searches",
-        where: "autosearch",
-        href: "https://github.com/zyx1121/autosearch",
-      },
-      {
-        when: "2025",
-        what: "Reliable UDP streaming with Reed-Solomon coding",
-        where: "PerfectSocket",
-        href: "https://github.com/zyx1121/network-final-project",
-      },
-      {
-        when: "2024",
-        what: "Find My item locations as an API",
-        where: "findmy-api",
-        href: "https://github.com/zyx1121/findmy-api",
-      },
-      {
-        when: "2024",
-        what: "SDN dashboard for mmWave nodes",
-        where: "mmwave-dashboard",
-        href: "https://github.com/zyx1121/mmwave-dashboard",
-      },
-      {
-        when: "2024",
-        what: "Experimental AFC on OpenWiFi",
-        where: "openwifi-afc",
-        href: "https://github.com/zyx1121/openwifi-afc",
-      },
-      {
-        when: "2024",
-        what: "A terminal client for Jenkins",
-        where: "jenkins-terminal",
-        href: "https://pypi.org/project/jenkins-terminal",
-      },
-      {
-        when: "2023–2024",
-        what: "FPGA data system for a lunar magnetometer",
-        where: "NTUST capstone",
-      },
-      {
-        when: "2023",
-        what: "WebRTC live streaming site",
-        where: "ntust.live",
-        href: "https://github.com/zyx1121/ntust.live",
-      },
-    ],
+    entries: PROJECTS.filter(({ where }) => SELECTED.includes(where)),
+    more: PROJECTS.filter(({ where }) => !SELECTED.includes(where)),
   },
   {
     id: "awards",
