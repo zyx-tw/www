@@ -17,15 +17,16 @@ export const MAP = {
   minutes: "分鐘",
   updated: "更新",
   log: "紀錄",
-  next: "接著讀",
   back: "回到",
   sources: "來源",
   depth: "深度",
   /** By Depth: 1, 2, 3. */
   depths: ["理解", "實作", "底層"],
   kinds: { concept: "觀念", deep: "深讀", field: "經驗" },
-  deeper: "往下追原理",
-  uses: "往上找應用",
+  before: "先知道",
+  beyond: "讀完之後",
+  deeper: "原理",
+  uses: "應用",
   related: "相關",
 } as const
 

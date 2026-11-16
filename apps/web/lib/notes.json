@@ -169,12 +169,12 @@
       }
     ],
     "intro": [
-      "我幾乎都從家目錄（~）啟動 Claude Code，不先 cd 進專案。2026-10-16 到 2026-11-15 的 30 天裡，442 段對話有 403 段從家目錄開。我的理由是：「碰得到所有專案、記憶共用」。",
-      "我的專案固定放在 Projects/<組織>/<專案>/，位置寫在使用者層級的 CLAUDE.md。因此我只講專案名稱，Claude Code 就找得到。"
+      "我幾乎都從家目錄（`~`）啟動 Claude Code，不先 `cd` 進專案。我的理由是：「碰得到所有專案、記憶共用」。",
+      "我的專案固定放在 `Projects/<組織>/<專案>/`，位置寫在使用者層級的 `CLAUDE.md`。因此我只講專案名稱，Claude Code 就找得到。"
     ],
     "sections": [
       {
-        "title": "我怎麼讓 Claude Code 跨專案工作",
+        "title": "我實際下過的跨專案指令",
         "body": [
           "我對 Claude Code 下過這個指令：「nas.zyx.tw 應該改成 ui.zyx.tw 的」。ui.zyx.tw 是我的共用元件庫，nas.zyx.tw 是另一個專案的網站。這項任務需要先讀元件庫，再修改另一個專案。"
         ]
@@ -182,8 +182,8 @@
       {
         "title": "Claude Code 的啟動位置決定了什麼",
         "body": [
-          "Claude Code 官方的預設工作範圍，是啟動資料夾與底下的內容；範圍外的資料夾要另外加入並同意存取。==從家目錄啟動，底下所有專案都在工作範圍內，自動記憶也集中在同一個資料夾。==",
-          "Claude Code 不會因此讀完整個家目錄，而是依任務搜尋需要的檔案。使用者層級的 ~/.claude/CLAUDE.md 則每段對話都載入，與啟動位置無關。"
+          "Claude Code 預設的工作範圍，是啟動資料夾與底下的內容；範圍外的資料夾要另外加入並同意存取。==從家目錄啟動，底下所有專案都在工作範圍內，自動記憶也集中在同一個資料夾。==",
+          "Claude Code 不會因此讀完整個家目錄，而是依任務搜尋需要的檔案。使用者層級的 `~/.claude/CLAUDE.md` 則每段對話都載入，與啟動位置無關。"
         ],
         "figure": {
           "kind": "lesson",
@@ -275,16 +275,16 @@
       {
         "title": "我替 Claude Code 補上的規則與整理",
         "body": [
-          "Claude Code 在對話開始時載入啟動資料夾與上層的 CLAUDE.md。子資料夾的 CLAUDE.md 要等讀到該資料夾的檔案才載入，因此從家目錄開場時，專案規則還沒進來。",
-          "我在使用者層級的 CLAUDE.md 明寫：「Session 幾乎都從 ~ 開，repo 自己的 CLAUDE.md 不會自動載入：動某 repo 前先讀它的 CLAUDE.md / AGENTS.md / README」。這類工作要求寫在哪裡、怎麼驗證生效，見 [[CLAUDE.md]]。",
+          "Claude Code 在對話開始時載入啟動資料夾與上層的 `CLAUDE.md`。子資料夾的 `CLAUDE.md` 要等讀到該資料夾的檔案才載入，因此從家目錄啟動時，專案規則還沒進來。",
+          "我在使用者層級的 `CLAUDE.md` 寫了這條規則：「Session 幾乎都從 ~ 開，repo 自己的 CLAUDE.md 不會自動載入：動某 repo 前先讀它的 CLAUDE.md / AGENTS.md / README」。這類工作要求寫在哪裡、怎麼驗證生效，見 [[CLAUDE.md]]。",
           "我的記憶都集中在同一個資料夾，筆數很多，因此另做 1 份索引檔，每則記憶佔 1 行，同類再收成總表。相關做法見 [[記憶]]。"
         ]
       },
       {
-        "title": "什麼情況適合從家目錄啟動 Claude Code",
+        "title": "什麼情況適合，什麼情況不適合",
         "body": [
-          "機制上，從家目錄啟動時，Claude Code 讀得到也改得到底下的每個專案。",
-          "只做 1 個專案，或團隊共用專案規則時，機制上在專案資料夾啟動比較省事：Claude Code 開場就自動載入專案的 CLAUDE.md，不必另寫「先讀」規則。"
+          "需要同時處理多個專案時，這樣啟動比較合適，像上面先讀元件庫再改另一個專案的任務。代價是範圍內的每個專案，Claude Code 都改得到。",
+          "只做 1 個專案，或團隊共用專案規則時，機制上在專案資料夾啟動比較省事：Claude Code 開場就自動載入專案的 `CLAUDE.md`，不必另寫「先讀」規則。"
         ]
       }
     ]
@@ -519,14 +519,14 @@
       }
     ],
     "intro": [
-      "MCP 全名是 Model Context Protocol，是 Anthropic 在 2024 年 11 月提出的開放標準。Claude Code、Codex、Gemini CLI、Cursor 都支援。",
-      "沒有 MCP，agent 也能用 curl 呼叫服務的 API。但 agent 得自行讀文件、處理登入與請求；做法若沒存下來，新對話就不記得。"
+      "MCP 全名是 Model Context Protocol，是 Anthropic 提出的開放標準。Claude Code、Codex、Gemini CLI、Cursor 都支援。",
+      "沒有 MCP，agent 也能用 `curl` 呼叫服務的 API。但 agent 得自行讀文件、處理登入與請求，新對話也不記得上次怎麼做。"
     ],
     "sections": [
       {
         "title": "服務操作由誰處理？",
         "body": [
-          "MCP server 是提供一組工具的程式。==server 處理連線與登入，agent 只呼叫工具、讀結果。== 訊息怎麼傳見 [[MCP 的訊息格式]]。",
+          "MCP server 是提供一組工具的程式。每個工具有名稱、說明與輸入欄位的格式。==server 處理連線與登入，agent 只呼叫工具、讀結果。== 訊息怎麼傳見 [[MCP 的訊息格式]]。",
           "圖中的「查空檔再排會議」，只有 API 時 agent 要做 6 步，接上 MCP 後是 3 步。agent 依工具名稱與說明選擇工具，工具的約定見 [[工具呼叫的格式]]。"
         ],
         "figure": {
@@ -619,7 +619,7 @@
         }
       },
       {
-        "title": "一次呼叫能完成多少事？",
+        "title": "一個工具能包多少事？",
         "body": [
           "工具要呼叫幾個 API，由 server 作者決定。查空檔與排會議可以合成同一個工具，agent 只需呼叫 1 次。",
           "API 回應常有用不到的欄位，server 可以只回傳需要的部分，減少 agent 要讀的內容。"
@@ -629,7 +629,8 @@
         "title": "接上 server 的代價是什麼？",
         "body": [
           "接上的每個 server，工具名稱與簡短說明都會進入每一段對話的 context，不管這段對話有沒有用到。",
-          "Claude Code 開始對話時先載入工具名稱與 server 簡介，要用時才讀完整欄位格式。作者選擇 MCP、API、CLI 與瀏覽器的順序見 [[接上每個系統]]。"
+          "Claude Code 開始對話時先載入工具名稱與 server 簡介，要用時才讀完整欄位格式。因為每個 server 都佔 context，不會用到的 server 就不必接上。",
+          "MCP、API、CLI 與瀏覽器的選擇順序見 [[接上每個系統]]。"
         ]
       }
     ]
@@ -11215,7 +11216,7 @@
     ]
   },
   {
-    "slug": "skill-not-loaded",
+    "slug": "how-a-skill-loads",
     "log": "058",
     "version": "1.0.0",
     "updated": "2026-11-16",
@@ -11227,80 +11228,50 @@
       }
     ],
     "intro": [
-      "==Skill 沒被載入，要先分清楚名稱沒進清單，還是進了清單卻沒被呼叫。== 這決定你該查檔案位置與格式，還是調整 name 與 description。把操作步驟寫進全文，並不能保證 agent 會選中這份 Skill。"
+      "==模型決定用哪份 Skill，harness 再把全文放進對話。== harness 是負責掃描檔案、組裝 context 與回傳工具訊息的執行環境。",
+      "[[Skill]] 已說明基本分工。以下以 Claude Code 為例，照發生的先後說明 6 步。"
     ],
     "sections": [
       {
-        "title": "SKILL.md 的位置與格式限制",
+        "title": "第 1、2 步：harness 只讀 2 個欄位並排成清單",
         "body": [
-          "1 份 Skill 是 1 個資料夾，內含 SKILL.md。在 Claude Code，專案層級路徑是 .claude/skills/<名稱>/SKILL.md，使用者層級則是 ~/.claude/skills/<名稱>/SKILL.md。",
-          "SKILL.md 採用 Agent Skills 開放規格。開頭放 name 與 description，下面接全文。name 最多 64 個字元，description 最多 1024 個字元，全文建議少於 500 行。Codex、Cursor、Gemini CLI、opencode 也讀同樣的 SKILL.md。",
-          "agent 載入全文後，全文會持續佔用這段對話的 context；全文提到的附檔與腳本，則用到才讀。內容該寫通則還是個案，見 [[Skill 不寫個案]]。"
+          "Agent Skills 格式以資料夾為單位，內含 `SKILL.md`，也能放附檔與腳本。Codex、Cursor、Gemini CLI、opencode 也讀同樣格式。",
+          "第 1 步：對話開始時，harness 掃描 `.claude/skills/<名稱>/`、`~/.claude/skills/<名稱>/`，以及 Plugin 提供的 Skill。此時只讀檔案開頭的 `name` 與 `description`。",
+          "以下是 `.claude/skills/release-notes/SKILL.md` 的內容：",
+          "```\n---\nname: release-notes\ndescription: Write release notes from the git log. Use when the user asks for release notes, a changelog entry, or 發版說明.\n---\n\n# Release notes\n\n1. Run `git log --oneline` for the commits since the last tag.\n2. Group them under Added, Changed and Fixed.\n3. Write one line per commit, in plain words.\n```",
+          "第 2 步：harness 把這 2 個欄位排成清單，放進 context。harness 同時指示模型，任務符合時用 `Skill` 工具載入。"
         ]
       },
       {
-        "title": "用固定輸出確認全文被讀到",
+        "title": "第 3、4 步：模型自己選，工具再帶回全文",
         "body": [
-          "下面是我為這次實驗寫的 Skill。第 3 步要求的那行字只放在全文，沒有放進 description。"
-        ],
-        "figure": {
-          "kind": "diagram",
-          "code": true,
-          "wide": [
-            "---",
-            "name: release-notes",
-            "description: Write release notes from the git log. Use when the user asks for release notes, a changelog entry, or 發版說明.",
-            "---",
-            "",
-            "# Release notes",
-            "",
-            "1. Run `git log --oneline` for the commits since the last tag.",
-            "2. Group them under Added, Changed and Fixed.",
-            "3. Start the notes with the line `RELEASE-NOTES-SKILL-LOADED`.",
-            "4. Write one line per commit, in plain words."
-          ],
-          "alt": "The exact release-notes SKILL.md used in the experiment."
-        }
-      },
-      {
-        "title": "只改名稱與說明，載入結果就不同",
-        "body": [
-          "2026-11-16，我在只有 2 個 commit 的空專案測試。環境是 Claude Code 2.1.325，以 claude -p 非互動模式執行，模型為 claude-sonnet-5-5。測試只載入專案層級設定，對話另有 19 份內建 Skill。",
-          "每次都開全新對話，只問「幫我寫這次的發版說明」。測試只改 name 與 description，全文保持不變。以下每種組合各跑 5 次，完整說明就是上面檔案的 description。"
-        ],
-        "points": [
-          {
-            "term": "release-notes＋完整說明",
-            "text": "5 次都載入。"
-          },
-          {
-            "term": "release-notes＋Helps with notes.",
-            "text": "5 次都載入。"
-          },
-          {
-            "term": "helper＋完整說明",
-            "text": "5 次都載入。"
-          },
-          {
-            "term": "helper＋Helps with notes.",
-            "text": "0 次載入。agent 直接跑 git log 自己寫，輸出沒有固定的那行字。"
-          }
+          "harness 沒有用關鍵字比對或分類器選 Skill。第 3 步：模型讀清單後自行決定，當下的判斷線索只有 `name` 與 `description`。",
+          "第 4 步：選定後，模型呼叫 `Skill`，以名稱作為參數。harness 回傳簡短的工具結果，再加入包含資料夾路徑與全文的新訊息，全文不含開頭的 2 個欄位。",
+          "```\n模型     tool_use     Skill {\"skill\": \"release-notes\"}\nharness  tool_result  Launching skill: release-notes\nharness  message      Base directory for this skill:\n                      .claude/skills/release-notes\n\n                      # Release notes\n                      1. Run `git log --oneline` for the commits ...\n```",
+          "工具呼叫的結構見 [[工具呼叫的格式]]。"
         ]
       },
       {
-        "title": "結果能支持什麼，不能支持什麼",
+        "title": "第 5、6 步：全文留在對話，附檔另外讀取",
         "body": [
-          "4 種組合裡，只要 name 或 description 有 1 個寫對任務，5 次都載入；兩個都沒對上的 helper＋Helps with notes. 是 0 次。不能據此認定 description 寫得模糊也沒關係，因為 release-notes＋Helps with notes. 那一組仍有 release-notes 這個名稱。",
-          "我另用無關問題「a.txt 裡面寫了什麼」測 name 為 release-notes 的 2 種組合，各跑 2 次，都沒有載入。",
-          "實驗只有 1 個模型、1 句發版請求，每種組合 5 次，專案也只有 1 份自寫 Skill。裝了多份說明相近的 Skill 時，結果可能不同，這次沒有測。"
+          "第 5 步：新訊息從此是對話的一部分，之後每一輪都跟著整段對話一起送給模型，直到對話被壓縮。每輪重送的機制見 [[context 的組成]]。",
+          "第 6 步：全文若提到相對路徑，模型依載入時收到的資料夾路徑定位附檔，再用一般讀檔工具讀取。腳本則由一般指令工具執行，程式碼不進 context，只有輸出進去。"
         ]
       },
       {
-        "title": "從事件紀錄定位失敗的階段",
+        "title": "依判斷線索與載入成本安排內容",
         "body": [
-          "實驗用 claude -p 加上 --output-format stream-json --verbose 執行。輸出是一行一個 JSON 事件，可以分開檢查這 2 件事。",
-          "先找第 1 個事件，type 是 system，subtype 是 init。skills 欄位列出這段對話看得到的 Skill 名稱。名稱不在清單裡，代表檔案位置或格式有問題。",
-          "名稱在清單裡，再找後續工具呼叫。若工具呼叫的 name 欄位是 Skill，input 是 {\"skill\": \"release-notes\"}，就代表全文已載入。"
+          "因為第 3 步只看 2 個欄位，所以名稱或說明必須看得出用途。`description` 要寫適用任務，並包含使用者實際會說的詞與語言，例如「發版說明」。",
+          "因為第 2 步會建立清單，所以每多裝 1 份 Skill，每段對話都多 1 組欄位，即使沒有用到。",
+          "因為第 5 步會保留訊息，所以全文越長，載入後每輪負擔越大。全文只留步驟，少用的細節放附檔；通則與個案的取捨見 [[Skill 不寫個案]]。"
+        ]
+      },
+      {
+        "title": "沒載入時，先查找到沒有，再查選了沒有",
+        "body": [
+          "用 Claude Code 非互動模式（`claude -p`），加上 `--output-format stream-json --verbose`。輸出會把每個事件印成一行 JSON，第 1 個事件的 `skills` 欄位列出找到的 Skill 名稱。",
+          "名稱不在 `skills`，代表第 1 步沒找到。檢查資料夾位置、檔名是否為 `SKILL.md`，以及開頭欄位格式；這時改說明沒有用。",
+          "名稱在 `skills`，後面卻沒有名稱為 `Skill` 的工具呼叫，代表已列出但模型沒選。此時修改 `name` 或 `description`，讓用途與適用任務可辨識。"
         ]
       }
     ]

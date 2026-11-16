@@ -1,10 +1,10 @@
 import { Fragment } from "react"
 
 import { Term } from "@/components/term"
-import { plain } from "@/lib/plain"
+import { fenced, plain } from "@/lib/plain"
 import { findTerm } from "@/lib/glossary"
 
-export { plain }
+export { fenced, plain }
 
 /** A clause: the text up to and including the punctuation that closes it. */
 const CLAUSE =
@@ -15,7 +15,9 @@ const CLAUSE =
  * when skimming, in the heavier weight, and `==words==` are marked as a
  * terminal marks a selection, in inverted colors: read alone, the marked
  * words are the note in brief. `[[a term]]` is a term from lib/glossary.json,
- * framed and linked to where it is explained. Everything else is plain.
+ * framed and linked to where it is explained. Words between backticks are
+ * code: a path, a command or a field, on a quiet plate. Everything else is
+ * plain.
  *
  * Chinese has no spaces, so a browser breaks a line between any two
  * characters. Each clause is kept whole instead (an inline block), so a
@@ -23,7 +25,7 @@ const CLAUSE =
  */
 export function Rich({ text }: { text: string }) {
   const pieces = text
-    .split(/(\*\*[^*]+\*\*|==[^=]+==|\[\[[^\]]+\]\])/)
+    .split(/(\*\*[^*]+\*\*|==[^=]+==|\[\[[^\]]+\]\]|`[^`]+`)/)
     .filter(Boolean)
     .map((part) =>
       part.startsWith("**")
@@ -32,7 +34,9 @@ export function Rich({ text }: { text: string }) {
           ? { kind: "mark" as const, text: part.slice(2, -2) }
           : part.startsWith("[[")
             ? { kind: "term" as const, text: part.slice(2, -2) }
-            : { kind: "plain" as const, text: part }
+            : part.startsWith("`")
+              ? { kind: "code" as const, text: part.slice(1, -1) }
+              : { kind: "plain" as const, text: part }
     )
   const clauses = plain(text).match(CLAUSE) ?? []
 
@@ -59,6 +63,12 @@ export function Rich({ text }: { text: string }) {
             {cut}
           </mark>
         )
+      else if (kind === "code")
+        parts.push(
+          <code key={key} className="bg-muted px-1">
+            {cut}
+          </code>
+        )
       else if (kind === "term") {
         const term = findTerm(whole)
         parts.push(
@@ -82,4 +92,23 @@ export function Rich({ text }: { text: string }) {
       </span>
     )
   })
+}
+
+/**
+ * One paragraph of a note: prose with its emphasis, or a block of code when
+ * the paragraph is fenced. A long line of code scrolls inside its block.
+ */
+export function Paragraph({ text }: { text: string }) {
+  const code = fenced(text)
+  if (code !== undefined)
+    return (
+      <pre className="overflow-x-auto border-t border-b border-border py-5 text-caption text-muted-foreground">
+        {code}
+      </pre>
+    )
+  return (
+    <p className="text-pretty">
+      <Rich text={text} />
+    </p>
+  )
 }
