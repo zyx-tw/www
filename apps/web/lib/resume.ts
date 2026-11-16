@@ -5,8 +5,8 @@ import { SOCIAL } from "@/lib/site"
 
 /**
  * The about page's CV, as data so /info and /info.md say the same thing.
- * Entries come from a record or from Loki himself: the degrees, the award
- * and the coaching from school documents, each paper's authors and pages
+ * Entries come from a record or from Loki himself: the degrees, the award,
+ * the technician certificates and the coaching from school documents, each paper's authors and pages
  * from its DOI record or its PDF, each project from Project or from its
  * repository or report, and the advisor, the lab work, the MediaTek course
  * and its head count, the TANET paper and the internship's months from
@@ -374,12 +374,22 @@ export const SECTIONS: Section[] = [
   },
   {
     id: "awards",
-    title: "Awards",
+    title: "Awards and certificates",
     entries: [
+      {
+        when: "2021",
+        what: "Level B technician, computer hardware fabrication",
+        where: "Ministry of Labor",
+      },
       {
         when: "2020",
         what: "1st place in computer repair",
         where: "National Vocational High School Skills Competition",
+      },
+      {
+        when: "2019–2020",
+        what: "Level C technician: hardware, software design, software application",
+        where: "Ministry of Labor",
       },
     ],
   },
