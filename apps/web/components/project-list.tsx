@@ -37,8 +37,9 @@ function subscribeWide(onChange: () => void) {
  * screen readers. There the list is a wheel: the page's pointer stays at the
  * middle of the screen (app/project/page.tsx), the first row starts on it,
  * and scrolling brings each row to it in turn. The row on the pointer is the
- * one in the window; the cursor picks nothing. Half a screen of space after
- * the last row lets it reach the pointer too.
+ * one in the window; the cursor picks nothing. Half a screen of space, less
+ * half a row, before the first row and after the last lets both reach the
+ * pointer.
  */
 export function ProjectList({ className }: { className?: string }) {
   const { projects, active, engage, release, point } = useShowcase()
@@ -80,7 +81,8 @@ export function ProjectList({ className }: { className?: string }) {
       <h2 id="projects-heading" className="sr-only">
         Projects
       </h2>
-      <ul ref={listRef} className="flex flex-col gap-y-3 lg:gap-y-0">
+      <div aria-hidden className="hidden lg:block lg:h-screen-half" />
+      <ul ref={listRef} className="flex flex-col gap-y-3 lg:-mt-4.5 lg:gap-y-0">
         {projects.map((project, index) => (
           <li
             key={project.slug}
