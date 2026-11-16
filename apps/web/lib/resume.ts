@@ -75,13 +75,6 @@ const WORKS: Entry[] = projects.map((project) => ({
 const REPOS: Entry[] = [
   {
     when: "2026",
-    what: "A local model host for agents on Windows",
-    where: "aias",
-    stack: ["Go", "TypeScript", "Python"],
-    href: "https://github.com/zyx1121/aias",
-  },
-  {
-    when: "2026",
     what: "Now playing inside Claude Code",
     where: "music-mod",
     href: "https://github.com/zyx1121/music-mod",
@@ -103,20 +96,6 @@ const REPOS: Entry[] = [
     what: "A Telegram to Claude Code agent template",
     where: "agent-template",
     href: "https://github.com/zyx1121/agent-template",
-  },
-  {
-    when: "2026",
-    what: "Hearing and sight for Claude Code on macOS",
-    where: "sense",
-    stack: ["Swift", "Python"],
-    href: "https://github.com/zyx1121/sense",
-  },
-  {
-    when: "2026",
-    what: "A software KVM over QUIC",
-    where: "quickvm",
-    stack: ["Rust", "QUIC", "Swift"],
-    href: "https://github.com/zyx1121/quickvm",
   },
   {
     when: "2026",
@@ -155,38 +134,10 @@ const REPOS: Entry[] = [
     href: "https://github.com/zyx1121/autosearch",
   },
   {
-    when: "2025",
-    what: "Reliable UDP streaming with Reed-Solomon coding",
-    where: "PerfectSocket",
-    stack: ["Python", "Docker"],
-    href: "https://github.com/zyx1121/network-final-project",
-  },
-  {
     when: "2024",
     what: "Find My item locations as an API",
     where: "findmy-api",
     href: "https://github.com/zyx1121/findmy-api",
-  },
-  {
-    when: "2024",
-    what: "SDN dashboard for mmWave nodes",
-    where: "mmwave-dashboard",
-    stack: ["TypeScript", "Python"],
-    href: "https://github.com/zyx1121/mmwave-dashboard",
-  },
-  {
-    when: "2024",
-    what: "Experimental AFC on OpenWiFi",
-    where: "openwifi-afc",
-    stack: ["Python", "openwifi", "ZedBoard"],
-    href: "https://github.com/zyx1121/openwifi-afc",
-  },
-  {
-    when: "2024",
-    what: "A terminal client for Jenkins",
-    where: "jenkins-terminal",
-    stack: ["Python"],
-    href: "https://pypi.org/project/jenkins-terminal",
   },
   {
     when: "2023–2024",

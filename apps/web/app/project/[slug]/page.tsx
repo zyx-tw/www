@@ -53,9 +53,12 @@ export default async function Project({
   const project = findProject((await params).slug)
   if (!project) notFound()
 
+  // A project that lives in its repository has one address, its code.
   const facts = [
-    { label: "Site", value: bare(project.href), href: project.href },
-    ...(project.code && project.code !== project.href
+    ...(project.href && project.href !== project.code
+      ? [{ label: "Site", value: bare(project.href), href: project.href }]
+      : []),
+    ...(project.code
       ? [{ label: "Code", value: bare(project.code), href: project.code }]
       : []),
   ]
@@ -135,10 +138,12 @@ export default async function Project({
         </section>
       ))}
 
-      <section aria-labelledby="facts-heading" className={cn("mt-20", below)}>
-        <SectionTitle id="facts-heading" title="Details" />
-        <Rows className="mt-5" rows={facts} />
-      </section>
+      {facts.length > 0 && (
+        <section aria-labelledby="facts-heading" className={cn("mt-20", below)}>
+          <SectionTitle id="facts-heading" title="Details" />
+          <Rows className="mt-5" rows={facts} />
+        </section>
+      )}
     </main>
   )
 }
