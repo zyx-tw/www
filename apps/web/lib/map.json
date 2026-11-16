@@ -27,8 +27,8 @@
         {
           "slug": "start-from-home",
           "short": "家目錄",
-          "name": "從家目錄啟動 Claude Code，集中專案範圍與記憶",
-          "line": "固定專案位置，修改前讀取專案規則，再處理跨專案任務。",
+          "name": "我從家目錄啟動 Claude Code，讓跨專案工作共用範圍與記憶",
+          "line": "跨專案操作方便，但專案規則與記憶整理要自己補上。",
           "kind": "field",
           "level": 2,
           "applies": ["claude-md"],
@@ -45,8 +45,8 @@
         },
         {
           "slug": "mcp-wraps-a-service",
-          "name": "用 MCP 把服務的操作包成工具",
-          "line": "MCP server 處理連線與登入，Claude Code 只呼叫工具。",
+          "name": "MCP 把服務操作包成 agent 能呼叫的工具",
+          "line": "把連線、登入與請求交給 server，也要計入工具佔用的 context。",
           "short": "MCP",
           "kind": "concept",
           "level": 1,
@@ -78,6 +78,16 @@
           "kind": "deep",
           "level": 2,
           "related": ["four-ways-to-extend"]
+        },
+        {
+          "slug": "skill-not-loaded",
+          "name": "Skill 沒被載入時，先看名稱有沒有進清單，再看有沒有被呼叫",
+          "line": "用事件紀錄拆開檔案問題與觸發問題，再改對地方。",
+          "short": "排查",
+          "kind": "deep",
+          "level": 2,
+          "requires": ["skill-loads-on-demand"],
+          "deepens": ["skill-loads-on-demand"]
         }
       ]
     },
