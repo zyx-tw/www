@@ -100,7 +100,7 @@ export default async function NotePage({
       {links.before.length > 0 && (
         <nav
           aria-labelledby="before"
-          className={cn("mb-10 flex max-w-2xl flex-col gap-y-2", enterRow(3))}
+          className={cn("mb-10 flex max-w-xl flex-col gap-y-2 leading-7", enterRow(3))}
         >
           <h2 id="before" className="text-caption text-muted-foreground">
             {MAP.before}
@@ -109,7 +109,7 @@ export default async function NotePage({
         </nav>
       )}
 
-      <div className="flex max-w-2xl flex-col gap-y-5">
+      <div className="flex max-w-xl flex-col gap-y-6 leading-7">
         {note.intro.map((paragraph, index) => (
           <div key={index} className={enterRow(first + index)}>
             <Paragraph text={paragraph} />
@@ -132,7 +132,7 @@ export default async function NotePage({
                 <div key={part}>
                   <div
                     className={cn(
-                      "flex max-w-2xl flex-col gap-y-5",
+                      "flex max-w-xl flex-col gap-y-6 leading-7",
                       (part === 0 || !section.callout) && "mt-5"
                     )}
                   >
@@ -172,7 +172,7 @@ export default async function NotePage({
             <ProjectDial dial={section.figure} className="mt-10" />
           )}
           {section.points && (
-            <dl className="mt-10 flex max-w-2xl flex-col gap-y-8">
+            <dl className="mt-10 flex max-w-xl flex-col gap-y-8 leading-7">
               {section.points.map(({ term, text }) => (
                 <div key={term} className="flex flex-col items-start gap-y-2">
                   <dt className="bg-(--mark)/20 font-medium text-(--mark)">
@@ -191,7 +191,7 @@ export default async function NotePage({
       {note.sources && (
         <section aria-labelledby="sources" className={cn("mt-20", below)}>
           <SectionTitle id="sources" title={MAP.sources} />
-          <ul className="mt-5 flex max-w-2xl flex-col gap-y-2">
+          <ul className="mt-5 flex max-w-xl flex-col gap-y-2 leading-7">
             {note.sources.map(({ title, href, by }) => (
               <li key={href} className="text-pretty">
                 <a
@@ -210,7 +210,7 @@ export default async function NotePage({
       {groups.length > 0 && (
         <section aria-labelledby="beyond" className={cn("mt-20", below)}>
           <SectionTitle id="beyond" title={MAP.beyond} />
-          <div className="mt-5 flex max-w-2xl flex-col gap-y-8">
+          <div className="mt-5 flex max-w-xl flex-col gap-y-8 leading-7">
             {groups.map(([label, items]) => (
               <div key={label} className="flex flex-col gap-y-2">
                 <h3 className="text-caption text-muted-foreground">{label}</h3>
