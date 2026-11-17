@@ -209,7 +209,7 @@ Every zyx.tw site is written for people and for agents. A static export has no s
 
 ## Agent kit
 
-Web apps with an agent in them (Handy, Stamp, the FDE demos) share the server half too. The kit lives in `packages/agent/src/`, is published as `registry:lib` items named `agent-*`, and installs into a project's `lib/agent/`. Each file is the app's own afterwards, like a component.
+Web apps with an agent in them (AIntern, the FDE demos) share the server half too. The kit lives in `packages/agent/src/`, is published as `registry:lib` items named `agent-*`, and installs into a project's `lib/agent/`. Each file is the app's own afterwards, like a component.
 
 | Item                 | What it gives                                                                                               |
 | -------------------- | ----------------------------------------------------------------------------------------------------------- |

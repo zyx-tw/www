@@ -56,13 +56,6 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      # The image jobs build every deployed app in Docker; only stamp has no image.
-      - name: Build stamp
-        run: bunx turbo build --filter=./apps/stamp
-        env:
-          NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
   registry:
     name: Registry smoke test
