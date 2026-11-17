@@ -2,6 +2,13 @@ import { getClientAttributionAttributes } from "./attribution"
 import { emitErrorLog } from "./log"
 
 /**
+ * Errors Next.js raises when a client sends a broken or truncated request body
+ * (bots, scanners, aborted uploads). The request is answered correctly, so
+ * they are client faults, not server errors, and are not logged.
+ */
+const CLIENT_FAULT_MESSAGE_PREFIXES = ["Failed to parse body as FormData"]
+
+/**
  * Builds Next.js's server-side error-observability hook (the reserved
  * `onRequestError` export in `instrumentation.ts`): fires whenever an error
  * occurs on the server (Server Component render, Route Handlers, Server
@@ -42,6 +49,8 @@ export function createOnRequestError(loggerName: string) {
       error instanceof Error
         ? (error as Error & { digest?: string }).digest
         : undefined
+
+    if (CLIENT_FAULT_MESSAGE_PREFIXES.some((p) => message.startsWith(p))) return
 
     emitErrorLog(loggerName, {
       message,
