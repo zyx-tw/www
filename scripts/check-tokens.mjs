@@ -13,7 +13,6 @@ const scanned = [
   "apps/3d",
   "apps/good",
   "apps/link",
-  "apps/stamp",
   "apps/time",
   "apps/ui",
   "apps/web",
@@ -56,12 +55,6 @@ const exempt = {
   "apps/web/lib/pond/renderer.ts": ["color literal"],
   // The map is content: a cockpit display in the color of its phosphor.
   "apps/web/lib/map-palette.ts": ["color literal"],
-  // Stamp's seal is the product's mark: vermilion ink and glyphs sized in
-  // the seal's own SVG units, the same in both themes.
-  "apps/stamp/components/seal.tsx": ["color literal", "raw font size"],
-  // Loki waived the type scale for Stamp's campaign page (2026-10-08): each
-  // screen says one thing, set large.
-  "apps/stamp/app/stamp.css": ["raw font size"],
 }
 
 const palette =

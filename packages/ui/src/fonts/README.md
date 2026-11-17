@@ -7,7 +7,7 @@ The files are subset to Latin, general punctuation, arrows, technical symbols, b
 Collect `cjk.txt` again when the apps' text gains new Han characters. From the repository root:
 
 ```bash
-grep -rhoP '\p{Han}' apps/{1909,good,link,stamp,time,ui,web}/{app,components,lib} 2>/dev/null \
+grep -rhoP '\p{Han}' apps/{1909,good,link,time,ui,web}/{app,components,lib} 2>/dev/null \
   | sort -u | tr -d '\n' > packages/ui/src/fonts/cjk.txt
 ```
 
