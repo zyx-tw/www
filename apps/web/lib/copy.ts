@@ -34,6 +34,8 @@ export const MAP = {
 export const FIGURE = {
   next: "下一步",
   again: "重來",
+  play: "播放",
+  stop: "暫停",
   right: "正確",
   wrong: "再想想",
 } as const
