@@ -18,6 +18,10 @@ const BAND = 40
 const HEADER = 64
 /** The space between the stage and the line read under it, in pixels. */
 const GAP = 24
+/** Where the stage sticks beside the lines (`lg:top-32`), in pixels. */
+const BESIDE_TOP = 128
+/** The share of a narrow screen the stage may take and still leave the lines. */
+const FIT = 0.6
 
 type Figure = Diagram | Trace
 
@@ -33,7 +37,9 @@ function stepsOf(figure: Figure) {
  * about it pass by, and the line in the middle of the screen is the step the
  * drawing shows. Play scrolls through the lines by itself, so the figure can
  * be watched without touching anything; any touch of the page stops it.
- * Reduced motion has no Play.
+ * Reduced motion has no Play. A drawing too tall to stay in view and leave
+ * room for the lines is not pinned: it shows as the figure does alone, with
+ * its own buttons.
  */
 export function Scrolly({
   figure,
@@ -53,11 +59,19 @@ export function Scrolly({
   const reducedMotion = useReducedMotion()
   const [active, setActive] = useState(0)
   const [playing, setPlaying] = useState(false)
+  const [pinned, setPinned] = useState(true)
 
   // Beside the stage (lg), the line across the middle of the screen is the
   // step. Under it, the stage covers the middle, so the line just below the
   // stage is.
   useEffect(() => {
+    // Not pinned, the stage is gone to measure: try again when the screen
+    // changes size.
+    if (!pinned) {
+      const retry = () => setPinned(true)
+      window.addEventListener("resize", retry)
+      return () => window.removeEventListener("resize", retry)
+    }
     let observer: IntersectionObserver | undefined
     const watch = () => {
       observer?.disconnect()
@@ -65,6 +79,10 @@ export function Scrolly({
       const side = window.matchMedia("(min-width: 1024px)").matches
       beside.current = side
       const stageHeight = stage.current?.getBoundingClientRect().height ?? 0
+      const fits = side
+        ? stageHeight + BESIDE_TOP + GAP <= height
+        : stageHeight <= height * FIT
+      if (!fits) return setPinned(false)
       const top = side
         ? height / 2 - BAND / 2
         : Math.min(stageHeight + HEADER + GAP, height - 2 * BAND)
@@ -90,7 +108,7 @@ export function Scrolly({
       observer?.disconnect()
       window.removeEventListener("resize", watch)
     }
-  }, [steps.length])
+  }, [steps.length, pinned])
 
   /**
    * Scrolls so the line of this step sits where the step is read. The page
@@ -124,7 +142,7 @@ export function Scrolly({
   }
 
   useEffect(() => {
-    if (!playing) return
+    if (!playing || !pinned) return
     const stop = () => setPlaying(false)
     const id = setInterval(() => {
       const next = at.current + 1
@@ -140,7 +158,7 @@ export function Scrolly({
       window.removeEventListener("touchstart", stop)
       window.removeEventListener("keydown", stop)
     }
-  }, [playing, steps.length])
+  }, [playing, pinned, steps.length])
 
   function play() {
     if (playing) return setPlaying(false)
@@ -148,6 +166,14 @@ export function Scrolly({
     at.current = from
     show(from)
     setPlaying(true)
+  }
+
+  if (!pinned) {
+    return figure.kind === "trace" ? (
+      <ProjectTrace trace={figure} className={className} />
+    ) : (
+      <ProjectDiagram diagram={figure} className={className} />
+    )
   }
 
   return (
