@@ -11,9 +11,9 @@ import { ProjectDial } from "@/components/project-dial"
 import { ProjectLesson } from "@/components/project-lesson"
 import { ProjectPicture } from "@/components/project-picture"
 import { ProjectQuiz } from "@/components/project-quiz"
-import { ProjectTrace } from "@/components/project-trace"
 import { NoteMap } from "@/components/note-map"
 import { Paragraph, Rich } from "@/components/rich"
+import { Scrolly } from "@/components/scrolly"
 import { MAP } from "@/lib/copy"
 import { around, type Body, findBody, findSystem } from "@/lib/map"
 import { findNote, notes } from "@/lib/notes"
@@ -56,8 +56,9 @@ export async function generateMetadata({
  * One note: its title, what is known about it (its number in the log,
  * kind and depth, length, reading time, version and last change), the notes
  * to know first, the text in sections with their figures, the notes to go
- * on to by the way they are linked, then its system as a small chart. The same
- * sections and figures as a project's page (app/project/[slug]/page.tsx).
+ * on to by the way they are linked, then its system as a small chart. A figure
+ * with steps is told by scrolling (components/scrolly.tsx); the rest are the
+ * same as on a project's page (app/project/[slug]/page.tsx).
  * The list of earlier versions stays in the data and is not shown.
  */
 export default async function NotePage({
@@ -163,9 +164,12 @@ export default async function NotePage({
               className="mt-20"
             />
           )}
-          {section.figure?.kind === "diagram" && (
-            <ProjectDiagram diagram={section.figure} className="mt-20" />
-          )}
+          {section.figure?.kind === "diagram" &&
+            (section.figure.steps?.length ? (
+              <Scrolly figure={section.figure} className="mt-10" />
+            ) : (
+              <ProjectDiagram diagram={section.figure} className="mt-20" />
+            ))}
           {section.figure?.kind === "lesson" && (
             <ProjectLesson lesson={section.figure} className="mt-14" />
           )}
@@ -173,7 +177,7 @@ export default async function NotePage({
             <ProjectQuiz quiz={section.figure} className="mt-14" />
           )}
           {section.figure?.kind === "trace" && (
-            <ProjectTrace trace={section.figure} className="mt-14" />
+            <Scrolly figure={section.figure} className="mt-10" />
           )}
           {section.figure?.kind === "dial" && (
             <ProjectDial dial={section.figure} className="mt-14" />

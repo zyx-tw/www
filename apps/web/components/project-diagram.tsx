@@ -95,9 +95,15 @@ function Lines({
 export function ProjectDiagram({
   diagram,
   className,
+  step: driven,
 }: {
   diagram: Diagram
   className?: string
+  /**
+   * The step a scrolling page lights (components/scrolly.tsx). Set, the
+   * figure plays nothing, lists no steps and shows no line: the page does.
+   */
+  step?: number
 }) {
   const steps = useMemo(() => diagram.steps ?? [], [diagram.steps])
   const { narrow, code } = diagram
@@ -108,6 +114,7 @@ export function ProjectDiagram({
   const [active, setActive] = useState(0)
   const [held, setHeld] = useState(false)
   const [visible, setVisible] = useState(false)
+  const shown = driven ?? active
 
   useEffect(() => {
     const root = rootRef.current
@@ -120,7 +127,12 @@ export function ProjectDiagram({
     return () => observer.disconnect()
   }, [])
 
-  const playing = steps.length > 1 && visible && !held && !reducedMotion
+  const playing =
+    steps.length > 1 &&
+    visible &&
+    !held &&
+    !reducedMotion &&
+    driven === undefined
   useEffect(() => {
     if (!playing) return
     const id = setInterval(
@@ -140,19 +152,19 @@ export function ProjectDiagram({
         <Lines
           lines={diagram.wide}
           lit={lit}
-          active={active}
+          active={shown}
           className={cn("w-fit", middle, narrow && "max-sm:hidden")}
         />
         {narrow && (
           <Lines
             lines={narrow}
             lit={lit}
-            active={active}
+            active={shown}
             className={cn("w-fit sm:hidden", middle)}
           />
         )}
       </div>
-      {steps.length > 0 && (
+      {steps.length > 0 && driven === undefined && (
         <>
           <ol
             className={cn(
