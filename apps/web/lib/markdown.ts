@@ -2,7 +2,8 @@ import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
 import { fenced, plain } from "@/components/rich"
-import { INFO, HOME, MAP, NOT_FOUND, PROJECT } from "@/lib/copy"
+import { INFO, HOME, MAP, NOT_FOUND, PROJECT, SITE } from "@/lib/copy"
+import { hosts } from "@/lib/hosts"
 import type { LegalDoc, Run } from "@/lib/legal"
 import {
   around,
@@ -107,6 +108,18 @@ export function worksMarkdown() {
               ? ` ${link(project.href === project.code ? "Code" : "Site", project.href)}`
               : ""
           }`
+      )
+      .join("\n"),
+  ])
+}
+
+export function siteMarkdown() {
+  return markdownDocument({ title: SITE.title, path: "/site" }, [
+    `# ${text(SITE.title)}`,
+    hosts
+      .map(
+        ({ host, purpose }) =>
+          `- ${link(host, `https://${host}`)}: ${text(purpose)}`
       )
       .join("\n"),
   ])

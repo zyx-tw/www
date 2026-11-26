@@ -1,6 +1,7 @@
 import { HomeShell } from "@/components/home-shell"
 import { HOME } from "@/lib/copy"
 import { systems } from "@/lib/map"
+import { hosts } from "@/lib/hosts"
 import { projects } from "@/lib/projects"
 import { pageMetadata, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
 
@@ -8,6 +9,7 @@ const BODIES = systems.flatMap(({ bodies }) => bodies)
 /** How much is under each page, for the shell's `ls`. */
 const COUNTS = {
   project: projects.length,
+  site: hosts.length,
   map: BODIES.filter(({ href }) => href).length,
 }
 

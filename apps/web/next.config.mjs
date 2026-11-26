@@ -38,6 +38,14 @@ const nextConfig = {
       { source: "/made.md", destination: "/project.md", permanent: true },
       { source: "/made/:path*", destination: "/project", permanent: true },
       { source: "/works", destination: "/project", permanent: true },
+      ...["ui", "link", "time", "good"].flatMap((slug) => [
+        { source: `/project/${slug}`, destination: "/site", permanent: true },
+        {
+          source: `/project/${slug}.md`,
+          destination: "/site.md",
+          permanent: true,
+        },
+      ]),
       { source: "/works.md", destination: "/project.md", permanent: true },
       {
         source: "/works/:slug",
