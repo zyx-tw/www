@@ -130,6 +130,12 @@ export type Scene3DProps = {
    */
   pathTracing?: number
   /**
+   * With `pathTracing`: called once the first traced frame is up, so every
+   * shader has compiled and the environment and the scene are loaded; or as
+   * soon as the browser turns out unable to trace.
+   */
+  onReady?: () => void
+  /**
    * With `lens`: let the background image drift slowly and shift a little
    * with the mouse, for depth. The pointer bends the image either way.
    */
@@ -157,6 +163,7 @@ export function Scene3D({
   ambient = false,
   frameloop = "always",
   pathTracing = 0,
+  onReady,
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -193,6 +200,7 @@ export function Scene3D({
           lighting={lighting}
           ambient={ambient}
           pathTracing={pathTracing}
+          onReady={onReady}
         />
       </Suspense>
       {controls && (
@@ -493,6 +501,7 @@ function SceneContents({
   lighting,
   ambient,
   pathTracing,
+  onReady,
 }: {
   scene: SceneV1
   envBaseUrl: string
@@ -507,6 +516,7 @@ function SceneContents({
   lighting: boolean
   ambient: boolean
   pathTracing: number
+  onReady: (() => void) | undefined
 }) {
   useRedrawOnCommit()
   // While the tracer draws the frame, the composer stands aside.
@@ -713,6 +723,7 @@ function SceneContents({
             background={staging.background}
             maxSamples={pathTracing}
             onTracing={setTracing}
+            onReady={onReady}
           />
         </Suspense>
       )}
