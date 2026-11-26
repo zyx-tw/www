@@ -48,6 +48,11 @@ export const PRIVACY: LegalDoc = {
             mark: "deleted after 30 days",
           },
         ],
+        [
+          {
+            text: "What a site keeps for you, such as short links and sign-in data, sits in a hosted database, and some files are served from a hosted storage service. Both act only on Loki's behalf.",
+          },
+        ],
       ],
     },
     {
