@@ -4,20 +4,21 @@ import type { LegalDoc } from "@/lib/legal"
 
 /**
  * The privacy page, as data so /privacy and /privacy.md say the same thing.
- * It covers every site under zyx.tw. Every statement is checked against the
- * code and the live sites; change it when they change, and bump `updated`.
+ * It covers zyx.tw as a whole and names no single app, so it stays true as
+ * apps come and go. Every statement is checked against the code; change it
+ * when the sites change, and bump `updated`.
  */
 export const PRIVACY: LegalDoc = {
   title: "Privacy",
-  updated: "2026-11-15",
+  updated: "2026-11-26",
   sections: [
     {
       heading: "What this covers",
       paragraphs: [
         [
           {
-            text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, plump (formerly 3d), link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts sensorium, derp and data.",
-            mark: "every site under zyx.tw",
+            text: "This policy covers zyx.tw and every site under it, run by Loki (詹詠翔).",
+            mark: "zyx.tw and every site under it",
           },
         ],
       ],
@@ -27,74 +28,39 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "No site runs analytics or tracking scripts. None sets cookies, except 1909, whose sign-in sets cookies that keep its members signed in.",
-            mark: "No site runs analytics or tracking scripts.",
+            text: "zyx.tw runs no analytics or tracking scripts, and sets no cookies unless you sign in.",
+            mark: "no analytics or tracking scripts",
           },
         ],
         [
           {
-            text: "If you switch the theme (the D key, or the toggle on ui.zyx.tw), your choice is saved in your browser's localStorage under the key “theme”. Plump keeps your current scene there too. None of it leaves your device. Scenes saved on the old 3d.zyx.tw address remain there; export a scene and open it in Plump to move it to plump.zyx.tw.",
-          },
-        ],
-        [
-          {
-            text: "Each site serves its own fonts or uses fonts already on your device.",
-          },
-        ],
-        [
-          {
-            text: "The 3D mark on www.zyx.tw loads its lighting from plump.zyx.tw, another of these sites.",
+            text: "Settings such as the theme are kept in your browser's storage and never leave your device.",
           },
         ],
       ],
     },
     {
-      heading: "On the servers",
+      heading: "On the server",
       paragraphs: [
         [
           {
-            text: "www, ui, plump, 3d, link, time, good and 1909 run on Loki's own server behind a gateway, which logs each request (your IP address, the request and its headers without credentials, and the response status) and keeps the log for up to 30 days.",
-            mark: "keeps the log for up to 30 days",
-          },
-        ],
-        [
-          {
-            text: "When www, link, time, good or 1909 renders a request on the server, it records the request with OpenTelemetry and sends the record to Loki's own monitoring service, sensorium.zyx.tw. A record can hold the method, the path and query string, the status and timing, your user agent and referrer, and your IP address. Server errors are recorded with the same details. Records are deleted after 30 days.",
-          },
-        ],
-        [
-          {
-            text: "The previews and the other hosts go through the same gateway. data.zyx.tw serves files from Cloudflare R2 under the ",
-          },
-          {
-            text: "Cloudflare privacy policy",
-            href: "https://www.cloudflare.com/privacypolicy/",
-          },
-          { text: "." },
-        ],
-        [
-          {
-            text: "The GitHub activity on Info is fetched by the server from the GitHub API. Your browser does not contact GitHub for it.",
+            text: "Each request is logged with your IP address, the page, your browser and the response. Logs stay on Loki's own servers and are deleted after 30 days.",
+            mark: "deleted after 30 days",
           },
         ],
       ],
     },
     {
-      heading: "What the sites keep",
+      heading: "What you give",
       paragraphs: [
         [
           {
-            text: "link.zyx.tw keeps each URL you shorten, with its short code and the time it was made. It does not keep who made it, and anyone with a short link can open it.",
+            text: "A tool keeps only what you give it, such as a link you shorten, and only so the tool works.",
           },
         ],
         [
           {
-            text: "1909 signs its members in with Google and asks only for their name, email address and profile picture. Only an email on its member list can make an account. It keeps that profile and the tokens Google returns. Each sign-in lasts 90 days and records the IP address and browser it came from. It also keeps the members' names, emails and shared expenses, which only signed-in members can see.",
-          },
-        ],
-        [
-          {
-            text: "1909 uses Google data only to sign its members in and to know whose expenses are whose. It does not sell it, share it or use it for ads, and it follows the ",
+            text: "Where you sign in with Google, a site asks only for your name, email address and profile picture, uses them only to sign you in, and follows the ",
           },
           {
             text: "Google API Services User Data Policy",
@@ -104,34 +70,8 @@ export const PRIVACY: LegalDoc = {
         ],
         [
           {
-            text: "Both sites keep their data in one database hosted by Neon, under the ",
-          },
-          {
-            text: "Neon privacy policy",
-            href: "https://neon.com/privacy-policy",
-          },
-          { text: "." },
-        ],
-        [
-          {
-            text: "Apart from the logs above, no other site keeps anything about you.",
-            mark: "Apart from the logs above, no other site keeps anything about you.",
-          },
-        ],
-      ],
-    },
-    {
-      heading: "Leaving the sites",
-      paragraphs: [
-        [
-          {
-            text: "Links to sites outside zyx.tw open in a new tab and send them no referrer. A short link sends you to whatever address its maker gave.",
-            mark: "send them no referrer",
-          },
-        ],
-        [
-          {
-            text: "On ui.zyx.tw, the Ask AI demo opens ChatGPT, Claude or Google with the page's address and a prompt, only when you click one of them.",
+            text: "Nothing is sold, shared or used for ads.",
+            mark: "Nothing is sold, shared or used for ads.",
           },
         ],
       ],
@@ -141,13 +81,10 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "To ask what is kept about you, or to have a short link or your data removed, write to ",
-            mark: "to have a short link or your data removed",
+            text: "To ask what is kept about you, or to have it removed, write to ",
           },
           { text: EMAIL, href: `mailto:${EMAIL}` },
-          {
-            text: ". This page changes when the sites do; the date at the top is the last change.",
-          },
+          { text: "." },
         ],
       ],
     },
