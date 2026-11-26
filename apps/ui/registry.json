@@ -596,7 +596,8 @@
         "https://ui.zyx.tw/r/corners.json",
         "https://ui.zyx.tw/r/page-decode-next.json",
         "https://ui.zyx.tw/r/layout.json",
-        "https://ui.zyx.tw/r/utils.json"
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/theme-toggle.json"
       ],
       "files": [
         {
@@ -1692,17 +1693,20 @@
       "name": "theme-toggle",
       "type": "registry:ui",
       "title": "Theme Toggle",
-      "description": "Icon button that switches light and dark (next-themes).",
+      "description": "A text link in the corner style that switches light and dark (next-themes): LIGHT or DARK, never an icon.",
       "author": "zyx1121 (https://github.com/zyx1121)",
       "categories": ["control", "theme"],
-      "docs": "Use when: Letting people switch light and dark.\nNot for: Sites that are dark only.\nGuide: https://ui.zyx.tw/theme-toggle.md",
+      "docs": "Use when: Letting people switch light and dark, in the top right corner.\nNot for: Sites that are dark only.\nGuide: https://ui.zyx.tw/theme-toggle.md",
       "meta": {
-        "useWhen": "Letting people switch light and dark.",
+        "useWhen": "Letting people switch light and dark, in the top right corner.",
         "notFor": "Sites that are dark only.",
-        "related": ["base"]
+        "related": ["corners", "base"]
       },
-      "dependencies": ["lucide-react", "next-themes"],
-      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "dependencies": ["next-themes"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/corners.json",
+        "https://ui.zyx.tw/r/utils.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/theme-toggle.tsx",

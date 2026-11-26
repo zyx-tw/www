@@ -40,8 +40,8 @@ export function CornerScope({
  * above the bottom ones, lined up with the item's outer edge, so it never runs
  * off the viewport. `children` is the item itself: one element that takes the
  * trigger's ref and props. A component that sets its own onClick before
- * spreading its props, such as ThemeToggle, goes inside a span, or the
- * trigger's onClick replaces it. Without a `tip` the item renders as it is.
+ * spreading its props goes inside a span, or the trigger's onClick replaces
+ * it. Without a `tip` the item renders as it is.
  */
 export function CornerTip({
   tip,
