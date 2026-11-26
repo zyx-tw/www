@@ -12,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog"
 import { Button } from "./ui/button"
+import { Spinner } from "./ui/spinner"
 
 /** "Delete" → "Deleting…", "Revoke access" → "Revoking access…". Pass
  * pendingLabel for a verb this gets wrong ("Run"). */
@@ -87,6 +88,7 @@ function ConfirmDialog({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
           <Button variant={variant} disabled={pending} onClick={confirm}>
+            {pending && <Spinner />}
             {pending ? pendingLabel : confirmLabel}
           </Button>
         </AlertDialogFooter>

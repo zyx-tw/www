@@ -3,6 +3,7 @@
 import { useState } from "react"
 
 import { Button } from "@workspace/ui/components/ui/button"
+import { Spinner } from "@workspace/ui/components/ui/spinner"
 
 import { authClient } from "@/lib/auth-client"
 
@@ -19,6 +20,7 @@ export function LoginForm() {
     <div className="flex flex-col items-center gap-4">
       <h1 className="text-title font-medium">1909</h1>
       <Button variant="outline" disabled={isLoading} onClick={handleLogin}>
+        {isLoading && <Spinner />}
         {isLoading ? "登入中..." : "Sign in with Google"}
       </Button>
     </div>

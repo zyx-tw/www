@@ -350,7 +350,8 @@
       "description": "Asks before an action, locks both buttons while it runs and closes when it finishes.",
       "registryDependencies": [
         "https://ui.zyx.tw/r/alert-dialog.json",
-        "https://ui.zyx.tw/r/button.json"
+        "https://ui.zyx.tw/r/button.json",
+        "https://ui.zyx.tw/r/spinner.json"
       ],
       "files": [
         {
@@ -844,6 +845,25 @@
       ]
     },
     {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Determinate bar that fills pixel by pixel with a dithered edge.",
+      "dependencies": ["cn"],
+      "css": {
+        "[data-slot=\"progress\"] canvas": {
+          "image-rendering": "pixelated"
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/ui/progress.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+    },
+    {
       "name": "resizable",
       "type": "registry:ui",
       "title": "Resizable",
@@ -937,11 +957,109 @@
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
-      "description": "Pulsing placeholder for loading content.",
+      "description": "Placeholder of flickering 4px pixels, in CSS.",
       "dependencies": ["cn"],
+      "css": {
+        "[data-slot=\"skeleton\"]::before": {
+          "content": "\"\"",
+          "position": "absolute",
+          "inset": "0",
+          "background": "var(--muted)",
+          "mask-image": "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'><rect x='8' y='8' width='4' height='4'/><rect x='8' y='0' width='4' height='4'/><rect x='8' y='4' width='4' height='4'/><rect x='12' y='12' width='4' height='4'/><rect x='0' y='0' width='4' height='4'/><rect x='4' y='0' width='4' height='4'/><rect x='0' y='8' width='4' height='4'/><rect x='0' y='12' width='4' height='4'/><rect x='4' y='4' width='4' height='4'/></svg>\")",
+          "mask-size": "16px 16px",
+          "animation": "pixel-flicker 480ms step-end infinite"
+        },
+        "@keyframes pixel-flicker": {
+          "0%": {
+            "mask-position": "0 0"
+          },
+          "25%": {
+            "mask-position": "8px 4px"
+          },
+          "50%": {
+            "mask-position": "4px 12px"
+          },
+          "75%": {
+            "mask-position": "12px 8px"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          "[data-slot=\"skeleton\"]::before": {
+            "animation": "none !important"
+          }
+        }
+      },
       "files": [
         {
           "path": "registry/zyx/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "A 3 by 3 LED panel whose lit pixel runs the edge, in CSS.",
+      "dependencies": ["cn"],
+      "css": {
+        "[data-slot=\"spinner\"] > *": {
+          "opacity": "0.15"
+        },
+        "[data-slot=\"spinner\"] > :not(:nth-child(5))": {
+          "animation": "pixel-ring 720ms step-end infinite"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(1)": {
+          "animation-delay": "-720ms"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(2)": {
+          "animation-delay": "-630ms"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(3)": {
+          "animation-delay": "-540ms"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(6)": {
+          "animation-delay": "-450ms"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(9)": {
+          "animation-delay": "-360ms"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(8)": {
+          "animation-delay": "-270ms"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(7)": {
+          "animation-delay": "-180ms"
+        },
+        "[data-slot=\"spinner\"] > :nth-child(4)": {
+          "animation-delay": "-90ms"
+        },
+        "@keyframes pixel-ring": {
+          "0%": {
+            "opacity": "1"
+          },
+          "12.5%": {
+            "opacity": "0.6"
+          },
+          "25%": {
+            "opacity": "0.3"
+          },
+          "37.5%, 100%": {
+            "opacity": "0.15"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          "[data-slot=\"spinner\"] > *": {
+            "animation": "none !important"
+          },
+          "[data-slot=\"spinner\"] > :nth-child(1)": {
+            "opacity": "1"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/ui/spinner.tsx",
           "type": "registry:ui"
         }
       ],
@@ -985,7 +1103,8 @@
           "path": "registry/zyx/ui/sonner.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/spinner.json"]
     },
     {
       "name": "switch",

@@ -5,6 +5,7 @@ import { useActionState, useEffect, useRef } from "react"
 
 import { Button } from "@workspace/ui/components/ui/button"
 import { Input } from "@workspace/ui/components/ui/input"
+import { Spinner } from "@workspace/ui/components/ui/spinner"
 
 import { SITE_DESC, SITE_NAME } from "@/lib/site"
 import { createShortLink } from "@/app/actions"
@@ -90,7 +91,7 @@ export function Shortener() {
           aria-label={isPending ? "Shortening URL" : "Shorten URL"}
           className="h-auto p-0 text-body transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
         >
-          <span aria-hidden="true">{isPending ? "⏳" : "🔥"}</span>
+          {isPending ? <Spinner /> : <span aria-hidden="true">🔥</span>}
         </Button>
       </form>
 
