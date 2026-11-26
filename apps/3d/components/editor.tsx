@@ -103,7 +103,15 @@ export function Editor() {
         if (file) void openFile(file)
       }}
     >
-      <Scene3D scene={preview} envBaseUrl="/env/" />
+      {/* Drawn only when something changes, so a still scene costs nothing.
+          Pixels are the cost of a frame: 1.5x draws 80% more frames than
+          2x on the same GPU, and looks the same at a glance. */}
+      <Scene3D
+        scene={preview}
+        envBaseUrl="/env/"
+        frameloop="demand"
+        dpr={[1, 1.5]}
+      />
       <Dock
         scene={scene}
         onChange={setScene}
