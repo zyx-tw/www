@@ -193,6 +193,7 @@ export function PageDecode() {
   const pathname = usePathname()
   const router = useRouter()
   const cancel = useRef<() => void>(() => {})
+  const entering = useRef(false)
 
   useLayoutEffect(() => {
     document.documentElement.dataset.decoder = ""
@@ -200,15 +201,34 @@ export function PageDecode() {
     if (!main || reducedMotion()) return
     cancel.current()
     cancel.current = play(main, collect(main), "in")
-    return () => cancel.current()
+    entering.current = true
+    // A click, a tap or a key while the page decodes shows it whole at once:
+    // the reader never waits on the effect.
+    const finish = () => {
+      if (!entering.current) return
+      entering.current = false
+      cancel.current()
+    }
+    const options = { capture: true, once: true } as const
+    document.addEventListener("pointerdown", finish, options)
+    document.addEventListener("keydown", finish, options)
+    return () => {
+      entering.current = false
+      document.removeEventListener("pointerdown", finish, options)
+      document.removeEventListener("keydown", finish, options)
+      cancel.current()
+    }
   }, [pathname])
 
   useEffect(() => {
     // Capture, so this runs before Next's own link handler and can hold the
     // navigation until the page has scrambled.
     const onClick = (event: MouseEvent) => {
+      // detail 0 is a link followed from the keyboard: it goes at once,
+      // without the scramble out.
       if (
         event.defaultPrevented ||
+        event.detail === 0 ||
         event.button !== 0 ||
         event.metaKey ||
         event.ctrlKey ||
@@ -236,6 +256,7 @@ export function PageDecode() {
       if (!main || reducedMotion()) return
       event.preventDefault()
       event.stopPropagation()
+      entering.current = false
       cancel.current()
       document.dispatchEvent(new Event(LEAVE_EVENT))
       cancel.current = play(main, collect(main), "out", () =>

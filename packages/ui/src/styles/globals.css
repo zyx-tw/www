@@ -330,6 +330,23 @@ html.tv [data-slot="corner-edge"][data-edge="bottom"] {
   border-radius: 0 0 var(--screen-radius) var(--screen-radius);
 }
 /*
+ * Toasts are windows (DESIGN.md, Motion): they fade in and out at the overlay
+ * duration and never slide or scale. Sonner still places a stack of toasts
+ * with transforms; they move into place at once.
+ */
+[data-sonner-toast] {
+  transition-property: opacity, height !important;
+  transition-duration: 200ms !important;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1) !important;
+}
+[data-sonner-toast][data-expanded="false"][data-front="false"] {
+  --y: translateY(calc(var(--lift-amount) * var(--toasts-before))) !important;
+}
+[data-sonner-toast][data-removed="true"][data-front="true"][data-swipe-out="false"] {
+  --y: translateY(0) !important;
+}
+
+/*
  * The TV frame turning on (components/tv.tsx, TvBoot): two black halves part
  * from a bright line across the middle, and the line flares and fades. It
  * plays while the root has data-boot, on the first page of a tab only.

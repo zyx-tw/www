@@ -967,6 +967,19 @@
       "title": "Sonner",
       "description": "Toasts in a small window.",
       "dependencies": ["lucide-react", "sonner"],
+      "css": {
+        "[data-sonner-toast]": {
+          "transition-property": "opacity, height !important",
+          "transition-duration": "200ms !important",
+          "transition-timing-function": "cubic-bezier(0, 0, 0.2, 1) !important"
+        },
+        "[data-sonner-toast][data-expanded=\"false\"][data-front=\"false\"]": {
+          "--y": "translateY(calc(var(--lift-amount) * var(--toasts-before))) !important"
+        },
+        "[data-sonner-toast][data-removed=\"true\"][data-front=\"true\"][data-swipe-out=\"false\"]": {
+          "--y": "translateY(0) !important"
+        }
+      },
       "files": [
         {
           "path": "registry/zyx/ui/sonner.tsx",
