@@ -144,6 +144,40 @@ jobs:
           PAGE
           bun run build
 
+      # The chrome must run outside Next.js too: a Vite app gets the base, the
+      # corners, the page motion and the loaders, with no Next import.
+      - name: Init a Vite project and add the chrome
+        run: |
+          mkdir -p "$RUNNER_TEMP/vite" && cd "$RUNNER_TEMP/vite"
+          bunx shadcn@latest create -t vite -n app --no-monorepo -y http://localhost:8099/r/base.json
+          cd app
+          bunx shadcn@latest add http://localhost:8099/r/corners.json http://localhost:8099/r/page-decode.json http://localhost:8099/r/spinner.json http://localhost:8099/r/progress.json http://localhost:8099/r/skeleton.json http://localhost:8099/r/theme-toggle.json -y -o
+          ! grep -rq 'from "next/' src
+          cat > src/App.tsx <<'PAGE'
+          import { BottomCorners, LegalLinks, TopCorners } from "@/components/corners"
+          import { PageDecode } from "@/components/page-decode"
+          import { Progress } from "@/components/ui/progress"
+          import { Skeleton } from "@/components/ui/skeleton"
+          import { Spinner } from "@/components/ui/spinner"
+
+          export default function App() {
+            return (
+              <>
+                <PageDecode />
+                <TopCorners fade />
+                <main>
+                  <h1>Task</h1>
+                  <Spinner />
+                  <Progress value={40} aria-label="Upload" />
+                  <Skeleton className="h-6" />
+                </main>
+                <BottomCorners fade links={<LegalLinks />} />
+              </>
+            )
+          }
+          PAGE
+          bun run build
+
   compose:
     name: compose.yaml is valid
     runs-on: ubuntu-latest
