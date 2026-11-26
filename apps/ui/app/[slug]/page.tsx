@@ -5,7 +5,13 @@ import { cn } from "@workspace/ui/lib/utils";
 import { column, enterRow, page } from "@workspace/ui/lib/layout";
 
 import { Demo } from "@/components/demos";
-import { docMarkdownPath, DOCS, getDoc, hasDemo } from "@/lib/docs";
+import {
+  docMarkdownPath,
+  DOCS,
+  getDoc,
+  hasDemo,
+  installCommand,
+} from "@/lib/docs";
 
 export const dynamicParams = false;
 
@@ -73,7 +79,7 @@ export default async function ComponentPage({
           enterRow(4)
         )}
       >
-        {`bunx shadcn@latest add @zyx1121/${item.name}`}
+        {installCommand(item.name)}
       </code>
     </main>
   );

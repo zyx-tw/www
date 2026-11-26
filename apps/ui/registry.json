@@ -10,7 +10,7 @@
       "description": "The zyx.tw design system base: a terminal look in one monospace face, grayscale tokens, four type sizes, square corners and two motion durations.",
       "author": "zyx1121 (https://github.com/zyx1121)",
       "categories": ["theme", "base"],
-      "docs": "Use when: Starting any project on the zyx.tw look: tokens, fonts, type sizes, motion durations.\nNot for: Changing a single color; edit the tokens in your own globals.css instead.\nGuide: https://ui.zyx.tw/index.md",
+      "docs": "Use when: Starting any project on the zyx.tw look: tokens, fonts, type sizes, motion durations.\nNot for: Changing a single color; edit the tokens in your own globals.css instead.\nFonts: put <link rel=\"stylesheet\" href=\"https://ui.zyx.tw/fonts/maple-mono-nf-cn.css\"> in the document head (index.html, or <head> in the root layout). A CSS @import of it after Tailwind is dropped.\nGuide: https://ui.zyx.tw/index.md",
       "meta": {
         "useWhen": "Starting any project on the zyx.tw look: tokens, fonts, type sizes, motion durations.",
         "notFor": "Changing a single color; edit the tokens in your own globals.css instead.",
@@ -39,7 +39,6 @@
       ],
       "devDependencies": ["tw-animate-css", "shadcn"],
       "css": {
-        "@import url(\"https://ui.zyx.tw/fonts/maple-mono-nf-cn.css\")": {},
         "@import \"tw-animate-css\"": {},
         "@import \"shadcn/tailwind.css\"": {},
         "@utility duration-state": {
@@ -154,6 +153,52 @@
       "files": [
         {
           "path": "registry/zyx/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "type": "registry:lib",
+      "title": "Layout",
+      "description": "The page layout every zyx.tw page shares: the gutter, the one centered column, the room for the corners and the row-by-row enter fade.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "motion"],
+      "docs": "Use when: Laying out a page: column, page and enterRow(n) from lib/layout.\nNot for: Spacing inside a component; use the spacing scale.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Laying out a page: column, page and enterRow(n) from lib/layout.",
+        "notFor": "Spacing inside a component; use the spacing scale.",
+        "related": ["corners", "page-decode", "task"]
+      },
+      "css": {
+        ":root": {
+          "--bezel": "0px",
+          "--gutter": "0.75rem"
+        },
+        "@utility enter-row-*": {
+          "--tw-animation-delay": "calc(--value(integer) * 25ms)"
+        },
+        "@utility transition-column": {
+          "transition-property": "max-width",
+          "transition-duration": "300ms",
+          "transition-timing-function": "cubic-bezier(0.4, 0, 0.2, 1)"
+        },
+        "@utility corner-top": {
+          "top": "calc(var(--bezel) + var(--gutter))"
+        },
+        "@utility corner-bottom": {
+          "bottom": "calc(var(--bezel) + var(--gutter))"
+        },
+        "@utility corner-left": {
+          "left": "calc(var(--bezel) + var(--gutter))"
+        },
+        "@utility corner-right": {
+          "right": "calc(var(--bezel) + var(--gutter))"
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/lib/layout.ts",
           "type": "registry:lib"
         }
       ]
@@ -318,7 +363,8 @@
       "dependencies": ["@base-ui/react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
-        "https://ui.zyx.tw/r/tooltip.json"
+        "https://ui.zyx.tw/r/tooltip.json",
+        "https://ui.zyx.tw/r/layout.json"
       ],
       "css": {
         "[data-slot=\"corner-edge\"]": {
@@ -382,7 +428,8 @@
           "path": "registry/zyx/components/page-decode.tsx",
           "type": "registry:component"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/layout.json"]
     },
     {
       "name": "page-decode-next",
@@ -527,6 +574,53 @@
         {
           "path": "registry/zyx/components/status-page.tsx",
           "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "task",
+      "type": "registry:block",
+      "title": "Task",
+      "description": "A Vite starter for a small task: the base, the four corners, the page motion and one centered column, plus an audit of the rendered page.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["starter", "layout", "vite"],
+      "docs": "Use when: Starting a personal tool or a research demo: bunx shadcn@latest create -t vite -n <name> https://ui.zyx.tw/r/base.json https://ui.zyx.tw/r/task.json\nNot for: Existing apps; add corners and page-decode to them instead.\nCheck: npx playwright install webkit, then node scripts/audit.mjs <url>\nGuide: https://ui.zyx.tw/task.md",
+      "meta": {
+        "useWhen": "Starting a personal tool or a research demo in Vite, in one command.",
+        "notFor": "Existing apps; add corners and page-decode to them instead.",
+        "related": ["corners", "page-decode", "spinner"]
+      },
+      "devDependencies": ["playwright"],
+      "dependencies": ["next-themes"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/corners.json",
+        "https://ui.zyx.tw/r/page-decode.json",
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/layout.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/components/task-shell.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/components/theme-provider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/task/App.tsx",
+          "type": "registry:file",
+          "target": "~/src/App.tsx"
+        },
+        {
+          "path": "registry/zyx/task/index.html",
+          "type": "registry:file",
+          "target": "~/index.html"
+        },
+        {
+          "path": "registry/zyx/task/audit.mjs",
+          "type": "registry:file",
+          "target": "~/scripts/audit.mjs"
         }
       ]
     },
