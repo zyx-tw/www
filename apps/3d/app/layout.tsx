@@ -12,7 +12,7 @@ import {
 } from "@workspace/ui/components/corners"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
-import { geistMono, notoSansJp, notoSansTc } from "@workspace/ui/lib/fonts"
+import { fontVariables } from "@workspace/ui/lib/fonts"
 
 import { SITE_DESC, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site"
 
@@ -52,14 +52,7 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(
-        "dark",
-        "antialiased",
-        notoSansJp.variable,
-        notoSansTc.variable,
-        geistMono.variable,
-        "font-sans"
-      )}
+      className={cn("dark", "antialiased", fontVariables, "font-sans")}
     >
       <body>
         <ThemeProvider>
