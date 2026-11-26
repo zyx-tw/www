@@ -144,19 +144,19 @@ jobs:
           PAGE
           bun run build
 
-      # The task starter: one command makes a Vite project on the base with
-      # the corners, the page motion and the layout, and no Next import.
-      - name: Create a Vite project from the task starter
+      # The task starter: one command makes a Next.js project on the base
+      # with the corners, the page motion and the layout.
+      - name: Create a project from the task starter
         run: |
-          mkdir -p "$RUNNER_TEMP/vite" && cd "$RUNNER_TEMP/vite"
-          bunx shadcn@latest create -t vite -n app --no-monorepo -y http://localhost:8099/r/base.json http://localhost:8099/r/task.json
+          mkdir -p "$RUNNER_TEMP/task" && cd "$RUNNER_TEMP/task"
+          bunx shadcn@latest create -t next -n app --no-monorepo -y http://localhost:8099/r/base.json http://localhost:8099/r/task.json
           cd app
           test -f scripts/audit.mjs
-          grep -q 'maple-mono-nf-cn.css' index.html
-          grep -q 'corner-top' src/index.css
-          grep -q -- '--gutter' src/index.css
-          grep -q 'TaskShell' src/App.tsx
-          ! grep -rq 'from "next/' src
+          grep -q 'maple-mono-nf-cn.css' app/layout.tsx
+          grep -q 'NextPageDecode' app/layout.tsx
+          grep -q 'TaskShell' app/page.tsx
+          grep -q 'corner-top' app/globals.css
+          grep -q -- '--gutter' app/globals.css
           bunx shadcn@latest add http://localhost:8099/r/spinner.json http://localhost:8099/r/progress.json http://localhost:8099/r/skeleton.json -y -o
           bun run build
 

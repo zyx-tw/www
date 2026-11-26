@@ -110,7 +110,7 @@ export function indexMarkdown() {
     "",
     `Load Maple Mono in the document head (index.html, or <head> in the root layout): ${code(FONT_LINK)}. A CSS \`@import\` of it after Tailwind is dropped.`,
     "",
-    "For a new small tool, one command makes the whole Vite project instead:",
+    "For a new small tool, one command makes the whole Next.js project instead:",
     "",
     "```bash",
     TASK_COMMAND,
@@ -171,7 +171,7 @@ export function componentMarkdown(name: string) {
     "```",
     "",
     item.name === "task"
-      ? "It makes a new Vite project on the base, with the task page in src/App.tsx. Check it with `node scripts/audit.mjs <url>` after `npx playwright install webkit`."
+      ? "It makes a new Next.js project on the base, with the task page in app/page.tsx. Check it with `node scripts/audit.mjs <url>` after `npx playwright install webkit`."
       : "The first line sets a project up on the base; skip it if the project already has it.",
     "",
     "## Item",

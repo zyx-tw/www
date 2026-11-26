@@ -3,7 +3,6 @@
 import { useTheme } from "next-themes"
 
 import { BottomCorners, cornerLink, LegalLinks, TopCorners } from "./corners"
-import { PageDecode } from "./page-decode"
 
 import { column, enterRow, page } from "../lib/layout"
 import { cn } from "../lib/utils"
@@ -22,10 +21,9 @@ function ThemeLink() {
 /**
  * The page of a small task (a personal tool, a demo): the four corners, the
  * page motion and one centered column that holds the title and the task.
- * Wrap the app in ThemeProvider once (the Vite template's main.tsx does) for
- * dark first and the D key. `actions` are short text links at the
- * top right, a link to the other theme by default; `wide` gives an editor or a comparison more room. It needs no
- * framework, so a Vite app made from the `task` item renders it as is.
+ * The root layout mounts ThemeProvider (dark first, the D key) and the page
+ * motion once, as the task item's app/layout.tsx does. `actions` are short text links at the
+ * top right, a link to the other theme by default; `wide` gives an editor or a comparison more room.
  */
 export function TaskShell({
   title,
@@ -42,7 +40,6 @@ export function TaskShell({
 }) {
   return (
     <>
-      <PageDecode />
       <TopCorners fade nav={actions} />
       <main
         id="task"
