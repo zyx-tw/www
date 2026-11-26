@@ -6,8 +6,8 @@ import localFont from "next/font/local"
 
 // Maple Mono NF CN sets all text, for the terminal look: every glyph keeps its
 // cell (0.6em, a Han character 1.2em), so text lines up on a character grid.
-// It is subset to Latin, punctuation, box drawing and CJK punctuation plus the
-// Han characters the apps' text uses (../fonts/README.md has the command).
+// It comes in two parts (../fonts/README.md has the commands). This one is
+// Latin, punctuation, arrows and box drawing, about 60 KB a weight, preloaded.
 // SemiBold serves 500 and 600.
 export const mapleMono = localFont({
   src: [
@@ -18,6 +18,27 @@ export const mapleMono = localFont({
   display: "swap",
   adjustFontFallback: false,
   variable: "--font-maple-mono",
+})
+
+// The other part: CJK punctuation, full width forms and the Han characters the
+// apps' text uses, about 250 KB a weight. Its unicode-range keeps a page with
+// no Han text from downloading it.
+export const mapleMonoCjk = localFont({
+  src: [
+    { path: "../fonts/MapleMonoNFCN-Regular-CJK.woff2", weight: "400" },
+    { path: "../fonts/MapleMonoNFCN-SemiBold-CJK.woff2", weight: "500 600" },
+  ],
+  style: "normal",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [
+    {
+      prop: "unicode-range",
+      value: "U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF",
+    },
+  ],
+  variable: "--font-maple-mono-cjk",
 })
 
 // Han characters outside Maple's subset, as unicode-range slices without
@@ -40,4 +61,8 @@ export const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 })
 
-export const fontVariables = [mapleMono.variable, notoSansTc.variable].join(" ")
+export const fontVariables = [
+  mapleMono.variable,
+  mapleMonoCjk.variable,
+  notoSansTc.variable,
+].join(" ")
