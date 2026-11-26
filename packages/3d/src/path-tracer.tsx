@@ -151,6 +151,13 @@ export default function PathTracer({
       settleLater()
       return
     }
+    // Below that measure the view counts as still, so hold the camera
+    // there: the controls' damping keeps nudging it a little each frame,
+    // and the nudges would add up to a move that restarts the trace, over
+    // and over, flickering between traced and raster frames.
+    camera.position.copy(current.position)
+    camera.quaternion.copy(current.rotation)
+    camera.updateMatrixWorld()
     if (!current.settled) return
     const source = scene.userData.equirect as THREE.Texture | undefined
     // The environment is still loading; its arrival asks for a frame.
