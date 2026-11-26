@@ -6,7 +6,7 @@ import {
   TopCorners,
 } from "@workspace/ui/components/corners"
 import "@workspace/ui/globals.css"
-import { PageDecode } from "@workspace/ui/components/page-decode"
+import { NextPageDecode } from "@workspace/ui/components/page-decode-next"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 
@@ -34,7 +34,7 @@ export default async function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <PageDecode />
+          <NextPageDecode />
           <TopCorners fade />
           {children}
           <BottomCorners

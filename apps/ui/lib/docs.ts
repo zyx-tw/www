@@ -7,7 +7,13 @@ import { COMPONENTS, type RegistryItem } from "@/lib/registry";
 const GROUPS = [
   {
     title: "Layout",
-    names: ["corners", "page-decode", "section-title", "shell"],
+    names: [
+      "corners",
+      "page-decode",
+      "page-decode-next",
+      "section-title",
+      "shell",
+    ],
   },
   {
     title: "Blocks",

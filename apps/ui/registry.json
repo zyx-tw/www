@@ -315,7 +315,7 @@
         "notFor": "In-page navigation or toolbars; those live in the page.",
         "related": ["page-decode", "section-title"]
       },
-      "dependencies": ["@base-ui/react", "next"],
+      "dependencies": ["@base-ui/react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/tooltip.json"
@@ -353,16 +353,15 @@
       "name": "page-decode",
       "type": "registry:component",
       "title": "Page Decode",
-      "description": "The page motion: a page's text decodes in row by row as a terminal prints it, and scrambles out before a link within the app leaves it.",
+      "description": "The page motion: a page's text decodes in row by row as a terminal prints it, and scrambles out before a link within the app leaves it. No framework needed.",
       "author": "zyx1121 (https://github.com/zyx1121)",
       "categories": ["layout", "motion"],
-      "docs": "Use when: Mounting once in the root layout so every page decodes in and scrambles out.\nNot for: Animating one element after load; use scramble-text.\nGuide: https://ui.zyx.tw/page-decode.md",
+      "docs": "Use when: Mounting once in the root layout so every page decodes in and scrambles out.\nNot for: Animating one element after load; use scramble-text. In Next.js mount page-decode-next.\nGuide: https://ui.zyx.tw/page-decode.md",
       "meta": {
         "useWhen": "Mounting once in the root layout so every page decodes in and scrambles out.",
-        "notFor": "Animating one element after load; use scramble-text.",
-        "related": ["scramble-text", "corners"]
+        "notFor": "Animating one element after load; use scramble-text. In Next.js mount page-decode-next.",
+        "related": ["page-decode-next", "scramble-text", "corners"]
       },
-      "dependencies": ["next"],
       "css": {
         "@media (prefers-reduced-motion: no-preference)": {
           "html:has([data-slot=\"page-decode\"]):not([data-decoder]) main [class*=\"enter-row-\"]": {
@@ -381,6 +380,28 @@
       "files": [
         {
           "path": "registry/zyx/components/page-decode.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "page-decode-next",
+      "type": "registry:component",
+      "title": "Page Decode for Next.js",
+      "description": "PageDecode on the Next.js App Router: it follows the router's path and leaves through router.push, so links stay client side.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "motion", "nextjs"],
+      "docs": "Use when: Mounting the page motion once in a Next.js root layout.\nNot for: Vite or other React apps; mount page-decode there.\nGuide: https://ui.zyx.tw/page-decode-next.md",
+      "meta": {
+        "useWhen": "Mounting the page motion once in a Next.js root layout.",
+        "notFor": "Vite or other React apps; mount page-decode there.",
+        "related": ["page-decode", "corners"]
+      },
+      "dependencies": ["next"],
+      "registryDependencies": ["https://ui.zyx.tw/r/page-decode.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/page-decode-next.tsx",
           "type": "registry:component"
         }
       ]

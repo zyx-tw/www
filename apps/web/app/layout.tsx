@@ -8,7 +8,7 @@ import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 
 import { SiteJsonLd } from "@/components/json-ld"
-import { PageDecode } from "@workspace/ui/components/page-decode"
+import { NextPageDecode } from "@workspace/ui/components/page-decode-next"
 import { HomeMark } from "@/components/home-mark"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -85,7 +85,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             <MotionProvider>
-              <PageDecode />
+              <NextPageDecode />
               <TvStatic />
               <StarField />
               <HomeMark />

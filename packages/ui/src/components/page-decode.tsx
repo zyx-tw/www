@@ -1,7 +1,6 @@
 "use client"
 
-import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useLayoutEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef, useSyncExternalStore } from "react"
 
 // Glyphs for characters that have not resolved, as ScrambleText draws them,
 // minus the ones a line may break at ("-", "/", "!", "?", brackets), so no
@@ -180,6 +179,11 @@ export function decodeText(element: HTMLElement) {
   return play(element, lines, "in")
 }
 
+function subscribeToHistory(onChange: () => void) {
+  window.addEventListener("popstate", onChange)
+  return () => window.removeEventListener("popstate", onChange)
+}
+
 /**
  * The page motion of every zyx.tw app: text decodes as a terminal prints it.
  * A page's text starts scrambled and resolves row by row (its `enter-row-<n>`
@@ -188,10 +192,32 @@ export function decodeText(element: HTMLElement) {
  * own characters takes part through LEAVE_EVENT. Reduced motion skips all of
  * it. Mount it once in the root layout: the marker it renders tells
  * globals.css to hold the rows until it starts, then their fades step aside.
+ *
+ * It needs no framework: by default it reads the path from `location` and
+ * leaves with a full navigation. A router passes its own `pathname` and
+ * `navigate` (page-decode-next.tsx does for Next.js), so links stay client
+ * side.
  */
-export function PageDecode() {
-  const pathname = usePathname()
-  const router = useRouter()
+export function PageDecode({
+  pathname: routerPathname,
+  navigate,
+}: {
+  pathname?: string
+  navigate?: (href: string) => void
+} = {}) {
+  const locationPathname = useSyncExternalStore(
+    subscribeToHistory,
+    () => window.location.pathname,
+    () => ""
+  )
+  const pathname = routerPathname ?? locationPathname
+  const clientSide = navigate !== undefined
+  const navigateRef = useRef(
+    navigate ?? ((href: string) => window.location.assign(href))
+  )
+  useEffect(() => {
+    if (navigate) navigateRef.current = navigate
+  })
   const cancel = useRef<() => void>(() => {})
   const entering = useRef(false)
 
@@ -224,11 +250,8 @@ export function PageDecode() {
     // Capture, so this runs before Next's own link handler and can hold the
     // navigation until the page has scrambled.
     const onClick = (event: MouseEvent) => {
-      // detail 0 is a link followed from the keyboard: it goes at once,
-      // without the scramble out.
       if (
         event.defaultPrevented ||
-        event.detail === 0 ||
         event.button !== 0 ||
         event.metaKey ||
         event.ctrlKey ||
@@ -252,20 +275,29 @@ export function PageDecode() {
       ) {
         return
       }
+      const href = url.pathname + url.search + url.hash
       const main = document.querySelector("main")
-      if (!main || reducedMotion()) return
+      // A link followed from the keyboard (detail 0) or under reduced motion
+      // goes at once, without the scramble out, but still through the router.
+      if (!main || reducedMotion() || event.detail === 0) {
+        if (!clientSide) return
+        event.preventDefault()
+        event.stopPropagation()
+        navigateRef.current(href)
+        return
+      }
       event.preventDefault()
       event.stopPropagation()
       entering.current = false
       cancel.current()
       document.dispatchEvent(new Event(LEAVE_EVENT))
       cancel.current = play(main, collect(main), "out", () =>
-        router.push(url.pathname + url.search + url.hash)
+        navigateRef.current(href)
       )
     }
     document.addEventListener("click", onClick, true)
     return () => document.removeEventListener("click", onClick, true)
-  }, [router])
+  }, [clientSide])
 
   return <span hidden data-slot="page-decode" />
 }

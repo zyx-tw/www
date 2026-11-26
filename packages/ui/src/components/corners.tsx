@@ -1,5 +1,3 @@
-import Link from "next/link"
-
 import { type At, CornerScope, CornerTip } from "./corner-tip"
 import { ZyxMark } from "./zyx-mark"
 
@@ -161,9 +159,9 @@ function Trail({ trail }: { trail: Crumb[] }) {
                 /
               </span>
               {href && !last ? (
-                <Link href={href} className={cornerLink}>
+                <a href={href} className={cornerLink}>
                   {label}
-                </Link>
+                </a>
               ) : (
                 <span aria-current="page" className="truncate uppercase">
                   {label}
@@ -214,14 +212,14 @@ export function TopCorners({
         className={cn(trail?.length && "gap-2 sm:right-72", className)}
       >
         <CornerTip tip={markTip}>
-          <Link
+          <a
             href={home}
             aria-label={label}
             className="group shrink-0 outline-offset-4 focus-visible:outline-2"
           >
             {/* 20 px tall, the corners' line height. */}
             <ZyxMark className="h-5 w-auto group-hover:-scale-x-100 motion-safe:transition-transform motion-safe:duration-overlay" />
-          </Link>
+          </a>
         </CornerTip>
         {trail && trail.length > 0 && <Trail trail={trail} />}
       </Corner>
