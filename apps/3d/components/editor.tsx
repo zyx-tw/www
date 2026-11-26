@@ -15,6 +15,12 @@ import { ZYX_SVG } from "@/lib/zyx-svg"
 
 const STORAGE_KEY = "3d:scene:v1"
 
+// Spike: ?pt=<samples> turns the path tracer on.
+const SPIKE_SAMPLES =
+  typeof location === "undefined"
+    ? 0
+    : Number(new URLSearchParams(location.search).get("pt") ?? 0)
+
 /** The last scene edited in this browser, or the zyx mark on a first visit. */
 function loadScene(): SceneV1 {
   try {
@@ -111,6 +117,7 @@ export function Editor() {
         envBaseUrl="/env/"
         frameloop="demand"
         dpr={[1, 1.5]}
+        pathTracing={SPIKE_SAMPLES}
       />
       <Dock
         scene={scene}
