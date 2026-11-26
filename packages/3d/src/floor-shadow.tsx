@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, type RefObject } from "react"
 import * as THREE from "three"
 
 import { SHAPE_SIZE } from "./geometry"
+import { OVERLAY } from "./overlay"
 
 /** The floor's side, in scene units: room for the shape turning and the blur around it. */
 const FLOOR_SIZE = SHAPE_SIZE * 2.5
@@ -123,7 +124,14 @@ export function FloorShadow({
   return (
     // The shadow map looks up from below, so the plane is flipped along the
     // floor's depth to line it up with the shape.
-    <mesh position={center} rotation-x={-Math.PI / 2} scale={[1, -1, 1]}>
+    // The path tracer can't catch a shadow, so it leaves this out and draws
+    // it over its frame.
+    <mesh
+      position={center}
+      rotation-x={-Math.PI / 2}
+      scale={[1, -1, 1]}
+      userData={{ [OVERLAY]: true }}
+    >
       <planeGeometry args={[FLOOR_SIZE, FLOOR_SIZE]} />
       <meshBasicMaterial
         color="#000000"

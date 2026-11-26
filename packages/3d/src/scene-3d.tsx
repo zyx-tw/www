@@ -8,6 +8,7 @@ import { RenderPass, ToneMappingMode } from "postprocessing"
 import {
   Component,
   Fragment,
+  lazy,
   Suspense,
   useCallback,
   useEffect,
@@ -37,6 +38,9 @@ import { resolveValues } from "./params"
 import { findPreset, type EffectPreset, type StagingPreset } from "./registry"
 import type { SceneV1 } from "./schema"
 import { stagings } from "./stagings"
+
+// Loaded only by a scene that traces, so other apps never download it.
+const PathTracer = lazy(() => import("./path-tracer"))
 
 /** The editor at plump.zyx.tw serves the environment maps, with CORS open to other sites. */
 export const DEFAULT_ENV_BASE_URL = "https://plump.zyx.tw/env/"
@@ -121,6 +125,17 @@ export type Scene3DProps = {
    */
   frameloop?: "always" | "demand"
   /**
+   * Once the view and the scene hold still, trace the frame: noisy at
+   * first, cleaner with each sample, up to this many. 0 never traces.
+   */
+  pathTracing?: number
+  /**
+   * With `pathTracing`: called once the first traced frame is up, so every
+   * shader has compiled and the environment and the scene are loaded; or as
+   * soon as the browser turns out unable to trace.
+   */
+  onReady?: () => void
+  /**
    * With `lens`: let the background image drift slowly and shift a little
    * with the mouse, for depth. The pointer bends the image either way.
    */
@@ -147,6 +162,8 @@ export function Scene3D({
   dpr = [1, 2],
   ambient = false,
   frameloop = "always",
+  pathTracing = 0,
+  onReady,
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -182,6 +199,8 @@ export function Scene3D({
           lens={lens}
           lighting={lighting}
           ambient={ambient}
+          pathTracing={pathTracing}
+          onReady={onReady}
         />
       </Suspense>
       {controls && (
@@ -481,6 +500,8 @@ function SceneContents({
   lens,
   lighting,
   ambient,
+  pathTracing,
+  onReady,
 }: {
   scene: SceneV1
   envBaseUrl: string
@@ -494,8 +515,12 @@ function SceneContents({
   lens: number
   lighting: boolean
   ambient: boolean
+  pathTracing: number
+  onReady: (() => void) | undefined
 }) {
   useRedrawOnCommit()
+  // While the tracer draws the frame, the composer stands aside.
+  const [tracing, setTracing] = useState(false)
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
   const [tumble] = useState(() => createDrift(drift))
@@ -673,6 +698,7 @@ function SceneContents({
         // clear would paint the frame opaque.
         key={backdrop ? "backdrop" : "environment"}
         autoClear={false}
+        enabled={!tracing}
         renderPass={backdrop ? transparentRenderPass : undefined}
       >
         {effectsAt("scene")}
@@ -690,6 +716,17 @@ function SceneContents({
         ) : null}
         {effectsAt("display")}
       </EffectComposer>
+      {pathTracing > 0 && (
+        <Suspense fallback={null}>
+          <PathTracer
+            version={scene}
+            background={staging.background}
+            maxSamples={pathTracing}
+            onTracing={setTracing}
+            onReady={onReady}
+          />
+        </Suspense>
+      )}
     </>
   )
 }
@@ -803,7 +840,13 @@ function GainMapEnvironment({
       { once: true }
     )
   }, [gl, files])
-  return <EnvironmentTexture texture={reflections.texture} {...props} />
+  return (
+    <EnvironmentTexture
+      texture={reflections.texture}
+      source={decoded.renderTarget.texture}
+      {...props}
+    />
+  )
 }
 
 /** What GainMapLoader resolves to: the decoded render target and its owner. */
@@ -828,17 +871,29 @@ function FileEnvironment({
       },
     })
   }, [file, texture, onReady])
-  return <EnvironmentTexture texture={texture} {...props} />
+  return <EnvironmentTexture texture={texture} source={texture} {...props} />
 }
 
 function EnvironmentTexture({
   texture,
+  source,
   background,
   intensity,
   rotation,
-}: Omit<EnvironmentMapProps, "onReady"> & { texture: THREE.Texture }) {
+}: Omit<EnvironmentMapProps, "onReady"> & {
+  texture: THREE.Texture
+  /** The panorama the reflection map was built from, for the path tracer. */
+  source: THREE.Texture
+}) {
   // A map that arrives after the rest of the scene commits on its own.
   useRedrawOnCommit()
+  const scene = useThree((state) => state.scene)
+  useLayoutEffect(() => {
+    scene.userData.equirect = source
+    return () => {
+      if (scene.userData.equirect === source) delete scene.userData.equirect
+    }
+  }, [scene, source])
   return (
     <Environment
       map={texture}

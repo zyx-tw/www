@@ -9,11 +9,22 @@ import {
   Scene3D,
   type SceneV1,
 } from "@workspace/3d"
+import { Spinner } from "@workspace/ui/components/ui/spinner"
+import { cn } from "@workspace/ui/lib/utils"
 
 import { Dock } from "@/components/dock"
 import { ZYX_SVG } from "@/lib/zyx-svg"
 
 const STORAGE_KEY = "3d:scene:v1"
+
+/** Samples the preview traces once it holds still. */
+const TRACED_SAMPLES = 256
+
+/**
+ * The longest the loading screen waits: a slow GPU may take longer to
+ * compile the tracer, and keeps tracing behind the editor.
+ */
+const LOADING_CAP_MS = 20_000
 
 /** The last scene edited in this browser, or the zyx mark on a first visit. */
 function loadScene(): SceneV1 {
@@ -32,6 +43,13 @@ function loadScene(): SceneV1 {
 export function Editor() {
   const [scene, setScene] = useState(loadScene)
   const [error, setError] = useState<string | null>(null)
+  // Everything loads behind a loading screen: the environment, the mesh and
+  // the tracer's shader, which takes seconds to compile the first time.
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setReady(true), LOADING_CAP_MS)
+    return () => clearTimeout(timer)
+  }, [])
   // Rebuilding the mesh can take a frame or two; this keeps the sliders
   // responsive while the preview catches up.
   const deferred = useDeferredValue(scene)
@@ -105,12 +123,15 @@ export function Editor() {
     >
       {/* Drawn only when something changes, so a still scene costs nothing.
           Pixels are the cost of a frame: 1.5x draws 80% more frames than
-          2x on the same GPU, and looks the same at a glance. */}
+          2x on the same GPU, and looks the same at a glance. Once the view
+          holds still, the frame is path traced: noisy, then cleaner. */}
       <Scene3D
         scene={preview}
         envBaseUrl="/env/"
         frameloop="demand"
         dpr={[1, 1.5]}
+        pathTracing={TRACED_SAMPLES}
+        onReady={() => setReady(true)}
       />
       <Dock
         scene={scene}
@@ -119,6 +140,17 @@ export function Editor() {
         onExport={exportScene}
         error={error}
       />
+      <div
+        role="status"
+        aria-hidden={ready}
+        className={cn(
+          "absolute inset-0 z-40 flex items-center justify-center gap-2 bg-background text-muted-foreground transition-opacity duration-overlay",
+          ready && "pointer-events-none opacity-0"
+        )}
+      >
+        <Spinner />
+        <span>Loading</span>
+      </div>
     </main>
   )
 }
