@@ -13,6 +13,7 @@ import { fontVariables } from "@workspace/ui/lib/fonts";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { DOC_TITLES } from "@/lib/docs";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 const SITE_TITLE = `Loki's design system | ${SITE_NAME}`;
@@ -67,7 +68,7 @@ export default function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             <NextPageDecode />
-            <SiteHeader />
+            <SiteHeader titles={DOC_TITLES} />
             {children}
             <SiteFooter />
           </TooltipProvider>

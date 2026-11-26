@@ -160,11 +160,7 @@ The chrome is grayscale, so a badge tells states apart by fill, not by hue. A ca
 
 `packages/ui/src/components/ui/`, published as `@zyx1121/<name>`:
 
-- **Controls**: button, toggle, input, input-group, textarea, label, checkbox, switch, slider, select, combobox, command, calendar
-- **Overlays**: dialog, alert-dialog, sheet, popover, dropdown-menu, tooltip, sonner, toolbar
-- **Content**: badge, avatar, table, tabs, collapsible, separator, skeleton, chart, resizable, frame
-- **Chat**: message, bubble, attachment
-- **zyx**: scramble-text, mask-reveal, theme-toggle
+- **Groups**: each item's first category in `apps/ui/registry.json` is its group on ui.zyx.tw (`apps/ui/lib/docs.ts` orders them); a new item needs no list edit.
 - **Layout** (`registry:component`, in `packages/ui/src/components/`): corners (with corner-tip and zyx-mark), page-decode, section-title, shell
 - **Blocks** (`registry:block`, in `packages/ui/src/components/`): confirm-dialog, empty-state, status-page (a shell session: the failed command, the title as output, the way out, an idle cursor; every 404 is `cd <RequestedPath />`). A block serves one purpose and fixes its copy pattern; a component is a part with no purpose of its own. Blocks have no description slot.
 
