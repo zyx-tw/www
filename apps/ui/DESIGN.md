@@ -75,6 +75,9 @@ Outlines are drawn with box-drawing characters (`╭ ─ ╮ │ ╰ ╯`), not 
 | `duration-overlay`  | 200ms ease-out | Something appearing or leaving: dialogs, menus, popovers, tooltips, the mark mirroring |
 | `enter-row-<n>`     | n × 25ms delay | The page's staggered entrance (`enterRow`, below)                                      |
 | `animate-cursor`    | 1s, stepped    | The block cursor at an idle prompt (`Cursor`): on for half a second, off for half      |
+| `Spinner`           | 90ms steps     | Waiting with no measure: a 3 by 3 LED panel, its lit pixel running the edge            |
+| `Skeleton`          | 120ms steps    | Content on its way: a field of 4px pixels reshuffling                                  |
+| `Progress`          | per value      | Waiting with a measure: a bar filling pixel by pixel, its edge a Bayer dither          |
 | `transition-column` | 300ms          | The column easing its width between breakpoints                                        |
 
 - **Page entrance: text decodes**: every app mounts `PageDecode` (`@workspace/ui/components/page-decode`) once in its root layout. A page's text starts scrambled and resolves left to right, 50ms per character (a long line within 600ms), row by row 25ms apart in document order, counting the top corners as row 0: the title is row 1, the subtitle row 2, each block after them one row further. The bottom corners come in at row 15 (375ms). Scrambled glyphs keep each character's cell (Han glyphs for Han characters), so nothing moves. Use `enterRow(n)` and `enterFooter` from `@workspace/ui/lib/layout`; the decoder reads the row from the class.

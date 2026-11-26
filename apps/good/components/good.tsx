@@ -1,27 +1,30 @@
 "use client"
 
-import { OrbitControls, useGLTF } from "@react-three/drei"
+import { OrbitControls, useGLTF, useProgress } from "@react-three/drei"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Suspense, useCallback, useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { Command, Cursor } from "@workspace/ui/components/shell"
+import { Progress } from "@workspace/ui/components/ui/progress"
 
 import { MODEL_URL } from "@/lib/site"
 
 // While the model downloads the page is an idle prompt, as every status page
-// of the design system ends.
+// of the design system ends, over a bar that fills as the bytes arrive.
 function LoadingOverlay() {
+  const { progress } = useProgress()
   return (
     <div
       data-slot="good-loading"
       role="status"
       aria-label="Loading"
-      className="absolute inset-0 z-10 flex items-center justify-center bg-background"
+      className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-background"
     >
       <Command>
         <Cursor />
       </Command>
+      <Progress value={progress} className="w-40" aria-label="Model download" />
     </div>
   )
 }

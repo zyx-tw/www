@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
 import {
@@ -156,6 +156,8 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/ui/tooltip";
 import { Toolbar } from "@workspace/ui/components/ui/toolbar";
+import { Progress } from "@workspace/ui/components/ui/progress";
+import { Spinner } from "@workspace/ui/components/ui/spinner";
 import { rowDelay } from "@workspace/ui/lib/layout";
 
 const PROJECTS = ["Plump", "Time", "Link", "Carrel", "Peck"];
@@ -174,6 +176,25 @@ const ROWS = [
   { name: "carrel", kind: "Infrastructure", updated: "Oct 4" },
   { name: "peck", kind: "App", updated: "Oct 5" },
 ];
+
+function ProgressDemo() {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    const timer = window.setInterval(
+      () => setValue((current) => (current >= 100 ? 0 : current + 4)),
+      120
+    );
+    return () => window.clearInterval(timer);
+  }, []);
+  return (
+    <div className="flex w-full max-w-md items-center gap-4">
+      <Progress value={value} aria-label="Upload" />
+      <span className="w-10 shrink-0 text-right text-caption text-muted-foreground tabular-nums">
+        {value}%
+      </span>
+    </div>
+  );
+}
 
 function ComboboxDemo() {
   const [open, setOpen] = useState(false);
@@ -530,6 +551,13 @@ const DEMOS: Record<string, React.ReactNode> = {
       <Skeleton className="h-10 w-full" />
     </div>
   ),
+  spinner: (
+    <div className="flex items-center gap-3 text-muted-foreground">
+      <Spinner />
+      Saving
+    </div>
+  ),
+  progress: <ProgressDemo />,
   sonner: (
     <Button
       variant="outline"

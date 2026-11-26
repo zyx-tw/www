@@ -54,6 +54,8 @@ const GROUPS = [
       "collapsible",
       "separator",
       "skeleton",
+      "spinner",
+      "progress",
       "chart",
       "resizable",
       "frame",
