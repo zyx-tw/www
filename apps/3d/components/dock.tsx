@@ -26,7 +26,6 @@ import {
   environments,
   findPreset,
   materials,
-  motionControls,
   shapeControls,
   stagingControls,
   stagings,
@@ -190,17 +189,6 @@ export function Dock({
                 onChange((current) => ({
                   ...current,
                   staging: { ...current.staging, id },
-                }))
-              }
-            />
-            <ParamGroup
-              id="motion"
-              defs={motionControls}
-              values={scene.motion}
-              onChange={(key, value) =>
-                onChange((current) => ({
-                  ...current,
-                  motion: { ...current.motion, [key]: value },
                 }))
               }
             />

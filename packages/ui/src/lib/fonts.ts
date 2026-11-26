@@ -1,4 +1,4 @@
-import { Geist_Mono, Noto_Sans_JP, Noto_Sans_TC } from "next/font/google"
+import { Noto_Sans_TC } from "next/font/google"
 import localFont from "next/font/local"
 
 // The fonts behind the theme's one stack (apps/ui/DESIGN.md, Type). Every
@@ -47,18 +47,6 @@ export const notoSansTc = Noto_Sans_TC({
   display: "swap",
   preload: false,
   variable: "--font-noto-sans-tc",
-})
-
-// Plump (apps/3d) sets its own scene text in these; no other app loads them.
-export const notoSansJp = Noto_Sans_JP({
-  display: "swap",
-  preload: false,
-  variable: "--font-noto-sans-jp",
-})
-
-export const geistMono = Geist_Mono({
-  preload: false,
-  variable: "--font-geist-mono",
 })
 
 export const fontVariables = [

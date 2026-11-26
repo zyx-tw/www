@@ -1,6 +1,6 @@
 "use client"
 
-import { useDeferredValue, useEffect, useState } from "react"
+import { useDeferredValue, useEffect, useMemo, useState } from "react"
 
 import {
   checkSvg,
@@ -34,7 +34,13 @@ export function Editor() {
   const [error, setError] = useState<string | null>(null)
   // Rebuilding the mesh can take a frame or two; this keeps the sliders
   // responsive while the preview catches up.
-  const preview = useDeferredValue(scene)
+  const deferred = useDeferredValue(scene)
+  // An editor holds the shape still: no lean toward the mouse and no grow
+  // under it. The scene keeps its own motion.hover for apps that render it.
+  const preview = useMemo(
+    () => ({ ...deferred, motion: { ...deferred.motion, hover: false } }),
+    [deferred]
+  )
 
   useEffect(() => {
     try {
