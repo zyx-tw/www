@@ -3,19 +3,19 @@ import { EMAIL } from "@workspace/ui/lib/profile"
 import type { LegalDoc } from "@/lib/legal"
 
 /**
- * The terms of every site under zyx.tw, as data so /terms and /terms.md say
- * the same thing. Change them with the sites, and bump `updated`.
+ * The terms of zyx.tw, as data so /terms and /terms.md say the same thing.
+ * They name no single app. Change them with the sites, and bump `updated`.
  */
 export const TERMS: LegalDoc = {
   title: "Terms",
-  updated: "2026-10-01",
+  updated: "2026-11-26",
   sections: [
     {
       heading: "What these cover",
       paragraphs: [
         [
           {
-            text: "These terms cover every site under zyx.tw: www.zyx.tw and the apps on its subdomains, such as ui, plump (formerly 3d), link, time and good. Loki (詹詠翔) runs them as personal projects. Using a site means you accept these terms.",
+            text: "These terms cover zyx.tw and every site under it, run by Loki (詹詠翔) as personal projects. Using a site means you accept these terms.",
             mark: "Using a site means you accept these terms.",
           },
         ],
@@ -37,13 +37,13 @@ export const TERMS: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "Do not use the sites to break the law, to harm anyone, or to spread malware, phishing or spam. Short links on link.zyx.tw must not lead to such content.",
+            text: "Do not use the sites to break the law, to harm anyone, or to spread malware, phishing or spam.",
             mark: "Do not use the sites to break the law, to harm anyone, or to spread malware, phishing or spam.",
           },
         ],
         [
           {
-            text: "Do not overload, scan or attack the sites, and do not try to reach tools that are not open to you, such as 1909.",
+            text: "Do not overload, scan or attack the sites, and do not try to reach tools that are not open to you.",
           },
         ],
       ],

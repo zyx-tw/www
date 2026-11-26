@@ -11,14 +11,20 @@ import { DRIFT, sky, starX, STARS } from "@/lib/sky"
 const PIXEL = 2
 
 /**
- * The far stars behind every page, as square pixels inside the screen's
- * bezel. It lives in the root layout, so the same sky carries on from page
- * to page, the map included: the map turns it, and elsewhere it drifts.
- * Reduced motion holds it still.
+ * The far stars behind the map and its notes, as square pixels inside the
+ * screen's bezel. Other pages have no sky. It lives in the root layout, so
+ * the same sky carries on from the map to a note: the map turns it, and a
+ * note lets it drift. Reduced motion holds it still.
  */
 export function StarField() {
-  const ref = useRef<HTMLCanvasElement>(null)
   const pathname = usePathname()
+  if (pathname !== "/map" && !pathname.startsWith("/map/")) return null
+  // On a note the stars keep to the margins, clear of the column being read.
+  return <Sky note={/^\/map\/[^/]+\/[^/]+/.test(pathname)} />
+}
+
+function Sky({ note }: { note: boolean }) {
+  const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = ref.current
@@ -71,15 +77,11 @@ export function StarField() {
     }
   }, [])
 
-  // Behind text the stars are dimmer, so none reads as a full stop. On a
-  // note they keep to the margins, clear of the column being read.
-  const note = /^\/map\/[^/]+\/[^/]+/.test(pathname)
   return (
     <div
       aria-hidden
       className={cn(
         "pointer-events-none fixed inset-(--bezel) -z-10",
-        !pathname.startsWith("/map") && "opacity-50",
         note && "sky-margins"
       )}
     >
