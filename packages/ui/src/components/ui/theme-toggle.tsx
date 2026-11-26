@@ -1,30 +1,36 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { MoonIcon, SunIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 
-import { Button } from "./button"
+import { cornerLink } from "../corners"
+import { cn } from "../../lib/utils"
 
+/**
+ * Switches light and dark. A text link in the corner style that names the
+ * theme it switches to, LIGHT or DARK, never an icon. Before mount it reads
+ * LIGHT, the dark-first default, so the server render matches.
+ */
 function ThemeToggle({
+  className,
   ...props
-}: Omit<React.ComponentProps<typeof Button>, "onClick" | "children">) {
+}: Omit<React.ComponentProps<"button">, "onClick" | "children">) {
   const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => setMounted(true), [])
 
+  const next = mounted && resolvedTheme === "light" ? "dark" : "light"
   return (
-    <Button
+    <button
+      type="button"
       data-slot="theme-toggle"
-      variant="ghost"
-      size="icon"
-      aria-label="Toggle theme"
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      className={cn(cornerLink, className)}
       {...props}
+      onClick={() => setTheme(next)}
     >
-      {mounted && resolvedTheme === "dark" ? <MoonIcon /> : <SunIcon />}
-    </Button>
+      {next === "light" ? "Light" : "Dark"}
+    </button>
   )
 }
 

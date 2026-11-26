@@ -1,22 +1,10 @@
 "use client"
 
-import { useTheme } from "next-themes"
-
-import { BottomCorners, cornerLink, LegalLinks, TopCorners } from "./corners"
+import { BottomCorners, LegalLinks, TopCorners } from "./corners"
+import { ThemeToggle } from "./ui/theme-toggle"
 
 import { column, enterRow, page } from "../lib/layout"
 import { cn } from "../lib/utils"
-
-/** The top right corner's default: a text link to the other theme. */
-function ThemeLink() {
-  const { resolvedTheme, setTheme } = useTheme()
-  const next = resolvedTheme === "light" ? "dark" : "light"
-  return (
-    <button type="button" className={cornerLink} onClick={() => setTheme(next)}>
-      {next === "light" ? "Light" : "Dark"}
-    </button>
-  )
-}
 
 /**
  * The page of a small task (a personal tool, a demo): the four corners, the
@@ -28,7 +16,7 @@ function ThemeLink() {
 export function TaskShell({
   title,
   description,
-  actions = <ThemeLink />,
+  actions = <ThemeToggle />,
   wide = false,
   children,
 }: {
