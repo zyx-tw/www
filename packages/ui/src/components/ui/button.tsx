@@ -11,11 +11,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/50",
-        outline: "group/outline relative bg-transparent focus-visible:ring-0",
-        ghost: "hover:bg-muted",
+          "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/50 active:bg-background active:text-foreground",
+        outline:
+          "group/outline relative bg-transparent focus-visible:ring-0 active:bg-foreground active:text-background",
+        ghost: "hover:bg-muted active:bg-foreground active:text-background",
         destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:ring-destructive/20",
+          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:ring-destructive/20 active:bg-destructive active:text-background",
       },
       size: {
         default: "px-4",
@@ -30,6 +31,7 @@ const buttonVariants = cva(
 )
 
 // An outline button is framed in glyphs; hovering lights the frame up.
+// Pressing any button inverts its cell, as a terminal highlights a key.
 function Button({
   className,
   variant,
