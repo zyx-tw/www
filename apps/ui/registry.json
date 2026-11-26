@@ -8,6 +8,14 @@
       "type": "registry:base",
       "title": "zyx Base",
       "description": "The zyx.tw design system base: a terminal look in one monospace face, grayscale tokens, four type sizes, square corners and two motion durations.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["theme", "base"],
+      "docs": "Use when: Starting any project on the zyx.tw look: tokens, fonts, type sizes, motion durations.\nNot for: Changing a single color; edit the tokens in your own globals.css instead.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Starting any project on the zyx.tw look: tokens, fonts, type sizes, motion durations.",
+        "notFor": "Changing a single color; edit the tokens in your own globals.css instead.",
+        "related": ["utils", "corners"]
+      },
       "extends": "none",
       "config": {
         "style": "base-nova",
@@ -134,6 +142,14 @@
       "type": "registry:lib",
       "title": "Utils",
       "description": "cn at @/lib/utils, aware of the four type sizes.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["lib"],
+      "docs": "Use when: Merging class names with cn when you write a component.\nNot for: Runtime logic; it only joins classes.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Merging class names with cn when you write a component.",
+        "notFor": "Runtime logic; it only joins classes.",
+        "related": ["base"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -147,6 +163,14 @@
       "type": "registry:lib",
       "title": "Agent Telemetry",
       "description": "OTLP tracing for agent apps: registerTelemetry for instrumentation.ts, inSpan, and a traced fetch for model calls that records the upstream provider. Off until OTEL_EXPORTER_OTLP_ENDPOINT is set; spans never carry content.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["agent", "lib", "observability"],
+      "docs": "Use when: Tracing an agent app's requests and model calls over OTLP.\nNot for: Logging prompts or outputs; spans never carry content.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Tracing an agent app's requests and model calls over OTLP.",
+        "notFor": "Logging prompts or outputs; spans never carry content.",
+        "related": ["agent-model", "agent-tools"]
+      },
       "dependencies": [
         "@opentelemetry/api",
         "@opentelemetry/context-async-hooks",
@@ -167,6 +191,14 @@
       "type": "registry:lib",
       "title": "Agent Model",
       "description": "Any OpenAI-compatible model for the AI SDK, configured from <PREFIX>MODEL_* variables, traced, and waiting out 429 rate limits until the gateway resets.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["agent", "lib", "ai"],
+      "docs": "Use when: Calling any OpenAI-compatible model through the AI SDK from env variables.\nNot for: Picking a model per request in UI code; configure it once in env.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Calling any OpenAI-compatible model through the AI SDK from env variables.",
+        "notFor": "Picking a model per request in UI code; configure it once in env.",
+        "related": ["agent-telemetry", "agent-tools"]
+      },
       "dependencies": ["ai", "@ai-sdk/openai", "@opentelemetry/api"],
       "registryDependencies": ["https://ui.zyx.tw/r/agent-telemetry.json"],
       "files": [
@@ -182,6 +214,14 @@
       "type": "registry:lib",
       "title": "Agent Tools",
       "description": "One tool registry for the page, the chat agent and MCP: zod input parsed once, run as the signed-in person, traced, with streamText tools and a stateless MCP endpoint from the same definitions.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["agent", "lib", "ai", "mcp"],
+      "docs": "Use when: Defining a tool once for the page, the chat agent and an MCP endpoint.\nNot for: Client-only helpers that never run as the signed-in person.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Defining a tool once for the page, the chat agent and an MCP endpoint.",
+        "notFor": "Client-only helpers that never run as the signed-in person.",
+        "related": ["agent-model", "agent-seal"]
+      },
       "dependencies": [
         "ai",
         "zod",
@@ -202,6 +242,14 @@
       "type": "registry:lib",
       "title": "Agent Seal",
       "description": "AES-256-GCM sealing for credentials an agent uses but never sees, and redact to scrub their values (and their JSON and URL forms) from anything returned.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["agent", "lib", "security"],
+      "docs": "Use when: Storing credentials an agent uses but must never see, and scrubbing them from output.\nNot for: Hashing passwords; use a password hash for those.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Storing credentials an agent uses but must never see, and scrubbing them from output.",
+        "notFor": "Hashing passwords; use a password hash for those.",
+        "related": ["agent-tools"]
+      },
       "files": [
         {
           "path": "registry/zyx/agent/seal.ts",
@@ -215,6 +263,14 @@
       "type": "registry:lib",
       "title": "Agent Public Fetch",
       "description": "fetch for requests made on an agent's behalf that reaches public addresses only, checked inside the connection's own DNS lookup so DNS rebinding cannot slip through. Node.js only.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["agent", "lib", "security"],
+      "docs": "Use when: Fetching a URL a person or a model supplied, server side.\nNot for: Calling your own internal services; it blocks private addresses on purpose.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Fetching a URL a person or a model supplied, server side.",
+        "notFor": "Calling your own internal services; it blocks private addresses on purpose.",
+        "related": ["agent-tools"]
+      },
       "dependencies": ["undici"],
       "files": [
         {
@@ -228,6 +284,15 @@
       "name": "font-noto-sans-tc",
       "type": "registry:font",
       "title": "Noto Sans TC",
+      "description": "Noto Sans TC for the Han characters outside the Maple Mono NF CN subset.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["font"],
+      "docs": "Use when: Pages with Han characters outside the Maple Mono subset.\nNot for: Latin-only sites; the base font covers them.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Pages with Han characters outside the Maple Mono subset.",
+        "notFor": "Latin-only sites; the base font covers them.",
+        "related": ["base"]
+      },
       "font": {
         "family": "'Noto Sans TC Variable', sans-serif",
         "provider": "google",
@@ -235,14 +300,21 @@
         "variable": "--font-noto-sans-tc",
         "subsets": ["latin"],
         "dependency": "@fontsource-variable/noto-sans-tc"
-      },
-      "description": "Noto Sans TC for the Han characters outside the Maple Mono NF CN subset."
+      }
     },
     {
       "name": "corners",
       "type": "registry:component",
       "title": "Corners",
       "description": "The four fixed corners every zyx.tw site shares: the zyx mark and the page nav on top, Privacy and Terms and the copyright below, each item with a tip.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "navigation"],
+      "docs": "Use when: The frame of every page: mark and nav on top, legal links and copyright below.\nNot for: In-page navigation or toolbars; those live in the page.\nGuide: https://ui.zyx.tw/corners.md",
+      "meta": {
+        "useWhen": "The frame of every page: mark and nav on top, legal links and copyright below.",
+        "notFor": "In-page navigation or toolbars; those live in the page.",
+        "related": ["page-decode", "section-title"]
+      },
       "dependencies": ["@base-ui/react", "next"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -282,6 +354,14 @@
       "type": "registry:component",
       "title": "Page Decode",
       "description": "The page motion: a page's text decodes in row by row as a terminal prints it, and scrambles out before a link within the app leaves it.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "motion"],
+      "docs": "Use when: Mounting once in the root layout so every page decodes in and scrambles out.\nNot for: Animating one element after load; use scramble-text.\nGuide: https://ui.zyx.tw/page-decode.md",
+      "meta": {
+        "useWhen": "Mounting once in the root layout so every page decodes in and scrambles out.",
+        "notFor": "Animating one element after load; use scramble-text.",
+        "related": ["scramble-text", "corners"]
+      },
       "dependencies": ["next"],
       "css": {
         "@media (prefers-reduced-motion: no-preference)": {
@@ -310,6 +390,14 @@
       "type": "registry:component",
       "title": "Shell",
       "description": "Pieces of a shell session: a command after a muted prompt, a blinking block cursor and the requested path for a 404.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "terminal"],
+      "docs": "Use when: Showing a command, a prompt cursor or a missing path, as a 404 or idle state.\nNot for: Real terminal emulation or long logs.\nGuide: https://ui.zyx.tw/shell.md",
+      "meta": {
+        "useWhen": "Showing a command, a prompt cursor or a missing path, as a 404 or idle state.",
+        "notFor": "Real terminal emulation or long logs.",
+        "related": ["status-page", "empty-state"]
+      },
       "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
       "cssVars": {
         "theme": {
@@ -335,6 +423,14 @@
       "type": "registry:component",
       "title": "Section Title",
       "description": "A section's heading in brackets and capitals, as the corner nav marks the current page.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "typography"],
+      "docs": "Use when: Headings of sections inside a page, in brackets and capitals.\nNot for: The page title; use text-title.\nGuide: https://ui.zyx.tw/section-title.md",
+      "meta": {
+        "useWhen": "Headings of sections inside a page, in brackets and capitals.",
+        "notFor": "The page title; use text-title.",
+        "related": ["corners"]
+      },
       "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
       "files": [
         {
@@ -348,6 +444,14 @@
       "type": "registry:block",
       "title": "Confirm Dialog",
       "description": "Asks before an action, locks both buttons while it runs and closes when it finishes.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["block", "overlay", "form"],
+      "docs": "Use when: Asking before an action that cannot be undone, and running it.\nNot for: Forms or long content; use dialog.\nGuide: https://ui.zyx.tw/confirm-dialog.md",
+      "meta": {
+        "useWhen": "Asking before an action that cannot be undone, and running it.",
+        "notFor": "Forms or long content; use dialog.",
+        "related": ["alert-dialog", "spinner"]
+      },
       "registryDependencies": [
         "https://ui.zyx.tw/r/alert-dialog.json",
         "https://ui.zyx.tw/r/button.json",
@@ -365,6 +469,14 @@
       "type": "registry:block",
       "title": "Empty State",
       "description": "One sentence and the next step when a list or a search has no rows, with a table row variant.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["block", "feedback"],
+      "docs": "Use when: A list, table or search with no rows: one sentence and the next step.\nNot for: Errors and missing pages; use status-page.\nGuide: https://ui.zyx.tw/empty-state.md",
+      "meta": {
+        "useWhen": "A list, table or search with no rows: one sentence and the next step.",
+        "notFor": "Errors and missing pages; use status-page.",
+        "related": ["table", "status-page"]
+      },
       "registryDependencies": [
         "https://ui.zyx.tw/r/button.json",
         "https://ui.zyx.tw/r/table.json"
@@ -381,6 +493,14 @@
       "type": "registry:block",
       "title": "Status Page",
       "description": "A title and the way out, for not found, errors and no access.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["block", "feedback"],
+      "docs": "Use when: Not found, error and no-access pages: a title and the way out.\nNot for: Empty lists inside a working page; use empty-state.\nGuide: https://ui.zyx.tw/status-page.md",
+      "meta": {
+        "useWhen": "Not found, error and no-access pages: a title and the way out.",
+        "notFor": "Empty lists inside a working page; use empty-state.",
+        "related": ["shell", "empty-state"]
+      },
       "registryDependencies": ["https://ui.zyx.tw/r/shell.json"],
       "files": [
         {
@@ -394,6 +514,14 @@
       "type": "registry:ui",
       "title": "Alert Dialog",
       "description": "Confirmation dialog with Cancel and an action.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["overlay"],
+      "docs": "Use when: A modal confirmation with Cancel and one action, when you need its parts.\nNot for: The common confirm-and-run case; use confirm-dialog.\nGuide: https://ui.zyx.tw/alert-dialog.md",
+      "meta": {
+        "useWhen": "A modal confirmation with Cancel and one action, when you need its parts.",
+        "notFor": "The common confirm-and-run case; use confirm-dialog.",
+        "related": ["confirm-dialog", "dialog"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -412,6 +540,14 @@
       "type": "registry:ui",
       "title": "Attachment",
       "description": "File chip with a media square, name and upload state.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["chat", "file"],
+      "docs": "Use when: A file chip in a composer or a message, with its upload state.\nNot for: File lists in tables; use table.\nGuide: https://ui.zyx.tw/attachment.md",
+      "meta": {
+        "useWhen": "A file chip in a composer or a message, with its upload state.",
+        "notFor": "File lists in tables; use table.",
+        "related": ["message", "progress"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -426,6 +562,14 @@
       "type": "registry:ui",
       "title": "Avatar",
       "description": "Square 40px avatar with an initials fallback.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["content", "identity"],
+      "docs": "Use when: A person in a list or a message, with initials when there is no picture.\nNot for: Logos or product images.\nGuide: https://ui.zyx.tw/avatar.md",
+      "meta": {
+        "useWhen": "A person in a list or a message, with initials when there is no picture.",
+        "notFor": "Logos or product images.",
+        "related": ["message"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -440,6 +584,14 @@
       "type": "registry:ui",
       "title": "Badge",
       "description": "Status label: default, muted, outline, destructive.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["content", "status"],
+      "docs": "Use when: A short status next to a name: active, failed, draft.\nNot for: Actions; use button. Counts in a nav.\nGuide: https://ui.zyx.tw/badge.md",
+      "meta": {
+        "useWhen": "A short status next to a name: active, failed, draft.",
+        "notFor": "Actions; use button. Counts in a nav.",
+        "related": ["table"]
+      },
       "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
       "files": [
         {
@@ -454,6 +606,14 @@
       "type": "registry:ui",
       "title": "Bubble",
       "description": "Chat text: a muted bubble for the person, plain text for the reply.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["chat"],
+      "docs": "Use when: Chat text: the person's turn in a bubble, the reply as plain text.\nNot for: Notifications; use sonner.\nGuide: https://ui.zyx.tw/bubble.md",
+      "meta": {
+        "useWhen": "Chat text: the person's turn in a bubble, the reply as plain text.",
+        "notFor": "Notifications; use sonner.",
+        "related": ["message", "attachment"]
+      },
       "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
       "files": [
         {
@@ -468,6 +628,14 @@
       "type": "registry:ui",
       "title": "Button",
       "description": "Button in one 40px height: variants default, outline, ghost, destructive; sizes default and icon.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: Every action: one 40px height; default for the primary, ghost or outline for the rest.\nNot for: Navigation between pages; use a link.\nGuide: https://ui.zyx.tw/button.md",
+      "meta": {
+        "useWhen": "Every action: one 40px height; default for the primary, ghost or outline for the rest.",
+        "notFor": "Navigation between pages; use a link.",
+        "related": ["toggle", "spinner"]
+      },
       "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
       "files": [
         {
@@ -485,6 +653,14 @@
       "type": "registry:ui",
       "title": "Calendar",
       "description": "Month grid for picking one day, with 40px day buttons.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "date"],
+      "docs": "Use when: Picking one day from a month grid.\nNot for: Ranges and times; it picks one day.\nGuide: https://ui.zyx.tw/calendar.md",
+      "meta": {
+        "useWhen": "Picking one day from a month grid.",
+        "notFor": "Ranges and times; it picks one day.",
+        "related": ["popover"]
+      },
       "dependencies": ["cn", "lucide-react", "react-day-picker"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -502,6 +678,14 @@
       "type": "registry:ui",
       "title": "Chart",
       "description": "Recharts container in the theme's colors, with a window tooltip.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["content", "data"],
+      "docs": "Use when: Charts in the theme's colors with a window tooltip.\nNot for: A single number; write it as text.\nGuide: https://ui.zyx.tw/chart.md",
+      "meta": {
+        "useWhen": "Charts in the theme's colors with a window tooltip.",
+        "notFor": "A single number; write it as text.",
+        "related": ["table"]
+      },
       "dependencies": ["cn", "recharts"],
       "files": [
         {
@@ -519,6 +703,14 @@
       "type": "registry:ui",
       "title": "Checkbox",
       "description": "Square 20px checkbox.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: Choosing any number of options, or agreeing to one statement.\nNot for: Settings that apply at once; use switch.\nGuide: https://ui.zyx.tw/checkbox.md",
+      "meta": {
+        "useWhen": "Choosing any number of options, or agreeing to one statement.",
+        "notFor": "Settings that apply at once; use switch.",
+        "related": ["switch", "label"]
+      },
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "files": [
         {
@@ -533,6 +725,14 @@
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "Unstyled show / hide region.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["content", "disclosure"],
+      "docs": "Use when: Folding a secondary block that people open rarely.\nNot for: Content people need every time; show it.\nGuide: https://ui.zyx.tw/collapsible.md",
+      "meta": {
+        "useWhen": "Folding a secondary block that people open rarely.",
+        "notFor": "Content people need every time; show it.",
+        "related": ["tabs"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -547,6 +747,14 @@
       "type": "registry:ui",
       "title": "Combobox",
       "description": "Trigger and content for a searchable picker built from Popover and Command.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: Picking one value from a long list by typing.\nNot for: Fewer than about 7 options; use select.\nGuide: https://ui.zyx.tw/combobox.md",
+      "meta": {
+        "useWhen": "Picking one value from a long list by typing.",
+        "notFor": "Fewer than about 7 options; use select.",
+        "related": ["select", "command"]
+      },
       "dependencies": ["cn", "lucide-react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -566,6 +774,14 @@
       "type": "registry:ui",
       "title": "Command",
       "description": "Searchable list for a combobox inside a popover.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "search"],
+      "docs": "Use when: The searchable list inside a combobox or a command palette.\nNot for: Static menus; use dropdown-menu.\nGuide: https://ui.zyx.tw/command.md",
+      "meta": {
+        "useWhen": "The searchable list inside a combobox or a command palette.",
+        "notFor": "Static menus; use dropdown-menu.",
+        "related": ["combobox", "popover"]
+      },
       "dependencies": ["cmdk", "cn", "lucide-react"],
       "files": [
         {
@@ -584,6 +800,14 @@
       "type": "registry:ui",
       "title": "Dialog",
       "description": "Modal window with title, description and footer; sizes default and wide.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["overlay", "form"],
+      "docs": "Use when: A short edit or a form called up over the page.\nNot for: Confirming a destructive action; use confirm-dialog.\nGuide: https://ui.zyx.tw/dialog.md",
+      "meta": {
+        "useWhen": "A short edit or a form called up over the page.",
+        "notFor": "Confirming a destructive action; use confirm-dialog.",
+        "related": ["sheet", "confirm-dialog"]
+      },
       "dependencies": [
         "@base-ui/react",
         "class-variance-authority",
@@ -607,6 +831,14 @@
       "type": "registry:ui",
       "title": "Dropdown Menu",
       "description": "Action menu window with labels, separators and one level of submenu.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["overlay", "navigation"],
+      "docs": "Use when: A menu of actions on one thing.\nNot for: Picking a value for a form; use select.\nGuide: https://ui.zyx.tw/dropdown-menu.md",
+      "meta": {
+        "useWhen": "A menu of actions on one thing.",
+        "notFor": "Picking a value for a form; use select.",
+        "related": ["select", "popover"]
+      },
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "files": [
         {
@@ -624,6 +856,14 @@
       "type": "registry:ui",
       "title": "Frame",
       "description": "Glyph frames: an outline drawn with box-drawing characters, so its lines run through the middle of a character cell and its corners are the font's arcs. Every window and field draws its edge with it.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["primitive"],
+      "docs": "Use when: Drawing the glyph outline of a window or a field in your own component.\nNot for: Grouping page content; pages have no frames.\nGuide: https://ui.zyx.tw/frame.md",
+      "meta": {
+        "useWhen": "Drawing the glyph outline of a window or a field in your own component.",
+        "notFor": "Grouping page content; pages have no frames.",
+        "related": ["dialog", "input"]
+      },
       "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
       "files": [
         {
@@ -719,6 +959,14 @@
       "type": "registry:ui",
       "title": "Field Trigger",
       "description": "Shared class list for pick-a-value triggers.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["primitive", "form"],
+      "docs": "Use when: Styling your own pick-a-value trigger like select and combobox.\nNot for: Buttons; use button.\nGuide: https://ui.zyx.tw/index.md",
+      "meta": {
+        "useWhen": "Styling your own pick-a-value trigger like select and combobox.",
+        "notFor": "Buttons; use button.",
+        "related": ["select", "combobox"]
+      },
       "files": [
         {
           "path": "registry/zyx/ui/field-trigger.ts",
@@ -731,6 +979,14 @@
       "type": "registry:ui",
       "title": "Input Group",
       "description": "Input with an icon, text or a button inside its border.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: An input with an icon, text or a button inside its border.\nNot for: Two separate fields; use two inputs.\nGuide: https://ui.zyx.tw/input-group.md",
+      "meta": {
+        "useWhen": "An input with an icon, text or a button inside its border.",
+        "notFor": "Two separate fields; use two inputs.",
+        "related": ["input", "button"]
+      },
       "dependencies": ["cn"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -751,6 +1007,14 @@
       "type": "registry:ui",
       "title": "Input",
       "description": "Text input, 40px tall to match Button.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: One line of text.\nNot for: Several lines; use textarea.\nGuide: https://ui.zyx.tw/input.md",
+      "meta": {
+        "useWhen": "One line of text.",
+        "notFor": "Several lines; use textarea.",
+        "related": ["label", "input-group"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -769,6 +1033,14 @@
       "type": "registry:ui",
       "title": "Label",
       "description": "Form label in text-body, medium weight.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: Naming a form control.\nNot for: Headings; use section-title.\nGuide: https://ui.zyx.tw/label.md",
+      "meta": {
+        "useWhen": "Naming a form control.",
+        "notFor": "Headings; use section-title.",
+        "related": ["input", "checkbox"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -783,6 +1055,14 @@
       "type": "registry:ui",
       "title": "Mask Reveal",
       "description": "Reveals its content with a feathered mask sweeping left to right.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["motion"],
+      "docs": "Use when: Revealing an image or block once, with a feathered sweep.\nNot for: Text; use scramble-text.\nGuide: https://ui.zyx.tw/mask-reveal.md",
+      "meta": {
+        "useWhen": "Revealing an image or block once, with a feathered sweep.",
+        "notFor": "Text; use scramble-text.",
+        "related": ["scramble-text"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -818,6 +1098,14 @@
       "type": "registry:ui",
       "title": "Message",
       "description": "Chat transcript layout: groups, messages, content and footer.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["chat"],
+      "docs": "Use when: Laying out a chat transcript: groups, messages and footers.\nNot for: Comments threads with replies.\nGuide: https://ui.zyx.tw/message.md",
+      "meta": {
+        "useWhen": "Laying out a chat transcript: groups, messages and footers.",
+        "notFor": "Comments threads with replies.",
+        "related": ["bubble", "avatar"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -832,6 +1120,14 @@
       "type": "registry:ui",
       "title": "Popover",
       "description": "Window anchored to a trigger.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["overlay"],
+      "docs": "Use when: A small window anchored to a trigger for extra controls.\nNot for: A label on hover; use tooltip.\nGuide: https://ui.zyx.tw/popover.md",
+      "meta": {
+        "useWhen": "A small window anchored to a trigger for extra controls.",
+        "notFor": "A label on hover; use tooltip.",
+        "related": ["tooltip", "dropdown-menu"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -849,6 +1145,14 @@
       "type": "registry:ui",
       "title": "Progress",
       "description": "Determinate bar that fills pixel by pixel with a dithered edge.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["feedback", "motion"],
+      "docs": "Use when: Waiting with a measure: an upload or a download with a known size.\nNot for: Waiting without a measure; use spinner.\nGuide: https://ui.zyx.tw/progress.md",
+      "meta": {
+        "useWhen": "Waiting with a measure: an upload or a download with a known size.",
+        "notFor": "Waiting without a measure; use spinner.",
+        "related": ["spinner", "skeleton"]
+      },
       "dependencies": ["cn"],
       "css": {
         "[data-slot=\"progress\"] canvas": {
@@ -868,6 +1172,14 @@
       "type": "registry:ui",
       "title": "Resizable",
       "description": "Panels split by a hairline handle you can drag.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout"],
+      "docs": "Use when: Two panels the person sizes by dragging, such as a list and a detail.\nNot for: Fixed layouts; use the grid.\nGuide: https://ui.zyx.tw/resizable.md",
+      "meta": {
+        "useWhen": "Two panels the person sizes by dragging, such as a list and a detail.",
+        "notFor": "Fixed layouts; use the grid.",
+        "related": ["toolbar"]
+      },
       "dependencies": ["cn", "react-resizable-panels"],
       "files": [
         {
@@ -882,6 +1194,14 @@
       "type": "registry:ui",
       "title": "Scramble Text",
       "description": "Text that resolves left to right from random glyphs, without moving layout.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["motion", "typography"],
+      "docs": "Use when: One line that resolves from random glyphs, such as a title that changes.\nNot for: Whole pages; page-decode does those.\nGuide: https://ui.zyx.tw/scramble-text.md",
+      "meta": {
+        "useWhen": "One line that resolves from random glyphs, such as a title that changes.",
+        "notFor": "Whole pages; page-decode does those.",
+        "related": ["page-decode"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -908,6 +1228,14 @@
       "type": "registry:ui",
       "title": "Select",
       "description": "Single-choice dropdown, as tall as Input.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: Picking one of a few known values.\nNot for: Long lists people search; use combobox.\nGuide: https://ui.zyx.tw/select.md",
+      "meta": {
+        "useWhen": "Picking one of a few known values.",
+        "notFor": "Long lists people search; use combobox.",
+        "related": ["combobox", "field-trigger"]
+      },
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -926,6 +1254,13 @@
       "type": "registry:ui",
       "title": "Separator",
       "description": "Hairline divider, horizontal or vertical.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["content"],
+      "docs": "Use when: A hairline between groups when spacing alone is not enough.\nNot for: Framing a group; pages have no frames.\nGuide: https://ui.zyx.tw/separator.md",
+      "meta": {
+        "useWhen": "A hairline between groups when spacing alone is not enough.",
+        "notFor": "Framing a group; pages have no frames."
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -940,6 +1275,14 @@
       "type": "registry:ui",
       "title": "Sheet",
       "description": "Full-height window on the left or right edge.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["overlay"],
+      "docs": "Use when: A tall panel from the edge: filters, details, a mobile menu.\nNot for: Short forms; use dialog.\nGuide: https://ui.zyx.tw/sheet.md",
+      "meta": {
+        "useWhen": "A tall panel from the edge: filters, details, a mobile menu.",
+        "notFor": "Short forms; use dialog.",
+        "related": ["dialog"]
+      },
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -958,6 +1301,14 @@
       "type": "registry:ui",
       "title": "Skeleton",
       "description": "Placeholder of flickering 4px pixels, in CSS.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["feedback", "motion"],
+      "docs": "Use when: Content on its way, in the shape it will take.\nNot for: Actions in progress; use spinner.\nGuide: https://ui.zyx.tw/skeleton.md",
+      "meta": {
+        "useWhen": "Content on its way, in the shape it will take.",
+        "notFor": "Actions in progress; use spinner.",
+        "related": ["spinner", "progress"]
+      },
       "dependencies": ["cn"],
       "css": {
         "[data-slot=\"skeleton\"]::before": {
@@ -1002,6 +1353,14 @@
       "type": "registry:ui",
       "title": "Spinner",
       "description": "A 3 by 3 LED panel whose lit pixel runs the edge, in CSS.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["feedback", "motion"],
+      "docs": "Use when: Waiting without a measure, beside a label: saving, signing in.\nNot for: Waiting with a measure; use progress.\nGuide: https://ui.zyx.tw/spinner.md",
+      "meta": {
+        "useWhen": "Waiting without a measure, beside a label: saving, signing in.",
+        "notFor": "Waiting with a measure; use progress.",
+        "related": ["progress", "button"]
+      },
       "dependencies": ["cn"],
       "css": {
         "[data-slot=\"spinner\"] > *": {
@@ -1070,6 +1429,14 @@
       "type": "registry:ui",
       "title": "Slider",
       "description": "Range slider with a 4px track and 20px thumbs.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: Choosing a number in a range where the exact value matters little.\nNot for: Exact numbers; use input.\nGuide: https://ui.zyx.tw/slider.md",
+      "meta": {
+        "useWhen": "Choosing a number in a range where the exact value matters little.",
+        "notFor": "Exact numbers; use input.",
+        "related": ["input"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -1084,6 +1451,14 @@
       "type": "registry:ui",
       "title": "Sonner",
       "description": "Toasts in a small window.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["feedback", "overlay"],
+      "docs": "Use when: Telling the outcome of an action in a few words: saved, failed.\nNot for: Information the person must act on; put it on the page.\nGuide: https://ui.zyx.tw/sonner.md",
+      "meta": {
+        "useWhen": "Telling the outcome of an action in a few words: saved, failed.",
+        "notFor": "Information the person must act on; put it on the page.",
+        "related": ["spinner"]
+      },
       "dependencies": ["lucide-react", "sonner"],
       "css": {
         "[data-sonner-toast]": {
@@ -1111,6 +1486,14 @@
       "type": "registry:ui",
       "title": "Switch",
       "description": "On / off toggle, one size.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: A setting that applies at once: on or off.\nNot for: Choices submitted with a form; use checkbox.\nGuide: https://ui.zyx.tw/switch.md",
+      "meta": {
+        "useWhen": "A setting that applies at once: on or off.",
+        "notFor": "Choices submitted with a form; use checkbox.",
+        "related": ["checkbox", "label"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -1125,6 +1508,14 @@
       "type": "registry:ui",
       "title": "Table",
       "description": "Data table with muted headers.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["content", "data"],
+      "docs": "Use when: Rows of records people scan and compare.\nNot for: Layout; use the grid.\nGuide: https://ui.zyx.tw/table.md",
+      "meta": {
+        "useWhen": "Rows of records people scan and compare.",
+        "notFor": "Layout; use the grid.",
+        "related": ["empty-state", "badge"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -1139,6 +1530,14 @@
       "type": "registry:ui",
       "title": "Tabs",
       "description": "Segmented tabs with 40px triggers.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["navigation", "content"],
+      "docs": "Use when: Switching between a few views of the same thing.\nNot for: Navigation between pages; use the corner nav.\nGuide: https://ui.zyx.tw/tabs.md",
+      "meta": {
+        "useWhen": "Switching between a few views of the same thing.",
+        "notFor": "Navigation between pages; use the corner nav.",
+        "related": ["collapsible"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -1153,6 +1552,14 @@
       "type": "registry:ui",
       "title": "Textarea",
       "description": "Multi-line input that grows with its content.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "form"],
+      "docs": "Use when: Several lines of text that grow as people type.\nNot for: One line; use input.\nGuide: https://ui.zyx.tw/textarea.md",
+      "meta": {
+        "useWhen": "Several lines of text that grow as people type.",
+        "notFor": "One line; use input.",
+        "related": ["input", "label"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -1171,6 +1578,14 @@
       "type": "registry:ui",
       "title": "Theme Toggle",
       "description": "Icon button that switches light and dark (next-themes).",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control", "theme"],
+      "docs": "Use when: Letting people switch light and dark.\nNot for: Sites that are dark only.\nGuide: https://ui.zyx.tw/theme-toggle.md",
+      "meta": {
+        "useWhen": "Letting people switch light and dark.",
+        "notFor": "Sites that are dark only.",
+        "related": ["base"]
+      },
       "dependencies": ["lucide-react", "next-themes"],
       "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
       "files": [
@@ -1185,6 +1600,14 @@
       "type": "registry:ui",
       "title": "Toggle",
       "description": "Pressable button that stays on, the box of a ghost Button.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["control"],
+      "docs": "Use when: A button that stays on, such as bold or a view mode.\nNot for: Settings; use switch.\nGuide: https://ui.zyx.tw/toggle.md",
+      "meta": {
+        "useWhen": "A button that stays on, such as bold or a view mode.",
+        "notFor": "Settings; use switch.",
+        "related": ["button", "toolbar"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -1199,6 +1622,14 @@
       "type": "registry:ui",
       "title": "Toolbar",
       "description": "Floating window of 40px controls over a canvas or map.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["overlay", "control"],
+      "docs": "Use when: Floating controls over a canvas or a map.\nNot for: Page actions; put buttons in the page.\nGuide: https://ui.zyx.tw/toolbar.md",
+      "meta": {
+        "useWhen": "Floating controls over a canvas or a map.",
+        "notFor": "Page actions; put buttons in the page.",
+        "related": ["toggle", "button"]
+      },
       "dependencies": ["cn"],
       "files": [
         {
@@ -1216,6 +1647,14 @@
       "type": "registry:ui",
       "title": "Tooltip",
       "description": "Short lowercase label in a small window on hover or focus.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["overlay"],
+      "docs": "Use when: A short lowercase label for an icon or a corner link.\nNot for: Content people need to read; put it on the page.\nGuide: https://ui.zyx.tw/tooltip.md",
+      "meta": {
+        "useWhen": "A short lowercase label for an icon or a corner link.",
+        "notFor": "Content people need to read; put it on the page.",
+        "related": ["popover"]
+      },
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {

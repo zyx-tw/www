@@ -7,6 +7,9 @@ export interface RegistryItem {
   description: string;
   dependencies?: string[];
   registryDependencies?: string[];
+  categories?: string[];
+  /** When to reach for the item, when not to, and what to use instead. */
+  meta?: { useWhen: string; notFor: string; related?: string[] };
 }
 
 // registry.json is the one list of what ui.zyx.tw ships. The page, index.md,

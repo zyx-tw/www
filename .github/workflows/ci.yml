@@ -75,6 +75,11 @@ jobs:
       - name: Build the registry
         run: bun run build --filter=ui
 
+      - name: Validate the registry and its links
+        run: |
+          (cd apps/ui && bunx shadcn@latest registry validate)
+          node apps/ui/scripts/check-links.mjs
+
       # Install the base and every component into a fresh project, the way an
       # app outside this repo would. Items depend on each other by absolute
       # URL; point those at this build so unreleased items resolve.

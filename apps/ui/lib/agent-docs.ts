@@ -46,6 +46,17 @@ function itemSection(item: RegistryItem, extra: string[] = []) {
     "",
     item.description,
     "",
+    ...(item.meta
+      ? [`- Use when: ${item.meta.useWhen}`, `- Not for: ${item.meta.notFor}`]
+      : []),
+    ...(item.meta?.related?.length
+      ? [
+          `- Related: ${item.meta.related.map((name) => (getDoc(name) ? `[${name}](${SITE_URL}${docMarkdownPath(name)})` : code(name))).join(", ")}`,
+        ]
+      : []),
+    ...(item.categories?.length
+      ? [`- Categories: ${item.categories.join(", ")}`]
+      : []),
     `- Install: ${code(addCommand(item.name))}`,
     `- JSON: [${item.name}.json](${itemUrl(item.name)})`,
     ...(page
@@ -187,7 +198,7 @@ export function llmsText() {
     DOC_GROUPS.flatMap((group) =>
       group.items.map(
         (item) =>
-          `- [${item.title}](${SITE_URL}${docMarkdownPath(item.name)}): ${group.title}. ${item.description}`
+          `- [${item.title}](${SITE_URL}${docMarkdownPath(item.name)}): ${group.title}. ${item.description}${item.meta ? ` Use when: ${item.meta.useWhen} Not for: ${item.meta.notFor}` : ""}`
       )
     ),
     "",
