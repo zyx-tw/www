@@ -17,6 +17,7 @@ type Swing = { from: THREE.Spherical; to: THREE.Spherical; progress: number }
  */
 export function CameraView({ azimuth, elevation }: SceneView) {
   const camera = useThree((state) => state.camera)
+  const invalidate = useThree((state) => state.invalidate)
   const shown = useRef({ azimuth, elevation })
   const swing = useRef<Swing | null>(null)
   useLayoutEffect(() => {
@@ -32,7 +33,8 @@ export function CameraView({ azimuth, elevation }: SceneView) {
     // The short way around.
     to.theta = from.theta + wrapAngle(to.theta - from.theta)
     swing.current = { from, to, progress: 0 }
-  }, [camera, azimuth, elevation])
+    invalidate()
+  }, [camera, invalidate, azimuth, elevation])
   useFrame((_, delta) => {
     const current = swing.current
     if (!current) return
@@ -45,6 +47,7 @@ export function CameraView({ azimuth, elevation }: SceneView) {
     )
     camera.lookAt(0, 0, 0)
     if (current.progress === 1) swing.current = null
+    else invalidate()
   })
   return null
 }

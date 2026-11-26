@@ -114,6 +114,13 @@ export type Scene3DProps = {
   /** Device pixel ratio range; a lower top end draws fewer pixels on retina screens. */
   dpr?: [number, number]
   /**
+   * "demand" draws a frame only when something changes: a control, an
+   * orbit, a swing of the camera or a motion still settling. A still scene
+   * then costs nothing. "always" draws every frame, for pages whose shape
+   * follows the mouse or the device.
+   */
+  frameloop?: "always" | "demand"
+  /**
    * With `lens`: let the background image drift slowly and shift a little
    * with the mouse, for depth. The pointer bends the image either way.
    */
@@ -139,6 +146,7 @@ export function Scene3D({
   lighting = true,
   dpr = [1, 2],
   ambient = false,
+  frameloop = "always",
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -150,6 +158,7 @@ export function Scene3D({
         fov: 35,
       }}
       dpr={dpr}
+      frameloop={frameloop}
       // Every frame goes through the composer, which antialiases on its own.
       gl={{ antialias: false }}
     >
@@ -486,6 +495,7 @@ function SceneContents({
   lighting: boolean
   ambient: boolean
 }) {
+  useRedrawOnCommit()
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
   const [tumble] = useState(() => createDrift(drift))
@@ -493,7 +503,9 @@ function SceneContents({
   const risen = useRef(rise ? 0 : 1)
   const canvas = useThree((state) => state.gl.domElement)
   useEffect(() => tumble.setSpeed(drift), [tumble, drift])
-  useFrame((_, delta) => {
+  useFrame(({ invalidate }, delta) => {
+    // On demand, a motion asks for the next frame itself.
+    if (autoRotate || drift || grab || risen.current < 1) invalidate()
     if (autoRotate && spin.current)
       spin.current.rotation.y += delta * SPIN_SPEED
     if ((drift || grab) && spin.current) tumble.step(spin.current, delta)
@@ -825,6 +837,8 @@ function EnvironmentTexture({
   intensity,
   rotation,
 }: Omit<EnvironmentMapProps, "onReady"> & { texture: THREE.Texture }) {
+  // A map that arrives after the rest of the scene commits on its own.
+  useRedrawOnCommit()
   return (
     <Environment
       map={texture}
@@ -834,6 +848,18 @@ function EnvironmentTexture({
       backgroundRotation={rotation}
     />
   )
+}
+
+/**
+ * Asks for a frame after every commit. On demand, R3F redraws when it sets
+ * a prop, but drei's Environment and the renderer's clear color change the
+ * scene from effects, which it doesn't see.
+ */
+function useRedrawOnCommit() {
+  const invalidate = useThree((state) => state.invalidate)
+  useEffect(() => {
+    invalidate()
+  })
 }
 
 /** A missing or blocked environment map leaves the scene without it rather than taking the page down. */
