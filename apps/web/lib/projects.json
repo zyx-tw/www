@@ -758,23 +758,6 @@
     }
   },
   {
-    "slug": "good",
-    "name": "Good",
-    "year": 2026,
-    "href": "https://good.zyx.tw",
-    "purpose": "a digital 乖乖 for servers",
-    "intro": [
-      "乖乖 is a corn snack that engineers in Taiwan tape onto servers for luck. The green bag means everything keeps running.",
-      "Good is the digital version: a 3D bag on a web page, for machines that have no shelf to put one on."
-    ],
-    "stack": ["Next.js", "three.js"],
-    "preview": {
-      "image": "/previews/good.webp",
-      "dither": "/previews/good-dither.webp",
-      "focus": "50% 50%"
-    }
-  },
-  {
     "slug": "3d",
     "name": "Plump",
     "year": 2026,
@@ -788,24 +771,6 @@
     "preview": {
       "image": "/previews/3d.webp",
       "dither": "/previews/3d-dither.webp",
-      "focus": "50% 50%"
-    }
-  },
-  {
-    "slug": "ui",
-    "name": "UI",
-    "year": 2026,
-    "href": "https://ui.zyx.tw",
-    "code": "https://github.com/zyx1121/www.zyx.tw",
-    "purpose": "component registry",
-    "intro": [
-      "The design system behind every zyx.tw site: grayscale tokens and our own components on Base UI, served as a shadcn registry.",
-      "It sets a terminal look with one monospace face, 4 type sizes, square corners and 2 motion durations. A token check in CI blocks values outside the system."
-    ],
-    "stack": ["React", "Base UI", "shadcn registry", "Tailwind CSS"],
-    "preview": {
-      "image": "/previews/ui.webp",
-      "dither": "/previews/ui-dither.webp",
       "focus": "50% 50%"
     }
   },
@@ -1022,34 +987,6 @@
     "preview": {
       "image": "/previews/jenkins-terminal.webp",
       "dither": "/previews/jenkins-terminal-dither.webp",
-      "focus": "50% 50%"
-    }
-  },
-  {
-    "slug": "link",
-    "name": "Link",
-    "year": 2026,
-    "href": "https://link.zyx.tw",
-    "purpose": "URL shortener",
-    "intro": ["Paste a long URL, get a short one back. That is all it does."],
-    "stack": ["Next.js", "Postgres"],
-    "preview": {
-      "image": "/previews/link.webp",
-      "dither": "/previews/link-dither.webp",
-      "focus": "50% 50%"
-    }
-  },
-  {
-    "slug": "time",
-    "name": "Time",
-    "year": 2026,
-    "href": "https://time.zyx.tw",
-    "purpose": "what time is it?",
-    "intro": ["What time is it? A clock, that's all."],
-    "stack": ["Next.js"],
-    "preview": {
-      "image": "/previews/time.webp",
-      "dither": "/previews/time-dither.webp",
       "focus": "50% 50%"
     }
   }

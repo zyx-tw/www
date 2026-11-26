@@ -148,7 +148,7 @@ export type Crumb = { label: string; href?: string }
  */
 function Trail({ trail }: { trail: Crumb[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="min-w-0">
+    <nav aria-label="Breadcrumb" className="min-w-0 max-sm:hidden">
       <ol className="flex gap-2">
         {trail.map(({ label, href }, index) => {
           const last = index === trail.length - 1
@@ -206,11 +206,12 @@ export function TopCorners({
   return (
     <header>
       {fade && <EdgeFade edge="top" />}
-      {/* With a trail the corner ends 160px from the right edge, clear of a
-          two-item nav, so a long name truncates instead of running into it. */}
+      {/* With a trail the corner ends 288px from the right edge, clear of a
+          four-item nav, so a long name truncates instead of running into it.
+          A phone has no room for both: there the nav marks the page. */}
       <Corner
         at="top-left"
-        className={cn(trail?.length && "right-40 gap-2", className)}
+        className={cn(trail?.length && "gap-2 sm:right-72", className)}
       >
         <CornerTip tip={markTip}>
           <Link

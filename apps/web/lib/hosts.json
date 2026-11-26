@@ -1,0 +1,34 @@
+[
+  {
+    "host": "aintern.zyx.tw",
+    "purpose": "an AI intern for any team"
+  },
+  {
+    "host": "golem.zyx.tw",
+    "purpose": "keeps watch over my services"
+  },
+  {
+    "host": "sensorium.zyx.tw",
+    "purpose": "observability for agents"
+  },
+  {
+    "host": "plump.zyx.tw",
+    "purpose": "SVG to 3D"
+  },
+  {
+    "host": "ui.zyx.tw",
+    "purpose": "component registry"
+  },
+  {
+    "host": "good.zyx.tw",
+    "purpose": "a digital 乖乖 for servers"
+  },
+  {
+    "host": "link.zyx.tw",
+    "purpose": "URL shortener"
+  },
+  {
+    "host": "time.zyx.tw",
+    "purpose": "what time is it?"
+  }
+]
