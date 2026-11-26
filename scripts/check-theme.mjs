@@ -14,11 +14,7 @@ const registry = JSON.parse(
 )
 
 const normalize = (value) =>
-  value
-    .replace(/\s+/g, " ")
-    .replace(/\( /g, "(")
-    .replace(/ \)/g, ")")
-    .trim()
+  value.replace(/\s+/g, " ").replace(/\( /g, "(").replace(/ \)/g, ")").trim()
 
 function readBlock(selector) {
   const start = css.indexOf(`${selector} {`)
@@ -34,7 +30,10 @@ function readBlock(selector) {
 
 let failed = false
 function compare(scope, actual, expected) {
-  for (const name of new Set([...Object.keys(actual), ...Object.keys(expected)])) {
+  for (const name of new Set([
+    ...Object.keys(actual),
+    ...Object.keys(expected),
+  ])) {
     if (actual[name] !== expected[name]) {
       console.error(
         `${scope} --${name}: globals.css=${actual[name]} registry.json=${expected[name]}`
@@ -45,7 +44,8 @@ function compare(scope, actual, expected) {
 }
 
 const base = registry.items.find((item) => item.name === "base")
-if (!base?.cssVars) throw new Error("registry.json has no base item with cssVars")
+if (!base?.cssVars)
+  throw new Error("registry.json has no base item with cssVars")
 
 // @theme inline also maps the colors, which the CLI writes on its own; the
 // rest must be exactly the base's theme plus the components' animations.
@@ -70,12 +70,45 @@ compare("dark", readBlock(".dark"), base.cssVars.dark)
 
 // Every color the base defines is mapped for Tailwind, and nothing else is.
 const colors = Object.keys(theme).filter((name) => name.startsWith("color-"))
-const defined = Object.keys(base.cssVars.light).filter((name) => name !== "radius")
+const defined = Object.keys(base.cssVars.light).filter(
+  (name) => name !== "radius"
+)
 compare(
   "color mapping",
   Object.fromEntries(colors.map((name) => [name, theme[name]])),
   Object.fromEntries(defined.map((name) => [`color-${name}`, `var(--${name})`]))
 )
+
+// And the other way: a utility defined here that a shipped file uses must
+// ship with some item, or a project outside this repo renders it as nothing.
+const shippedUtilities = new Set(
+  registry.items.flatMap((item) =>
+    Object.keys(item.css ?? {})
+      .filter((rule) => rule.startsWith("@utility "))
+      .map((rule) => rule.slice("@utility ".length))
+  )
+)
+const sources = await Promise.all(
+  registry.items
+    .flatMap((item) => item.files ?? [])
+    .map((file) =>
+      readFile(new URL(`apps/ui/${file.path}`, root), "utf8").catch(() => "")
+    )
+)
+const shippedSource = sources.join("\n")
+for (const [, name] of css.matchAll(/@utility ([\w-]+\*?) \{/g)) {
+  if (shippedUtilities.has(name)) continue
+  const stem = name.replace(/\*$/, "")
+  const pattern = new RegExp(
+    `(?<![\\w-])${stem}${name.endsWith("*") ? "\\d" : "(?![\\w-])"}`
+  )
+  if (pattern.test(shippedSource)) {
+    console.error(
+      `registry ships a file that uses @utility ${name}, but no item ships it`
+    )
+    failed = true
+  }
+}
 
 // Utilities and keyframes the registry ships must exist here too.
 for (const item of registry.items) {

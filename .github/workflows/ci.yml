@@ -96,7 +96,7 @@ jobs:
           grep -q '"@zyx1121": "https://ui.zyx.tw/r/{name}.json"' components.json
           grep -q -- '--text-\*: initial' app/globals.css
           grep -q -- '--text-caption: 0.875rem' app/globals.css
-          grep -q 'fonts/maple-mono-nf-cn.css' app/globals.css
+          ! grep -q '@import url' app/globals.css
           grep -q '@utility terminal-link' app/globals.css
           grep -q '@utility duration-overlay' app/globals.css
           ! grep -q -- '--card:' app/globals.css
@@ -144,38 +144,20 @@ jobs:
           PAGE
           bun run build
 
-      # The chrome must run outside Next.js too: a Vite app gets the base, the
-      # corners, the page motion and the loaders, with no Next import.
-      - name: Init a Vite project and add the chrome
+      # The task starter: one command makes a Vite project on the base with
+      # the corners, the page motion and the layout, and no Next import.
+      - name: Create a Vite project from the task starter
         run: |
           mkdir -p "$RUNNER_TEMP/vite" && cd "$RUNNER_TEMP/vite"
-          bunx shadcn@latest create -t vite -n app --no-monorepo -y http://localhost:8099/r/base.json
+          bunx shadcn@latest create -t vite -n app --no-monorepo -y http://localhost:8099/r/base.json http://localhost:8099/r/task.json
           cd app
-          bunx shadcn@latest add http://localhost:8099/r/corners.json http://localhost:8099/r/page-decode.json http://localhost:8099/r/spinner.json http://localhost:8099/r/progress.json http://localhost:8099/r/skeleton.json http://localhost:8099/r/theme-toggle.json -y -o
+          test -f scripts/audit.mjs
+          grep -q 'maple-mono-nf-cn.css' index.html
+          grep -q 'corner-top' src/index.css
+          grep -q -- '--gutter' src/index.css
+          grep -q 'TaskShell' src/App.tsx
           ! grep -rq 'from "next/' src
-          cat > src/App.tsx <<'PAGE'
-          import { BottomCorners, LegalLinks, TopCorners } from "@/components/corners"
-          import { PageDecode } from "@/components/page-decode"
-          import { Progress } from "@/components/ui/progress"
-          import { Skeleton } from "@/components/ui/skeleton"
-          import { Spinner } from "@/components/ui/spinner"
-
-          export default function App() {
-            return (
-              <>
-                <PageDecode />
-                <TopCorners fade />
-                <main>
-                  <h1>Task</h1>
-                  <Spinner />
-                  <Progress value={40} aria-label="Upload" />
-                  <Skeleton className="h-6" />
-                </main>
-                <BottomCorners fade links={<LegalLinks />} />
-              </>
-            )
-          }
-          PAGE
+          bunx shadcn@latest add http://localhost:8099/r/spinner.json http://localhost:8099/r/progress.json http://localhost:8099/r/skeleton.json -y -o
           bun run build
 
   compose:

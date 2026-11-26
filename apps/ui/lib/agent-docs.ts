@@ -1,4 +1,10 @@
-import { docMarkdownPath, DOC_GROUPS, getDoc } from "@/lib/docs";
+import {
+  docMarkdownPath,
+  DOC_GROUPS,
+  getDoc,
+  installCommand,
+  TASK_COMMAND,
+} from "@/lib/docs";
 import {
   AGENT_KIT,
   COMPONENTS,
@@ -29,6 +35,7 @@ const INDEX_URL = `${SITE_URL}${MARKDOWN_PATH}`;
 const LLMS_URL = `${SITE_URL}${LLMS_PATH}`;
 const INSTRUCTIONS_URL = `${SITE_URL}${AGENT_INSTRUCTIONS_PATH}`;
 const REGISTRY_INDEX_URL = `${SITE_URL}/r/registry.json`;
+const FONT_LINK = `<link rel="stylesheet" href="${SITE_URL}/fonts/maple-mono-nf-cn.css">`;
 const ANY_ITEM_COMMAND = `bunx shadcn@latest add ${SITE_URL}/r/<name>.json`;
 
 function code(text: string) {
@@ -101,6 +108,14 @@ export function indexMarkdown() {
     INIT_COMMAND,
     "```",
     "",
+    `Load Maple Mono in the document head (index.html, or <head> in the root layout): ${code(FONT_LINK)}. A CSS \`@import\` of it after Tailwind is dropped.`,
+    "",
+    "For a new small tool, one command makes the whole Vite project instead:",
+    "",
+    "```bash",
+    TASK_COMMAND,
+    "```",
+    "",
     "Then add components by name:",
     "",
     "```bash",
@@ -150,11 +165,14 @@ export function componentMarkdown(name: string) {
     "## Install",
     "",
     "```bash",
-    INIT_COMMAND,
-    `bunx shadcn@latest add @zyx1121/${item.name}`,
+    ...(item.name === "task"
+      ? [installCommand(item.name)]
+      : [INIT_COMMAND, installCommand(item.name)]),
     "```",
     "",
-    "The first line sets a project up on the base; skip it if the project already has it.",
+    item.name === "task"
+      ? "It makes a new Vite project on the base, with the task page in src/App.tsx. Check it with `node scripts/audit.mjs <url>` after `npx playwright install webkit`."
+      : "The first line sets a project up on the base; skip it if the project already has it.",
     "",
     "## Item",
     "",
@@ -235,7 +253,7 @@ export function agentInstructions() {
     "## Call order",
     "",
     `1. Read ${INDEX_URL}. It lists every item.`,
-    `2. Start the project from the base: ${code(INIT_COMMAND)}. It brings the tokens, the fonts and the @zyx1121 registry.`,
+    `2. Start the project from the base: ${code(INIT_COMMAND)}. It brings the tokens, the fonts and the @zyx1121 registry. Then put ${code(FONT_LINK)} in the document head. For a new small tool use ${code(TASK_COMMAND)} instead; it does both.`,
     `3. For each item you need, run ${code(ANY_ITEM_COMMAND)}.`,
     "",
     "## Rules",
