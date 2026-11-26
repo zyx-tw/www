@@ -4,6 +4,7 @@ import { SectionTitle } from "@workspace/ui/components/section-title";
 import { cn } from "@workspace/ui/lib/utils";
 import { enterRow } from "@workspace/ui/lib/layout";
 
+import { CopyCommand } from "@/components/copy-command";
 import type { DocGroup } from "@/lib/docs";
 
 // Rows 0 to 2 are the header, the title and the subtitle.
@@ -53,14 +54,10 @@ export function Showcase({
         description="Init a project on the base: tokens, fonts and the @zyx1121 registry in one step."
         row={FIRST_ROW}
       >
-        <pre
-          className={cn(
-            "overflow-x-auto bg-muted p-4 font-mono text-caption",
-            enterRow(FIRST_ROW + 1)
-          )}
-        >
-          {initCommand}
-        </pre>
+        <CopyCommand
+          command={initCommand}
+          className={cn("block w-full bg-muted p-4", enterRow(FIRST_ROW + 1))}
+        />
       </Group>
       <div id="components" className="flex scroll-mt-5 flex-col gap-20">
         {groups.map((group, index) => (

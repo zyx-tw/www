@@ -583,7 +583,7 @@
       "title": "Task",
       "description": "A Next.js starter for a small task: the base, the four corners, the page motion and one centered column, plus an audit of the rendered page.",
       "author": "zyx1121 (https://github.com/zyx1121)",
-      "categories": ["starter", "layout", "nextjs"],
+      "categories": ["block", "starter", "layout", "nextjs"],
       "docs": "Use when: Starting a personal tool or a research demo: bunx shadcn@latest create -t next -n <name> https://ui.zyx.tw/r/base.json https://ui.zyx.tw/r/task.json\nNot for: Existing apps; add corners and page-decode-next to them instead.\nCheck: npx playwright install webkit, then node scripts/audit.mjs <url>\nGuide: https://ui.zyx.tw/task.md",
       "meta": {
         "useWhen": "Starting a personal tool or a research demo in Next.js, in one command.",
@@ -973,7 +973,7 @@
       "title": "Frame",
       "description": "Glyph frames: an outline drawn with box-drawing characters, so its lines run through the middle of a character cell and its corners are the font's arcs. Every window and field draws its edge with it.",
       "author": "zyx1121 (https://github.com/zyx1121)",
-      "categories": ["primitive"],
+      "categories": ["content", "primitive"],
       "docs": "Use when: Drawing the glyph outline of a window or a field in your own component.\nNot for: Grouping page content; pages have no frames.\nGuide: https://ui.zyx.tw/frame.md",
       "meta": {
         "useWhen": "Drawing the glyph outline of a window or a field in your own component.",
@@ -1647,7 +1647,7 @@
       "title": "Tabs",
       "description": "Segmented tabs with 40px triggers.",
       "author": "zyx1121 (https://github.com/zyx1121)",
-      "categories": ["navigation", "content"],
+      "categories": ["content", "navigation"],
       "docs": "Use when: Switching between a few views of the same thing.\nNot for: Navigation between pages; use the corner nav.\nGuide: https://ui.zyx.tw/tabs.md",
       "meta": {
         "useWhen": "Switching between a few views of the same thing.",
