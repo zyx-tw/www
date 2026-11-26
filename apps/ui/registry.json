@@ -581,22 +581,22 @@
       "name": "task",
       "type": "registry:block",
       "title": "Task",
-      "description": "A Vite starter for a small task: the base, the four corners, the page motion and one centered column, plus an audit of the rendered page.",
+      "description": "A Next.js starter for a small task: the base, the four corners, the page motion and one centered column, plus an audit of the rendered page.",
       "author": "zyx1121 (https://github.com/zyx1121)",
-      "categories": ["starter", "layout", "vite"],
-      "docs": "Use when: Starting a personal tool or a research demo: bunx shadcn@latest create -t vite -n <name> https://ui.zyx.tw/r/base.json https://ui.zyx.tw/r/task.json\nNot for: Existing apps; add corners and page-decode to them instead.\nCheck: npx playwright install webkit, then node scripts/audit.mjs <url>\nGuide: https://ui.zyx.tw/task.md",
+      "categories": ["starter", "layout", "nextjs"],
+      "docs": "Use when: Starting a personal tool or a research demo: bunx shadcn@latest create -t next -n <name> https://ui.zyx.tw/r/base.json https://ui.zyx.tw/r/task.json\nNot for: Existing apps; add corners and page-decode-next to them instead.\nCheck: npx playwright install webkit, then node scripts/audit.mjs <url>\nGuide: https://ui.zyx.tw/task.md",
       "meta": {
-        "useWhen": "Starting a personal tool or a research demo in Vite, in one command.",
-        "notFor": "Existing apps; add corners and page-decode to them instead.",
-        "related": ["corners", "page-decode", "spinner"]
+        "useWhen": "Starting a personal tool or a research demo in Next.js, in one command.",
+        "notFor": "Existing apps; add corners and page-decode-next to them instead.",
+        "related": ["corners", "page-decode-next", "layout"]
       },
       "devDependencies": ["playwright"],
       "dependencies": ["next-themes"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/corners.json",
-        "https://ui.zyx.tw/r/page-decode.json",
-        "https://ui.zyx.tw/r/utils.json",
-        "https://ui.zyx.tw/r/layout.json"
+        "https://ui.zyx.tw/r/page-decode-next.json",
+        "https://ui.zyx.tw/r/layout.json",
+        "https://ui.zyx.tw/r/utils.json"
       ],
       "files": [
         {
@@ -608,14 +608,14 @@
           "type": "registry:component"
         },
         {
-          "path": "registry/zyx/task/App.tsx",
+          "path": "registry/zyx/task/layout.tsx",
           "type": "registry:file",
-          "target": "~/src/App.tsx"
+          "target": "~/app/layout.tsx"
         },
         {
-          "path": "registry/zyx/task/index.html",
+          "path": "registry/zyx/task/page.tsx",
           "type": "registry:file",
-          "target": "~/index.html"
+          "target": "~/app/page.tsx"
         },
         {
           "path": "registry/zyx/task/audit.mjs",

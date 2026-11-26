@@ -123,7 +123,7 @@ export function docMarkdownPath(name: string) {
 
 /** The one command that installs an item; a starter makes a whole project. */
 export const TASK_COMMAND =
-  "bunx shadcn@latest create -t vite -n <name> https://ui.zyx.tw/r/base.json https://ui.zyx.tw/r/task.json";
+  "bunx shadcn@latest create -t next -n <name> https://ui.zyx.tw/r/base.json https://ui.zyx.tw/r/task.json";
 
 export function installCommand(name: string) {
   return name === "task"
