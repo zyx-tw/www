@@ -4,7 +4,7 @@
 #   docker compose up -d
 #
 # The web port binds to 127.0.0.1: put a reverse proxy with TLS in front.
-name: www-zyx-tw
+name: www
 
 services:
   web:

@@ -1,16 +1,16 @@
 #!/bin/sh
 # carrel-deployd (from land) runs this from the release directory on every
-# deploy and rollback: it moves /opt/www-zyx-tw to the release in VERSION, reports
+# deploy and rollback: it moves /opt/www to the release in VERSION, reports
 # ready once the container is healthy, then follows its logs. The unit needs
 # Type=notify and NotifyAccess=all.
 set -eu
 
 version=$(cat VERSION)
 if [ -f compose.yaml ]; then
-  cp compose.yaml /opt/www-zyx-tw/compose.yaml.new
-  mv /opt/www-zyx-tw/compose.yaml.new /opt/www-zyx-tw/compose.yaml
+  cp compose.yaml /opt/www/compose.yaml.new
+  mv /opt/www/compose.yaml.new /opt/www/compose.yaml
 fi
-cd /opt/www-zyx-tw
+cd /opt/www
 
 tmp=$(mktemp .env.XXXXXX)
 grep -v '^WEB_VERSION=' .env >"$tmp" || true
