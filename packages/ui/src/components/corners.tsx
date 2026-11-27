@@ -32,9 +32,9 @@ export const cornerLink =
 
 /**
  * A nav label in brackets, as in a terminal menu: the brackets show on the
- * current page only. The other labels keep theirs invisible, so nothing
- * shifts on navigation; a nav of these takes `gap-2`, since each label
- * already carries a character of space on either side.
+ * current page only. They hang outside the label, so the label's own text
+ * lines up with the corner's edge and nothing shifts on navigation; a nav of
+ * these takes `gap-7`, room for a bracket on either side of the gap.
  */
 export function CornerLabel({
   current = false,
@@ -45,15 +45,15 @@ export function CornerLabel({
 }) {
   const bracket = current ? undefined : "invisible"
   return (
-    <>
-      <span aria-hidden="true" className={bracket}>
+    <span className="relative">
+      <span aria-hidden="true" className={cn("absolute right-full", bracket)}>
         [
       </span>
       {children}
-      <span aria-hidden="true" className={bracket}>
+      <span aria-hidden="true" className={cn("absolute left-full", bracket)}>
         ]
       </span>
-    </>
+    </span>
   )
 }
 

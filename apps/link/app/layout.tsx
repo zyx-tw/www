@@ -57,7 +57,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <NextPageDecode />
           <TooltipProvider>
-            <TopCorners />
+            <TopCorners trail={[{ label: "LINK" }]} />
             {children}
             <BottomCorners links={<LegalLinks />} />
           </TooltipProvider>

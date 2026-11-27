@@ -57,7 +57,7 @@ export function SiteHeader({
       className={enter}
       nav={
         <nav aria-label="Main">
-          <ul className="flex gap-2">
+          <ul className="flex gap-7">
             {NAV.map(({ path, label, tip }) => {
               const current =
                 pathname === path || pathname.startsWith(`${path}/`)
