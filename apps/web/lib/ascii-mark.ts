@@ -74,6 +74,7 @@ uniform float uHeight;
 uniform float uGlyphs;
 uniform vec3 uInk;
 uniform vec3 uPage;
+uniform float uGlow;
 uniform float uPhase;
 uniform float uElapsed;
 uniform float uRun;
@@ -93,8 +94,28 @@ void main() {
   vec2 p = vec2(gl_FragCoord.x, uHeight - gl_FragCoord.y);
   vec2 cell = floor(p / uCell);
   if (cell.x >= uGrid.x || cell.y >= uGrid.y) discard;
+  // Bloom: light from the lit cells within three cells spills around them,
+  // over the page and the pond. The dark theme only (uGlow 0 in light).
+  float halo = 0.0;
+  if (uGlow > 0.0) {
+    for (int dy = -3; dy <= 3; dy++) {
+      for (int dx = -3; dx <= 3; dx++) {
+        vec2 c = cell + vec2(float(dx), float(dy));
+        if (c.x < 0.0 || c.y < 0.0 || c.x >= uGrid.x || c.y >= uGrid.y) continue;
+        vec4 s = texelFetch(uShade, ivec2(c.x, uGrid.y - 1.0 - c.y), 0);
+        if (s.a < 0.5) continue;
+        vec2 d = (p - (c + 0.5) * uCell) / uCell.y;
+        halo += s.r * exp(-dot(d, d) * 0.6);
+      }
+    }
+    halo = (1.0 - exp(-halo * 0.16)) * uGlow;
+  }
   vec4 shade = texelFetch(uShade, ivec2(cell.x, uGrid.y - 1.0 - cell.y), 0);
-  if (shade.a < 0.5) discard;
+  if (shade.a < 0.5) {
+    if (halo < 0.004) discard;
+    gl_FragColor = vec4(uInk, halo * 0.8);
+    return;
+  }
   float glyph = clamp(floor(shade.r * (uGlyphs - 1.0) + 0.5), 1.0, uGlyphs - 1.0);
   if (uPhase > 0.5) {
     float x = clamp((cell.x - uSpan.x) / max(uSpan.y - uSpan.x, 1.0), 0.0, 1.0);
@@ -115,7 +136,8 @@ void main() {
   }
   vec2 inCell = fract(p / uCell);
   float ink = texture2D(uAtlas, vec2((glyph + inCell.x) / uGlyphs, inCell.y)).r;
-  gl_FragColor = vec4(mix(uPage, uInk, ink), 1.0);
+  // The glow adds under the glyph's gaps only, so the glyphs keep their hue.
+  gl_FragColor = vec4(mix(uPage + uInk * halo * 0.5, uInk, ink), 1.0);
 }`
 
 /** A CSS color as linear 0 to 1 channels the shader writes out unchanged. */
@@ -205,6 +227,7 @@ export class AsciiMark {
         uGlyphs: { value: MARK.ramp.length },
         uInk: { value: new THREE.Vector3(1, 1, 1) },
         uPage: { value: new THREE.Vector3(0, 0, 0) },
+        uGlow: { value: 0 },
         uPhase: { value: STILL },
         uElapsed: { value: 0 },
         uRun: { value: 0 },
@@ -279,11 +302,12 @@ export class AsciiMark {
     this.draw()
   }
 
-  /** The text and page colors, as CSS colors. */
-  setColors(ink: string, page: string) {
+  /** The mark's and the page's colors, as CSS colors, and how much it glows (0 to 1). */
+  setColors(ink: string, page: string, glow = 0) {
     const uniforms = this.glyphMaterial.uniforms
     uniforms.uInk!.value = channels(ink, this.probe)
     uniforms.uPage!.value = channels(page, this.probe)
+    uniforms.uGlow!.value = glow
     this.draw()
   }
 

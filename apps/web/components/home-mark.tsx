@@ -22,6 +22,37 @@ const CELL_SCALE = 0.6
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)"
 
 /**
+ * The mark's color follows the day of the week, red to violet from Monday to
+ * Sunday: full colors on the dark page, where the mark also glows, and deeper
+ * ones on the light page. Content, not chrome (DESIGN.md, Color).
+ */
+const WEEKDAY_INK = {
+  // Sunday first, as getDay() counts.
+  dark: [
+    "#c77dff",
+    "#ff5a5a",
+    "#ff9a3c",
+    "#ffe04a",
+    "#4ade80",
+    "#4aa8ff",
+    "#7b7bff",
+  ],
+  light: [
+    "#8b3fd1",
+    "#d42a2a",
+    "#d96a00",
+    "#a88a00",
+    "#16a34a",
+    "#1d6fd6",
+    "#4a45d6",
+  ],
+}
+
+function weekdayInk(dark: boolean) {
+  return WEEKDAY_INK[dark ? "dark" : "light"][new Date().getDay()]!
+}
+
+/**
  * The zyx mark in characters, swaying slowly over the stars; a drag on it
  * turns it and throws it (lib/ascii-mark.ts). It lives in the root layout
  * and shows on the home alone: three.js loads on the first visit to the
@@ -61,13 +92,16 @@ export function HomeMark() {
         return
       }
       const family = getComputedStyle(canvas).fontFamily
-      const paint = () =>
+      const paint = () => {
+        const dark = document.documentElement.classList.contains("dark")
         mark.setColors(
-          getComputedStyle(canvas).color,
+          weekdayInk(dark),
           getComputedStyle(document.documentElement).getPropertyValue(
             "--background"
-          )
+          ),
+          dark ? 1 : 0
         )
+      }
       const resize = new ResizeObserver(() => {
         if (shown.current) mark.resize(family)
       })
