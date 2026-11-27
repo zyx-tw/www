@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next"
+import type { Metadata } from "next"
 
 import { cn } from "@workspace/ui/lib/utils"
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
@@ -31,9 +31,6 @@ const PROJECT_NAMES = Object.fromEntries([
 ])
 
 import "./globals.css"
-
-// The TV frame's bezel, for browsers that tint their bars from theme-color.
-export const viewport: Viewport = { themeColor: "black" }
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -69,9 +66,9 @@ export default async function RootLayout({
       suppressHydrationWarning
       // A stable gutter keeps the centered column from moving when a page
       // gains or loses its scrollbar. One edge only, so the left corners stay
-      // 20 px from the window's edge on every page and every site.
+      // 12 px from the window's edge on every page and every site.
       className={cn(
-        "dark tv",
+        "dark",
         "antialiased [scrollbar-gutter:stable]",
         fontVariables,
         "font-sans"
