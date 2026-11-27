@@ -66,6 +66,16 @@ function hash(n: number) {
 
 type Rgb = [number, number, number]
 
+/** The alpha (0 to 255) a CSS color paints with. */
+function alphaOf(css: string) {
+  const c = document.createElement("canvas")
+  c.width = c.height = 1
+  const g = c.getContext("2d", { willReadFrequently: true })!
+  g.fillStyle = css
+  g.fillRect(0, 0, 1, 1)
+  return g.getImageData(0, 0, 1, 1).data[3]!
+}
+
 function parseColor(css: string): Rgb {
   const c = document.createElement("canvas")
   c.width = c.height = 1
@@ -206,7 +216,15 @@ export function Ascii({
     function readTheme() {
       const cs = getComputedStyle(canvas)
       fg = parseColor(cs.color)
-      bgCss = getComputedStyle(document.body).backgroundColor
+      // The first painted background behind the canvas: body is often
+      // transparent while html or a wrapper carries the page color.
+      for (let n: Element | null = canvas; n; n = n.parentElement) {
+        const c = getComputedStyle(n).backgroundColor
+        if (c && alphaOf(c) > 0) {
+          bgCss = c
+          break
+        }
+      }
       bg = parseColor(bgCss)
       font = cs.fontFamily
     }
@@ -502,8 +520,7 @@ export function Ascii({
         })
       } else if (ctx2d) {
         ctx2d.setTransform(1, 0, 0, 1, 0, 0)
-        ctx2d.fillStyle = bgCss
-        ctx2d.fillRect(0, 0, canvas.width, canvas.height)
+        ctx2d.clearRect(0, 0, canvas.width, canvas.height)
         ctx2d.drawImage(base, 0, 0)
       }
       if (!reduce && visible) raf = requestAnimationFrame(frame)
@@ -635,19 +652,25 @@ void main() {
     rgb = vec3(r.r, c.g, b.b);
     a = max(a, max(r.a, b.a));
   }
-  vec3 o = bg * (1.0 - a) + rgb;
+  // Light only: the page shows through, so no box of a slightly different
+  // background ever frames the drawing. Output is premultiplied.
+  vec3 o = rgb;
   if (bloom > 0.0) {
     vec3 g = textureLod(tex, q, 1.5).rgb * 0.35
       + textureLod(tex, q, 3.0).rgb * 0.5
       + textureLod(tex, q, 4.5).rgb * 0.7
       + textureLod(tex, q, 6.0).rgb * 0.6;
-    o += g * bloom;
+    // Fade the glow out before the canvas edge, so it never ends in a line.
+    vec2 e = min(uv, 1.0 - uv) * res / (24.0 * dpr);
+    o += g * bloom * clamp(min(e.x, e.y), 0.0, 1.0);
   }
   if (scan > 0.0) {
     float line = step(0.66, fract(gl_FragCoord.y / (3.0 * dpr)));
     o *= 1.0 - 0.28 * line * scan;
+    a *= 1.0 - 0.28 * line * scan;
   }
-  color = vec4(o, 1.0);
+  float alpha = clamp(max(a, max(o.r, max(o.g, o.b))), 0.0, 1.0);
+  color = vec4(min(o, vec3(alpha)), alpha);
 }`
 
 type PostParams = {
@@ -661,7 +684,11 @@ type PostParams = {
 }
 
 function createPost(canvas: HTMLCanvasElement) {
-  const gl = canvas.getContext("webgl2", { alpha: false, antialias: false })
+  const gl = canvas.getContext("webgl2", {
+    alpha: true,
+    premultipliedAlpha: true,
+    antialias: false,
+  })
   if (!gl) return null
   const compile = (type: number, src: string) => {
     const sh = gl.createShader(type)!
@@ -744,7 +771,7 @@ function fieldHash(n: number) {
 }
 
 /**
- * A line of text as a field, shaded by a slow wave with a little grain; with
+ * A line of text as a field, shaded by a slow wave with a little grain on the letters; with
  * `glitch`, bands of it shake now and then. Color it with `color`.
  */
 export function textField(
@@ -789,7 +816,7 @@ export function textField(
         const m = mask[j * w + Math.min(w - 1, Math.max(0, i + shift))]
         const wave = 0.6 + 0.4 * Math.sin(i * (12 / w) - t * 2 + j * (4 / h))
         const grain = fieldHash(i * 31 + j * 57 + frame) * 0.12
-        const v = m! > 0.5 ? Math.min(1, wave + grain) : grain * 0.25
+        const v = m! > 0.5 ? Math.min(1, wave + grain) : 0
         const o = j * w + i
         lum[o] = v
         rgb[o * 4] = rgb[o * 4 + 1] = rgb[o * 4 + 2] = 255 * v
