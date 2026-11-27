@@ -18,7 +18,7 @@ import {
 } from "@/lib/map"
 import { HUES } from "@/lib/map-palette"
 import { aim, drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
-import { DRIFT, sky } from "@/lib/sky"
+import { DRIFT, sky } from "@workspace/ui/lib/sky"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 /** CSS pixels to one pixel of the wireframe. */

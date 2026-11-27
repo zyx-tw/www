@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
 
-import { LEAVE_EVENT } from "@workspace/ui/components/page-decode"
+import { LEAVE_EVENT } from "./page-decode"
 
 /** Session storage key: the set is already on in this tab. */
 const ON_KEY = "tv-on"

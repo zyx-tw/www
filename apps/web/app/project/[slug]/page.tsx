@@ -4,10 +4,10 @@ import { SectionTitle } from "@workspace/ui/components/section-title"
 import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
-import { Hero, HeroTitle } from "@/components/hero"
+import { Hero, HeroTitle } from "@workspace/ui/components/hero"
 import { ProjectDiagram } from "@/components/project-diagram"
 import { ProjectPicture } from "@/components/project-picture"
-import { Rows } from "@/components/rows"
+import { Rows } from "@workspace/ui/components/rows"
 import { findProject, projectPath, projects } from "@/lib/projects"
 import { pageMetadata } from "@/lib/site"
 

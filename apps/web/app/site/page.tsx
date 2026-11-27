@@ -1,7 +1,7 @@
 import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
-import { Hero, HeroTitle } from "@/components/hero"
+import { Hero, HeroTitle } from "@workspace/ui/components/hero"
 import { SITE } from "@/lib/copy"
 import { hosts } from "@/lib/hosts"
 import { pageMetadata } from "@/lib/site"

@@ -1,9 +1,9 @@
-import { cn } from "@workspace/ui/lib/utils"
-import { enterRow } from "@workspace/ui/lib/layout"
+import { cn } from "../lib/utils"
+import { enterRow } from "../lib/layout"
 
 /**
  * The page title at hero size. It decodes in with the rest of the page
- * (page-decode.tsx).
+ * (page-decode).
  */
 export function HeroTitle({
   text,

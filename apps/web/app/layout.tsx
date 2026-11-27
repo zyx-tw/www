@@ -12,8 +12,8 @@ import { NextPageDecode } from "@workspace/ui/components/page-decode-next"
 import { HomeMark } from "@/components/home-mark"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { StarField } from "@/components/star-field"
-import { TvBoot, TvStatic } from "@/components/tv"
+import { MapSky } from "@/components/star-field"
+import { TvBoot, TvStatic } from "@workspace/ui/components/tv"
 import { systems } from "@/lib/map"
 import { projects } from "@/lib/projects"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
@@ -87,7 +87,7 @@ export default async function RootLayout({
             <MotionProvider>
               <NextPageDecode />
               <TvStatic />
-              <StarField />
+              <MapSky />
               <HomeMark />
               <SiteHeader projectNames={PROJECT_NAMES} />
               {children}

@@ -674,3 +674,18 @@ html[data-boot] [data-slot="tv-boot"] {
 @utility corner-right {
   right: calc(var(--bezel) + var(--gutter));
 }
+
+/*
+ * Stars kept to the margins (components/star-field.tsx, margins), clear of
+ * a column of text. Where the screen has no margins, a phone, the sky is
+ * empty.
+ */
+[data-slot="star-field"][data-margins] {
+  mask-image: linear-gradient(
+    to right,
+    black calc(50% - 32rem),
+    transparent calc(50% - 28rem),
+    transparent calc(50% + 28rem),
+    black calc(50% + 32rem)
+  );
+}

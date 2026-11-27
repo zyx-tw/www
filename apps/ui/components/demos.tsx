@@ -33,7 +33,12 @@ import {
 import { Avatar, AvatarFallback } from "@workspace/ui/components/ui/avatar";
 import { ConfirmDialog } from "@workspace/ui/components/confirm-dialog";
 import { EmptyState, TableEmpty } from "@workspace/ui/components/empty-state";
+import { Hero, HeroTitle } from "@workspace/ui/components/hero";
+import { LEAVE_EVENT } from "@workspace/ui/components/page-decode";
+import { Rows } from "@workspace/ui/components/rows";
 import { SectionTitle } from "@workspace/ui/components/section-title";
+import { StarField } from "@workspace/ui/components/star-field";
+import { TvStatic } from "@workspace/ui/components/tv";
 import {
   Command as ShellCommand,
   Cursor,
@@ -673,6 +678,36 @@ const DEMOS: Record<string, React.ReactNode> = {
   ),
   "empty-state": <EmptyStateDemo />,
   "section-title": <SectionTitle title="Components" />,
+  tv: (
+    <div>
+      <TvStatic />
+      <Button
+        variant="outline"
+        onClick={() => document.dispatchEvent(new Event(LEAVE_EVENT))}
+      >
+        Change channel
+      </Button>
+    </div>
+  ),
+  "star-field": (
+    <div className="relative h-40 w-full">
+      <StarField className="absolute inset-0 z-0" />
+    </div>
+  ),
+  hero: <Hero title={<HeroTitle text="Devices" />} subtitle="devices 6" />,
+  rows: (
+    <Rows
+      rows={[
+        { label: "System", value: "Proxmox VE" },
+        { label: "Memory", value: "64 GB" },
+        {
+          label: "Repo",
+          value: "zyx1121/www.zyx.tw",
+          href: "https://github.com/zyx1121/www.zyx.tw",
+        },
+      ]}
+    />
+  ),
   shell: (
     <div>
       <ShellCommand>ls /</ShellCommand>

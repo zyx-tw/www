@@ -2,7 +2,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { page } from "@workspace/ui/lib/layout"
 
 import { DeviceRoom } from "@/components/device-room"
-import { Hero, HeroTitle } from "@/components/hero"
+import { Hero, HeroTitle } from "@workspace/ui/components/hero"
 import { DEVICE } from "@/lib/copy"
 import { DEVICES } from "@/lib/room"
 import { pageMetadata } from "@/lib/site"

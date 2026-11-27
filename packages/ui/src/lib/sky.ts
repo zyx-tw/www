@@ -1,7 +1,7 @@
 /**
  * The far stars behind every page, and the turn they share. The map turns
- * the sky while it is open (components/star-map.tsx); elsewhere the sky
- * drifts by itself (components/star-field.tsx). Both read and write `sky`,
+ * the sky while it is open (the map on www.zyx.tw); elsewhere the sky
+ * drifts by itself (star-field.tsx). Both read and write `sky`,
  * so a star is in the same place before and after a page change.
  */
 
