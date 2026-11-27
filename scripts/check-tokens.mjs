@@ -50,6 +50,8 @@ const exempt = {
   // The works window draws each screenshot as characters in the
   // screenshot's own colors.
   "apps/web/lib/ascii-preview.ts": ["color literal"],
+  // The home mark's weekday colors are content: the mark is a picture.
+  "apps/web/components/home-mark.tsx": ["color literal"],
   // The Works backdrop is content: ASCII koi in their own colors, drawn on
   // a canvas.
   "apps/web/lib/pond/renderer.ts": ["color literal"],
