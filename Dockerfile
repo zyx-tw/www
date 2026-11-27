@@ -2,7 +2,6 @@
 # One zyx.tw Next.js app as a container: its standalone server on Node.
 # Build from the repository root:
 #   docker build --build-arg APP=web --build-arg HEALTH=/llms.txt .
-# apps/ui is a static export and has its own apps/ui/Dockerfile.
 
 ARG APP=web
 

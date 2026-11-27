@@ -38,36 +38,6 @@
         "typescript": "^5.9.3",
       },
     },
-    "apps/ui": {
-      "name": "ui",
-      "version": "1.0.0",
-      "dependencies": {
-        "@workspace/otel": "workspace:*",
-        "@workspace/ui": "workspace:*",
-        "cn": "^0.4.0",
-        "lucide-react": "^1.49.0",
-        "next": "16.4.3",
-        "next-themes": "^0.4.6",
-        "react": "19.2.8",
-        "react-dom": "19.2.8",
-        "recharts": "3.8.0",
-        "shadcn": "^4.21.0",
-        "sonner": "^2.0.7",
-      },
-      "devDependencies": {
-        "@tailwindcss/postcss": "^4.3.3",
-        "@types/node": "^26",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
-        "@workspace/eslint-config": "workspace:^",
-        "@workspace/typescript-config": "workspace:*",
-        "eslint": "^9",
-        "prettier": "^3.9.6",
-        "prettier-plugin-tailwindcss": "^0.8.1",
-        "tailwindcss": "^4.3.3",
-        "typescript": "^5",
-      },
-    },
     "apps/web": {
       "name": "web",
       "version": "0.0.1",
@@ -1723,8 +1693,6 @@
     "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "typescript-eslint": ["typescript-eslint@8.59.1", "", { "dependencies": { "@typescript-eslint/eslint-plugin": "8.59.1", "@typescript-eslint/parser": "8.59.1", "@typescript-eslint/typescript-estree": "8.59.1", "@typescript-eslint/utils": "8.59.1" }, "peerDependencies": { "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0", "typescript": ">=4.8.4 <6.1.0" } }, "sha512-xqDcFVBmlrltH64lklOVp1wYxgJr6LVdg3NamBgH2OOQDLFdTKfIZXF5PfghrnXQKXZGTQs8tr1vL7fJvq8CTQ=="],
-
-    "ui": ["ui@workspace:apps/ui"],
 
     "unbox-primitive": ["unbox-primitive@1.1.0", "", { "dependencies": { "call-bound": "^1.0.3", "has-bigints": "^1.0.2", "has-symbols": "^1.1.0", "which-boxed-primitive": "^1.1.1" } }, "sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw=="],
 

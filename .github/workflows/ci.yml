@@ -25,9 +25,6 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Theme drift check
-        run: bun run theme:check
-
       - name: Token policy
         run: bun run tokens:check
 
@@ -57,109 +54,6 @@ jobs:
         run: bun run typecheck
 
 
-  registry:
-    name: Registry smoke test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.13
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Build the registry
-        run: bun run build --filter=ui
-
-      - name: Validate the registry and its links
-        run: |
-          (cd apps/ui && bunx shadcn@latest registry validate)
-          node apps/ui/scripts/check-links.mjs
-
-      # Install the base and every component into a fresh project, the way an
-      # app outside this repo would. Items depend on each other by absolute
-      # URL; point those at this build so unreleased items resolve.
-      - name: Init a project from the base and add every component
-        run: |
-          mkdir -p "$RUNNER_TEMP/registry"
-          cp -r apps/ui/out/r "$RUNNER_TEMP/registry/r"
-          sed -i 's#https://ui.zyx.tw/r/\([a-z-]*\)\.json#http://localhost:8099/r/\1.json#g' "$RUNNER_TEMP"/registry/r/*.json
-          (cd "$RUNNER_TEMP/registry" && python3 -m http.server 8099 > /dev/null 2>&1 &)
-          for i in $(seq 1 10); do curl -sf localhost:8099/r/base.json > /dev/null && break; sleep 1; done
-          mkdir -p "$RUNNER_TEMP/consumer" && cd "$RUNNER_TEMP/consumer"
-          bunx shadcn@latest init http://localhost:8099/r/base.json -t next -n app --no-monorepo -y
-          cd app
-          grep -q '"@zyx1121": "https://ui.zyx.tw/r/{name}.json"' components.json
-          grep -q -- '--text-\*: initial' app/globals.css
-          grep -q -- '--text-caption: 0.875rem' app/globals.css
-          ! grep -q '@import url' app/globals.css
-          grep -q '@utility terminal-link' app/globals.css
-          grep -q '@utility duration-overlay' app/globals.css
-          ! grep -q -- '--card:' app/globals.css
-          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] in ("registry:ui", "registry:component", "registry:block") or i["name"].startswith("agent-")))')
-          bunx shadcn@latest add $items -y -o
-          for file in telemetry model tools seal public-fetch; do test -f "lib/agent/$file.ts"; done
-          grep -q 'from "./telemetry"' lib/agent/tools.ts
-          grep -q '"@modelcontextprotocol/server"' package.json
-          grep -q 'createCn' lib/utils.ts
-          grep -q 'from "./corner-tip"' components/corners.tsx
-          grep -q 'corner-edge' app/globals.css
-          grep -q 'from "../../lib/utils"' components/ui/button.tsx
-          ! grep -rq 'text-sm\|text-xs\|rounded-lg' components/ui
-          grep -q 'animate-mask-reveal' app/globals.css
-          cat > app/page.tsx <<'PAGE'
-          "use client"
-          import { BottomCorners, LegalLinks, TopCorners } from "@/components/corners"
-          import { ConfirmDialog } from "@/components/confirm-dialog"
-          import { EmptyState } from "@/components/empty-state"
-          import { StatusPage } from "@/components/status-page"
-          import { Button } from "@/components/ui/button"
-          import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-          import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
-          import { MaskReveal } from "@/components/ui/mask-reveal"
-          import { Toolbar } from "@/components/ui/toolbar"
-
-          export default function Page() {
-            return (
-              <main>
-                <TopCorners fade nav={<a href="/">Docs</a>} />
-                <BottomCorners fade links={<LegalLinks />} />
-                <StatusPage title="Not found" />
-                <EmptyState noun="projects" />
-                <ConfirmDialog trigger={<Button>Delete</Button>} title="Delete it?" confirmLabel="Delete" onConfirm={() => {}} />
-                <Toolbar><Button>Save</Button></Toolbar>
-                <InputGroup><InputGroupInput /></InputGroup>
-                <MaskReveal>zyx</MaskReveal>
-                <Dialog>
-                  <DialogTrigger render={<Button />}>Open</DialogTrigger>
-                  <DialogContent><DialogTitle>Title</DialogTitle></DialogContent>
-                </Dialog>
-              </main>
-            )
-          }
-          PAGE
-          bun run build
-
-      # The task starter: one command makes a Next.js project on the base
-      # with the corners, the page motion and the layout.
-      - name: Create a project from the task starter
-        run: |
-          mkdir -p "$RUNNER_TEMP/task" && cd "$RUNNER_TEMP/task"
-          bunx shadcn@latest create -t next -n app --no-monorepo -y http://localhost:8099/r/base.json http://localhost:8099/r/task.json
-          cd app
-          test -f scripts/audit.mjs
-          grep -q 'maple-mono-nf-cn.css' app/layout.tsx
-          grep -q 'NextPageDecode' app/layout.tsx
-          grep -q 'TaskShell' app/page.tsx
-          grep -q 'corner-top' app/globals.css
-          grep -q -- '--gutter' app/globals.css
-          bunx shadcn@latest add http://localhost:8099/r/spinner.json http://localhost:8099/r/progress.json http://localhost:8099/r/skeleton.json -y -o
-          bun run build
-
   compose:
     name: compose.yaml is valid
     runs-on: ubuntu-latest
@@ -180,7 +74,6 @@ jobs:
       matrix:
         include:
           - { app: web, host: www.zyx.tw, health: /llms.txt, file: Dockerfile }
-          - { app: ui, host: ui.zyx.tw, health: /, file: apps/ui/Dockerfile }
           - { app: 3d, host: 3d.zyx.tw, health: /, file: Dockerfile }
     uses: zyx1121/.github/.github/workflows/image.yml@main
     permissions:
@@ -198,10 +91,10 @@ jobs:
 
   promote:
     # The host runs all apps from one release, so every image must pass.
-    needs: [ci, registry, compose, image]
+    needs: [ci, compose, image]
     uses: zyx1121/.github/.github/workflows/promote.yml@main
     permissions:
       contents: read
       packages: write
     with:
-      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/ui.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
+      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'

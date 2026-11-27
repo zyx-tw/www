@@ -15,7 +15,7 @@ cd /opt/www-zyx-tw
 
 tmp=$(mktemp .env.XXXXXX)
 grep -vE '^(WEB|UI|GOOD|TIME|LINK|APP_1909|PLUMP)_VERSION=' .env >"$tmp" || true
-for name in WEB UI PLUMP; do
+for name in WEB PLUMP; do
   echo "${name}_VERSION=$version" >>"$tmp"
 done
 chmod 600 "$tmp"
