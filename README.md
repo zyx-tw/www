@@ -14,7 +14,6 @@
 
 ```
 zyx.tw          the site: a 3D home, projects, a star map of notes and a resume
-plump.zyx.tw    Plump: SVG, shaped and lit in 3D
 ```
 
 A new subdomain used to mean a new repo and another copy of the same lint config, design tokens and telemetry setup. Here, a new idea is a new folder under `apps/`.
@@ -43,7 +42,6 @@ Open http://localhost:3000. You should see the zyx.tw home page.
 | App | Folder | Live at |
 |-----|--------|---------|
 | Site | `apps/web` | [zyx.tw](https://zyx.tw) |
-| Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
 
 - Run one app: `bun dev --filter=<folder name>`. `bun dev` starts all of them.
 - Import a component in an app: `import { Button } from "@workspace/ui/components/ui/button"`.
@@ -80,7 +78,7 @@ Shared packages: `packages/ui` (design system), `packages/3d` (the Plump scene f
 
 Facts for coding agents and LLM tools. The rules for changing the code are in [AGENTS.md](AGENTS.md).
 
-- **Summary**: Bun and Turborepo monorepo with 2 Next.js apps, zyx.tw and plump.zyx.tw, on the ui.zyx.tw design system.
+- **Summary**: Bun and Turborepo monorepo with the zyx.tw Next.js app, on the ui.zyx.tw design system.
 - **Type**: web
 - **Interfaces**: HTTP, the live sites in the Usage table. Each page also has a Markdown version, and `/llms.txt` lists them.
 - **Install**: `bun install --frozen-lockfile`

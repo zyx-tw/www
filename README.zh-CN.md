@@ -16,7 +16,6 @@
 
 ```
 zyx.tw          the site: a 3D home, works and a resume
-plump.zyx.tw    Plump: SVG, shaped and lit in 3D
 ```
 
 以前每开一个子域名，就要开一个新 repo，再复制一次同样的 lint 配置、设计 token 和遥测配置。在这里，一个新点子就是 `apps/` 下的一个新文件夹。
@@ -45,7 +44,6 @@ bun dev --filter=web
 | 应用 | 文件夹 | 地址 |
 |------|--------|------|
 | 主站 | `apps/web` | [zyx.tw](https://zyx.tw) |
-| Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
 
 - 只运行一个应用：`bun dev --filter=<文件夹名称>`。`bun dev` 会全部一起运行。
 - 在应用里引用组件：`import { Button } from "@workspace/ui/components/ui/button"`。

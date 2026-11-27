@@ -9,7 +9,6 @@ import { join, relative } from "node:path"
 
 const root = new URL("..", import.meta.url).pathname
 const scanned = [
-  "apps/3d",
   "apps/web",
   "packages/ui/src",
 ]
@@ -40,7 +39,6 @@ const exempt = {
   // The 3D stage's background comes from the exported scene, at runtime.
   "apps/web/app/page.tsx": ["inline style"],
   "apps/web/app/layout.tsx": ["inline style"],
-  "apps/3d/components/editor-loader.tsx": ["color literal", "arbitrary value"],
   // The works window draws each screenshot as characters in the
   // screenshot's own colors.
   "apps/web/lib/ascii-preview.ts": ["color literal"],
