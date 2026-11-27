@@ -4,7 +4,7 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 import { GitLog } from "@/components/git-log"
 import { SectionTitle } from "@workspace/ui/components/section-title"
 
-import { Hero, HeroTitle } from "@/components/hero"
+import { Hero, HeroTitle } from "@workspace/ui/components/hero"
 import { INFO, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
 import { FACTS, ME, SECTIONS, type Entry } from "@/lib/resume"

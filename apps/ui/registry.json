@@ -454,6 +454,188 @@
       ]
     },
     {
+      "name": "tv",
+      "type": "registry:component",
+      "title": "TV",
+      "description": "The screen as an old TV: it turns on from a bright line once per tab, and shows static while the page changes.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["motion", "layout", "nextjs"],
+      "docs": "Use when: Mounting the screen's power-on and the static between pages once in a Next.js root layout.\nNot for: A single element's entrance; use mask-reveal or scramble-text.\nGuide: https://ui.zyx.tw/tv.md",
+      "meta": {
+        "useWhen": "Mounting the screen's power-on and the static between pages once in a Next.js root layout.",
+        "notFor": "A single element's entrance; use mask-reveal or scramble-text.",
+        "related": ["page-decode-next", "corners"]
+      },
+      "dependencies": ["next"],
+      "registryDependencies": ["https://ui.zyx.tw/r/page-decode.json"],
+      "css": {
+        "[data-slot=\"tv-boot\"]": {
+          "display": "none"
+        },
+        "html[data-boot] [data-slot=\"tv-boot\"]": {
+          "position": "fixed",
+          "inset": "var(--bezel)",
+          "z-index": "2147483646",
+          "display": "block",
+          "overflow": "hidden",
+          "border-radius": "var(--screen-radius)",
+          "pointer-events": "none"
+        },
+        "[data-slot=\"tv-boot\"] > [data-part=\"top\"], [data-slot=\"tv-boot\"] > [data-part=\"bottom\"]": {
+          "position": "absolute",
+          "inset-inline": "0",
+          "height": "50.5%",
+          "background": "#000",
+          "animation": "tv-part 520ms cubic-bezier(0.7, 0, 0.2, 1) 220ms both"
+        },
+        "[data-slot=\"tv-boot\"] > [data-part=\"top\"]": {
+          "top": "0",
+          "--tv-part-to": "-100%"
+        },
+        "[data-slot=\"tv-boot\"] > [data-part=\"bottom\"]": {
+          "bottom": "0",
+          "--tv-part-to": "100%"
+        },
+        "[data-slot=\"tv-boot\"] > [data-part=\"line\"]": {
+          "position": "absolute",
+          "inset-inline": "0",
+          "top": "calc(50% - 1px)",
+          "height": "2px",
+          "background": "#fff",
+          "box-shadow": "0 0 24px 4px rgb(255 255 255 / 0.5)",
+          "animation": "tv-line 760ms ease-out both"
+        },
+        "@keyframes tv-part": {
+          "to": {
+            "transform": "translateY(var(--tv-part-to))"
+          }
+        },
+        "@keyframes tv-line": {
+          "0%": {
+            "transform": "scaleX(0)",
+            "opacity": "1"
+          },
+          "28%": {
+            "transform": "scaleX(1)",
+            "opacity": "1"
+          },
+          "100%": {
+            "transform": "scaleX(1) scaleY(60)",
+            "opacity": "0"
+          }
+        },
+        "[data-slot=\"tv-static\"]": {
+          "position": "fixed",
+          "inset": "var(--bezel)",
+          "z-index": "2147483646",
+          "width": "calc(100% - 2 * var(--bezel))",
+          "height": "calc(100% - 2 * var(--bezel))",
+          "border-radius": "var(--screen-radius)",
+          "image-rendering": "pixelated",
+          "mix-blend-mode": "screen",
+          "opacity": "0",
+          "pointer-events": "none",
+          "transition": "opacity 180ms ease-out"
+        },
+        "[data-slot=\"tv-static\"][data-on]": {
+          "opacity": "0.22",
+          "transition-duration": "80ms"
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          "[data-slot=\"tv-boot\"], [data-slot=\"tv-static\"]": {
+            "display": "none !important"
+          }
+        },
+        "@media print": {
+          "[data-slot=\"tv-static\"]": {
+            "display": "none"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/components/tv.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "star-field",
+      "type": "registry:component",
+      "title": "Star Field",
+      "description": "Far stars as square pixels behind the page, drifting slowly; optionally kept to the margins of a column of text.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["motion", "background"],
+      "docs": "Use when: A quiet sky behind a page or a reading column, mounted once in a layout.\nNot for: Data plots or charts; use chart.\nGuide: https://ui.zyx.tw/star-field.md",
+      "meta": {
+        "useWhen": "A quiet sky behind a page or a reading column, mounted once in a layout.",
+        "notFor": "Data plots or charts; use chart.",
+        "related": ["tv"]
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "css": {
+        "[data-slot=\"star-field\"][data-margins]": {
+          "mask-image": "linear-gradient(to right, black calc(50% - 32rem), transparent calc(50% - 28rem), transparent calc(50% + 28rem), black calc(50% + 32rem))"
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/components/star-field.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/sky.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "hero",
+      "type": "registry:component",
+      "title": "Hero",
+      "description": "A page title at hero size with an optional muted subtitle, entering as the page's first two rows.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "typography"],
+      "docs": "Use when: The title block at the top of a page.\nNot for: Section headings inside a page; use section-title.\nGuide: https://ui.zyx.tw/hero.md",
+      "meta": {
+        "useWhen": "The title block at the top of a page.",
+        "notFor": "Section headings inside a page; use section-title.",
+        "related": ["section-title", "rows"]
+      },
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/layout.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/components/hero.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "rows",
+      "type": "registry:component",
+      "title": "Rows",
+      "description": "Rows of a label and its value in a fixed label column; a value can be a link.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["layout", "nextjs"],
+      "docs": "Use when: Facts as label and value pairs, such as a profile or a spec sheet.\nNot for: Data with many columns; use table.\nGuide: https://ui.zyx.tw/rows.md",
+      "meta": {
+        "useWhen": "Facts as label and value pairs, such as a profile or a spec sheet.",
+        "notFor": "Data with many columns; use table.",
+        "related": ["hero", "table"]
+      },
+      "dependencies": ["next"],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/rows.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "shell",
       "type": "registry:component",
       "title": "Shell",

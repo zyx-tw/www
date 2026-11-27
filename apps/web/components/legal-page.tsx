@@ -3,7 +3,7 @@ import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { SectionTitle } from "@workspace/ui/components/section-title"
 
-import { Hero, HeroTitle } from "@/components/hero"
+import { Hero, HeroTitle } from "@workspace/ui/components/hero"
 import type { LegalDoc, Run } from "@/lib/legal"
 
 const LINK = "terminal-link underline underline-offset-4"

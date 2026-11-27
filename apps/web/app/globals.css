@@ -67,18 +67,3 @@
 .term[data-open]::before {
   color: var(--mark);
 }
-
-/*
- * On a note the stars (components/star-field.tsx) keep to the margins,
- * clear of the column of text. Where the screen has no margins, a phone,
- * the sky is empty.
- */
-@utility sky-margins {
-  mask-image: linear-gradient(
-    to right,
-    black calc(50% - 32rem),
-    transparent calc(50% - 28rem),
-    transparent calc(50% + 28rem),
-    black calc(50% + 32rem)
-  );
-}
