@@ -182,7 +182,6 @@ const SELECTED = [
   "Plump",
   "NYCU AI",
   "WinLab Portal",
-  "aias",
   "sense",
   "quickvm",
   "PerfectSocket",
