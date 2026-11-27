@@ -8,6 +8,7 @@ export const HOME = { title: "Loki, 詹詠翔." } as const
 export const PROJECT = { title: "Project" } as const
 
 export const SITE = { title: "Site" } as const
+export const DEVICE = { title: "設備" } as const
 
 export const MAP = {
   title: "地圖",

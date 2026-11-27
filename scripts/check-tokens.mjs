@@ -53,6 +53,15 @@ const exempt = {
   // The Works backdrop is content: ASCII koi in their own colors, drawn on
   // a canvas.
   "apps/web/lib/pond/renderer.ts": ["color literal"],
+  // The device room is content: pixel pictures set where the page places
+  // them, links in the colors of the blocks they stand for, and labels drawn
+  // in an SVG sized in pixels.
+  "apps/web/components/device-room.tsx": [
+    "inline style",
+    "color literal",
+    "raw font size",
+  ],
+  "apps/web/lib/room.ts": ["color literal"],
   // The map is content: a cockpit display in the color of its phosphor.
   "apps/web/lib/map-palette.ts": ["color literal"],
 }
