@@ -17,11 +17,6 @@ services:
     ports:
       - "${WEB_BIND:-127.0.0.1:3000}:3000"
 
-  ui:
-    <<: *app
-    image: ghcr.io/zyx1121/ui.zyx.tw:${UI_VERSION:-main}
-    ports:
-      - "${UI_BIND:-127.0.0.1:3001}:3000"
 
   3d:
     <<: *app

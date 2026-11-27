@@ -1,4 +1,4 @@
-// Everything visual must come from the base tokens (apps/ui/DESIGN.md). This
+// Everything visual must come from the base tokens (https://github.com/zyx-tw/ui/blob/main/DESIGN.md). This
 // rejects the ways around them: sizes outside text-display / title / body /
 // caption, any radius (everything is square), removed color tokens, Tailwind
 // palette colors, color literals, inline styles, raw font sizes, arbitrary
@@ -10,7 +10,6 @@ import { join, relative } from "node:path"
 const root = new URL("..", import.meta.url).pathname
 const scanned = [
   "apps/3d",
-  "apps/ui",
   "apps/web",
   "packages/ui/src",
 ]
@@ -31,7 +30,6 @@ const exempt = {
   // Open Graph images render through Satori, which takes inline styles and
   // literal colors, not Tailwind classes or CSS variables.
   "packages/ui/src/components/og-image.tsx": "all",
-  "apps/ui/app/opengraph-image.tsx": "all",
   // The GitHub contribution grid is data: one character per day, laid out by
   // inline grid columns and set at the size that makes a week one column.
   "packages/ui/src/components/status.tsx": [

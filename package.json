@@ -2,7 +2,7 @@
   "name": "www.zyx.tw",
   "version": "0.0.1",
   "private": true,
-  "description": "Loki's personal site — turborepo + Next.js 16 + Tailwind v4 + shadcn/ui",
+  "description": "Loki's personal site \u2014 turborepo + Next.js 16 + Tailwind v4 + shadcn/ui",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -10,7 +10,6 @@
     "format": "turbo format",
     "format:check": "turbo format:check",
     "typecheck": "turbo typecheck",
-    "theme:check": "node scripts/check-theme.mjs",
     "tokens:check": "node scripts/check-tokens.mjs"
   },
   "devDependencies": {

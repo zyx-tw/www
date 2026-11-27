@@ -17,7 +17,6 @@
 ```
 zyx.tw          the site: a 3D home, works and a resume
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
-ui.zyx.tw       the component registry that every app imports from
 ```
 
 以前每開一個子網域，就要開一個新 repo，再複製一次同樣的 lint 設定、設計 token 和遙測設定。在這裡，一個新點子就是 `apps/` 底下的一個新資料夾。
@@ -47,7 +46,6 @@ bun dev --filter=web
 |-----|--------|------|
 | 主站 | `apps/web` | [zyx.tw](https://zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
-| 元件庫 | `apps/ui` | [ui.zyx.tw](https://ui.zyx.tw) |
 
 - 只跑一個 app：`bun dev --filter=<資料夾名稱>`。`bun dev` 會全部一起跑。
 - 在 app 裡引用元件：`import { Button } from "@workspace/ui/components/ui/button"`。
@@ -59,7 +57,7 @@ bun dev --filter=web
   ```
 
 
-設計規則(主題、字級、版面、動態和文案)在 [apps/ui/DESIGN.md](apps/ui/DESIGN.md)。
+設計規則(主題、字級、版面、動態和文案)在 [DESIGN.md in zyx-tw/ui](https://github.com/zyx-tw/ui/blob/main/DESIGN.md)。
 
 ## 設定
 
