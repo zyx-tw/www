@@ -798,6 +798,73 @@
       ]
     },
     {
+      "name": "star-map",
+      "type": "registry:component",
+      "title": "Star Map",
+      "description": "A wireframe star chart of notes: systems over a plane, notes orbiting them, a drag to turn and a click to fly to a system.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "nextjs"],
+      "docs": "Use when: A whole set of notes or docs as a map the reader explores, filling the screen.\nNot for: A small chart at the foot of a page; use note-map.\nGuide: https://ui.zyx.tw/star-map.md",
+      "meta": {
+        "useWhen": "A whole set of notes or docs as a map the reader explores, filling the screen.",
+        "notFor": "A small chart at the foot of a page; use note-map.",
+        "related": ["note-map", "star-field"]
+      },
+      "dependencies": ["next"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/layout.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/components/star-map.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/star-chart.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/zyx/lib/star-scene.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/zyx/lib/sky.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/zyx/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "note-map",
+      "type": "registry:component",
+      "title": "Note Map",
+      "description": "One system of a star chart as a small orbit drawing: its notes as links, the one being read framed.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "nextjs"],
+      "docs": "Use when: The foot of a note, showing where it sits among its siblings.\nNot for: The whole chart; use star-map.\nGuide: https://ui.zyx.tw/note-map.md",
+      "meta": {
+        "useWhen": "The foot of a note, showing where it sits among its siblings.",
+        "notFor": "The whole chart; use star-map.",
+        "related": ["star-map"]
+      },
+      "dependencies": ["next"],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/note-map.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/star-chart.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "shell",
       "type": "registry:component",
       "title": "Shell",

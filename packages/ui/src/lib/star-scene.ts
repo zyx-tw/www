@@ -1,4 +1,4 @@
-import { around, type Depth, lanes, shows, systems, type System } from "./map"
+import { type Chart, type Depth, shows, type System } from "./star-chart"
 
 /*
  * The map is one scene in wireframe: the systems stand over a plane, each
@@ -6,7 +6,7 @@ import { around, type Depth, lanes, shows, systems, type System } from "./map"
  * angle and turns around the middle. Flying to a system moves the middle to
  * its star and zooms in, until its sun and its planets fill
  * the view. A frame is a list of lines, dots and labels in CSS pixels;
- * components/star-map.tsx paints the lines as square pixels and the labels
+^ * star-map.tsx paints the lines as square pixels and the labels
  * as text.
  */
 
@@ -27,7 +27,7 @@ export type View = {
   center: Aim
   /** Seconds the bodies have been in orbit. */
   time: number
-  /** How deep the map shows: a body past it is left out (lib/map.ts). */
+  /** How deep the map shows: a body past it is left out (star-chart.ts). */
   depth: Depth
   /** The slug under the pointer. */
   hover?: string
@@ -41,7 +41,7 @@ export type Line = {
   x1: number
   y1: number
   lit?: boolean
-  /** The system whose color it takes (lib/map-palette.ts); gray without. */
+  /** The system whose color it takes (the hues the page passes); gray without. */
   hue?: string
   /** Paint one pixel in this many: 1 is a solid line. */
   every?: number
@@ -104,6 +104,7 @@ const NAMED = 0.75
 const ROW = 24
 
 export function drawScene(
+  chart: Chart,
   view: View,
   width: number,
   height: number,
@@ -261,16 +262,16 @@ export function drawScene(
   ring(0, 0, 0, 0.55, 4)
   ring(0, 0, 0, 1.1, 4)
 
-  for (const [from, to] of lanes) {
-    const a = place(systems.find(({ slug }) => slug === from)!)
-    const b = place(systems.find(({ slug }) => slug === to)!)
+  for (const [from, to] of chart.lanes) {
+    const a = place(chart.systems.find(({ slug }) => slug === from)!)
+    const b = place(chart.systems.find(({ slug }) => slug === to)!)
     const start = project(a.x, a.y, a.h)
     const end = project(b.x, b.y, b.h)
     lines.push({ x0: start.x, y0: start.y, x1: end.x, y1: end.y, every: 3 })
   }
 
   // Far systems first, so a near one is drawn over them.
-  const ordered = systems
+  const ordered = chart.systems
     .map((system) => {
       const at = place(system)
       return { system, at, star: project(at.x, at.y, at.h) }
@@ -328,7 +329,7 @@ export function drawScene(
       ({ slug }) => slug === (view.hover ?? view.pinned)
     )
     if (from && held) {
-      const links = around(held)
+      const links = chart.around(held)
       const groups = [
         [links.before, 1],
         [[...links.deeper, ...links.uses], 2],

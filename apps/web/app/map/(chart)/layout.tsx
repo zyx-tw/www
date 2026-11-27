@@ -1,4 +1,8 @@
-import { StarMap } from "@/components/star-map"
+import { StarMap } from "@workspace/ui/components/star-map"
+
+import { MAP } from "@/lib/copy"
+import { lanes, systems } from "@/lib/map"
+import { HUES } from "@/lib/map-palette"
 
 /**
  * Every page of the map: the map itself, which fills the screen and stays
@@ -8,7 +12,7 @@ import { StarMap } from "@/components/star-map"
 export default function MapLayout({ children }: { children: React.ReactNode }) {
   return (
     <main lang="zh-Hant" className="fixed inset-(--bezel) flex flex-col">
-      <StarMap />
+      <StarMap systems={systems} lanes={lanes} hues={HUES} labels={MAP} />
       <div className="sr-only">{children}</div>
     </main>
   )

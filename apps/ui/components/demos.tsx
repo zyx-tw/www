@@ -39,7 +39,10 @@ import { LessonFigure } from "@workspace/ui/components/figure-lesson";
 import { QuizFigure } from "@workspace/ui/components/figure-quiz";
 import { TraceFigure } from "@workspace/ui/components/figure-trace";
 import { Hero, HeroTitle } from "@workspace/ui/components/hero";
+import { NoteMap } from "@workspace/ui/components/note-map";
 import { Scrolly } from "@workspace/ui/components/scrolly";
+import { StarMap } from "@workspace/ui/components/star-map";
+import type { System } from "@workspace/ui/lib/star-chart";
 import { LEAVE_EVENT } from "@workspace/ui/components/page-decode";
 import { Rows } from "@workspace/ui/components/rows";
 import { SectionTitle } from "@workspace/ui/components/section-title";
@@ -314,6 +317,88 @@ function MaskRevealDemo() {
 
 // One demo per registry:ui item, keyed by its name. A page renders the demo
 // for its item; an item without one gets no page.
+
+// A small chart for the star-map and note-map demos.
+const DEMO_SYSTEMS: System[] = [
+  {
+    slug: "basics",
+    name: "Basics",
+    line: "What the tool is and how it runs.",
+    at: [0.3, 0.4, 0.2],
+    bodies: [
+      {
+        slug: "loop",
+        name: "The agent loop",
+        short: "loop",
+        line: "Read, act, check.",
+        kind: "concept",
+        level: 1,
+        href: "#loop",
+      },
+      {
+        slug: "tools",
+        name: "Tool calls",
+        short: "tools",
+        line: "How a model asks for a tool.",
+        kind: "deep",
+        level: 2,
+        requires: ["loop"],
+      },
+      {
+        slug: "rules",
+        name: "Rules files",
+        short: "rules",
+        line: "What every session loads.",
+        kind: "concept",
+        level: 1,
+        href: "#rules",
+      },
+    ],
+  },
+  {
+    slug: "machines",
+    name: "Machines",
+    line: "Where the work runs.",
+    at: [0.7, 0.6, 0.4],
+    bodies: [
+      {
+        slug: "remote",
+        name: "Run builds remotely",
+        short: "remote",
+        line: "The laptop only edits.",
+        kind: "field",
+        level: 1,
+        href: "#remote",
+        applies: ["loop"],
+      },
+      {
+        slug: "names",
+        name: "Name every machine",
+        short: "names",
+        line: "A name is a place.",
+        kind: "field",
+        level: 2,
+      },
+    ],
+  },
+];
+const DEMO_LANES: [string, string][] = [["basics", "machines"]];
+
+function StarMapDemo() {
+  const [path, setPath] = useState("/star-map");
+  return (
+    <div className="relative flex h-112 w-full flex-col overflow-hidden">
+      <StarMap
+        systems={DEMO_SYSTEMS}
+        lanes={DEMO_LANES}
+        base="/star-map"
+        path={path}
+        go={(href) => !href.startsWith("#") && setPath(href)}
+      />
+    </div>
+  );
+}
+
 const DEMOS: Record<string, React.ReactNode> = {
   button: (
     <div className="flex flex-wrap justify-center gap-3">
@@ -832,6 +917,10 @@ const DEMOS: Record<string, React.ReactNode> = {
         ],
       }}
     />
+  ),
+  "star-map": <StarMapDemo />,
+  "note-map": (
+    <NoteMap system={DEMO_SYSTEMS[0]!} current="loop" systemHref="#basics" />
   ),
   hero: <Hero title={<HeroTitle text="Devices" />} subtitle="devices 6" />,
   rows: (
