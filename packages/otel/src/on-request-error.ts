@@ -6,7 +6,10 @@ import { emitErrorLog } from "./log"
  * (bots, scanners, aborted uploads). The request is answered correctly, so
  * they are client faults, not server errors, and are not logged.
  */
-const CLIENT_FAULT_MESSAGE_PREFIXES = ["Failed to parse body as FormData"]
+const CLIENT_FAULT_MESSAGE_PREFIXES = [
+  "Failed to parse body as FormData",
+  "Invalid forward reference",
+]
 
 /**
  * Builds Next.js's server-side error-observability hook (the reserved
