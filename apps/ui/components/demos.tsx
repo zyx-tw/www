@@ -47,6 +47,7 @@ import { LEAVE_EVENT } from "@workspace/ui/components/page-decode";
 import { Rows } from "@workspace/ui/components/rows";
 import { SectionTitle } from "@workspace/ui/components/section-title";
 import { StarField } from "@workspace/ui/components/star-field";
+import { AsciiDemo, GlyphChartDemo } from "./glyph-demos";
 import { TvStatic } from "@workspace/ui/components/tv";
 import {
   Command as ShellCommand,
@@ -780,6 +781,8 @@ const DEMOS: Record<string, React.ReactNode> = {
       </Button>
     </div>
   ),
+  ascii: <AsciiDemo />,
+  "glyph-chart": <GlyphChartDemo />,
   "star-field": (
     <div className="relative h-40 w-full">
       <StarField className="absolute inset-0 z-0" />

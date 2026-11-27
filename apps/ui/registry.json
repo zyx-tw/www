@@ -112,6 +112,9 @@
           "background": "oklch(0.97 0.005 85)",
           "foreground": "oklch(0.25 0 0)",
           "mark": "oklch(0.78 0.16 62)",
+          "data-low": "oklch(0.72 0.15 150)",
+          "data-mid": "oklch(0.78 0.15 80)",
+          "data-high": "oklch(0.68 0.19 25)",
           "primary": "oklch(0.25 0 0)",
           "primary-foreground": "oklch(0.97 0.005 85)",
           "muted": "oklch(0.93 0.005 85)",
@@ -586,6 +589,47 @@
         {
           "path": "registry/zyx/lib/sky.ts",
           "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "ascii",
+      "type": "registry:component",
+      "title": "ASCII",
+      "description": "Any picture as live text art on a canvas: an image, a video, a camera or a function that paints each frame, drawn as characters, braille, dots, dither, bricks, edges, rain or particles, with bloom, a chromatic split, scanlines and glitch.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "motion"],
+      "docs": "Use when: A picture or a scene that should read as a terminal drawing: a hero, an empty state, a 404, a live preview.\nNot for: Numbers a reader compares; use glyph-chart or chart.\nGuide: https://ui.zyx.tw/ascii.md",
+      "meta": {
+        "useWhen": "A picture or a scene that should read as a terminal drawing: a hero, an empty state, a 404, a live preview.",
+        "notFor": "Numbers a reader compares; use glyph-chart or chart.",
+        "related": ["glyph-chart", "star-field"]
+      },
+      "files": [
+        {
+          "path": "registry/zyx/components/ascii.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "glyph-chart",
+      "type": "registry:component",
+      "title": "Glyph Chart",
+      "description": "Charts drawn in characters that fill their container's width: a braille area or line chart, a block sparkline, a meter and block columns, in the foreground or the data hues.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "content"],
+      "docs": "Use when: A trend, a share or a few columns inside text: a dashboard panel, a table cell, a stat.\nNot for: Axes, tooltips or two series to compare; use chart.\nGuide: https://ui.zyx.tw/glyph-chart.md",
+      "meta": {
+        "useWhen": "A trend, a share or a few columns inside text: a dashboard panel, a table cell, a stat.",
+        "notFor": "Axes, tooltips or two series to compare; use chart.",
+        "related": ["chart", "frame", "ascii"]
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/glyph-chart.tsx",
+          "type": "registry:component"
         }
       ]
     },

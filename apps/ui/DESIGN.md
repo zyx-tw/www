@@ -20,15 +20,18 @@ This file is the design contract for every zyx.tw app. `bun run theme:check` and
 
 Grayscale. The only chroma on screen is `destructive` and content itself (photos, 3D scenes, the koi pond).
 
-| Token                            | Use                                      |
-| -------------------------------- | ---------------------------------------- |
-| `background` / `foreground`      | The page and its text                    |
-| `primary` / `primary-foreground` | The main action                          |
-| `muted` / `muted-foreground`     | The one neutral fill, and secondary text |
-| `destructive`                    | Errors and deleting                      |
-| `border` / `input` / `ring`      | Lines, control outlines, focus rings     |
+| Token                                 | Use                                      |
+| ------------------------------------- | ---------------------------------------- |
+| `background` / `foreground`           | The page and its text                    |
+| `primary` / `primary-foreground`      | The main action                          |
+| `muted` / `muted-foreground`          | The one neutral fill, and secondary text |
+| `destructive`                         | Errors and deleting                      |
+| `border` / `input` / `ring`           | Lines, control outlines, focus rings     |
+| `data-low` / `data-mid` / `data-high` | Marks that encode a value, low to high   |
 
-There is no `secondary`, `accent` or `card` (they duplicated `muted` or `background`), no `popover` or `overlay` (windows are `background`), no `sidebar-*` (the chrome is the four corners) and no `chart-*` (charts use the colors above). `tokens:check` rejects them, Tailwind palette colors (`bg-gray-500`, `bg-black`) and color literals. The few literals that are content rather than chrome (Open Graph images, a scene's background color) are waived file by file in `scripts/check-tokens.mjs`, each with its reason.
+There is no `secondary`, `accent` or `card` (they duplicated `muted` or `background`), no `popover` or `overlay` (windows are `background`), no `sidebar-*` (the chrome is the four corners) and no `chart-*` (charts use the colors above).
+
+- **Data hues, never chrome**: `data-low` (green), `data-mid` (amber) and `data-high` (red) color only a mark whose color is the value: a meter's fill, a chart's line by height, a status dot. Frames, labels, numbers and controls stay grayscale, and the value is always written too, so the hue is never the only label. They are the same in both themes. `tokens:check` rejects them, Tailwind palette colors (`bg-gray-500`, `bg-black`) and color literals. The few literals that are content rather than chrome (Open Graph images, a scene's background color) are waived file by file in `scripts/check-tokens.mjs`, each with its reason.
 
 - **Dark first, soft extremes**: every app server-renders `<html class="dark">` and starts dark (`ThemeProvider` from `@workspace/ui/components/theme-provider`); the `d` key toggles. There is no pure white or pure black: dark sits on near black (`oklch(0.17 0 0)`) with text at `oklch(0.88 0 0)`, light on warm paper (`oklch(0.97 0.005 85)`) with text at `oklch(0.25 0 0)`. Contrast is about 14:1 (WCAG AAA asks for 7:1).
 - **Primary is the text color**: `primary` equals `foreground` and `primary-foreground` equals `background`, so the main action is an inverted block, as a terminal highlights.
@@ -178,6 +181,8 @@ Per item:
 - `scramble-text`: glyphs resolve left to right at `speed` ms per character (50) on `trigger` `mount` or `in-view`. The final text stays one untouched text node, painted transparent while an `aria-hidden` overlay draws one cell per character, pinned to that character's measured box before paint, so line breaks, size and the accessible text never change. The server text is held invisible for at most 1.5s until the client starts; reduced motion shows the text at once.
 - `mask-reveal`: a feathered mask three times the element's width sweeps from 100% to 0% over 600ms with `cubic-bezier(.16,1,.3,1)`. The delay comes from an `enter-row-<n>` class on the same element (`rowDelay(n)`), so it keeps time with the row fades. The mask exists only inside the keyframes, so focus rings and shadows are intact afterwards.
 - `chart`: series colors are `primary`, `muted` (muted-foreground) or `destructive`, set per key in the config and reaching Recharts as `--color-<key>`. Bars are square, lines are 2px, the grid is horizontal only, and two series always come with `ChartLegendContent`, so color is never the only label. More than two series to tell apart by color means small multiples or a table.
+- `glyph-chart`: `BrailleChart`, `Sparkline`, `Meter` and `BlockColumns` measure their container in character cells and fill its width, so they line up with the text grid. `tone="heat"` shades by value with the data hues; the default is the foreground.
+- `ascii`: a canvas that redraws any source (image, video, camera, canvas or a field function) as cells, with a WebGL pass for bloom, a chromatic split, scanlines and glitch. Glow is allowed here only, and only in the dark theme: it is the phosphor of the picture, not a shadow on chrome. Pass `sharedField` around an expensive field so several canvases render it once per frame. Without WebGL it draws the cells with no effects.
 - `toolbar`: a window of 40px controls over a working surface, 4px around them.
 - `page-decode`: see Motion. Text inside a `scramble-text` is left to it; text nodes of symbols alone (an ASCII frame) are left to their owners.
 - `shell`: `Command` (a muted `$ ` prompt, then the command), `Cursor` (a blinking block) and `RequestedPath` (the path a 404 was asked for, filled in on the client).
