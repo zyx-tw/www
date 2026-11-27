@@ -10,17 +10,21 @@ import { type System, systemPath } from "@/lib/map"
 
 /** The px size of `text-caption`: the chart is drawn 1:1, never scaled up. */
 const FONT = 14
-/** The first ring, and how far out the last one may sit on a phone. */
+/** The first ring, and how far out the last one may sit: on a phone, and from `sm` up. */
 const RING = 46
-const OUTER = 150
+const SIZES = {
+  phone: { outer: 150, most: 22 },
+  wide: { outer: 300, most: 34 },
+} as const
+type Size = (typeof SIZES)[keyof typeof SIZES]
 /** How flat the rings are: their height over their width. */
 const FLAT = 0.6
 
 type Box = { x0: number; y0: number; x1: number; y1: number }
 
 /** The step from one ring to the next: closer in a system with many bodies. */
-function step(count: number) {
-  return Math.min(22, (OUTER - RING) / Math.max(1, count - 1))
+function step(count: number, size: Size) {
+  return Math.min(size.most, (size.outer - RING) / Math.max(1, count - 1))
 }
 
 /** A label's width: a CJK character is twice as wide as a Latin one. */
@@ -41,13 +45,13 @@ function overlap(a: Box, b: Box) {
  * A label goes where it covers the least of what is already drawn: the
  * system's name, the dots and the labels before it.
  */
-function layout(system: System) {
+function layout(system: System, size: Size) {
   const count = system.bodies.length
-  const outer = RING + step(count) * (count - 1)
+  const outer = RING + step(count, size) * (count - 1)
   const width = (outer + 16) * 2
   const height = outer * 2 * FLAT + 48
   const spots = system.bodies.map((_, index) => {
-    const rx = RING + step(count) * index
+    const rx = RING + step(count, size) * index
     const angle = index * 2.4 - 0.6
     return {
       rx,
@@ -134,7 +138,8 @@ function layout(system: System) {
  * The note's system as a small chart at the foot of its page: its name in
  * the middle leads back to the system, each written note is a link, and the
  * note being read is framed. Pointing at a body names it under the chart.
- * The chart is drawn 1:1 at a phone's width, so its text keeps its size.
+ * The chart is drawn 1:1, so its text keeps its size: one drawing for a
+ * phone, a roomier one from `sm` up.
  */
 export function NoteMap({
   system,
@@ -148,93 +153,124 @@ export function NoteMap({
 }) {
   const [over, setOver] = useState<string>()
   const pointed = system.bodies.find(({ slug }) => slug === over)
-  const { width: WIDTH, height: HEIGHT, marks } = layout(system)
 
   return (
     <div className={cn("flex flex-col items-center gap-3", className)}>
-      <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        role="group"
-        aria-label={system.name}
-        width={WIDTH}
-        height={HEIGHT}
-        className="h-auto max-w-full text-caption"
-      >
-        {marks.map(({ body, rx, ry }) => {
-          return (
-            <ellipse
-              key={body.slug}
-              cx={WIDTH / 2}
-              cy={HEIGHT / 2}
-              rx={rx}
-              ry={ry}
-              strokeDasharray="1 5"
-              className="fill-none stroke-muted-foreground/60"
-            />
-          )
-        })}
-        <Link href={systemPath(system)} aria-label={system.name}>
-          <text
-            x={WIDTH / 2}
-            y={HEIGHT / 2 + 5}
-            textAnchor="middle"
-            className="fill-foreground"
-          >
-            {system.name}
-          </text>
-        </Link>
-        {marks.map(({ body, x, y, label }) => {
-          const here = body.slug === current
-          const mark = (
-            <g
-              onPointerEnter={() => setOver(body.slug)}
-              onPointerLeave={() => setOver(undefined)}
-              className={cn(
-                here
-                  ? "fill-(--mark) stroke-(--mark)"
-                  : body.href
-                    ? "fill-foreground stroke-foreground"
-                    : "fill-muted-foreground stroke-muted-foreground"
-              )}
-            >
-              {here && (
-                <rect
-                  x={x - 8}
-                  y={y - 8}
-                  width={16}
-                  height={16}
-                  className="fill-none"
-                />
-              )}
-              <circle
-                cx={x}
-                cy={y}
-                r={3}
-                className={cn(!body.href && "fill-background")}
-              />
-              <text
-                x={x + label.dx}
-                y={y + label.dy}
-                textAnchor={label.anchor}
-                className="stroke-none"
-              >
-                {body.short}
-              </text>
-            </g>
-          )
-          return body.href && !here ? (
-            <Link key={body.slug} href={body.href} aria-label={body.name}>
-              {mark}
-            </Link>
-          ) : (
-            <g key={body.slug}>{mark}</g>
-          )
-        })}
-      </svg>
+      <Chart
+        system={system}
+        current={current}
+        size={SIZES.phone}
+        onPoint={setOver}
+        className="sm:hidden"
+      />
+      <Chart
+        system={system}
+        current={current}
+        size={SIZES.wide}
+        onPoint={setOver}
+        className="max-sm:hidden"
+      />
       <p className="min-h-10 max-w-md text-center text-caption text-balance text-muted-foreground">
         {pointed &&
           `${pointed.name}${pointed.href ? "" : `（${MAP.planned}）`}`}
       </p>
     </div>
+  )
+}
+
+function Chart({
+  system,
+  current,
+  size,
+  onPoint,
+  className,
+}: {
+  system: System
+  current: string
+  size: Size
+  onPoint: (slug: string | undefined) => void
+  className?: string
+}) {
+  const { width: WIDTH, height: HEIGHT, marks } = layout(system, size)
+  return (
+    <svg
+      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      role="group"
+      aria-label={system.name}
+      width={WIDTH}
+      height={HEIGHT}
+      className={cn("h-auto max-w-full text-caption", className)}
+    >
+      {marks.map(({ body, rx, ry }) => {
+        return (
+          <ellipse
+            key={body.slug}
+            cx={WIDTH / 2}
+            cy={HEIGHT / 2}
+            rx={rx}
+            ry={ry}
+            strokeDasharray="1 5"
+            className="fill-none stroke-muted-foreground/60"
+          />
+        )
+      })}
+      <Link href={systemPath(system)} aria-label={system.name}>
+        <text
+          x={WIDTH / 2}
+          y={HEIGHT / 2 + 5}
+          textAnchor="middle"
+          className="fill-foreground"
+        >
+          {system.name}
+        </text>
+      </Link>
+      {marks.map(({ body, x, y, label }) => {
+        const here = body.slug === current
+        const mark = (
+          <g
+            onPointerEnter={() => onPoint(body.slug)}
+            onPointerLeave={() => onPoint(undefined)}
+            className={cn(
+              here
+                ? "fill-(--mark) stroke-(--mark)"
+                : body.href
+                  ? "fill-foreground stroke-foreground"
+                  : "fill-muted-foreground stroke-muted-foreground"
+            )}
+          >
+            {here && (
+              <rect
+                x={x - 8}
+                y={y - 8}
+                width={16}
+                height={16}
+                className="fill-none"
+              />
+            )}
+            <circle
+              cx={x}
+              cy={y}
+              r={3}
+              className={cn(!body.href && "fill-background")}
+            />
+            <text
+              x={x + label.dx}
+              y={y + label.dy}
+              textAnchor={label.anchor}
+              className="stroke-none"
+            >
+              {body.short}
+            </text>
+          </g>
+        )
+        return body.href && !here ? (
+          <Link key={body.slug} href={body.href} aria-label={body.name}>
+            {mark}
+          </Link>
+        ) : (
+          <g key={body.slug}>{mark}</g>
+        )
+      })}
+    </svg>
   )
 }
