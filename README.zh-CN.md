@@ -16,11 +16,8 @@
 
 ```
 zyx.tw          the site: a 3D home, works and a resume
-time.zyx.tw     a clock
-good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
 ui.zyx.tw       the component registry that every app imports from
-1909            a private shared-expense dashboard for three flatmates
 ```
 
 以前每开一个子域名，就要开一个新 repo，再复制一次同样的 lint 配置、设计 token 和遥测配置。在这里，一个新点子就是 `apps/` 下的一个新文件夹。
@@ -49,11 +46,8 @@ bun dev --filter=web
 | 应用 | 文件夹 | 地址 |
 |------|--------|------|
 | 主站 | `apps/web` | [zyx.tw](https://zyx.tw) |
-| 时钟 | `apps/time` | [time.zyx.tw](https://time.zyx.tw) |
-| 乖乖 | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
 | 组件库 | `apps/ui` | [ui.zyx.tw](https://ui.zyx.tw) |
-| 分账 | `apps/1909` | 不公开 |
 
 - 只运行一个应用：`bun dev --filter=<文件夹名称>`。`bun dev` 会全部一起运行。
 - 在应用里引用组件：`import { Button } from "@workspace/ui/components/ui/button"`。
@@ -80,7 +74,7 @@ bun dev --filter=web
 | 界面 | React 19、Tailwind CSS 4、Base UI、[ui.zyx.tw](https://ui.zyx.tw) 组件 |
 | 语言 | TypeScript，strict 并开启 `noUncheckedIndexedAccess` |
 | 数据 | Supabase(`1909`、`link`) |
-| 3D | three.js、React Three Fiber(`good`、`3d`) |
+| 3D | three.js、React Three Fiber(`3d`) |
 | 遥测 | `packages/otel` 把日志发送到 [sensorium](https://github.com/zyx1121/sensorium) |
 | 工具 | Bun workspaces 和 Turborepo |
 
