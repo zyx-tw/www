@@ -183,7 +183,6 @@ jobs:
           - { app: ui, host: ui.zyx.tw, health: /, file: apps/ui/Dockerfile }
           - { app: good, host: good.zyx.tw, health: /, file: Dockerfile }
           - { app: time, host: time.zyx.tw, health: /, file: Dockerfile }
-          - { app: link, host: link.zyx.tw, health: /, file: Dockerfile }
           - { app: "1909", host: 1909.zyx.tw, health: /auth/login, file: Dockerfile }
           - { app: 3d, host: 3d.zyx.tw, health: /, file: Dockerfile }
     uses: zyx1121/.github/.github/workflows/image.yml@main
@@ -208,4 +207,4 @@ jobs:
       contents: read
       packages: write
     with:
-      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/ui.zyx.tw", "ghcr.io/zyx1121/good.zyx.tw", "ghcr.io/zyx1121/time.zyx.tw", "ghcr.io/zyx1121/link.zyx.tw", "ghcr.io/zyx1121/1909.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
+      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/ui.zyx.tw", "ghcr.io/zyx1121/good.zyx.tw", "ghcr.io/zyx1121/time.zyx.tw", "ghcr.io/zyx1121/1909.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
