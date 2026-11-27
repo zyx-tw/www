@@ -26,7 +26,7 @@ Then open the changed page in a browser. Look at it in dark mode, at desktop and
 ## Deploy
 
 - The site runs as a container on VM 117. The pull request builds `Dockerfile` through the shared `image.yml`, and `deploy/smoke.sh` tests it. The image is `ghcr.io/zyx-tw/www`.
-- A merge to `main` ships it through land (app `www-zyx-tw`): carrel-deployd on VM 117 runs `deploy/carrel-start.sh`, which sets `WEB_VERSION` in `/opt/www-zyx-tw/.env` to `sha-<commit>` and restarts the stack. Wait for it with `golem-watch zyx-tw/www <sha>`.
+- A merge to `main` ships it through land (app `www`): carrel-deployd on VM 117 runs `deploy/carrel-start.sh`, which sets `WEB_VERSION` in `/opt/www/.env` to `sha-<commit>` and restarts the stack. Wait for it with `golem-watch zyx-tw/www <sha>`.
 - After a merge, verify that the live site serves the merge commit: the image's `sha-<commit>` tag and the live page.
 
 ## The CV as a PDF
