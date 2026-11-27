@@ -16,7 +16,7 @@ jobs:
       actions: read
       id-token: write
     with:
-      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/ui.zyx.tw", "ghcr.io/zyx1121/good.zyx.tw", "ghcr.io/zyx1121/time.zyx.tw", "ghcr.io/zyx1121/1909.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
+      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/ui.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
       target: land
       tenant: compose
       app: www-zyx-tw

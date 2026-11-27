@@ -14,18 +14,15 @@
 
 ```
 zyx.tw          the site: a 3D home, projects, a star map of notes and a resume
-time.zyx.tw     a clock
-good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
 ui.zyx.tw       the component registry that every app imports from
-1909            a private shared-expense dashboard for three flatmates
 ```
 
 A new subdomain used to mean a new repo and another copy of the same lint config, design tokens and telemetry setup. Here, a new idea is a new folder under `apps/`.
 
 ## Features
 
-- **Hosts 6 apps**: each app deploys to its own subdomain from one repo and one CI pipeline.
+- **Hosts 3 apps**: each app deploys to its own subdomain from one repo and one CI pipeline.
 - **Shares one design system**: every component lives once in `packages/ui`, and every app imports it from there.
 - **Enforces the design rules**: CI fails when an app drifts from the theme or uses a value that is not a design token.
 - **Serves agents**: the site and ui.zyx.tw give each page a Markdown version, plus `/llms.txt`, `/agent-instructions.md` and JSON-LD.
@@ -47,11 +44,8 @@ Open http://localhost:3000. You should see the zyx.tw home page.
 | App | Folder | Live at |
 |-----|--------|---------|
 | Site | `apps/web` | [zyx.tw](https://zyx.tw) |
-| Clock | `apps/time` | [time.zyx.tw](https://time.zyx.tw) |
-| Snack | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
 | Component registry | `apps/ui` | [ui.zyx.tw](https://ui.zyx.tw) |
-| Shared expenses | `apps/1909` | private |
 
 - Run one app: `bun dev --filter=<folder name>`. `bun dev` starts all of them.
 - Import a component in an app: `import { Button } from "@workspace/ui/components/ui/button"`.
@@ -67,7 +61,7 @@ The design rules (theme, type scale, layout, motion and copy) are in [apps/ui/DE
 
 ## Configuration
 
-`apps/web` has a `.env.example`. `apps/1909` lists its variables in [its README](apps/1909/README.md#environment-variables).
+`apps/web` has a `.env.example`.
 
 `GITHUB_TOKEN` in `apps/web` is optional. It is a fine-grained token with `read:user`. Without it, the site hides the contribution heatmap and still shows the events list.
 
@@ -78,8 +72,7 @@ The design rules (theme, type scale, layout, motion and copy) are in [apps/ui/DE
 | Framework | Next.js 16 (App Router, Turbopack) |
 | UI | React 19, Tailwind CSS 4, Base UI, [ui.zyx.tw](https://ui.zyx.tw) components |
 | Language | TypeScript, strict, with `noUncheckedIndexedAccess` |
-| Data | Supabase (`1909`) |
-| 3D | three.js, React Three Fiber (`good`, `3d`) |
+| 3D | three.js, React Three Fiber (`3d`) |
 | Telemetry | `packages/otel` sends logs to [sensorium](https://github.com/zyx1121/sensorium) |
 | Tooling | Bun workspaces and Turborepo |
 
@@ -97,7 +90,7 @@ Facts for coding agents and LLM tools. The rules for changing the code are in [A
 - **Verify**: `bun run theme:check && bun run tokens:check && bun run typecheck`
 - **Config**: the root `.env.example` (ports and image tags for `compose.yaml`) and `.env.example` in each app that needs settings
 - **Secrets**: Supabase keys and the optional `GITHUB_TOKEN` in each app's `.env.local`, never in the repo
-- **Deploy**: each app is a container image built by CI and run with the root `compose.yaml` (AGENTS.md, Deploy). `apps/1909` is private.
+- **Deploy**: each app is a container image built by CI and run with the root `compose.yaml` (AGENTS.md, Deploy).
 
 ## Development
 

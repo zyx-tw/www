@@ -9,10 +9,7 @@ import { join, relative } from "node:path"
 
 const root = new URL("..", import.meta.url).pathname
 const scanned = [
-  "apps/1909",
   "apps/3d",
-  "apps/good",
-  "apps/time",
   "apps/ui",
   "apps/web",
   "packages/ui/src",
