@@ -74,7 +74,6 @@ jobs:
       matrix:
         include:
           - { app: web, host: www.zyx.tw, health: /llms.txt, file: Dockerfile }
-          - { app: 3d, host: 3d.zyx.tw, health: /, file: Dockerfile }
     uses: zyx1121/.github/.github/workflows/image.yml@main
     permissions:
       contents: read
@@ -97,4 +96,4 @@ jobs:
       contents: read
       packages: write
     with:
-      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
+      images: '["ghcr.io/zyx1121/www.zyx.tw"]'

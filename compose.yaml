@@ -16,13 +16,3 @@ services:
     env_file: .env
     ports:
       - "${WEB_BIND:-127.0.0.1:3000}:3000"
-
-
-  3d:
-    <<: *app
-    image: ghcr.io/zyx1121/3d.zyx.tw:${PLUMP_VERSION:-main}
-    env_file:
-      - path: env/3d.env
-        required: false
-    ports:
-      - "${PLUMP_BIND:-127.0.0.1:3006}:3000"
