@@ -323,7 +323,7 @@ const DEMO_SYSTEMS: System[] = [
   {
     slug: "basics",
     name: "Basics",
-    line: "What the tool is and how it runs.",
+    line: "Tool and runtime",
     at: [0.3, 0.4, 0.2],
     bodies: [
       {
@@ -339,7 +339,7 @@ const DEMO_SYSTEMS: System[] = [
         slug: "tools",
         name: "Tool calls",
         short: "tools",
-        line: "How a model asks for a tool.",
+        line: "Model tool requests",
         kind: "deep",
         level: 2,
         requires: ["loop"],
@@ -365,7 +365,7 @@ const DEMO_SYSTEMS: System[] = [
         slug: "remote",
         name: "Run builds remotely",
         short: "remote",
-        line: "The laptop only edits.",
+        line: "Remote builds",
         kind: "field",
         level: 1,
         href: "#remote",
@@ -375,7 +375,7 @@ const DEMO_SYSTEMS: System[] = [
         slug: "names",
         name: "Name every machine",
         short: "names",
-        line: "A name is a place.",
+        line: "Machine names",
         kind: "field",
         level: 2,
       },
