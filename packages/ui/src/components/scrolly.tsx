@@ -2,13 +2,17 @@
 
 import { useEffect, useRef, useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils"
 
-import { ProjectDiagram } from "@/components/project-diagram"
-import { ProjectTrace } from "@/components/project-trace"
-import { FIGURE } from "@/lib/copy"
-import type { Diagram, Trace } from "@/lib/projects"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { DiagramFigure } from "./figure-diagram"
+import { TraceFigure } from "./figure-trace"
+import {
+  type Diagram,
+  FIGURE_LABELS,
+  type FigureLabels,
+  type Trace,
+} from "../lib/figures"
+import { useReducedMotion } from "../hooks/use-reduced-motion"
 
 /** Milliseconds Play stays on a step before it scrolls to the next. */
 const PLAY_MS = 2600
@@ -44,10 +48,13 @@ function stepsOf(figure: Figure) {
 export function Scrolly({
   figure,
   className,
+  labels,
 }: {
   figure: Figure
   className?: string
+  labels?: Partial<FigureLabels>
 }) {
+  const words = { ...FIGURE_LABELS, ...labels }
   const steps = stepsOf(figure)
   const lines = useRef<(HTMLLIElement | null)[]>([])
   const stage = useRef<HTMLDivElement>(null)
@@ -170,9 +177,9 @@ export function Scrolly({
 
   if (!pinned) {
     return figure.kind === "trace" ? (
-      <ProjectTrace trace={figure} className={className} />
+      <TraceFigure trace={figure} className={className} labels={labels} />
     ) : (
-      <ProjectDiagram diagram={figure} className={className} />
+      <DiagramFigure diagram={figure} className={className} />
     )
   }
 
@@ -189,9 +196,9 @@ export function Scrolly({
         className="sticky top-16 z-10 bg-background py-5 lg:top-32 lg:col-span-5 lg:col-start-3 lg:row-start-1 lg:self-start lg:bg-transparent"
       >
         {figure.kind === "trace" ? (
-          <ProjectTrace trace={figure} shown={active + 1} />
+          <TraceFigure trace={figure} shown={active + 1} />
         ) : (
-          <ProjectDiagram diagram={figure} step={active} />
+          <DiagramFigure diagram={figure} step={active} />
         )}
         <div className="mt-5 flex items-baseline gap-x-5">
           {!reducedMotion && (
@@ -201,7 +208,7 @@ export function Scrolly({
               onClick={play}
               className="-my-2.5 cursor-pointer bg-(--mark)/20 py-2.5 text-(--mark) outline-offset-4 focus-visible:outline-2"
             >
-              {playing ? FIGURE.stop : FIGURE.play}
+              {playing ? words.stop : words.play}
             </button>
           )}
           <span className="text-muted-foreground tabular-nums">

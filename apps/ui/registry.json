@@ -636,6 +636,168 @@
       ]
     },
     {
+      "name": "figure-diagram",
+      "type": "registry:component",
+      "title": "Diagram Figure",
+      "description": "A drawing in box-drawing characters, set as text; its steps light one part at a time with a line under it.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "motion"],
+      "docs": "Use when: An architecture, a flow or pseudo code the reader reads part by part.\nNot for: Charts of numbers; use chart.\nGuide: https://ui.zyx.tw/figure-diagram.md",
+      "meta": {
+        "useWhen": "An architecture, a flow or pseudo code the reader reads part by part.",
+        "notFor": "Charts of numbers; use chart.",
+        "related": ["scrolly", "figure-trace"]
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/figure-diagram.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/figures.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/zyx/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "figure-lesson",
+      "type": "registry:component",
+      "title": "Lesson Figure",
+      "description": "One choice and what each answer leads to: titled blocks of rows, with the line to take from it.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "motion"],
+      "docs": "Use when: A choice between ways, where the reader picks one and sees the result.\nNot for: A plain list of options; use tabs.\nGuide: https://ui.zyx.tw/figure-lesson.md",
+      "meta": {
+        "useWhen": "A choice between ways, where the reader picks one and sees the result.",
+        "notFor": "A plain list of options; use tabs.",
+        "related": ["figure-quiz", "figure-dial"]
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/figure-lesson.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/figures.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "figure-quiz",
+      "type": "registry:component",
+      "title": "Quiz Figure",
+      "description": "A question the reader answers before the text does: the right option lights, a wrong pick is struck, and the reason appears.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "motion"],
+      "docs": "Use when: A judgement the reader makes first, then reads why.\nNot for: Forms that are submitted; use field.\nGuide: https://ui.zyx.tw/figure-quiz.md",
+      "meta": {
+        "useWhen": "A judgement the reader makes first, then reads why.",
+        "notFor": "Forms that are submitted; use field.",
+        "related": ["figure-lesson"]
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/figure-quiz.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/figures.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "figure-trace",
+      "type": "registry:component",
+      "title": "Trace Figure",
+      "description": "A run replayed one event a press: who sent what, and the line to take from it, with the record growing on screen.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "motion"],
+      "docs": "Use when: A run of messages, such as an agent's tool calls, replayed step by step.\nNot for: Logs to search; use table.\nGuide: https://ui.zyx.tw/figure-trace.md",
+      "meta": {
+        "useWhen": "A run of messages, such as an agent's tool calls, replayed step by step.",
+        "notFor": "Logs to search; use table.",
+        "related": ["scrolly", "figure-diagram"]
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/figure-trace.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/figures.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "figure-dial",
+      "type": "registry:component",
+      "title": "Dial Figure",
+      "description": "A quantity the reader moves: each stop redraws the same bars, so the eye follows what grows.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "motion"],
+      "docs": "Use when: A quantity that grows, and how its parts change with it.\nNot for: Exact values over time; use chart.\nGuide: https://ui.zyx.tw/figure-dial.md",
+      "meta": {
+        "useWhen": "A quantity that grows, and how its parts change with it.",
+        "notFor": "Exact values over time; use chart.",
+        "related": ["figure-lesson"]
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/figure-dial.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/figures.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "scrolly",
+      "type": "registry:component",
+      "title": "Scrolly",
+      "description": "A diagram or trace that stays on screen while its lines scroll past, one step a line, with play and pause.",
+      "author": "zyx1121 (https://github.com/zyx1121)",
+      "categories": ["figure", "motion"],
+      "docs": "Use when: A long walk through a diagram or a trace, step by step as the page scrolls.\nNot for: Short figures; use figure-diagram or figure-trace alone.\nGuide: https://ui.zyx.tw/scrolly.md",
+      "meta": {
+        "useWhen": "A long walk through a diagram or a trace, step by step as the page scrolls.",
+        "notFor": "Short figures; use figure-diagram or figure-trace alone.",
+        "related": ["figure-diagram", "figure-trace"]
+      },
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/figure-diagram.json",
+        "https://ui.zyx.tw/r/figure-trace.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/components/scrolly.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/lib/figures.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/zyx/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
       "name": "shell",
       "type": "registry:component",
       "title": "Shell",

@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils"
 
-import type { Diagram } from "@/lib/projects"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import type { Diagram } from "../lib/figures"
+import { useReducedMotion } from "../hooks/use-reduced-motion"
 
 /** Milliseconds a step stays lit while the figure plays by itself. */
 const STEP_MS = 2400
@@ -58,7 +58,13 @@ function Lines({
     [lines, lit]
   )
   return (
-    <div aria-hidden className={cn("diagram", className)}>
+    <div
+      aria-hidden
+      className={cn(
+        "w-max text-body leading-(--text-caption--line-height) whitespace-pre",
+        className
+      )}
+    >
       {rows.map((row, index) => (
         // An empty line still takes its row.
         <span key={index} className="block">
@@ -92,7 +98,7 @@ function Lines({
  * picking a step holds it, and picking it again lets the figure play on.
  * Reduced motion never plays by itself.
  */
-export function ProjectDiagram({
+export function DiagramFigure({
   diagram,
   className,
   step: driven,

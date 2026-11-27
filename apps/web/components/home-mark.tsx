@@ -11,7 +11,7 @@ import { LEAVE_EVENT, OUT } from "@workspace/ui/components/page-decode"
 import type { AsciiMark } from "@/lib/ascii-mark"
 import sceneFile from "@/lib/home-scene.json"
 import { glyphFont } from "@/lib/pond/renderer"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { useReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
 
 /** The mark as saved from 3d.zyx.tw, with the rounder edges the home uses. */
 const SHAPE = { ...sceneFile.shape, bevel: 0.12 } as SceneV1["shape"]

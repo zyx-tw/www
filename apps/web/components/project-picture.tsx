@@ -6,7 +6,7 @@ import { cn } from "@workspace/ui/lib/utils"
 
 import { LEAVE_EVENT, OUT } from "@workspace/ui/components/page-decode"
 import { ScanPreview } from "@/lib/scan-preview"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { useReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
 
 /**
  * A project page's screenshot, loading in from the top as in the works

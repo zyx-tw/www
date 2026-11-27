@@ -12,7 +12,7 @@ import {
 } from "react"
 
 import type { Project } from "@/lib/projects"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { useReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
 
 /** How long each project stays in the window while the rotation runs. */
 const ADVANCE_MS = 3200

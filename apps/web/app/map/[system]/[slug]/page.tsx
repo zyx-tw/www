@@ -6,15 +6,15 @@ import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@workspace/ui/components/hero"
-import { ProjectDiagram } from "@/components/project-diagram"
-import { ProjectDial } from "@/components/project-dial"
-import { ProjectLesson } from "@/components/project-lesson"
+import { DiagramFigure } from "@workspace/ui/components/figure-diagram"
+import { DialFigure } from "@workspace/ui/components/figure-dial"
+import { LessonFigure } from "@workspace/ui/components/figure-lesson"
 import { ProjectPicture } from "@/components/project-picture"
-import { ProjectQuiz } from "@/components/project-quiz"
+import { QuizFigure } from "@workspace/ui/components/figure-quiz"
 import { NoteMap } from "@/components/note-map"
 import { Paragraph, Rich } from "@/components/rich"
-import { Scrolly } from "@/components/scrolly"
-import { MAP } from "@/lib/copy"
+import { Scrolly } from "@workspace/ui/components/scrolly"
+import { FIGURE, MAP } from "@/lib/copy"
 import { around, type Body, findBody, findSystem } from "@/lib/map"
 import { findNote, notes } from "@/lib/notes"
 import { pageMetadata } from "@/lib/site"
@@ -166,21 +166,33 @@ export default async function NotePage({
           )}
           {section.figure?.kind === "diagram" &&
             (section.figure.steps?.length ? (
-              <Scrolly figure={section.figure} className="mt-10" />
+              <Scrolly
+                labels={FIGURE}
+                figure={section.figure}
+                className="mt-10"
+              />
             ) : (
-              <ProjectDiagram diagram={section.figure} className="mt-20" />
+              <DiagramFigure diagram={section.figure} className="mt-20" />
             ))}
           {section.figure?.kind === "lesson" && (
-            <ProjectLesson lesson={section.figure} className="mt-14" />
+            <LessonFigure lesson={section.figure} className="mt-14" />
           )}
           {section.figure?.kind === "quiz" && (
-            <ProjectQuiz quiz={section.figure} className="mt-14" />
+            <QuizFigure
+              labels={FIGURE}
+              quiz={section.figure}
+              className="mt-14"
+            />
           )}
           {section.figure?.kind === "trace" && (
-            <Scrolly figure={section.figure} className="mt-10" />
+            <Scrolly
+              labels={FIGURE}
+              figure={section.figure}
+              className="mt-10"
+            />
           )}
           {section.figure?.kind === "dial" && (
-            <ProjectDial dial={section.figure} className="mt-14" />
+            <DialFigure dial={section.figure} className="mt-14" />
           )}
           {section.points && (
             <dl className="mt-14 flex max-w-xl flex-col gap-y-10 leading-8">

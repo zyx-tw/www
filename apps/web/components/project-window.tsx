@@ -12,7 +12,7 @@ import {
 import { useShowcase } from "@/components/showcase"
 import { scrambleFrame } from "@/lib/ascii-frame"
 import { ScanPreview } from "@/lib/scan-preview"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { useReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
 
 // Long enough to outrun any frame; the boxes clip the rest.
 const HORIZONTAL = "─".repeat(400)

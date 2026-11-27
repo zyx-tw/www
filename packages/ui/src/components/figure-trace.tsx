@@ -2,29 +2,31 @@
 
 import { useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils"
 
-import { FIGURE } from "@/lib/copy"
-import type { Trace } from "@/lib/projects"
+import { FIGURE_LABELS, type FigureLabels, type Trace } from "../lib/figures"
 
 /**
  * A run replayed by the reader, one event a press. Events that have happened
  * stay on screen and the newest is lit, so the record is seen growing. Every
  * event keeps its place from the start: nothing below moves.
  */
-export function ProjectTrace({
+export function TraceFigure({
   trace,
   className,
   shown: driven,
+  labels,
 }: {
   trace: Trace
   className?: string
+  labels?: Partial<FigureLabels>
   /**
    * How many events a scrolling page has shown (components/scrolly.tsx).
    * Set, the figure has no button and no line: the page has them.
    */
   shown?: number
 }) {
+  const words = { ...FIGURE_LABELS, ...labels }
   const { events } = trace
   const [pressed, setShown] = useState(1)
   const shown = driven ?? pressed
@@ -48,7 +50,7 @@ export function ProjectTrace({
               "bg-(--mark)/20 text-(--mark)"
             )}
           >
-            {last ? FIGURE.again : FIGURE.next}
+            {last ? words.again : words.next}
           </button>
           <span className="text-muted-foreground tabular-nums">
             {shown} / {events.length}

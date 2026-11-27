@@ -39,8 +39,8 @@ export const FIGURE = {
   again: "重來",
   play: "播放",
   stop: "暫停",
-  right: "正確",
-  wrong: "再想想",
+  right: "正確：",
+  wrong: "再想想：",
 } as const
 
 export const INFO = { title: "Info" } as const

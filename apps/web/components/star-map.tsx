@@ -19,7 +19,7 @@ import {
 import { HUES } from "@/lib/map-palette"
 import { aim, drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
 import { DRIFT, sky } from "@workspace/ui/lib/sky"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { useReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
 
 /** CSS pixels to one pixel of the wireframe. */
 const PIXEL = 2
