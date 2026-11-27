@@ -50,9 +50,6 @@ const exempt = {
   "lib/ascii-preview.ts": ["color literal"],
   // The home mark's weekday colors are content: the mark is a picture.
   "components/home-mark.tsx": ["color literal"],
-  // The Works backdrop is content: ASCII koi in their own colors, drawn on
-  // a canvas.
-  "lib/pond/renderer.ts": ["color literal"],
   // The device room is content: pixel pictures set where the page places
   // them, links in the colors of the blocks they stand for, and labels drawn
   // in an SVG sized in pixels.

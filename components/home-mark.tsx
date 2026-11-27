@@ -10,7 +10,7 @@ import type { SceneV1 } from "@/lib/3d"
 import { LEAVE_EVENT, OUT } from "@/components/page-decode"
 import type { AsciiMark } from "@/lib/ascii-mark"
 import sceneFile from "@/lib/home-scene.json"
-import { glyphFont } from "@/lib/pond/renderer"
+import { glyphFont } from "@/lib/glyph-grid"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 
 /** The mark as saved from 3d.zyx.tw, with the rounder edges the home uses. */
@@ -87,7 +87,7 @@ export function HomeMark() {
       if (cancelled || markRef.current) return
       let mark: AsciiMark
       try {
-        mark = new AsciiMark(canvas, SHAPE, null, CELL_SCALE)
+        mark = new AsciiMark(canvas, SHAPE, CELL_SCALE)
       } catch {
         return
       }
