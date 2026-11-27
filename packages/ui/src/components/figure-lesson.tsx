@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils"
 
-import type { Lesson } from "@/lib/projects"
+import type { Lesson } from "../lib/figures"
 
 /**
  * A figure the reader operates: one choice above, and under it what that
@@ -17,7 +17,7 @@ import type { Lesson } from "@/lib/projects"
  * the text nodes it started with. The space a shorter state leaves empty is
  * part of what it says.
  */
-export function ProjectLesson({
+export function LessonFigure({
   lesson,
   className,
 }: {

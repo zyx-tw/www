@@ -33,7 +33,13 @@ import {
 import { Avatar, AvatarFallback } from "@workspace/ui/components/ui/avatar";
 import { ConfirmDialog } from "@workspace/ui/components/confirm-dialog";
 import { EmptyState, TableEmpty } from "@workspace/ui/components/empty-state";
+import { DiagramFigure } from "@workspace/ui/components/figure-diagram";
+import { DialFigure } from "@workspace/ui/components/figure-dial";
+import { LessonFigure } from "@workspace/ui/components/figure-lesson";
+import { QuizFigure } from "@workspace/ui/components/figure-quiz";
+import { TraceFigure } from "@workspace/ui/components/figure-trace";
 import { Hero, HeroTitle } from "@workspace/ui/components/hero";
+import { Scrolly } from "@workspace/ui/components/scrolly";
 import { LEAVE_EVENT } from "@workspace/ui/components/page-decode";
 import { Rows } from "@workspace/ui/components/rows";
 import { SectionTitle } from "@workspace/ui/components/section-title";
@@ -693,6 +699,139 @@ const DEMOS: Record<string, React.ReactNode> = {
     <div className="relative h-40 w-full">
       <StarField className="absolute inset-0 z-0" />
     </div>
+  ),
+  "figure-diagram": (
+    <DiagramFigure
+      diagram={{
+        kind: "diagram",
+        alt: "A laptop sends commands to a build machine.",
+        wide: [
+          "┌──────────┐   ssh   ┌─────────┐",
+          "│  laptop  │ ──────▶ │  build  │",
+          "└──────────┘         └─────────┘",
+        ],
+        steps: [
+          { label: "Edit", lit: ["laptop"], text: "Edits stay on the laptop." },
+          {
+            label: "Run",
+            lit: ["build"],
+            text: "Builds and tests run remotely.",
+          },
+        ],
+      }}
+    />
+  ),
+  "figure-lesson": (
+    <LessonFigure
+      lesson={{
+        kind: "lesson",
+        ask: "Where should the build run?",
+        states: [
+          {
+            label: "Laptop",
+            blocks: [
+              { title: "Runs on", rows: [{ text: "the laptop", tone: "dim" }] },
+            ],
+            text: "Closing the lid stops it.",
+          },
+          {
+            label: "Build machine",
+            blocks: [
+              {
+                title: "Runs on",
+                rows: [{ text: "a remote VM", tone: "mark" }],
+              },
+            ],
+            text: "The laptop stays free.",
+          },
+        ],
+      }}
+    />
+  ),
+  "figure-quiz": (
+    <QuizFigure
+      quiz={{
+        kind: "quiz",
+        ask: "Does each command keep the last one's directory?",
+        options: ["Yes", "No"],
+        items: [
+          {
+            text: 'ssh build "cd app"; ssh build "make"',
+            answer: 1,
+            why: "Each ssh call opens a new shell.",
+          },
+        ],
+      }}
+    />
+  ),
+  "figure-trace": (
+    <TraceFigure
+      trace={{
+        kind: "trace",
+        alt: "A model calls a tool and reads the result.",
+        events: [
+          { from: "USER", lines: ["List the VMs."], text: "The request." },
+          {
+            from: "MODEL",
+            lines: ['{"tool": "list_guests"}'],
+            text: "The model asks for a tool.",
+          },
+          {
+            from: "TOOL",
+            lines: ["sandbox, golem"],
+            text: "The result goes back to the model.",
+          },
+        ],
+      }}
+    />
+  ),
+  "figure-dial": (
+    <DialFigure
+      dial={{
+        kind: "dial",
+        ask: "Files read",
+        scale: 20,
+        stops: [
+          {
+            label: "1",
+            bars: [
+              { label: "context", cells: 4 },
+              { label: "rules", cells: 2, tone: "quiet" },
+            ],
+            text: "A small task.",
+          },
+          {
+            label: "10",
+            bars: [
+              { label: "context", cells: 16, tone: "mark" },
+              { label: "rules", cells: 2, tone: "quiet" },
+            ],
+            text: "The rules stay the same size.",
+          },
+        ],
+      }}
+    />
+  ),
+  scrolly: (
+    <Scrolly
+      figure={{
+        kind: "trace",
+        alt: "A model calls a tool and reads the result.",
+        events: [
+          { from: "USER", lines: ["List the VMs."], text: "The request." },
+          {
+            from: "MODEL",
+            lines: ['{"tool": "list_guests"}'],
+            text: "The model asks for a tool.",
+          },
+          {
+            from: "TOOL",
+            lines: ["sandbox, golem"],
+            text: "The result goes back to the model.",
+          },
+        ],
+      }}
+    />
   ),
   hero: <Hero title={<HeroTitle text="Devices" />} subtitle="devices 6" />,
   rows: (

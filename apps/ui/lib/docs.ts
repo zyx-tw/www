@@ -14,6 +14,7 @@ const GROUPS = [
   { category: "content", title: "Content" },
   { category: "feedback", title: "Feedback" },
   { category: "chat", title: "Chat" },
+  { category: "figure", title: "Figures" },
   { category: "motion", title: "Motion" },
 ] as const;
 

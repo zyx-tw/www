@@ -5,7 +5,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@workspace/ui/components/hero"
-import { ProjectDiagram } from "@/components/project-diagram"
+import { DiagramFigure } from "@workspace/ui/components/figure-diagram"
 import { ProjectPicture } from "@/components/project-picture"
 import { Rows } from "@workspace/ui/components/rows"
 import { findProject, projectPath, projects } from "@/lib/projects"
@@ -124,7 +124,7 @@ export default async function Project({
             />
           )}
           {section.figure?.kind === "diagram" && (
-            <ProjectDiagram diagram={section.figure} className="mt-10" />
+            <DiagramFigure diagram={section.figure} className="mt-10" />
           )}
           {section.points && (
             <Rows

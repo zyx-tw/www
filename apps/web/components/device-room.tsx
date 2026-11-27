@@ -21,7 +21,7 @@ import {
   type Device,
   type DeviceId,
 } from "@/lib/room"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { useReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
 
 type Shot = { src: string; x: number; y: number; w: number; h: number }
 type Point = [number, number]

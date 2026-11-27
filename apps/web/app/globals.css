@@ -10,18 +10,6 @@
 }
 
 /*
- * A project page's drawing in box-drawing characters
- * (components/project-diagram.tsx). Rows are 20px, as in a glyph frame,
- * and Maple's vertical bar is 1.52em tall: the bars meet with no gap.
- */
-@utility diagram {
-  width: max-content;
-  font-size: var(--text-body);
-  line-height: var(--text-caption--line-height);
-  white-space: pre;
-}
-
-/*
  * The map's wireframe (components/star-map.tsx) is drawn at half size and
  * shown at full size, so each of its pixels is a square of four.
  */

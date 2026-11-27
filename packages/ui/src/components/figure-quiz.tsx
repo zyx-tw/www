@@ -2,23 +2,25 @@
 
 import { useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils"
 
-import { FIGURE } from "@/lib/copy"
-import type { Quiz } from "@/lib/projects"
+import { FIGURE_LABELS, type FigureLabels, type Quiz } from "../lib/figures"
 
 /**
  * A question the reader answers before the text does. Each item takes one
  * pick: the right option lights, a wrong pick is struck, and the line that
  * says why appears in the space kept for it, so nothing below moves.
  */
-export function ProjectQuiz({
+export function QuizFigure({
   quiz,
   className,
+  labels,
 }: {
   quiz: Quiz
   className?: string
+  labels?: Partial<FigureLabels>
 }) {
+  const words = { ...FIGURE_LABELS, ...labels }
   const [picks, setPicks] = useState<(number | undefined)[]>([])
 
   return (
@@ -80,7 +82,7 @@ export function ProjectQuiz({
                 className={cn("text-pretty", !done && "invisible")}
               >
                 <span className="text-muted-foreground">
-                  {pick === answer ? FIGURE.right : FIGURE.wrong}：
+                  {pick === answer ? words.right : words.wrong}
                 </span>
                 {why}
               </p>

@@ -2,16 +2,16 @@
 
 import { useId, useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils"
 
-import type { Dial } from "@/lib/projects"
+import type { Dial } from "../lib/figures"
 
 /**
  * A quantity the reader moves. The bars are text, one block a cell, and the
  * same bars stand at every stop: only their lengths change, so the eye
  * follows what grows and what stays.
  */
-export function ProjectDial({
+export function DialFigure({
   dial,
   className,
 }: {
