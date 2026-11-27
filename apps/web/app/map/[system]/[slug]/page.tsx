@@ -11,11 +11,11 @@ import { DialFigure } from "@workspace/ui/components/figure-dial"
 import { LessonFigure } from "@workspace/ui/components/figure-lesson"
 import { ProjectPicture } from "@/components/project-picture"
 import { QuizFigure } from "@workspace/ui/components/figure-quiz"
-import { NoteMap } from "@/components/note-map"
 import { Paragraph, Rich } from "@/components/rich"
+import { NoteMap } from "@workspace/ui/components/note-map"
 import { Scrolly } from "@workspace/ui/components/scrolly"
 import { FIGURE, MAP } from "@/lib/copy"
-import { around, type Body, findBody, findSystem } from "@/lib/map"
+import { around, type Body, findBody, findSystem, systemPath } from "@/lib/map"
 import { findNote, notes } from "@/lib/notes"
 import { pageMetadata } from "@/lib/site"
 
@@ -247,6 +247,8 @@ export default async function NotePage({
       <NoteMap
         system={system}
         current={body.slug}
+        systemHref={systemPath(system)}
+        planned={MAP.planned}
         className={cn("mt-28", below)}
       />
     </main>

@@ -3,10 +3,8 @@
 import Link from "next/link"
 import { useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
-
-import { MAP } from "@/lib/copy"
-import { type System, systemPath } from "@/lib/map"
+import { STAR_CHART_LABELS, type System } from "../lib/star-chart"
+import { cn } from "../lib/utils"
 
 /** The px size of `text-caption`: the chart is drawn 1:1, never scaled up. */
 const FONT = 14
@@ -144,11 +142,17 @@ function layout(system: System, size: Size) {
 export function NoteMap({
   system,
   current,
+  systemHref,
+  planned = STAR_CHART_LABELS.planned,
   className,
 }: {
   system: System
   /** The slug of the note being read. */
   current: string
+  /** The system's own page, linked from its name in the middle. */
+  systemHref: string
+  /** The word after a note that is not written yet. */
+  planned?: string
   className?: string
 }) {
   const [over, setOver] = useState<string>()
@@ -161,6 +165,7 @@ export function NoteMap({
         current={current}
         size={SIZES.phone}
         onPoint={setOver}
+        systemHref={systemHref}
         className="sm:hidden"
       />
       <Chart
@@ -168,11 +173,11 @@ export function NoteMap({
         current={current}
         size={SIZES.wide}
         onPoint={setOver}
+        systemHref={systemHref}
         className="max-sm:hidden"
       />
       <p className="min-h-10 max-w-md text-center text-caption text-balance text-muted-foreground">
-        {pointed &&
-          `${pointed.name}${pointed.href ? "" : `（${MAP.planned}）`}`}
+        {pointed && `${pointed.name}${pointed.href ? "" : `（${planned}）`}`}
       </p>
     </div>
   )
@@ -183,12 +188,14 @@ function Chart({
   current,
   size,
   onPoint,
+  systemHref,
   className,
 }: {
   system: System
   current: string
   size: Size
   onPoint: (slug: string | undefined) => void
+  systemHref: string
   className?: string
 }) {
   const { width: WIDTH, height: HEIGHT, marks } = layout(system, size)
@@ -214,7 +221,7 @@ function Chart({
           />
         )
       })}
-      <Link href={systemPath(system)} aria-label={system.name}>
+      <Link href={systemHref} aria-label={system.name}>
         <text
           x={WIDTH / 2}
           y={HEIGHT / 2 + 5}

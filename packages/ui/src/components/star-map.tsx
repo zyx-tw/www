@@ -1,25 +1,29 @@
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
-import { enterRow, page } from "@workspace/ui/lib/layout"
-
-import { MAP } from "@/lib/copy"
+import { useReducedMotion } from "../hooks/use-reduced-motion"
+import { enterRow, page } from "../lib/layout"
+import { DRIFT, sky } from "../lib/sky"
 import {
-  findBody,
-  findSystem,
-  shows,
-  systemPath,
-  systems,
   type Body,
   type Depth,
-} from "@/lib/map"
-import { HUES } from "@/lib/map-palette"
-import { aim, drawScene, type Hit, type Line, type View } from "@/lib/map-scene"
-import { DRIFT, sky } from "@workspace/ui/lib/sky"
-import { useReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
+  type Ink,
+  shows,
+  makeChart,
+  STAR_CHART_LABELS,
+  type StarChartLabels,
+  type System,
+} from "../lib/star-chart"
+import {
+  aim,
+  drawScene,
+  type Hit,
+  type Line,
+  type View,
+} from "../lib/star-scene"
+import { cn } from "../lib/utils"
 
 /** CSS pixels to one pixel of the wireframe. */
 const PIXEL = 2
@@ -69,12 +73,12 @@ const DEPTH_KEY = "map-depth"
 const DEPTHS: Depth[] = [1, 2, 3]
 
 /** How many notes of `bodies` show at `depth`. */
-function count(bodies: Body[], depth: Depth) {
+function count(MAP: StarChartLabels, bodies: Body[], depth: Depth) {
   return [`${MAP.notes} ${bodies.filter((body) => shows(body, depth)).length}`]
 }
 
 /** What is known about a body: its state or its measures. */
-function facts(body: Body, after: string[]) {
+function facts(MAP: StarChartLabels, body: Body, after: string[]) {
   return [
     `${MAP.kinds[body.kind]} L${body.level}`,
     !body.href && MAP.planned,
@@ -87,22 +91,49 @@ function facts(body: Body, after: string[]) {
 }
 
 /**
- * The map (lib/map-scene.ts) fills the screen under the corners, as the
+ * The map (star-scene.ts) fills the screen under the corners, as the
  * display of a ship: the wireframe on a canvas of square pixels, the names
  * on a sharp one over it, and the
  * instruments at its foot: what the thing pointed at is, and what is known
  * about it. A drag turns the view. Pointing at a system or a body puts it on
  * the instruments; a click on a system flies there
- * (/map/<system>), a click on a body keeps it on the instruments, and a
+ * (<base>/<system>), a click on a body keeps it on the instruments, and a
  * click on empty space lets go of it, then flies back out. It lives in the
  * layout, so it keeps its turn from one page of the map to the next.
  * Decorative for a screen reader: the layout holds the same links as lists.
  */
-export function StarMap() {
-  const pathname = usePathname()
+export function StarMap({
+  systems: data,
+  lanes,
+  base = "/map",
+  hues = {},
+  labels,
+  path,
+  go,
+}: {
+  /** Plain data, so a server page can pass it. */
+  systems: System[]
+  lanes: [string, string][]
+  /** Where the chart's pages live: <base>/<system>. */
+  base?: string
+  /** The page's path; the router's by default. */
+  path?: string
+  /** Opens a page; the router's push by default. */
+  go?: (href: string) => void
+  /** Each system's own color, by its slug; a system without one stays gray. */
+  hues?: Record<string, Ink>
+  labels?: Partial<StarChartLabels>
+}) {
+  const MAP = { ...STAR_CHART_LABELS, ...labels }
+  const chart = useMemo(() => makeChart(data, lanes, base), [data, lanes, base])
+  const { systems, findBody, findSystem, systemPath } = chart
+  const routerPath = usePathname()
   const router = useRouter()
+  const pathname = path ?? routerPath
+  const navigate = go ?? router.push
   const reducedMotion = useReducedMotion()
-  const target = findSystem(pathname.split("/")[2] ?? "") ?? null
+  const target =
+    findSystem(pathname.slice(chart.base.length).split("/")[1] ?? "") ?? null
   const [hover, setHover] = useState<string>()
   const [picked, setPinned] = useState<string>()
   const [depth, setDepth] = useState<Depth>(1)
@@ -233,7 +264,7 @@ export function StarMap() {
       const bright = getComputedStyle(high.canvas).color
       // A system's own color where the scene names one, else gray.
       const ink = ({ hue, lit }: { hue?: string; lit?: boolean }) => {
-        const own = hue ? HUES[hue] : undefined
+        const own = hue ? hues[hue] : undefined
         return lit ? (own?.bright ?? bright) : (own?.dim ?? dim)
       }
       const style = getComputedStyle(high.canvas)
@@ -243,6 +274,7 @@ export function StarMap() {
         .join(" ")
       high.textBaseline = "middle"
       const drawn = drawScene(
+        chart,
         state,
         width,
         height,
@@ -331,11 +363,11 @@ export function StarMap() {
   const open = (hit: Hit | undefined) => {
     if (hit?.body) {
       const href = findBody(hit.body)?.body.href
-      return href ? router.push(href) : setPinned(hit.body)
+      return href ? navigate(href) : setPinned(hit.body)
     }
-    if (hit) return router.push(systemPath({ slug: hit.system }))
+    if (hit) return navigate(systemPath({ slug: hit.system }))
     if (pinned) return setPinned(undefined)
-    if (scene.current.goal) router.push("/map")
+    if (scene.current.goal) navigate(chart.base)
   }
 
   const system = subject ? findSystem(subject) : undefined
@@ -465,12 +497,13 @@ export function StarMap() {
           )}
           <p className="text-caption text-muted-foreground">
             {(system
-              ? count(system.bodies, depth)
+              ? count(MAP, system.bodies, depth)
               : found
-                ? facts(found.body, after)
+                ? facts(MAP, found.body, after)
                 : [
                     `${MAP.systems} ${systems.length}`,
                     ...count(
+                      MAP,
                       systems.flatMap(({ bodies }) => bodies),
                       depth
                     ),
