@@ -330,7 +330,7 @@ const DEMO_SYSTEMS: System[] = [
         slug: "loop",
         name: "The agent loop",
         short: "loop",
-        line: "Read, act, check.",
+        line: "Agent loop",
         kind: "concept",
         level: 1,
         href: "#loop",
@@ -348,7 +348,7 @@ const DEMO_SYSTEMS: System[] = [
         slug: "rules",
         name: "Rules files",
         short: "rules",
-        line: "What every session loads.",
+        line: "Session rules",
         kind: "concept",
         level: 1,
         href: "#rules",
@@ -358,7 +358,7 @@ const DEMO_SYSTEMS: System[] = [
   {
     slug: "machines",
     name: "Machines",
-    line: "Where the work runs.",
+    line: "Machines",
     at: [0.7, 0.6, 0.4],
     bodies: [
       {
