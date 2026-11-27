@@ -1,0 +1,697 @@
+/*
+ * The one stylesheet of every zyx.tw app (apps/ui/DESIGN.md). The tokens are
+ * the `base` item in apps/ui/registry.json; `bun run theme:check` fails when
+ * this file and the registry drift apart.
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+@source "../**/*.{ts,tsx}";
+
+@theme inline {
+  --text-*: initial;
+  --text-display: 5rem;
+  --text-display--line-height: 5rem;
+  --text-title: 1.5rem;
+  --text-title--line-height: 2rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.25rem;
+  --font-sans:
+    var(--font-maple-mono, Maple Mono NF CN),
+    var(--font-maple-mono-cjk, Maple Mono NF CN), var(--font-noto-sans-tc),
+    ui-monospace, monospace;
+  --font-heading:
+    var(--font-maple-mono, Maple Mono NF CN),
+    var(--font-maple-mono-cjk, Maple Mono NF CN), var(--font-noto-sans-tc),
+    ui-monospace, monospace;
+  --font-mono:
+    var(--font-maple-mono, Maple Mono NF CN),
+    var(--font-maple-mono-cjk, Maple Mono NF CN), var(--font-noto-sans-tc),
+    ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-mark: var(--mark);
+  --color-data-low: var(--data-low);
+  --color-data-mid: var(--data-mid);
+  --color-data-high: var(--data-high);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --animate-scramble-hold: scramble-text-hold 1.5s;
+  --animate-cursor: terminal-cursor 1s step-end infinite;
+  --animate-mask-reveal: mask-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1)
+    var(--tw-animation-delay, 0s) backwards;
+}
+
+:root {
+  --background: oklch(0.97 0.005 85);
+  --foreground: oklch(0.25 0 0);
+  /* The one accent: marked words, the current step, a name pointed at. An
+     orange leaning to amber, the same in both themes. */
+  --mark: oklch(0.78 0.16 62);
+  /* Data hues: only on marks that encode a value (a chart's line, a meter's
+     fill, a status dot), low to high, the same in both themes. The chrome
+     around them stays grayscale. */
+  --data-low: oklch(0.72 0.15 150);
+  --data-mid: oklch(0.78 0.15 80);
+  --data-high: oklch(0.68 0.19 25);
+  --primary: oklch(0.25 0 0);
+  --primary-foreground: oklch(0.97 0.005 85);
+  --muted: oklch(0.93 0.005 85);
+  --muted-foreground: oklch(0.52 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.89 0.005 85);
+  --input: oklch(0.89 0.005 85);
+  --ring: oklch(0.25 0 0);
+  --radius: 0;
+}
+
+.dark {
+  --background: oklch(0.17 0 0);
+  --foreground: oklch(0.88 0 0);
+  --primary: oklch(0.88 0 0);
+  --primary-foreground: oklch(0.17 0 0);
+  --muted: oklch(0.26 0 0);
+  --muted-foreground: oklch(0.62 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.88 0 0);
+}
+
+/* Motion: state changes (hover, toggle, tab) take 150ms, overlays 200ms. */
+@utility duration-state {
+  --tw-duration: 150ms;
+  transition-duration: 150ms;
+  --tw-ease: cubic-bezier(0, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+@utility duration-overlay {
+  --tw-duration: 200ms;
+  transition-duration: 200ms;
+  --tw-ease: cubic-bezier(0, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/*
+ * Page motion (DESIGN.md, Motion): rows enter 25ms apart (lib/layout.ts
+ * enterRow), and the column eases its width between breakpoints.
+ */
+@source inline("enter-row-{0..40}");
+@utility enter-row-* {
+  --tw-animation-delay: calc(--value(integer) * 25ms);
+}
+@utility transition-column {
+  transition-property: max-width;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Menus with p-1 sit 4px outside their trigger on both sides. */
+@utility w-menu {
+  width: calc(var(--anchor-width) + 0.5rem);
+}
+
+/*
+ * A link in running text inverts on hover and focus, like a highlighted menu
+ * item, with no fade. It keeps its own resting underline.
+ */
+@utility terminal-link {
+  &:hover,
+  &:focus-visible {
+    background-color: var(--foreground);
+    color: var(--background);
+    text-decoration-line: none;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--foreground);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-body text-foreground;
+  }
+  .dark {
+    color-scheme: dark;
+  }
+  ::selection {
+    @apply bg-foreground text-background;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/*
+ * Reduced motion covers every animation (DESIGN.md, Motion), including the
+ * tw-animate-css entrances of overlays. 1ms rather than 0 keeps the end
+ * events Base UI waits for.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * The page decoder (components/page-decode.tsx) draws each row's entrance:
+ * its text starts scrambled and resolves. On a page that mounts it, rows are
+ * held invisible until it starts (at most 1.5s, so they still show if
+ * scripts fail); once it runs, their fades step aside.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html:has([data-slot="page-decode"]):not([data-decoder])
+    main
+    [class*="enter-row-"] {
+    animation: scramble-text-hold 1.5s;
+  }
+  html[data-decoder] main [class*="enter-row-"] {
+    animation: none;
+  }
+}
+
+/* An idle prompt's block cursor (components/shell.tsx): on for half a second, off for half, no fade. */
+@keyframes terminal-cursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Keyframes of scramble-text and mask-reveal; each item also ships its own in registry.json. */
+@keyframes scramble-text-hold {
+  0%,
+  100% {
+    opacity: 0;
+  }
+}
+/* mask-reveal feather: alpha = 1 - smoothstep over the middle third, sampled at t = k/6. */
+@keyframes mask-reveal {
+  from {
+    mask-image: linear-gradient(
+      90deg,
+      #000 33.333%,
+      rgb(0 0 0 / 0.926) 38.889%,
+      rgb(0 0 0 / 0.741) 44.444%,
+      rgb(0 0 0 / 0.5) 50%,
+      rgb(0 0 0 / 0.259) 55.556%,
+      rgb(0 0 0 / 0.074) 61.111%,
+      transparent 66.667%
+    );
+    mask-size: 300% 100%;
+    mask-repeat: no-repeat;
+    mask-position: 100% 0;
+  }
+  to {
+    mask-image: linear-gradient(
+      90deg,
+      #000 33.333%,
+      rgb(0 0 0 / 0.926) 38.889%,
+      rgb(0 0 0 / 0.741) 44.444%,
+      rgb(0 0 0 / 0.5) 50%,
+      rgb(0 0 0 / 0.259) 55.556%,
+      rgb(0 0 0 / 0.074) 61.111%,
+      transparent 66.667%
+    );
+    mask-size: 300% 100%;
+    mask-repeat: no-repeat;
+    mask-position: 0 0;
+  }
+}
+/*
+ * Page edges under the fixed corners: a transparent 12px blur that fades over
+ * 64px toward the content (corners.tsx draws the element).
+ */
+[data-slot="corner-edge"] {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  -webkit-mask-image: linear-gradient(
+    var(--edge-direction),
+    #000 35%,
+    transparent
+  );
+  mask-image: linear-gradient(var(--edge-direction), #000 35%, transparent);
+}
+[data-slot="corner-edge"][data-edge="top"] {
+  --edge-direction: to bottom;
+}
+[data-slot="corner-edge"][data-edge="bottom"] {
+  --edge-direction: to top;
+}
+
+/*
+ * TV frame, opt in with `tv` on <html>: a black bezel around the viewport and
+ * a screen with round corners, a soft dark glow at its edge and faint
+ * scanlines. The body is the screen: it scrolls inside the bezel, so nothing
+ * of the page passes under the browser's bars and the page around it stays
+ * black. Safari 26 tints its bars from a fixed element at the top or else the
+ * body's background, so the body is placed absolutely with no background, and
+ * the screen's grey is a layer of its own under the pond. The frame is one fixed layer
+ * above everything that ignores the pointer; the corners and the edge blur
+ * move in by the bezel.
+ */
+:root {
+  --bezel: 0px;
+  /* From the screen's edge to the corners and to a page's text: 12px. */
+  --gutter: 0.75rem;
+}
+html.tv {
+  --bezel: 16px;
+  --screen-radius: 16px;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  scrollbar-gutter: auto;
+}
+html.tv::before {
+  content: "";
+  position: absolute;
+  inset: var(--bezel);
+  z-index: -20;
+  border-radius: var(--screen-radius);
+  background: var(--background);
+}
+html.tv body {
+  position: absolute;
+  inset: var(--bezel);
+  background: none;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--screen-radius);
+  scrollbar-width: none;
+}
+html.tv body::-webkit-scrollbar {
+  display: none;
+}
+html.tv::after {
+  content: "";
+  position: fixed;
+  inset: var(--bezel);
+  z-index: 2147483647;
+  pointer-events: none;
+  border-radius: var(--screen-radius);
+  box-shadow:
+    0 0 0 100vmax #000,
+    inset 0 0 48px rgb(0 0 0 / 0.35);
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.18) 0 1px,
+    transparent 1px 3px
+  );
+}
+/*
+ * The edge blur is a rectangle. Without the screen's round corners it blurs
+ * the black bezel into the page at each corner.
+ */
+html.tv [data-slot="corner-edge"] {
+  inset-inline: var(--bezel);
+}
+html.tv [data-slot="corner-edge"][data-edge="top"] {
+  top: var(--bezel);
+  border-radius: var(--screen-radius) var(--screen-radius) 0 0;
+}
+html.tv [data-slot="corner-edge"][data-edge="bottom"] {
+  bottom: var(--bezel);
+  border-radius: 0 0 var(--screen-radius) var(--screen-radius);
+}
+/*
+ * Loaders (DESIGN.md, Motion), in pixels and in CSS alone so they show
+ * before hydration. Spinner: a 3 by 3 LED panel whose lit pixel runs the edge
+ * in 90ms steps. Skeleton: a field of 4px pixels that reshuffles every 120ms.
+ * Reduced motion holds both still.
+ */
+[data-slot="spinner"] > * {
+  opacity: 0.15;
+}
+[data-slot="spinner"] > :not(:nth-child(5)) {
+  animation: pixel-ring 720ms step-end infinite;
+}
+[data-slot="spinner"] > :nth-child(1) {
+  animation-delay: -720ms;
+}
+[data-slot="spinner"] > :nth-child(2) {
+  animation-delay: -630ms;
+}
+[data-slot="spinner"] > :nth-child(3) {
+  animation-delay: -540ms;
+}
+[data-slot="spinner"] > :nth-child(6) {
+  animation-delay: -450ms;
+}
+[data-slot="spinner"] > :nth-child(9) {
+  animation-delay: -360ms;
+}
+[data-slot="spinner"] > :nth-child(8) {
+  animation-delay: -270ms;
+}
+[data-slot="spinner"] > :nth-child(7) {
+  animation-delay: -180ms;
+}
+[data-slot="spinner"] > :nth-child(4) {
+  animation-delay: -90ms;
+}
+[data-slot="skeleton"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--muted);
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'><rect x='8' y='8' width='4' height='4'/><rect x='8' y='0' width='4' height='4'/><rect x='8' y='4' width='4' height='4'/><rect x='12' y='12' width='4' height='4'/><rect x='0' y='0' width='4' height='4'/><rect x='4' y='0' width='4' height='4'/><rect x='0' y='8' width='4' height='4'/><rect x='0' y='12' width='4' height='4'/><rect x='4' y='4' width='4' height='4'/></svg>");
+  mask-size: 16px 16px;
+  animation: pixel-flicker 480ms step-end infinite;
+}
+[data-slot="progress"] canvas {
+  image-rendering: pixelated;
+}
+@keyframes pixel-ring {
+  0% {
+    opacity: 1;
+  }
+  12.5% {
+    opacity: 0.6;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  37.5%,
+  100% {
+    opacity: 0.15;
+  }
+}
+@keyframes pixel-flicker {
+  0% {
+    mask-position: 0 0;
+  }
+  25% {
+    mask-position: 8px 4px;
+  }
+  50% {
+    mask-position: 4px 12px;
+  }
+  75% {
+    mask-position: 12px 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="spinner"] > *,
+  [data-slot="skeleton"]::before {
+    animation: none !important;
+  }
+  [data-slot="spinner"] > :nth-child(1) {
+    opacity: 1;
+  }
+}
+
+/*
+ * Toasts are windows (DESIGN.md, Motion): they fade in and out at the overlay
+ * duration and never slide or scale. Sonner still places a stack of toasts
+ * with transforms; they move into place at once.
+ */
+[data-sonner-toast] {
+  transition-property: opacity, height !important;
+  transition-duration: 200ms !important;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1) !important;
+}
+[data-sonner-toast][data-expanded="false"][data-front="false"] {
+  --y: translateY(calc(var(--lift-amount) * var(--toasts-before))) !important;
+}
+[data-sonner-toast][data-removed="true"][data-front="true"][data-swipe-out="false"] {
+  --y: translateY(0) !important;
+}
+
+/*
+ * The TV frame turning on (components/tv.tsx, TvBoot): two black halves part
+ * from a bright line across the middle, and the line flares and fades. It
+ * plays while the root has data-boot, on the first page of a tab only.
+ */
+[data-slot="tv-boot"] {
+  display: none;
+}
+html[data-boot] [data-slot="tv-boot"] {
+  position: fixed;
+  inset: var(--bezel);
+  z-index: 2147483646;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--screen-radius);
+  pointer-events: none;
+}
+[data-slot="tv-boot"] > [data-part="top"],
+[data-slot="tv-boot"] > [data-part="bottom"] {
+  position: absolute;
+  inset-inline: 0;
+  height: 50.5%;
+  background: #000;
+  animation: tv-part 520ms cubic-bezier(0.7, 0, 0.2, 1) 220ms both;
+}
+[data-slot="tv-boot"] > [data-part="top"] {
+  top: 0;
+  --tv-part-to: -100%;
+}
+[data-slot="tv-boot"] > [data-part="bottom"] {
+  bottom: 0;
+  --tv-part-to: 100%;
+}
+[data-slot="tv-boot"] > [data-part="line"] {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 24px 4px rgb(255 255 255 / 0.5);
+  animation: tv-line 760ms ease-out both;
+}
+@keyframes tv-part {
+  to {
+    transform: translateY(var(--tv-part-to));
+  }
+}
+@keyframes tv-line {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  28% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1) scaleY(60);
+    opacity: 0;
+  }
+}
+
+/*
+ * Static between pages (components/tv.tsx, TvStatic): coarse grey noise over
+ * the screen while the page scrambles out and the next one comes in.
+ */
+[data-slot="tv-static"] {
+  position: fixed;
+  inset: var(--bezel);
+  z-index: 2147483646;
+  width: calc(100% - 2 * var(--bezel));
+  height: calc(100% - 2 * var(--bezel));
+  border-radius: var(--screen-radius);
+  image-rendering: pixelated;
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
+}
+[data-slot="tv-static"][data-on] {
+  opacity: 0.22;
+  transition-duration: 80ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="tv-boot"],
+  [data-slot="tv-static"] {
+    display: none !important;
+  }
+}
+@media print {
+  [data-slot="tv-static"] {
+    display: none;
+  }
+}
+
+@media print {
+  html.tv {
+    height: auto;
+    overflow: visible;
+  }
+  html.tv body {
+    position: static;
+    overflow: visible;
+  }
+  html.tv::after {
+    display: none;
+  }
+}
+
+/*
+ * Glyph frames (DESIGN.md, Frames; components/ui/frame.tsx): box-drawing
+ * characters draw the outline, as a terminal draws a window, so each line runs
+ * through the middle of a character cell and the corners are the font's own
+ * arcs. The edges overhang their parent by half a cell, which puts each line
+ * where a 1px border would be. Rows are 20px and Maple's vertical bar is
+ * 1.52em tall, so the bars meet with no gap. Fills are long runs the cell
+ * clips; the vertical run wraps one bar per line.
+ */
+[data-slot="frame-edges"] {
+  position: absolute;
+  inset: calc(var(--text-caption--line-height) / -2) -0.5ch;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1ch minmax(0, 1fr) 1ch;
+  grid-template-rows: var(--text-caption--line-height) minmax(0, 1fr) var(
+      --text-caption--line-height
+    );
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: var(--text-caption--line-height);
+  white-space: pre;
+  text-align: start;
+  pointer-events: none;
+  user-select: none;
+}
+[data-slot="frame-edges"] > * {
+  display: flex;
+  min-width: 0;
+}
+[data-slot="frame-edges"] [data-frame-text] {
+  flex: none;
+  padding-inline: 1ch;
+  color: var(--foreground);
+}
+/*
+ * A fill reaches 1px into its neighbors: clipping two glyphs at the same
+ * fractional pixel would leave a faint seam where they meet.
+ */
+[data-edge="fill"] {
+  flex: 1;
+  min-width: 0;
+  margin-inline: -1px;
+  overflow: hidden;
+}
+[data-edge="top-left"]::before {
+  content: "╭" / "";
+}
+[data-edge="top-right"]::before {
+  content: "╮" / "";
+}
+[data-edge="bottom-left"]::before {
+  content: "╰" / "";
+}
+[data-edge="bottom-right"]::before {
+  content: "╯" / "";
+}
+[data-edge="lead"]::before {
+  content: "─" / "";
+}
+[data-edge="fill"]::before {
+  content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" /
+    "";
+}
+[data-edge="side"] {
+  display: block;
+  margin-block: -1px;
+  overflow: hidden;
+  word-break: break-all;
+  white-space: normal;
+}
+[data-edge="side"]::before {
+  content: "││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││" /
+    "";
+}
+/* One vertical edge alone, for a sheet against a viewport edge. */
+[data-slot="frame-side"] {
+  position: absolute;
+  inset-block: 0;
+  width: 1ch;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  line-height: var(--text-caption--line-height);
+  word-break: break-all;
+  pointer-events: none;
+  user-select: none;
+}
+[data-slot="frame-side"][data-side="left"] {
+  left: -0.5ch;
+}
+[data-slot="frame-side"][data-side="right"] {
+  right: -0.5ch;
+}
+[data-slot="frame-side"]::before {
+  content: "││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││" /
+    "";
+}
+
+/*
+ * As tall as the screen: the viewport less the TV bezel on both sides. For a
+ * block that stays put while the page scrolls under it.
+ */
+@utility h-screen-inner {
+  height: calc(100dvh - 2 * var(--bezel));
+}
+/* Half of that: from the screen's top edge to its middle line. */
+@utility h-screen-half {
+  height: calc(50dvh - var(--bezel));
+}
+
+/*
+ * Corners sit one gutter in from the screen, past the TV bezel when there is
+ * one. The column (lib/layout.ts) has the same gutter, so on a narrow screen
+ * a page's text starts under the mark.
+ */
+@utility corner-top {
+  top: calc(var(--bezel) + var(--gutter));
+}
+@utility corner-bottom {
+  bottom: calc(var(--bezel) + var(--gutter));
+}
+@utility corner-left {
+  left: calc(var(--bezel) + var(--gutter));
+}
+@utility corner-right {
+  right: calc(var(--bezel) + var(--gutter));
+}
+
+/*
+ * Stars kept to the margins (components/star-field.tsx, margins), clear of
+ * a column of text. Where the screen has no margins, a phone, the sky is
+ * empty.
+ */
+[data-slot="star-field"][data-margins] {
+  mask-image: linear-gradient(
+    to right,
+    black calc(50% - 32rem),
+    transparent calc(50% - 28rem),
+    transparent calc(50% + 28rem),
+    black calc(50% + 32rem)
+  );
+}
