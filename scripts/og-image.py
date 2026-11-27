@@ -7,14 +7,12 @@
 """Regenerates the share cards in public/og/, the GIFs a shared link shows.
 
 Each card is the home itself, recorded in dark mode without the corners: the
-mark decodes in, sways, and the koi swim around it. The mark is drawn by
-three.js on the client, so a card is a recording of a running site rather
-than a next/og render. The pond is brightened so the fish read at thumbnail
-size. The koi start in random places, so every recording differs, and
+mark decodes in and sways. The mark is drawn by three.js on the client, so
+a card is a recording of a running site rather than a next/og render.
 /og.gif (app/og.gif/route.ts) sends each request to one of them at random.
 
-Look at the cards before you commit them, and record again if the koi stay
-off screen. lib/og.json records how many there are.
+Look at the cards before you commit them. lib/og.json records how many there
+are.
 
 Requirements
   uv            `bun run og` runs this file with `uv run`.
@@ -46,14 +44,10 @@ VIEWPORT = {"width": 1200, "height": 630}
 WIDTH = 800
 FPS = 12
 # The clip starts just before the mark decodes in, about 2 seconds after
-# load, and runs long enough for the koi to come round.
+# load, and runs long enough to show the sway.
 START_S = 1.8
 LENGTH_S = 15
-# The pond is dimmed to stay a backdrop on the site; the card wants it bright.
-STYLE = (
-    "header, footer { visibility: hidden }"
-    " canvas.pointer-events-none { filter: brightness(1.8) }"
-)
+STYLE = "header, footer { visibility: hidden }"
 GIF_FILTER = (
     f"fps={FPS},scale={WIDTH}:-1:flags=lanczos,split[a][b];"
     "[a]palettegen=max_colors=64:stats_mode=diff[p];"

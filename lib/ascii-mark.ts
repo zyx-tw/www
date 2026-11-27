@@ -4,16 +4,14 @@ import type { SceneV1 } from "@/lib/3d"
 import { buildShapeGeometry } from "@/lib/3d/geometry"
 
 import { ART, DECODE_LENGTH } from "@/lib/ascii-preview"
-import type { Obstacle } from "@/lib/pond/obstacle"
-import { cellSize, glyphFont } from "@/lib/pond/renderer"
+import { cellSize, glyphFont } from "@/lib/glyph-grid"
 
 /**
  * The home's mark in characters: the zyx mark extruded in 3D, swaying
- * slowly, drawn on the pond's character grid. Each frame renders the lit
+ * slowly, drawn on a character grid. Each frame renders the lit
  * mesh at one pixel per cell, then a pass over the screen draws each covered
  * cell as a glyph from the ramp, denser where the face catches more light,
- * over the page color. The covered cells go to the pond as an obstacle, so
- * the fish and koi swim around the mark. It arrives and leaves as the page's
+ * over the page color. It arrives and leaves as the page's
  * text does: in, every cell starts as noise and resolves as a frontier
  * crosses it from left to right, on the Works window's timing; out, the
  * cells turn to noise from the right before the next page.
@@ -63,7 +61,7 @@ void main() {
   gl_Position = vec4(position.xy, 0.0, 1.0);
 }`
 
-// Cells count from the top left, as the pond's; the shade target's rows
+// Cells count from the top left; the shade target's rows
 // count from the bottom.
 const GLYPH_FRAGMENT = /* glsl */ `
 uniform sampler2D uShade;
@@ -95,7 +93,7 @@ void main() {
   vec2 cell = floor(p / uCell);
   if (cell.x >= uGrid.x || cell.y >= uGrid.y) discard;
   // Bloom: light from the lit cells within three cells spills around them,
-  // over the page and the pond. The dark theme only (uGlow 0 in light).
+  // over the page. The dark theme only (uGlow 0 in light).
   float halo = 0.0;
   if (uGlow > 0.0) {
     for (int dy = -3; dy <= 3; dy++) {
@@ -189,9 +187,7 @@ export class AsciiMark {
   constructor(
     private canvas: HTMLCanvasElement,
     shape: SceneV1["shape"],
-    /** What swims around the mark, if anything does. */
-    private obstacle: Obstacle | null,
-    /** The pond's cell scale, so the mark draws on the pond's grid. */
+    /** The size of a character cell. */
     private cellScale: number
   ) {
     this.renderer = new THREE.WebGLRenderer({
@@ -253,7 +249,7 @@ export class AsciiMark {
     canvas.addEventListener("pointercancel", this.onPointerUp)
   }
 
-  /** Fit the grid to the canvas, on the pond's cells. */
+  /** Fit the grid to the canvas. */
   resize(family: string) {
     const { width, height } = this.canvas.getBoundingClientRect()
     if (width < 1 || height < 1) return
@@ -346,7 +342,6 @@ export class AsciiMark {
     this.canvas.removeEventListener("pointermove", this.onPointerMove)
     this.canvas.removeEventListener("pointerup", this.onPointerUp)
     this.canvas.removeEventListener("pointercancel", this.onPointerUp)
-    this.obstacle?.clear()
     this.mesh.geometry.dispose()
     this.shadeMaterial.dispose()
     this.glyphMaterial.dispose()
@@ -389,8 +384,7 @@ export class AsciiMark {
     const renderer = this.renderer
     renderer.setRenderTarget(this.target)
     renderer.render(this.shadeScene, this.camera)
-    // The mask is also what a drag is tested against, so it is read with or
-    // without a pond to hand it to.
+    // The mask is what a drag is tested against.
     if (this.frame++ % MARK.maskEvery === 0 && !this.reading) this.readMask()
     const uniforms = this.glyphMaterial.uniforms
     if (this.phase !== STILL) {
@@ -441,9 +435,8 @@ export class AsciiMark {
   }
 
   /**
-   * Read the covered cells back without waiting for the GPU: the pond reads
-   * its own state back every frame, and a blocking read here would make it
-   * wait for the mark's frame too. The obstacle lags a frame or two.
+   * Read the covered cells back without waiting for the GPU. The mask lags
+   * a frame or two.
    */
   private readMask() {
     const { cols, rows, pixels } = this
@@ -452,7 +445,7 @@ export class AsciiMark {
       .readRenderTargetPixelsAsync(this.target, 0, 0, cols, rows, pixels)
       .then(() => {
         // A resize since the read started makes it stale.
-        if (!this.disposed && pixels === this.pixels) this.updateObstacle()
+        if (!this.disposed && pixels === this.pixels) this.updateMask()
       })
       .catch(() => undefined)
       .finally(() => {
@@ -460,9 +453,8 @@ export class AsciiMark {
       })
   }
 
-  /** The covered cells, top row first: kept for the drag's hit test, and
-   *  handed to the pond when there is one. */
-  private updateObstacle() {
+  /** The covered cells, top row first, for the drag's hit test. */
+  private updateMask() {
     const { cols, rows, pixels, mask } = this
     for (let row = 0; row < rows; row++) {
       const from = (rows - 1 - row) * cols
@@ -470,7 +462,6 @@ export class AsciiMark {
         mask[row * cols + col] = pixels[(from + col) * 4 + 3]! > 127 ? 1 : 0
       }
     }
-    this.obstacle?.update(mask, cols, rows, this.cellW, this.cellH)
   }
 
   /** The ramp's glyphs side by side, one cell each, white on clear. */
