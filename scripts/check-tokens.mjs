@@ -62,6 +62,12 @@ const exempt = {
     "raw font size",
   ],
   "apps/web/lib/room.ts": ["color literal"],
+  // ASCII redraws a picture in its own colors on a canvas, and its shader
+  // and gradients take color values at runtime.
+  "packages/ui/src/components/ascii.tsx": ["color literal", "inline style"],
+  // Glyph charts color each cell by its value (color-mix of the data hues)
+  // and measure a cell with an off-screen probe.
+  "packages/ui/src/components/glyph-chart.tsx": ["inline style"],
   // The map is content: a cockpit display in the color of its phosphor.
   "apps/web/lib/map-palette.ts": ["color literal"],
 }

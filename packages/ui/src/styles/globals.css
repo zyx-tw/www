@@ -38,6 +38,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-mark: var(--mark);
+  --color-data-low: var(--data-low);
+  --color-data-mid: var(--data-mid);
+  --color-data-high: var(--data-high);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-muted: var(--muted);
@@ -58,6 +61,12 @@
   /* The one accent: marked words, the current step, a name pointed at. An
      orange leaning to amber, the same in both themes. */
   --mark: oklch(0.78 0.16 62);
+  /* Data hues: only on marks that encode a value (a chart's line, a meter's
+     fill, a status dot), low to high, the same in both themes. The chrome
+     around them stays grayscale. */
+  --data-low: oklch(0.72 0.15 150);
+  --data-mid: oklch(0.78 0.15 80);
+  --data-high: oklch(0.68 0.19 25);
   --primary: oklch(0.25 0 0);
   --primary-foreground: oklch(0.97 0.005 85);
   --muted: oklch(0.93 0.005 85);
