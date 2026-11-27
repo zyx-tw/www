@@ -5,8 +5,6 @@ import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "./globals.css"
 import {
   BottomCorners,
-  cornerLink,
-  CornerTip,
   LegalLinks,
   TopCorners,
 } from "@workspace/ui/components/corners"
@@ -57,15 +55,7 @@ export default async function RootLayout({
       <body>
         <ThemeProvider>
           <TooltipProvider>
-            <TopCorners
-              nav={
-                <CornerTip tip="Every project and its link">
-                  <a href="https://www.zyx.tw/project" className={cornerLink}>
-                    {SITE_NAME}
-                  </a>
-                </CornerTip>
-              }
-            />
+            <TopCorners trail={[{ label: SITE_NAME }]} />
             {children}
             <BottomCorners links={<LegalLinks />} />
           </TooltipProvider>
