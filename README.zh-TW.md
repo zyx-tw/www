@@ -16,7 +16,6 @@
 
 ```
 zyx.tw          the site: a 3D home, works and a resume
-link.zyx.tw     a URL shortener
 time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
@@ -28,7 +27,7 @@ ui.zyx.tw       the component registry that every app imports from
 
 ## 功能
 
-- **放 7 個 app**：同一個 repo、同一條 CI，各自部署到自己的子網域。
+- **放 6 個 app**：同一個 repo、同一條 CI，各自部署到自己的子網域。
 - **共用一套設計系統**：每個元件只在 `packages/ui` 存一份，所有 app 都從那裡引用。
 - **強制設計規則**：app 偏離主題，或用了不是設計 token 的值，CI 就會失敗。
 - **也給 agent 讀**：主站和 ui.zyx.tw 每一頁都有 Markdown 版本，另外有 `/llms.txt`、`/agent-instructions.md` 和 JSON-LD。
@@ -50,7 +49,6 @@ bun dev --filter=web
 | App | 資料夾 | 網址 |
 |-----|--------|------|
 | 主站 | `apps/web` | [zyx.tw](https://zyx.tw) |
-| 短網址 | `apps/link` | [link.zyx.tw](https://link.zyx.tw) |
 | 時鐘 | `apps/time` | [time.zyx.tw](https://time.zyx.tw) |
 | 乖乖 | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
@@ -71,7 +69,6 @@ bun dev --filter=web
 
 ## 設定
 
-`apps/web` 和 `apps/link` 各有一份 `.env.example`。`apps/1909` 的變數列在[它的 README](apps/1909/README.md#environment-variables)。
 
 `apps/web` 的 `GITHUB_TOKEN` 是選用的，需要有 `read:user` 權限的 fine-grained token。沒設的話，網站會隱藏貢獻熱力圖，事件列表照常顯示。
 

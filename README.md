@@ -14,7 +14,6 @@
 
 ```
 zyx.tw          the site: a 3D home, projects, a star map of notes and a resume
-link.zyx.tw     a URL shortener
 time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
@@ -26,7 +25,7 @@ A new subdomain used to mean a new repo and another copy of the same lint config
 
 ## Features
 
-- **Hosts 7 apps**: each app deploys to its own subdomain from one repo and one CI pipeline.
+- **Hosts 6 apps**: each app deploys to its own subdomain from one repo and one CI pipeline.
 - **Shares one design system**: every component lives once in `packages/ui`, and every app imports it from there.
 - **Enforces the design rules**: CI fails when an app drifts from the theme or uses a value that is not a design token.
 - **Serves agents**: the site and ui.zyx.tw give each page a Markdown version, plus `/llms.txt`, `/agent-instructions.md` and JSON-LD.
@@ -48,7 +47,6 @@ Open http://localhost:3000. You should see the zyx.tw home page.
 | App | Folder | Live at |
 |-----|--------|---------|
 | Site | `apps/web` | [zyx.tw](https://zyx.tw) |
-| URL shortener | `apps/link` | [link.zyx.tw](https://link.zyx.tw) |
 | Clock | `apps/time` | [time.zyx.tw](https://time.zyx.tw) |
 | Snack | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
@@ -69,7 +67,7 @@ The design rules (theme, type scale, layout, motion and copy) are in [apps/ui/DE
 
 ## Configuration
 
-`apps/web` and `apps/link` each have a `.env.example`. `apps/1909` lists its variables in [its README](apps/1909/README.md#environment-variables).
+`apps/web` has a `.env.example`. `apps/1909` lists its variables in [its README](apps/1909/README.md#environment-variables).
 
 `GITHUB_TOKEN` in `apps/web` is optional. It is a fine-grained token with `read:user`. Without it, the site hides the contribution heatmap and still shows the events list.
 
@@ -80,7 +78,7 @@ The design rules (theme, type scale, layout, motion and copy) are in [apps/ui/DE
 | Framework | Next.js 16 (App Router, Turbopack) |
 | UI | React 19, Tailwind CSS 4, Base UI, [ui.zyx.tw](https://ui.zyx.tw) components |
 | Language | TypeScript, strict, with `noUncheckedIndexedAccess` |
-| Data | Supabase (`1909`, `link`) |
+| Data | Supabase (`1909`) |
 | 3D | three.js, React Three Fiber (`good`, `3d`) |
 | Telemetry | `packages/otel` sends logs to [sensorium](https://github.com/zyx1121/sensorium) |
 | Tooling | Bun workspaces and Turborepo |

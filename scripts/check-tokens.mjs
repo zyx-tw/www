@@ -12,7 +12,6 @@ const scanned = [
   "apps/1909",
   "apps/3d",
   "apps/good",
-  "apps/link",
   "apps/time",
   "apps/ui",
   "apps/web",

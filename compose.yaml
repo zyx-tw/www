@@ -42,15 +42,6 @@ services:
     ports:
       - "${TIME_BIND:-127.0.0.1:3003}:3000"
 
-  link:
-    <<: *app
-    image: ghcr.io/zyx1121/link.zyx.tw:${LINK_VERSION:-main}
-    env_file:
-      - path: env/link.env
-        required: false
-    ports:
-      - "${LINK_BIND:-127.0.0.1:3004}:3000"
-
   "1909":
     <<: *app
     image: ghcr.io/zyx1121/1909.zyx.tw:${APP_1909_VERSION:-main}

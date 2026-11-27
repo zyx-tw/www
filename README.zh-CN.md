@@ -16,7 +16,6 @@
 
 ```
 zyx.tw          the site: a 3D home, works and a resume
-link.zyx.tw     a URL shortener
 time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
@@ -50,7 +49,6 @@ bun dev --filter=web
 | 应用 | 文件夹 | 地址 |
 |------|--------|------|
 | 主站 | `apps/web` | [zyx.tw](https://zyx.tw) |
-| 短链接 | `apps/link` | [link.zyx.tw](https://link.zyx.tw) |
 | 时钟 | `apps/time` | [time.zyx.tw](https://time.zyx.tw) |
 | 乖乖 | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
@@ -71,7 +69,6 @@ bun dev --filter=web
 
 ## 配置
 
-`apps/web` 和 `apps/link` 各有一份 `.env.example`。`apps/1909` 的变量列在[它的 README](apps/1909/README.md#environment-variables)。
 
 `apps/web` 的 `GITHUB_TOKEN` 是可选的，需要有 `read:user` 权限的 fine-grained token。没设置的话，网站会隐藏贡献热力图，事件列表照常显示。
 
