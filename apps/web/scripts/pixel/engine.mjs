@@ -3,8 +3,8 @@
 import zlib from "node:zlib"
 import fs from "node:fs"
 
-export const W = 480,
-  H = 360
+export const W = +(process.env.PX_W ?? 480),
+  H = +(process.env.PX_H ?? 360)
 const S = 20,
   OX = W / 2,
   OY = 176
@@ -407,6 +407,7 @@ export function render(
     stars = true,
     scale = S,
     sprites = [],
+    clear = false,
   } = {}
 ) {
   const lamps = prims
@@ -633,19 +634,40 @@ export function render(
         px.set([c[0], c[1], c[2], 255], (Y * W + X) * 4)
       }
   }
+  // `clear`: nothing hit is transparent, and the file is cut to what was drawn.
+  // The cut is returned in canvas pixels, so a page can set the picture back in place.
+  let box0 = { x: 0, y: 0, w: W, h: H }
+  if (clear) {
+    let x0 = W,
+      y0 = H,
+      x1 = -1,
+      y1 = -1
+    for (let y = 0; y < H; y++)
+      for (let x = 0; x < W; x++)
+        if (depth[y * W + x] !== Infinity) {
+          x0 = Math.min(x0, x)
+          x1 = Math.max(x1, x)
+          y0 = Math.min(y0, y)
+          y1 = Math.max(y1, y)
+        }
+    box0 =
+      x1 < 0
+        ? { x: 0, y: 0, w: 1, h: 1 }
+        : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 }
+  }
   const K = 3,
-    w = W * K,
-    hgt = H * K,
+    w = box0.w * K,
+    hgt = box0.h * K,
     raw = Buffer.alloc((w * 4 + 1) * hgt)
   for (let y = 0; y < hgt; y++) {
     const row = y * (w * 4 + 1) + 1,
-      sy = ((y / K) | 0) * W
+      sy = (box0.y + ((y / K) | 0)) * W
     for (let x = 0; x < w; x++) {
-      const s = (sy + ((x / K) | 0)) * 4
+      const s = (sy + box0.x + ((x / K) | 0)) * 4
       raw[row + x * 4] = px[s]
       raw[row + x * 4 + 1] = px[s + 1]
       raw[row + x * 4 + 2] = px[s + 2]
-      raw[row + x * 4 + 3] = 255
+      raw[row + x * 4 + 3] = clear && depth[s / 4] === Infinity ? 0 : 255
     }
   }
   const chunk = (type, data) => {
@@ -669,6 +691,7 @@ export function render(
       chunk("IEND", Buffer.alloc(0)),
     ])
   )
+  return box0
 }
 export const floor = () =>
   box(-30, -30, -1, 60, 60, 1, MAT.floor, { floor: true })

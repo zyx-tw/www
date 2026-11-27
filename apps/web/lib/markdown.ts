@@ -2,8 +2,9 @@ import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
 import { fenced, plain } from "@/components/rich"
-import { INFO, HOME, MAP, NOT_FOUND, PROJECT, SITE } from "@/lib/copy"
+import { DEVICE, INFO, HOME, MAP, NOT_FOUND, PROJECT, SITE } from "@/lib/copy"
 import { hosts } from "@/lib/hosts"
+import { DEVICES, KINDS, LINKS, OUTSIDE_LABEL } from "@/lib/room"
 import type { LegalDoc, Run } from "@/lib/legal"
 import {
   around,
@@ -122,6 +123,36 @@ export function siteMarkdown() {
           `- ${link(host, `https://${host}`)}: ${text(purpose)}`
       )
       .join("\n"),
+  ])
+}
+
+/** Every machine with its block, role, system, parts and guests, then the links between them. */
+export function deviceMarkdown() {
+  const end = (name: string) =>
+    name in OUTSIDE_LABEL
+      ? OUTSIDE_LABEL[name as keyof typeof OUTSIDE_LABEL]
+      : name
+  return markdownDocument({ title: DEVICE.title, path: "/device" }, [
+    `# ${text(DEVICE.title)}`,
+    ...DEVICES.map((d) =>
+      [
+        `## ${d.id}（${text(d.block)}）`,
+        text(d.role),
+        [
+          `- 系統：${text(d.system)}`,
+          `- 硬體：${text(d.parts.join("，"))}`,
+          d.vms ? `- VM：${d.vms.join("、")}` : "",
+          d.cts ? `- CT：${d.cts.join("、")}` : "",
+          d.others ? `- ${text(d.others)}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      ].join("\n\n")
+    ),
+    "## 連線",
+    LINKS.map(
+      (l) => `- ${end(l.from)} → ${end(l.to)}：${text(KINDS[l.kind].label)}`
+    ).join("\n"),
   ])
 }
 
