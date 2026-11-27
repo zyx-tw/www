@@ -1,6 +1,3 @@
-dist/
-node_modules/
+# build artifacts & generated output
 .next/
-.turbo/
-coverage/
-bun.lock
+next-env.d.ts

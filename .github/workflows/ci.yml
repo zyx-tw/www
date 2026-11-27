@@ -1,99 +1,43 @@
-name: CI
+name: ci
 
 on:
   pull_request:
   push:
     branches: [main]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  ci:
-    name: Lint, typecheck, build
+  check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.3.13
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Token policy
-        run: bun run tokens:check
-
-      - name: cn keeps the type scale next to a text color
-        run: bun -e 'import { cn } from "./packages/ui/src/lib/utils"; const out = cn("text-body text-title", "text-caption text-foreground"); if (out !== "text-caption text-foreground") throw new Error(out)'
-
-      - name: Setup Node for the agent kit's network tests
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Agent kit tests
-        working-directory: packages/agent
-        run: bun run test
-
+          bun-version: 1.4.5
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run lint
+      - run: bun run format:check
+      - run: bun run tokens:check
       - name: The CV's LaTeX source matches the resume
-        working-directory: apps/web
         run: bun run cv --check
 
-      - name: Lint
-        run: bun run lint
-
-      - name: Format check
-        run: bun run format:check
-
-      - name: Typecheck
-        run: bun run typecheck
-
-
-  compose:
-    name: compose.yaml is valid
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Validate with the example settings
-        run: |
-          cp .env.example .env
-          docker compose config --quiet
-          docker compose config --services
-
   image:
-    name: image (${{ matrix.app }})
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - { app: web, host: www.zyx.tw, health: /llms.txt, file: Dockerfile }
     uses: zyx1121/.github/.github/workflows/image.yml@main
     permissions:
       contents: read
       packages: write
     with:
-      images: '[{"name": "ghcr.io/zyx1121/${{ matrix.host }}", "file": "${{ matrix.file }}"}]'
-      build-args: |
-        APP=${{ matrix.app }}
-        HEALTH=${{ matrix.health }}
-      smoke: bash deploy/smoke.sh ${{ matrix.app }} ghcr.io/zyx1121/${{ matrix.host }}:ci
+      images: '[{"name": "ghcr.io/zyx-tw/www"}]'
+      smoke: bash deploy/smoke.sh
     secrets:
-      # Classic token, no scopes: the web heatmap counts private contributions.
+      # Classic token, no scopes: the heatmap counts private contributions.
       build-env: '{"github_token": ${{ toJSON(secrets.HEATMAP_GITHUB_TOKEN) }}}'
 
   promote:
-    # The host runs all apps from one release, so every image must pass.
-    needs: [ci, compose, image]
+    needs: [check, image]
     uses: zyx1121/.github/.github/workflows/promote.yml@main
     permissions:
       contents: read
       packages: write
     with:
-      images: '["ghcr.io/zyx1121/www.zyx.tw"]'
+      images: '["ghcr.io/zyx-tw/www"]'

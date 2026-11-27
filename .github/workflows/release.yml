@@ -1,8 +1,5 @@
 name: release
 
-# A push to main deploys every app's image ci passed to VM 117 through land:
-# ship retags tree-<tree> as sha-<commit> and main, then carrel-deployd on
-# the VM runs deploy/carrel-start.sh, which moves the whole stack at once.
 on:
   push:
     branches: [main]
@@ -16,7 +13,7 @@ jobs:
       actions: read
       id-token: write
     with:
-      images: '["ghcr.io/zyx1121/www.zyx.tw"]'
+      images: '["ghcr.io/zyx-tw/www"]'
       target: land
       tenant: compose
       app: www-zyx-tw

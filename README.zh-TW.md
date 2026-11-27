@@ -1,66 +1,40 @@
-<!-- 翻譯自 README.md @ docs/readme-template-v2。只翻 "For AI agents" 以上的章節，英文版更新時一起改。 -->
+<!-- 翻譯自 README.md。只翻 "For AI agents" 以上的章節，英文版更新時一起改。 -->
 
 <div align="center">
 
-<h1>www.zyx.tw</h1>
+<h1>www</h1>
 
-<p><strong>zyx.tw 和它所有子網域的 app，放在同一個 Turborepo，共用一套設計系統。</strong></p>
+<p><strong>zyx.tw：3D 首頁、作品、筆記星圖和履歷。</strong></p>
 
-[![CI](https://img.shields.io/github/actions/workflow/status/zyx1121/www.zyx.tw/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/zyx1121/www.zyx.tw/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/zyx-tw/www/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/zyx-tw/www/actions)
 [![Live](https://img.shields.io/badge/live-zyx.tw-000000?style=flat-square)](https://zyx.tw)
-[![License](https://img.shields.io/github/license/zyx1121/www.zyx.tw?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/github/license/zyx-tw/www?style=flat-square)](LICENSE)
 
 [English](README.md) | **繁體中文** | [简体中文](README.zh-CN.md)
 
 </div>
 
-```
-zyx.tw          the site: a 3D home, works and a resume
-```
-
-以前每開一個子網域，就要開一個新 repo，再複製一次同樣的 lint 設定、設計 token 和遙測設定。在這裡，一個新點子就是 `apps/` 底下的一個新資料夾。
-
 ## 功能
 
-- **放 3 個 app**：同一個 repo、同一條 CI，各自部署到自己的子網域。
-- **共用一套設計系統**：每個元件只在 `packages/ui` 存一份，所有 app 都從那裡引用。
-- **強制設計規則**：app 偏離主題，或用了不是設計 token 的值，CI 就會失敗。
-- **也給 agent 讀**：主站和 ui.zyx.tw 每一頁都有 Markdown 版本，另外有 `/llms.txt`、`/agent-instructions.md` 和 JSON-LD。
-- **發布元件庫**：其他專案可以用 shadcn CLI 從 ui.zyx.tw 安裝元件。
+- **3D 首頁**：zyx 標誌，用 Plump 場景算出來。
+- **作品和筆記**：作品、筆記星圖，還有 Info 上的履歷，也有 PDF 版。
+- **也給 agent 讀**：每一頁都有 Markdown 版本，另外有 `/llms.txt`、`/agent-instructions.md` 和 JSON-LD。
+- **只用設計 token**：頁面用了 [ui.zyx.tw](https://ui.zyx.tw) token 以外的值，CI 就會失敗。
 
 ## 快速開始
 
 ```sh
-git clone https://github.com/zyx1121/www.zyx.tw && cd www.zyx.tw
+git clone https://github.com/zyx-tw/www && cd www
 bun install
-cp apps/web/.env.example apps/web/.env.local
-bun dev --filter=web
+cp .env.example .env.local
+bun run dev
 ```
 
-打開 http://localhost:3000，應該會看到 zyx.tw 首頁。
-
-## 使用方式
-
-| App | 資料夾 | 網址 |
-|-----|--------|------|
-| 主站 | `apps/web` | [zyx.tw](https://zyx.tw) |
-
-- 只跑一個 app：`bun dev --filter=<資料夾名稱>`。`bun dev` 會全部一起跑。
-- 在 app 裡引用元件：`import { Button } from "@workspace/ui/components/ui/button"`。
-- 在其他專案使用這套設計系統：
-
-  ```sh
-  bunx shadcn@latest init https://ui.zyx.tw/r/base.json
-  bunx shadcn@latest add @zyx1121/button @zyx1121/dialog
-  ```
-
-
-設計規則(主題、字級、版面、動態和文案)在 [DESIGN.md in zyx-tw/ui](https://github.com/zyx-tw/ui/blob/main/DESIGN.md)。
+打開 http://localhost:3000，會看到 zyx.tw 首頁。
 
 ## 設定
 
-
-`apps/web` 的 `GITHUB_TOKEN` 是選用的，需要有 `read:user` 權限的 fine-grained token。沒設的話，網站會隱藏貢獻熱力圖，事件列表照常顯示。
+設定在 `.env.example`。`GITHUB_TOKEN` 可以不填：沒有它，Info 不顯示貢獻熱圖，事件列表照常顯示。
 
 ## 運作方式
 
@@ -68,18 +42,12 @@ bun dev --filter=web
 |----|------|
 | 框架 | Next.js 16(App Router、Turbopack) |
 | 介面 | React 19、Tailwind CSS 4、Base UI、[ui.zyx.tw](https://ui.zyx.tw) 元件 |
-| 語言 | TypeScript，strict 並開 `noUncheckedIndexedAccess` |
-| 資料 | Supabase(`1909`、`link`) |
-| 3D | three.js、React Three Fiber(`3d`) |
-| 遙測 | `packages/otel` 把 log 送到 [sensorium](https://github.com/zyx1121/sensorium) |
-| 工具 | Bun workspaces 和 Turborepo |
+| 語言 | TypeScript，strict，開 `noUncheckedIndexedAccess` |
+| 3D | three.js 和 React Three Fiber，Plump 的算圖程式在 `lib/3d` |
+| 遙測 | `lib/otel` 把 trace 和 log 送到 [sensorium](https://github.com/zyx-tw/sensorium) |
 
-共用套件：`packages/ui`(設計系統)、`packages/3d`(Plump 的場景格式和渲染器)、`packages/agent`(agent kit)、`packages/otel`、`packages/eslint-config` 和 `packages/typescript-config`。
+`components/`、`lib/` 和 `styles/` 裡的元件複製自 [zyx-tw/ui](https://github.com/zyx-tw/ui) 的 registry 原始碼，`lib/3d` 複製自 [zyx-tw/plump](https://github.com/zyx-tw/plump)。要改請先改那邊。
 
-## 其他
-
-給 AI agent 的結構化資訊與開發說明在[英文版](README.md#for-ai-agents)。
-
-## 授權
+## License
 
 [MIT](LICENSE)

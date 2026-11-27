@@ -1,16 +1,19 @@
-// Everything visual must come from the base tokens (https://github.com/zyx-tw/ui/blob/main/DESIGN.md). This
+// Everything visual must come from the base tokens (DESIGN.md in zyx-tw/ui). This
 // rejects the ways around them: sizes outside text-display / title / body /
 // caption, any radius (everything is square), removed color tokens, Tailwind
 // palette colors, color literals, inline styles, raw font sizes, arbitrary
-// values and stray durations. Page code (outside packages/ui's components)
+// values and stray durations. Page code (outside components/ui)
 // also may not draw layer-2 surfaces.
 import { readdir, readFile } from "node:fs/promises"
 import { join, relative } from "node:path"
 
 const root = new URL("..", import.meta.url).pathname
 const scanned = [
-  "apps/web",
-  "packages/ui/src",
+  "app",
+  "components",
+  "hooks",
+  "lib",
+  "styles",
 ]
 const skippedDirs = new Set([
   "node_modules",
@@ -19,51 +22,54 @@ const skippedDirs = new Set([
   "public",
   ".turbo",
   "fonts",
+  // lib/3d is a copy of the Plump renderer (zyx-tw/plump): scene colors,
+  // not page chrome.
+  "3d",
 ])
 
 // Files that render content rather than chrome, each with its reason. A
 // rule is waived only for the file named here, never for a directory.
 const exempt = {
   // The stylesheet defines the tokens themselves.
-  "packages/ui/src/styles/globals.css": "all",
+  "styles/globals.css": "all",
   // Open Graph images render through Satori, which takes inline styles and
   // literal colors, not Tailwind classes or CSS variables.
-  "packages/ui/src/components/og-image.tsx": "all",
+  "components/og-image.tsx": "all",
   // The GitHub contribution grid is data: one character per day, laid out by
   // inline grid columns and set at the size that makes a week one column.
-  "packages/ui/src/components/status.tsx": [
+  "components/status.tsx": [
     "inline style",
     "arbitrary value",
     "raw font size",
   ],
   // The 3D stage's background comes from the exported scene, at runtime.
-  "apps/web/app/page.tsx": ["inline style"],
-  "apps/web/app/layout.tsx": ["inline style"],
+  "app/page.tsx": ["inline style"],
+  "app/layout.tsx": ["inline style"],
   // The works window draws each screenshot as characters in the
   // screenshot's own colors.
-  "apps/web/lib/ascii-preview.ts": ["color literal"],
+  "lib/ascii-preview.ts": ["color literal"],
   // The home mark's weekday colors are content: the mark is a picture.
-  "apps/web/components/home-mark.tsx": ["color literal"],
+  "components/home-mark.tsx": ["color literal"],
   // The Works backdrop is content: ASCII koi in their own colors, drawn on
   // a canvas.
-  "apps/web/lib/pond/renderer.ts": ["color literal"],
+  "lib/pond/renderer.ts": ["color literal"],
   // The device room is content: pixel pictures set where the page places
   // them, links in the colors of the blocks they stand for, and labels drawn
   // in an SVG sized in pixels.
-  "apps/web/components/device-room.tsx": [
+  "components/device-room.tsx": [
     "inline style",
     "color literal",
     "raw font size",
   ],
-  "apps/web/lib/room.ts": ["color literal"],
+  "lib/room.ts": ["color literal"],
   // ASCII redraws a picture in its own colors on a canvas, and its shader
   // and gradients take color values at runtime.
-  "packages/ui/src/components/ascii.tsx": ["color literal", "inline style"],
+  "components/ascii.tsx": ["color literal", "inline style"],
   // Glyph charts color each cell by its value (color-mix of the data hues)
   // and measure a cell with an off-screen probe.
-  "packages/ui/src/components/glyph-chart.tsx": ["inline style"],
+  "components/glyph-chart.tsx": ["inline style"],
   // The map is content: a cockpit display in the color of its phosphor.
-  "apps/web/lib/map-palette.ts": ["color literal"],
+  "lib/map-palette.ts": ["color literal"],
 }
 
 const palette =
@@ -132,7 +138,7 @@ const pageRules = [
   },
 ]
 
-const componentRoot = "packages/ui/src/components/ui/"
+const componentRoot = "components/ui/"
 
 async function* files(dir) {
   const entries = await readdir(dir, { withFileTypes: true }).catch(() => [])
