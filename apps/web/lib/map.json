@@ -259,6 +259,15 @@
           "related": ["start-from-home"]
         },
         {
+          "slug": "six-machines",
+          "name": "我替 6 台設備各定一類工作，說名稱就知道指令送去哪裡",
+          "line": "筆電編輯，其他設備各負責虛擬機、記憶體、備份、顯示卡與對外出口。",
+          "short": "6 台設備",
+          "kind": "field",
+          "level": 2,
+          "requires": ["one-claude-many-machines"]
+        },
+        {
           "slug": "private-network",
           "name": "私有網路由協調伺服器管金鑰與規則，資料在機器之間傳送",
           "line": "協調伺服器分發公鑰與規則，機器之間直接傳送資料。",
