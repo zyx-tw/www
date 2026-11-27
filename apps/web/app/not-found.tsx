@@ -4,6 +4,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Command, Cursor, RequestedPath } from "@workspace/ui/components/shell"
+import { SignalLost } from "@/components/signal-lost"
 import { MAP, NOT_FOUND } from "@/lib/copy"
 import { systemPath, systems } from "@/lib/map"
 import { PAGES } from "@/lib/site"
@@ -26,6 +27,7 @@ export default function NotFound() {
           cd <RequestedPath />
         </Command>
         <h1 className="mt-3 text-title font-medium">{NOT_FOUND.title}</h1>
+        <SignalLost className="mt-10 block h-48 w-full" />
       </div>
       <section aria-label={NOT_FOUND.lead} className={enterRow(2)}>
         <Command>ls /</Command>
