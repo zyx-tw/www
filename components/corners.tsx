@@ -1,4 +1,4 @@
-import { type At, CornerScope, CornerTip } from "./corner-tip"
+import { type At, CornerMenu, CornerScope, CornerTip } from "./corner-tip"
 import { ZyxMark } from "./zyx-mark"
 
 import { cn } from "../lib/utils"
@@ -130,11 +130,15 @@ export type Crumb = { label: string; href?: string }
 /**
  * The path from the mark to the current page, as a shell prints one:
  * `/ WORKS / AINTERN`. Every step but the last is a link. On a phone only
- * the last step shows, and it truncates rather than reach the page nav.
+ * the last step shows, and it truncates rather than reach the page nav; with
+ * a nav that does not fold, a phone shows no trail at all.
  */
-function Trail({ trail }: { trail: Crumb[] }) {
+function Trail({ trail, phone }: { trail: Crumb[]; phone: boolean }) {
   return (
-    <nav aria-label="Breadcrumb" className="min-w-0 max-sm:hidden">
+    <nav
+      aria-label="Breadcrumb"
+      className={cn("min-w-0", !phone && "max-sm:hidden")}
+    >
       <ol className="flex gap-2">
         {trail.map(({ label, href }, index) => {
           const last = index === trail.length - 1
@@ -175,6 +179,7 @@ export function TopCorners({
   markTip = home.startsWith("/") ? "Home" : new URL(home).host,
   trail,
   nav,
+  foldNav = false,
   fade = false,
   className,
 }: {
@@ -185,6 +190,8 @@ export function TopCorners({
   /** The steps from the home page to this one; none on the home page. */
   trail?: Crumb[]
   nav?: React.ReactNode
+  /** On a phone, fold the nav behind a MENU link so the trail has room. */
+  foldNav?: boolean
   fade?: boolean
   /** On each corner, e.g. an entrance animation or a theme scope. */
   className?: string
@@ -194,10 +201,15 @@ export function TopCorners({
       {fade && <EdgeFade edge="top" />}
       {/* With a trail the corner ends 288px from the right edge, clear of a
           four-item nav, so a long name truncates instead of running into it.
-          A phone has no room for both: there the nav marks the page. */}
+          A phone has no room for both: there the nav marks the page, or,
+          folded behind MENU, leaves the trail 96px to the right edge. */}
       <Corner
         at="top-left"
-        className={cn(trail?.length && "gap-2 sm:right-72", className)}
+        className={cn(
+          trail?.length && "gap-2 sm:right-72",
+          trail?.length && (foldNav || !nav) && "max-sm:right-24",
+          className
+        )}
       >
         <CornerTip tip={markTip}>
           <a
@@ -209,11 +221,22 @@ export function TopCorners({
             <ZyxMark className="h-5 w-auto group-hover:-scale-x-100 motion-safe:transition-transform motion-safe:duration-overlay" />
           </a>
         </CornerTip>
-        {trail && trail.length > 0 && <Trail trail={trail} />}
+        {trail && trail.length > 0 && (
+          <Trail trail={trail} phone={foldNav || !nav} />
+        )}
       </Corner>
       {nav && (
         <Corner at="top-right" className={className}>
-          {nav}
+          {foldNav ? (
+            <>
+              <div className="flex max-sm:hidden">{nav}</div>
+              <CornerMenu linkClassName={cornerLink} className="sm:hidden">
+                {nav}
+              </CornerMenu>
+            </>
+          ) : (
+            nav
+          )}
         </Corner>
       )}
     </header>

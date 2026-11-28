@@ -8,13 +8,7 @@ import { readdir, readFile } from "node:fs/promises"
 import { join, relative } from "node:path"
 
 const root = new URL("..", import.meta.url).pathname
-const scanned = [
-  "app",
-  "components",
-  "hooks",
-  "lib",
-  "styles",
-]
+const scanned = ["app", "components", "hooks", "lib", "styles"]
 const skippedDirs = new Set([
   "node_modules",
   ".next",
@@ -37,17 +31,19 @@ const exempt = {
   "components/og-image.tsx": "all",
   // The GitHub contribution grid is data: one character per day, laid out by
   // inline grid columns and set at the size that makes a week one column.
-  "components/status.tsx": [
-    "inline style",
-    "arbitrary value",
-    "raw font size",
-  ],
+  "components/status.tsx": ["inline style", "arbitrary value", "raw font size"],
   // The 3D stage's background comes from the exported scene, at runtime.
   "app/page.tsx": ["inline style"],
   "app/layout.tsx": ["inline style"],
   // The works window draws each screenshot as characters in the
   // screenshot's own colors.
   "lib/ascii-preview.ts": ["color literal"],
+  // The phone's folded nav opens as a floating panel over the page, a layer
+  // like a popover, so it takes the window's border and shadow.
+  "components/corner-tip.tsx": [
+    "shadow on a page",
+    "frame on a page (use spacing or border-t / border-b)",
+  ],
   // The home mark's weekday colors are content: the mark is a picture.
   "components/home-mark.tsx": ["color literal"],
   // The device room is content: pixel pictures set where the page places
