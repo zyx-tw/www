@@ -13,7 +13,12 @@ export function HeroTitle({
   className?: string
 }) {
   return (
-    <h1 className={cn("text-title font-medium text-pretty", className)}>
+    <h1
+      className={cn(
+        "text-headline font-medium tracking-tight text-pretty",
+        className
+      )}
+    >
       {text}
     </h1>
   )

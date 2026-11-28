@@ -59,7 +59,7 @@ export function CornerLabel({
 
 /**
  * Privacy and Terms, which every zyx.tw site shares at www.zyx.tw. They lead
- * the bottom left corner; the labels and their tips follow the site's
+ * the bottom left corner; the labels follow the site's
  * language.
  */
 export function LegalLinks({
