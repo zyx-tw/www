@@ -1,13 +1,7 @@
 "use client"
 /* eslint-disable @next/next/no-img-element -- the room is small pixel frames swapped in place; next/image would resample them */
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type PointerEvent,
-  type ReactNode,
-} from "react"
+import { useEffect, useRef, useState, type PointerEvent } from "react"
 
 import { cn } from "@/lib/utils"
 import { enterRow } from "@/lib/layout"
@@ -453,7 +447,9 @@ function FitRoom({
   return (
     <div
       ref={cell}
-      className={cn("relative min-h-60 min-w-0", className)}
+      // isolate: the blocks' z-indexes stay inside the room, under the
+      // corners and the folded nav.
+      className={cn("relative isolate min-h-60 min-w-0", className)}
       onClick={pick.clear}
     >
       {size && placed && (
@@ -541,13 +537,13 @@ function Row({ device, pick }: { device: Device; pick: Pick }) {
 }
 
 /**
- * The page under the title: each machine as its block, and a row per
+ * The whole page: each machine as its block, and a row per
  * machine. A mouse pointing at a block or a row lights its links and opens
  * its row. A click or a tap keeps it chosen, until it is clicked again or the
  * floor is. The page is one screen tall and the room takes the space the
- * title and the rows leave.
+ * rows leave.
  */
-export function DeviceRoom({ hero }: { hero: ReactNode }) {
+export function DeviceRoom() {
   const still = useReducedMotion()
   const [pointed, setPointed] = useState<DeviceId | null>(null)
   const [picked, setPicked] = useState<DeviceId | null>(null)
@@ -567,19 +563,16 @@ export function DeviceRoom({ hero }: { hero: ReactNode }) {
     },
   }
 
-  // Below md: title, room, rows, one column. From md the title and rows are
-  // the left column and the room the whole right side; the left column's box
-  // is gone below md (`contents`) and `order` puts the room between its two
-  // children. When an open row makes the rows taller than their space, the
+  // Below md: room, then rows, one column. From md the rows are the left
+  // column and the room the whole right side. When an open row makes the rows taller than their space, the
   // rows scroll inside it and the page stays one screen.
   return (
     <>
       <div className="contents md:flex md:min-h-0 md:w-72 md:shrink-0 md:flex-col md:gap-10">
-        <div className="order-1">{hero}</div>
         <ul
           className={cn(
             "order-3 flex min-h-0 shrink flex-col overflow-y-auto",
-            enterRow(4)
+            enterRow(2)
           )}
         >
           {DEVICES.map((d) => (
@@ -590,7 +583,7 @@ export function DeviceRoom({ hero }: { hero: ReactNode }) {
       <FitRoom
         still={still}
         pick={pick}
-        className={cn("order-2 flex-1", enterRow(3))}
+        className={cn("order-2 flex-1", enterRow(1))}
       />
     </>
   )

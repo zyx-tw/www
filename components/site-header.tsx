@@ -55,6 +55,7 @@ export function SiteHeader({
       fade={!home}
       trail={trailOf(pathname, projectNames)}
       className={enter}
+      foldNav
       nav={
         <nav aria-label="Main">
           <ul className="flex gap-7">

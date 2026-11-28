@@ -78,3 +78,67 @@ export function CornerTip({
     </Tooltip>
   )
 }
+
+/**
+ * The page nav folded behind a MENU link, for a phone without room for it
+ * beside the breadcrumb. It opens a panel under the top right corner with the
+ * nav's links in a column, and closes on a pick, a tap outside or Escape.
+ */
+export function CornerMenu({
+  label = "Menu",
+  linkClassName,
+  className,
+  children,
+}: {
+  label?: string
+  /** The corner link style, so MENU looks like the links it hides. */
+  linkClassName?: string
+  className?: string
+  children: React.ReactNode
+}) {
+  const [open, setOpen] = React.useState(false)
+  const root = React.useRef<HTMLDivElement>(null)
+  const id = React.useId()
+
+  React.useEffect(() => {
+    if (!open) return
+    const away = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false)
+    }
+    document.addEventListener("pointerdown", away)
+    document.addEventListener("keydown", key)
+    return () => {
+      document.removeEventListener("pointerdown", away)
+      document.removeEventListener("keydown", key)
+    }
+  }, [open])
+
+  return (
+    <div ref={root} className={cn("relative flex", className)}>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((v) => !v)}
+        className={linkClassName}
+      >
+        {label}
+      </button>
+      <div
+        id={id}
+        hidden={!open}
+        // A pick inside closes the panel; the link still navigates. Capture,
+        // so a link that stops its click still closes it.
+        onClickCapture={(e) => {
+          if ((e.target as HTMLElement).closest("a")) setOpen(false)
+        }}
+        className="absolute top-full right-0 mt-3 min-w-40 rounded-control border border-border bg-background/95 px-5 py-3 shadow-window backdrop-blur-md [&_li]:py-2 [&_ul]:flex-col [&_ul]:items-end [&_ul]:gap-0"
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
