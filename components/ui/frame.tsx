@@ -2,9 +2,9 @@ import * as React from "react"
 
 import { cn } from "../../lib/utils"
 
-// The outline of a window or a control, drawn with box-drawing characters
-// (globals.css, Glyph frames). It overhangs its parent by half a cell, so the
-// parent is positioned, does not clip, and sets the color with text-*.
+// The outline of a window or a control: a 1px line on the parent's edge that
+// follows its corners (globals.css, Frames). The parent is positioned and sets
+// its radius; text-* sets the line color.
 // label sits on the top edge, detail on the bottom edge at the right.
 function FrameEdges({
   className,
@@ -18,7 +18,7 @@ function FrameEdges({
   return (
     <span
       data-slot="frame-edges"
-      className={cn("text-muted-foreground", className)}
+      className={cn("text-border", className)}
       {...props}
     >
       <span data-edge="top-left" aria-hidden />
@@ -81,7 +81,7 @@ function Frame({
   return (
     <div
       data-slot="frame"
-      className={cn("relative px-4 py-4", className)}
+      className={cn("relative rounded-control px-4 py-4", className)}
       {...props}
     >
       {children}

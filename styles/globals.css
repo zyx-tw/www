@@ -7,19 +7,28 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* One fixed theme: dark: never matches, not even under a dark OS setting. */
 @custom-variant dark (&:is(.dark *));
+
 @source "../**/*.{ts,tsx}";
 
 @theme inline {
   --text-*: initial;
   --text-display: 5rem;
   --text-display--line-height: 5rem;
+  --text-headline: 2.5rem;
+  --text-headline--line-height: 3rem;
   --text-title: 1.5rem;
   --text-title--line-height: 2rem;
   --text-body: 1rem;
-  --text-body--line-height: 1.5rem;
+  --text-body--line-height: 1.625rem;
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.25rem;
+  --radius-inner: 0.375rem;
+  --radius-control: 0.625rem;
+  --shadow-window:
+    0 12px 32px -8px oklch(0.24 0.012 60 / 18%),
+    0 4px 8px -4px oklch(0.24 0.012 60 / 10%);
   --font-sans:
     var(--font-maple-mono, Maple Mono NF CN),
     var(--font-maple-mono-cjk, Maple Mono NF CN), var(--font-noto-sans-tc),
@@ -53,54 +62,41 @@
 }
 
 :root {
-  --background: oklch(0.97 0.005 85);
-  --foreground: oklch(0.25 0 0);
+  --background: oklch(0.975 0.008 95);
+  --foreground: oklch(0.24 0.012 60);
   /* The one accent: marked words, the current step, a name pointed at. An
-     orange leaning to amber, the same in both themes. */
+     orange leaning to amber. */
   --mark: oklch(0.78 0.16 62);
   /* Data hues: only on marks that encode a value (a chart's line, a meter's
-     fill, a status dot), low to high, the same in both themes. The chrome
-     around them stays grayscale. */
+     fill, a status dot), low to high. The chrome around them stays neutral. */
   --data-low: oklch(0.72 0.15 150);
   --data-mid: oklch(0.78 0.15 80);
   --data-high: oklch(0.68 0.19 25);
-  --primary: oklch(0.25 0 0);
-  --primary-foreground: oklch(0.97 0.005 85);
-  --muted: oklch(0.93 0.005 85);
-  --muted-foreground: oklch(0.52 0 0);
+  --primary: oklch(0.24 0.012 60);
+  --primary-foreground: oklch(0.975 0.008 95);
+  --muted: oklch(0.945 0.009 90);
+  --muted-foreground: oklch(0.5 0.01 70);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.89 0.005 85);
-  --input: oklch(0.89 0.005 85);
-  --ring: oklch(0.25 0 0);
-  --radius: 0;
+  --border: oklch(0.24 0.012 60 / 12%);
+  --input: oklch(0.24 0.012 60 / 18%);
+  --ring: oklch(0.24 0.012 60);
+  --radius: 0.625rem;
 }
 
-.dark {
-  --background: oklch(0.17 0 0);
-  --foreground: oklch(0.88 0 0);
-  --primary: oklch(0.88 0 0);
-  --primary-foreground: oklch(0.17 0 0);
-  --muted: oklch(0.26 0 0);
-  --muted-foreground: oklch(0.62 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.88 0 0);
-}
-
-/* Motion: state changes (hover, toggle, tab) take 150ms, overlays 200ms. */
+/* Motion: state changes (hover, toggle, tab) take 150ms, overlays 200ms, on
+   one strong ease-out: fast at the start, a long soft landing. */
 @utility duration-state {
   --tw-duration: 150ms;
   transition-duration: 150ms;
-  --tw-ease: cubic-bezier(0, 0, 0.2, 1);
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  --tw-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @utility duration-overlay {
   --tw-duration: 200ms;
   transition-duration: 200ms;
-  --tw-ease: cubic-bezier(0, 0, 0.2, 1);
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  --tw-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /*
@@ -123,17 +119,21 @@
 }
 
 /*
- * A link in running text inverts on hover and focus, like a highlighted menu
- * item, with no fade. It keeps its own resting underline.
+ * A link in running text: a 1px underline that thickens to 2px on hover, and
+ * a 2px ring on keyboard focus.
  */
 @utility terminal-link {
-  &:hover,
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-thickness 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
   &:focus-visible {
-    background-color: var(--foreground);
-    color: var(--background);
-    text-decoration-line: none;
-    outline: none;
-    box-shadow: 0 0 0 2px var(--foreground);
+    text-decoration-thickness: 2px;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-inner);
   }
 }
 
@@ -147,11 +147,11 @@
   body {
     @apply bg-background text-body text-foreground;
   }
-  .dark {
-    color-scheme: dark;
+  :root {
+    color-scheme: light;
   }
   ::selection {
-    @apply bg-foreground text-background;
+    @apply bg-foreground/15;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -374,17 +374,8 @@ html.tv [data-slot="corner-edge"][data-edge="bottom"] {
 [data-slot="spinner"] > :nth-child(4) {
   animation-delay: -90ms;
 }
-[data-slot="skeleton"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--muted);
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'><rect x='8' y='8' width='4' height='4'/><rect x='8' y='0' width='4' height='4'/><rect x='8' y='4' width='4' height='4'/><rect x='12' y='12' width='4' height='4'/><rect x='0' y='0' width='4' height='4'/><rect x='4' y='0' width='4' height='4'/><rect x='0' y='8' width='4' height='4'/><rect x='0' y='12' width='4' height='4'/><rect x='4' y='4' width='4' height='4'/></svg>");
-  mask-size: 16px 16px;
-  animation: pixel-flicker 480ms step-end infinite;
-}
-[data-slot="progress"] canvas {
-  image-rendering: pixelated;
+[data-slot="skeleton"] {
+  animation: skeleton-breathe 1.6s ease-in-out infinite;
 }
 @keyframes pixel-ring {
   0% {
@@ -401,23 +392,14 @@ html.tv [data-slot="corner-edge"][data-edge="bottom"] {
     opacity: 0.15;
   }
 }
-@keyframes pixel-flicker {
-  0% {
-    mask-position: 0 0;
-  }
-  25% {
-    mask-position: 8px 4px;
-  }
+@keyframes skeleton-breathe {
   50% {
-    mask-position: 4px 12px;
-  }
-  75% {
-    mask-position: 12px 8px;
+    opacity: 0.5;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-slot="spinner"] > *,
-  [data-slot="skeleton"]::before {
+  [data-slot="skeleton"] {
     animation: none !important;
   }
   [data-slot="spinner"] > :nth-child(1) {
@@ -426,21 +408,9 @@ html.tv [data-slot="corner-edge"][data-edge="bottom"] {
 }
 
 /*
- * Toasts are windows (DESIGN.md, Motion): they fade in and out at the overlay
- * duration and never slide or scale. Sonner still places a stack of toasts
- * with transforms; they move into place at once.
+ * Toasts slide up from the bottom edge and fade, with Sonner's own motion
+ * (DESIGN.md, Motion); the stack keeps Sonner's lift.
  */
-[data-sonner-toast] {
-  transition-property: opacity, height !important;
-  transition-duration: 200ms !important;
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1) !important;
-}
-[data-sonner-toast][data-expanded="false"][data-front="false"] {
-  --y: translateY(calc(var(--lift-amount) * var(--toasts-before))) !important;
-}
-[data-sonner-toast][data-removed="true"][data-front="true"][data-swipe-out="false"] {
-  --y: translateY(0) !important;
-}
 
 /*
  * The TV frame turning on (components/tv.tsx, TvBoot): two black halves part
@@ -552,103 +522,54 @@ html[data-boot] [data-slot="tv-boot"] {
 }
 
 /*
- * Glyph frames (DESIGN.md, Frames; components/ui/frame.tsx): box-drawing
- * characters draw the outline, as a terminal draws a window, so each line runs
- * through the middle of a character cell and the corners are the font's own
- * arcs. The edges overhang their parent by half a cell, which puts each line
- * where a 1px border would be. Rows are 20px and Maple's vertical bar is
- * 1.52em tall, so the bars meet with no gap. Fills are long runs the cell
- * clips; the vertical run wraps one bar per line.
+ * Frames (DESIGN.md, Frames; components/ui/frame.tsx): a 1px line in the
+ * frame's text color, following its parent's corners (border-radius:
+ * inherit), so a field or a window sets the radius once on itself. A label
+ * sits on the top edge and a detail on the bottom edge at the right, each on
+ * the page color so the line stops around it.
  */
 [data-slot="frame-edges"] {
   position: absolute;
-  inset: calc(var(--text-caption--line-height) / -2) -0.5ch;
+  inset: 0;
   z-index: 1;
-  display: grid;
-  grid-template-columns: 1ch minmax(0, 1fr) 1ch;
-  grid-template-rows: var(--text-caption--line-height) minmax(0, 1fr) var(
-      --text-caption--line-height
-    );
-  font-family: var(--font-mono);
-  font-size: var(--text-body);
-  font-weight: 400;
-  line-height: var(--text-caption--line-height);
-  white-space: pre;
-  text-align: start;
+  border: 1px solid currentColor;
+  border-radius: inherit;
   pointer-events: none;
   user-select: none;
 }
-[data-slot="frame-edges"] > * {
-  display: flex;
-  min-width: 0;
+[data-slot="frame-edges"] [data-edge] {
+  display: none;
 }
 [data-slot="frame-edges"] [data-frame-text] {
-  flex: none;
-  padding-inline: 1ch;
-  color: var(--foreground);
+  position: absolute;
+  padding-inline: 0.5ch;
+  background: var(--background);
+  color: var(--muted-foreground);
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  white-space: pre;
 }
-/*
- * A fill reaches 1px into its neighbors: clipping two glyphs at the same
- * fractional pixel would leave a faint seam where they meet.
- */
-[data-edge="fill"] {
-  flex: 1;
-  min-width: 0;
-  margin-inline: -1px;
-  overflow: hidden;
+[data-slot="frame-edges"] > :nth-child(2) [data-frame-text] {
+  top: calc(var(--text-caption--line-height) / -2);
+  left: 1.5ch;
 }
-[data-edge="top-left"]::before {
-  content: "╭" / "";
-}
-[data-edge="top-right"]::before {
-  content: "╮" / "";
-}
-[data-edge="bottom-left"]::before {
-  content: "╰" / "";
-}
-[data-edge="bottom-right"]::before {
-  content: "╯" / "";
-}
-[data-edge="lead"]::before {
-  content: "─" / "";
-}
-[data-edge="fill"]::before {
-  content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" /
-    "";
-}
-[data-edge="side"] {
-  display: block;
-  margin-block: -1px;
-  overflow: hidden;
-  word-break: break-all;
-  white-space: normal;
-}
-[data-edge="side"]::before {
-  content: "││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││" /
-    "";
+[data-slot="frame-edges"] > :nth-child(8) [data-frame-text] {
+  bottom: calc(var(--text-caption--line-height) / -2);
+  right: 1.5ch;
 }
 /* One vertical edge alone, for a sheet against a viewport edge. */
 [data-slot="frame-side"] {
   position: absolute;
   inset-block: 0;
-  width: 1ch;
-  overflow: hidden;
-  font-family: var(--font-mono);
-  font-size: var(--text-body);
-  line-height: var(--text-caption--line-height);
-  word-break: break-all;
+  width: 1px;
+  background: currentColor;
   pointer-events: none;
-  user-select: none;
 }
 [data-slot="frame-side"][data-side="left"] {
-  left: -0.5ch;
+  left: 0;
 }
 [data-slot="frame-side"][data-side="right"] {
-  right: -0.5ch;
-}
-[data-slot="frame-side"]::before {
-  content: "││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││" /
-    "";
+  right: 0;
 }
 
 /*

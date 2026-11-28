@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import { cn } from "@/lib/utils"
 import { attributeRootLayoutRequest } from "@/lib/otel/layout"
 import { MotionProvider } from "@/components/motion-provider"
-import { ThemeProvider } from "@/components/theme-provider"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { fontVariables } from "@/lib/fonts"
 
@@ -63,12 +62,10 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning
       // A stable gutter keeps the centered column from moving when a page
       // gains or loses its scrollbar. One edge only, so the left corners stay
       // 12 px from the window's edge on every page and every site.
       className={cn(
-        "dark",
         "[scrollbar-gutter:stable] antialiased",
         fontVariables,
         "font-sans"
@@ -79,19 +76,17 @@ export default async function RootLayout({
       <body className="flex min-h-dvh flex-col text-body">
         <TvBoot />
         <SiteJsonLd />
-        <ThemeProvider>
-          <TooltipProvider>
-            <MotionProvider>
-              <NextPageDecode />
-              <TvStatic />
-              <MapSky />
-              <HomeMark />
-              <SiteHeader projectNames={PROJECT_NAMES} />
-              {children}
-              <SiteFooter />
-            </MotionProvider>
-          </TooltipProvider>
-        </ThemeProvider>
+        <TooltipProvider>
+          <MotionProvider>
+            <NextPageDecode />
+            <TvStatic />
+            <MapSky />
+            <HomeMark />
+            <SiteHeader projectNames={PROJECT_NAMES} />
+            {children}
+            <SiteFooter />
+          </MotionProvider>
+        </TooltipProvider>
       </body>
     </html>
   )

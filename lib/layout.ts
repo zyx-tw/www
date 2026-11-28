@@ -12,7 +12,7 @@ export const column =
  * A page's space for the fixed corners: the title starts 120px down, and the
  * last line ends 100px up, 60px clear of the bottom corners.
  */
-export const page = "pt-30 pb-25"
+export const page = "pt-44 pb-36"
 
 /**
  * Enter fade (tw-animate-css): opacity 0 to 1 over 300ms ease-out, filled
