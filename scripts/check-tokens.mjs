@@ -1,6 +1,6 @@
 // Everything visual must come from the base tokens (DESIGN.md in zyx-tw/ui). This
 // rejects the ways around them: sizes outside text-display / title / body /
-// caption, any radius (everything is square), removed color tokens, Tailwind
+// caption, a radius outside the tokens, removed color tokens, Tailwind
 // palette colors, color literals, inline styles, raw font sizes, arbitrary
 // values and stray durations. Page code (outside components/ui)
 // also may not draw layer-2 surfaces.
@@ -86,11 +86,13 @@ const classRules = [
     name: "arbitrary value",
     regex: /(?<![\w-])-?[a-z][\w-]*-\[[^\]\s]+\](?![:/\]])/g,
   },
-  // Everything is square, as in a terminal: rounded-none only, to clear a
-  // radius a library sets.
+  // One corner radius (DESIGN.md in zyx-tw/ui, Corners): control on every
+  // box, inner for a row inside a window and the checkbox, full for pills, or
+  // none to clear a library's radius.
   {
-    name: "radius (everything is square)",
-    regex: /\brounded(?!-none\b)(?:-[\w-]+)?(?![\w-])/g,
+    name: "radius (use rounded-control, rounded-inner or rounded-full)",
+    regex:
+      /\brounded(?:-(?:t|b|l|r|s|e|tl|tr|bl|br|ss|se|es|ee))?(?!-(?:none|inner|control|full)\b)(?:-[\w-]+)?(?![\w-])/g,
   },
   {
     name: "palette color",
@@ -115,8 +117,8 @@ const sourceRules = [
   },
   { name: "inline style", regex: /\bstyle=\{/g },
   {
-    name: "radius (everything is square)",
-    regex: /var\(--radius[\w-]*\)|\bborder-radius\s*:(?!\s*0\b)/g,
+    name: "radius literal (use a radius token)",
+    regex: /\bborder-radius\s*:(?!\s*(?:0\b|inherit\b|var\(--radius))/g,
   },
   // CSS may only name the scale: font-size: var(--text-body).
   {
